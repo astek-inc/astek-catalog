@@ -8,8 +8,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :categories, only: [:index, :show, :create, :update, :destroy] do
-        post :update_row_order, on: :collection
+        resources :collections, only: [:index, :show]
       end
+
+      resources :collections, only: [:index, :show, :create, :update, :destroy]
     end
   end
 
