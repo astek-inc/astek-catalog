@@ -8,6 +8,6 @@ default: &default
 development:
   <<: *default
   host: localhost
-  database: astek_rails_development
+  database: astek_catalog_dev
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
