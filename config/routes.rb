@@ -7,11 +7,16 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+
       resources :categories, only: [:index, :show, :create, :update, :destroy] do
         resources :collections, only: [:index, :show]
+        resources :category_images, only: :index, controller: :category_images
       end
+      resources :category_images, only: [:create, :update, :destroy]
 
       resources :collections, only: [:index, :show, :create, :update, :destroy]
+      resources :collection_images, only: [:create, :update, :destroy]
+
     end
   end
 

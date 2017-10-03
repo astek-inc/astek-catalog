@@ -15,7 +15,7 @@ module Api
 
       def show
         @category = Category.friendly.find(params[:id])
-        render json: @category, include: :collections
+        render json: @category, include: [:category_images, :collections]
       end
 
       def update

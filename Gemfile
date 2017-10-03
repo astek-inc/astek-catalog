@@ -15,6 +15,11 @@ gem 'acts_as_paranoid', '~> 0.5.0'
 gem 'friendly_id', '~> 5.1.0'
 gem 'ranked-model'
 
+# File uploads, image transformation, and Amazon S3 storage
+gem 'fog-aws'
+gem 'carrierwave', '~> 1.0'
+gem 'mini_magick'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

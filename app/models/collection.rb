@@ -9,7 +9,7 @@ class Collection < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :category
-  # has_many :designs
-  # has_many :collection_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_many :designs
+  has_many :collection_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
 end
