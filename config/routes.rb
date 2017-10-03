@@ -10,12 +10,20 @@ Rails.application.routes.draw do
 
       resources :categories, only: [:index, :show, :create, :update, :destroy] do
         resources :collections, only: [:index, :show]
-        resources :category_images, only: :index, controller: :category_images
+        # resources :category_images, only: :index, controller: :category_images
       end
-      resources :category_images, only: [:create, :update, :destroy]
+      resources :category_images, only: [:create, :destroy]
 
-      resources :collections, only: [:index, :show, :create, :update, :destroy]
-      resources :collection_images, only: [:create, :update, :destroy]
+      resources :collections, only: [:index, :show, :create, :update, :destroy] do
+        resources :designs, only: [:index, :show]
+        # resources :collection_images, only: :index, controller: :collection_images
+      end
+      resources :collection_images, only: [:create, :destroy]
+
+      resources :designs, only: [:index, :show, :create, :update, :destroy] do
+        # resources :design_images, only: :index, controller: :design_images
+      end
+      resources :design_images, only: [:create, :destroy]
 
     end
   end

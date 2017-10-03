@@ -9,9 +9,9 @@ class CategorySerializer < ActiveModel::Serializer
     api_v1_category_path object
   end
 
-  link :category_images do
-    api_v1_category_category_images_path object
-  end
+  # link :category_images do
+  #   api_v1_category_category_images_path object
+  # end
 
   link :collections do
     api_v1_category_collections_path object
