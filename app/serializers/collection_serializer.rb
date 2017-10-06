@@ -6,7 +6,7 @@ class CollectionSerializer < ActiveModel::Serializer
   # has_many :designs
 
   link :self do
-    api_v1_category_collection_path object.category, object
+    api_v1_collection_path object
   end
 
   link :category do
