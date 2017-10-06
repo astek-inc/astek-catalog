@@ -1,0 +1,54 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, 'Collections' %>
+<% end %>
+
+<% content_for :header_right do %>
+    <%= link_to 'New Collection', new_admin_collection_path, class: 'btn btn-default' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<div>
+
+  <% if @collections.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_collections_path %>" data-position-start="<%= @position_start %>">
+          <thead>
+          <tr>
+            <th class="move-handle"></th>
+            <th>Name</th>
+            <th>Description</th>
+            <!--<th>Image</th>-->
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @collections.each do |collection| %>
+              <tr class="product_property fields" data-item-id=<%= "#{collection.id}" %> data-hook="collection">
+                <td class="move-handle text-center">
+                  <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+                </td>
+                <td><%= collection.name %></td>
+                <td><%= truncate(sanitize(collection.description), length: 140) %></td>
+                <!--<td></td>-->
+                <td class="actions">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <%= edit_button edit_admin_collection_path collection %>
+                    <%= delete_button admin_collection_path collection %>
+                  </div>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <%= paginate @collections %>
+
+  <% else %>
+    <p>No collections found. <%= link_to 'Create one.', new_admin_collection_path %></p>
+  <% end %>
+
+</div>

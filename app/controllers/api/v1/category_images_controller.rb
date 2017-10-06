@@ -1,6 +1,6 @@
 module Api
   module V1
-    class CategoryImagesController < ::ApplicationController
+    class CategoryImagesController < BaseController
 
       # def index
       #   @category = Category.friendly.find(params[:category_id])

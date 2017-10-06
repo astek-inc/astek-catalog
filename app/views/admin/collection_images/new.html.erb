@@ -1,0 +1,32 @@
+<% content_for :header_left do %>
+    <%= content_tag :h1,
+                    [link_to('Collections', admin_collections_path(@collection)),
+                     link_to(@collection.name, admin_collection_path(@collection)),
+                     link_to('Images', admin_collection_collection_images_path(@collection)),
+                     'New Image'].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, :collection, @collection_image], html: { multipart: true } do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'collection_image_new' do %>
+            <%= content_tag :div, class: ['form-group'] do %>
+                <%= f.label :file, 'Image' %> <span class="required">*</span>
+                <%= f.file_field :file, required: true, class: 'form-control' %>
+                <%= f.hidden_field :image_type, value: @collection_image.class.name %>
+                <%= f.hidden_field :owner_id, value: @collection.id %>
+                <%#= f.hidden_field :image_cache %>
+            <% end %>
+        <% end %>
+
+        <%= content_tag :div, class: 'form-actions' do %>
+            <%= button_tag 'Submit' %>
+            <%#= button_tag 'Cancel' %>
+        <% end %>
+    <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/collections/subnav', locals: { current: 'images' } %>
+<% end %>

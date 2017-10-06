@@ -1,0 +1,17 @@
+<%= content_tag :div do %>
+    <%= content_tag :div, class: 'row' do %>
+        <%= content_tag :div, { class: 'page-header col-md-12' } do %>
+            <%= content_tag :div, class: 'col-md-10' do %>
+                <%= yield :header_left %>
+            <% end %>
+
+            <%= content_tag :div, class: 'col-md-2 header-right' do %>
+                <%= yield :header_right %>
+            <% end %>
+        <% end %>
+    <% end %>
+<% end %>
+
+<%= content_tag :div do %>
+  <%= render partial: 'admin/shared/flash' %>
+<% end %>

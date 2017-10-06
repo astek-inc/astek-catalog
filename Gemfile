@@ -11,14 +11,36 @@ gem 'pg', '~> 0.20.0'
 
 gem 'puma'
 
+gem 'rails_12factor', group: :production
+
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0.3'
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails', '~> 4.0.0'
+
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+
 gem 'acts_as_paranoid', '~> 0.5.0'
 gem 'friendly_id', '~> 5.1.0'
+
 gem 'ranked-model'
+gem 'jquery-ui-rails'
+
+gem 'kaminari'
 
 # File uploads, image transformation, and Amazon S3 storage
 gem 'fog-aws'
 gem 'carrierwave', '~> 1.0'
 gem 'mini_magick'
+
+# # Authentication and permissions
+# gem 'omniauth-google-oauth2'
+# gem 'devise'
+# gem 'cancancan'
+# gem 'rolify'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

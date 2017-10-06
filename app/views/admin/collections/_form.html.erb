@@ -1,0 +1,26 @@
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :category_id, 'Category' %> <span class="required">*</span>
+    <%= f.collection_select :category_id, Category.rank(:row_order), :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :name, 'Name' %> <span class="required">*</span>
+    <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :description, 'Description' %> <span class="required">*</span>
+    <%= f.text_area :description, rows: 9, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
+    <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+<% end %>
+
+<% if @collection.persisted? %>
+    <%= content_tag :div, class: ['form-group'] do %>
+        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
+        <%= f.text_field :slug, required: true, class: 'form-control' %>
+    <% end %>
+<% end %>

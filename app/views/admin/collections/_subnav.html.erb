@@ -1,0 +1,9 @@
+<div class="list-group">
+  <%= link_to 'Details', edit_admin_collection_path(@collection), { class: current == 'details' ? 'list-group-item active' : 'list-group-item' } %>
+  <%= link_to 'Images', admin_collection_collection_images_path(@collection), { class: current == 'images' ? 'list-group-item active' : 'list-group-item' } %>
+  <%= link_to 'Designs', admin_collection_designs_path(@collection), { class: current == 'designs' ? 'list-group-item active' : 'list-group-item' } %>
+  <!--<a href="#" class="list-group-item">Dapibus ac facilisis in</a>-->
+  <!--<a href="#" class="list-group-item">Morbi leo risus</a>-->
+  <!--<a href="#" class="list-group-item">Porta ac consectetur ac</a>-->
+  <!--<a href="#" class="list-group-item">Vestibulum at eros</a>-->
+</div>

@@ -1,14 +1,46 @@
 Rails.application.routes.draw do
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
+  # devise_for :users
+
+  concern :paginatable do
+    get '(page/:page)', action: :index, on: :collection, as: ''
+  end
+
+  root to: 'admin/categories#index'
+
+  namespace :admin do
+
+    resources :categories, concerns: :paginatable do
+      post :update_row_order, on: :collection
+      resources :category_images, only: [:index, :new, :create, :destroy], controller: :category_images do
+        post :update_row_order, on: :collection
+      end
+    end
+
+    resources :collections, concerns: :paginatable do
+      post :update_row_order, on: :collection
+
+      resources :collection_images, only: [:index, :new, :create, :destroy], controller: :collection_images do
+        post :update_row_order, on: :collection
+      end
+
+      resources :designs, concerns: :paginatable do
+        post :update_row_order, on: :collection
+      end
+    end
+
+  end
+
   namespace :api do
     namespace :v1 do
 
-      resources :categories, only: [:index, :show, :create, :update, :destroy] do
+      resources :categories, only: [:index, :show] do #, :create, :update, :destroy] do
         resources :collections, only: [:index, :show]
         # resources :category_images, only: :index, controller: :category_images
       end

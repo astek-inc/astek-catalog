@@ -1,0 +1,32 @@
+<%= f.hidden_field :collection_id, value: @collection.id %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :name, 'Name' %> <span class="required">*</span>
+    <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :description, 'Description' %> <span class="required">*</span>
+    <%= f.text_area :description, rows: 9, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
+    <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+<% end %>
+
+<% if @design.persisted? %>
+    <%= content_tag :div, class: ['form-group'] do %>
+        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
+        <%= f.text_field :slug, required: true, class: 'form-control' %>
+    <% end %>
+<% end %>
+
+<%#= content_tag :div, class: ['form-group'] do %>
+    <%#= f.label :image, 'Image' %> <!-- <span class="required">*</span> -->
+    <%#= content_tag :div, class: 'image' do %>
+        <%#= image_tag(@design.image_url(:thumb)) if @design.image? %>
+    <%# end %>
+    <%#= f.file_field :image, required: !@design.image?, class: 'form-control' %>
+    <%#= f.hidden_field :image_cache %>
+<%# end %>
