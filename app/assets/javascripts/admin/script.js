@@ -1,5 +1,11 @@
 $(function(){
-    $('a[data-method="delete"]').click(function(){
+    setTimeout(function() {
+        $('div.alert-info, div.alert-success').hide('slow')
+    }, 5000);
+});
+
+$(function(){
+    $('td.actions a[data-method="delete"]').click(function(){
         return confirm('Are you sure you want to delete this record?');
     })
 });

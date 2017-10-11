@@ -21,7 +21,6 @@
 </head>
 
 <body>
-
 <%= content_tag :nav, class: 'navbar navbar-inverse navbar-fixed-top' do %>
     <%= content_tag :div, class: 'container-fluid' do %>
         <%= content_tag :div, class: 'navbar-header' do %>
@@ -33,33 +32,43 @@
             <% end %>
             <%= link_to 'Astek Inc Product Catalog', root_path, class: 'navbar-brand' %>
         <% end %>
+
+        <% if user_signed_in? %>
+            <%= content_tag :div, id: 'navbar', class: 'collapse navbar-collapse' do %>
+                <%= content_tag :ul, class: 'nav navbar-nav navbar-right' do %>
+                    <%= content_tag :li, link_to('Sign Out', destroy_user_session_path, method: :delete) %>
+                <% end %>
+            <% end %>
+        <% end %>
     <% end %>
 <% end %>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
-      <ul class="nav nav-sidebar">
-        <%= content_tag :li, link_to('Categories', admin_categories_path) %>
-        <%= content_tag :li, link_to('Collections', admin_collections_path) %>
-        <%#= content_tag :li, link_to('Designs', admin_designs_path) %>
-      </ul>
+<%= content_tag :div, class: 'container-fluid' do %>
+    <%= content_tag :div, class: 'row' do %>
 
-      <ul class="nav nav-sidebar">
-        <%#= content_tag :li, link_to('Blog', admin_blog_root_path) %>
-        <%#= content_tag :li, link_to('Designs', admin_designs_path) %>
-      </ul>
-    </div>
+        <% if user_signed_in? %>
+            <% main_div_class = 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' %>
+            <%= content_tag :div, class: 'col-sm-3 col-md-2 sidebar' do %>
+                <%= content_tag :ul, class: 'nav nav-sidebar' do %>
+                    <%= content_tag :li, link_to('Categories', admin_categories_path) %>
+                    <%= content_tag :li, link_to('Collections', admin_collections_path) %>
+                    <%#= content_tag :li, link_to('Designs', admin_designs_path) %>
+                <% end %>
+            <% end %>
+        <% else %>
+            <% main_div_class = 'col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 main' %>
+        <% end %>
 
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <%= content_tag :div, class: main_div_class do %>
 
-      <div class="row">
-        <%= yield %>
-      </div>
+            <%= content_tag :div, class: 'row' do %>
+                <%= yield %>
+            <% end %>
 
-    </div>
-  </div>
-</div>
+        <% end %>
+
+    <% end %>
+<% end %>
 
 </body>
 </html>

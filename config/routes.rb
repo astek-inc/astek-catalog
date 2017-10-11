@@ -6,13 +6,13 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-  # devise_for :users
+  root 'admin/categories#index'
+
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
   concern :paginatable do
     get '(page/:page)', action: :index, on: :collection, as: ''
   end
-
-  root to: 'admin/categories#index'
 
   namespace :admin do
 

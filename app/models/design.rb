@@ -1,5 +1,7 @@
 class Design < ActiveRecord::Base
 
+  resourcify
+
   extend FriendlyId
   friendly_id :name, use: :slugged
 

@@ -1,0 +1,41 @@
+<%= render 'admin/shared/flash' %>
+
+<%= content_tag :div, class: 'panel panel-default devise-bs' do %>
+    <%= content_tag :div, class: 'panel-heading' do %>
+        <%= content_tag :h4, t('.sign_in', default: 'Sign in') %>
+    <% end %>
+
+    <%= content_tag :div, class: 'panel-body' do %>
+
+        <%#= form_for(resource, as: resource_name, url: session_path(resource_name), html: { role: 'form' }) do |f| %>
+          <!--<div class="form-group">-->
+            <%#= f.label :email %>
+            <%#= f.email_field :email, autofocus: true, class: 'form-control' %>
+          <!--</div>-->
+          <!--<div class="form-group">-->
+            <%#= f.label :password %>
+            <%#= f.password_field :password, autocomplete: 'off', class: 'form-control' %>
+          <!--</div>-->
+          <%# if devise_mapping.rememberable? %>
+            <!--<div class="checkbox">-->
+              <%#= f.label :remember_me do %>
+                <%#= f.check_box :remember_me %> <%#= t('.remember_me', default: 'Remember me') %>
+              <%# end %>
+            <!--</div>-->
+          <%# end %>
+          <%#= f.submit  t('.sign_in', default: 'Sign in'), class: 'btn btn-primary' %>
+        <%# end %>
+
+        <% if devise_mapping.omniauthable? %>
+            <% resource_class.omniauth_providers.each do |provider| %>
+                <%# t('.sign_in_with_provider', provider: provider.to_s.titleize, default: "Sign in with #{provider.to_s.titleize}") %>
+                <%= content_tag :div, id: "#{provider}_sign_in_button" do %>
+                    <%= link_to image_tag("btn_#{provider}_signin_dark_normal_web", alt: "Sign in with #{provider.to_s.titleize}"), omniauth_authorize_path(resource_name, provider) %><br />
+                <% end %>
+            <% end %>
+        <% end %>
+
+    <% end %>
+<% end %>
+
+<%#= render 'devise/shared/links' %>

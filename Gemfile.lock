@@ -44,7 +44,9 @@ GEM
       activerecord (>= 4.0, < 5.1)
       activesupport (>= 4.0, < 5.1)
     arel (6.0.4)
+    bcrypt (3.1.11)
     builder (3.2.3)
+    cancancan (2.0.0)
     carrierwave (1.1.0)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
@@ -59,9 +61,18 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
+    devise (4.3.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0, < 5.2)
+      responders
+      warden (~> 1.2.3)
+    devise-bootstrap-views (0.0.11)
     erubis (2.7.0)
     excon (0.55.0)
     execjs (2.7.0)
+    faraday (0.12.2)
+      multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
     figaro (1.1.1)
       thor (~> 0.14)
@@ -85,6 +96,7 @@ GEM
       activerecord (>= 4.0.0)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    hashie (3.5.6)
     i18n (0.8.6)
     ipaddress (0.8.3)
     jquery-rails (4.3.1)
@@ -94,6 +106,7 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     jsonapi-renderer (0.1.3)
+    jwt (1.5.6)
     kaminari (1.0.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.0.1)
@@ -117,8 +130,28 @@ GEM
     mini_portile2 (2.2.0)
     minitest (5.10.3)
     multi_json (1.12.2)
+    multi_xml (0.6.0)
+    multipart-post (2.0.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
+    oauth2 (1.4.0)
+      faraday (>= 0.8, < 0.13)
+      jwt (~> 1.0)
+      multi_json (~> 1.3)
+      multi_xml (~> 0.5)
+      rack (>= 1.2, < 3)
+    omniauth (1.7.1)
+      hashie (>= 3.4.6, < 3.6.0)
+      rack (>= 1.6.2, < 3)
+    omniauth-google-oauth2 (0.5.2)
+      jwt (~> 1.5)
+      multi_json (~> 1.3)
+      omniauth (>= 1.1.1)
+      omniauth-oauth2 (>= 1.3.1)
+    omniauth-oauth2 (1.4.0)
+      oauth2 (~> 1.0)
+      omniauth (~> 1.2)
+    orm_adapter (0.5.0)
     pg (0.20.0)
     puma (3.9.1)
     rack (1.6.8)
@@ -162,6 +195,10 @@ GEM
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    responders (2.4.0)
+      actionpack (>= 4.2.0, < 5.3)
+      railties (>= 4.2.0, < 5.3)
+    rolify (5.1.0)
     sass (3.5.2)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -189,6 +226,8 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
+    warden (1.2.7)
+      rack (>= 1.0)
 
 PLATFORMS
   ruby
@@ -196,8 +235,11 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   acts_as_paranoid (~> 0.5.0)
+  cancancan
   carrierwave (~> 1.0)
   coffee-rails (~> 4.0.0)
+  devise
+  devise-bootstrap-views
   figaro
   fog-aws
   friendly_id (~> 5.1.0)
@@ -205,12 +247,14 @@ DEPENDENCIES
   jquery-ui-rails
   kaminari
   mini_magick
+  omniauth-google-oauth2
   pg (~> 0.20.0)
   puma
   rails (= 4.2.8)
   rails-api
   rails_12factor
   ranked-model
+  rolify
   sass-rails (~> 5.0.3)
   spring
   uglifier (>= 1.3.0)

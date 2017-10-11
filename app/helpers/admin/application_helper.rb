@@ -13,5 +13,15 @@ module Admin
       link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' }), path, { method: :delete, class: 'btn btn-default', 'aria-label': 'Delete', title: 'Delete' })
     end
 
+    # https://coderwall.com/p/jzofog/ruby-on-rails-flash-messages-with-bootstrap
+    def flash_class level
+      case level
+        when 'notice' then 'alert alert-info'
+        when 'success' then 'alert alert-success'
+        when 'error' then 'alert alert-warning'
+        when 'alert' then 'alert alert-danger'
+      end
+    end
+
   end
 end
