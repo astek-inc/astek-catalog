@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-  root 'admin/categories#index'
+  root 'admin/product_types#index'
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
@@ -16,9 +16,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
-    resources :categories, concerns: :paginatable do
+    resources :product_types, concerns: :paginatable do
       post :update_row_order, on: :collection
-      resources :category_images, only: [:index, :new, :create, :destroy], controller: :category_images do
+      resources :product_type_images, only: [:index, :new, :create, :destroy], controller: :product_type_images do
         post :update_row_order, on: :collection
       end
     end
@@ -35,27 +35,41 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :designs, concerns: :paginatable do
+      resources :design_images, only: [:index, :new, :create, :destroy], controller: :design_images do
+        post :update_row_order, on: :collection
+      end
+
+      resources :color_ways, concerns: :paginatable do
+        post :update_row_order, on: :collection
+
+        resources :color_way_images, only: [:index, :new, :create, :destroy], controller: :color_way_images do
+          post :update_row_order, on: :collection
+        end
+      end
+    end
+
   end
 
   namespace :api do
     namespace :v1 do
 
-      resources :categories, only: [:index, :show] do #, :create, :update, :destroy] do
+      resources :product_types, only: [:index, :show] do #, :create, :update, :destroy] do
         resources :collections, only: [:index, :show]
-        # resources :category_images, only: :index, controller: :category_images
+        # resources :product_type_images, only: :index, controller: :product_type_images
       end
-      resources :category_images, only: [:create, :destroy]
+      # resources :product_type_images, only: [:create, :destroy]
 
-      resources :collections, only: [:index, :show, :create, :update, :destroy] do
+      resources :collections, only: [:index, :show] do #, :create, :update, :destroy] do
         resources :designs, only: [:index, :show]
         # resources :collection_images, only: :index, controller: :collection_images
       end
-      resources :collection_images, only: [:create, :destroy]
+      # resources :collection_images, only: [:create, :destroy]
 
-      resources :designs, only: [:index, :show, :create, :update, :destroy] do
-        # resources :design_images, only: :index, controller: :design_images
+      resources :designs, only: [:index, :show] do #, :create, :update, :destroy] do
+        resources :color_ways, only: [:index, :show]
       end
-      resources :design_images, only: [:create, :destroy]
+      # resources :design_images, only: [:create, :destroy]
 
     end
   end

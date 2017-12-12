@@ -19,7 +19,7 @@
             <th class="move-handle"></th>
             <th>Name</th>
             <th>Description</th>
-            <!--<th>Image</th>-->
+            <th>Slug</th>
             <th class="actions"></th>
           </tr>
           </thead>
@@ -32,7 +32,7 @@
                 </td>
                 <td><%= collection.name %></td>
                 <td><%= truncate(sanitize(collection.description), length: 140) %></td>
-                <!--<td></td>-->
+                <td><%= collection.slug %></td>
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                     <%= edit_button edit_admin_collection_path collection %>
