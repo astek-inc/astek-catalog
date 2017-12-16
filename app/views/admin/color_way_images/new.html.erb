@@ -1,32 +1,31 @@
 <% content_for :header_left do %>
     <%= content_tag :h1,
-                    [link_to('Designs', admin_designs_path(@design)),
-                     link_to(@design.name, admin_design_path(@design)),
-                     link_to('Images', admin_design_design_images_path(@design)),
+                    [link_to('Color Ways', admin_color_ways_path(@color_way)),
+                     link_to(@color_way.name, admin_color_way_path(@color_way)),
+                     link_to('Images', admin_color_way_color_way_images_path(@color_way)),
                      'New Image'].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'col-md-9' do %>
-    <%= form_for [:admin, :design, @design_image], html: { multipart: true } do |f| %>
-        <%= field_set_tag nil, 'data-hook': 'design_image_new' do %>
+    <%= form_for [:admin, :color_way, @color_way_image], html: { multipart: true } do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'color_way_image_new' do %>
             <%= content_tag :div, class: ['form-group'] do %>
                 <%= f.label :file, 'Image' %> <span class="required">*</span>
                 <%= f.file_field :file, required: true, class: 'form-control' %>
-                <%= f.hidden_field :image_type, value: @design_image.class.name %>
-                <%= f.hidden_field :owner_id, value: @design.id %>
-                <%#= f.hidden_field :image_cache %>
+                <%= f.hidden_field :image_type, value: @color_way_image.class.name %>
+                <%= f.hidden_field :owner_id, value: @color_way.id %>
             <% end %>
         <% end %>
 
         <%= content_tag :div, class: 'form-actions' do %>
-            <%= button_tag 'Submit', class: 'btn btn-default' %>
-            <%#= button_tag 'Cancel' %>
+            <%= button_tag 'Submit', class: 'btn btn-primary' %>
+            <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{admin_color_way_color_way_images_path(@color_way)}'".html_safe %>
         <% end %>
     <% end %>
 <% end %>
 
 <%= content_tag :div, class: 'col-md-3' do %>
-    <%= render partial: 'admin/designs/subnav', locals: { current: 'images' } %>
+    <%= render partial: 'admin/color_ways/subnav', locals: { current: 'images' } %>
 <% end %>

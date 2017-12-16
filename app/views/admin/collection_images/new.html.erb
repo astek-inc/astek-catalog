@@ -16,13 +16,12 @@
                 <%= f.file_field :file, required: true, class: 'form-control' %>
                 <%= f.hidden_field :image_type, value: @collection_image.class.name %>
                 <%= f.hidden_field :owner_id, value: @collection.id %>
-                <%#= f.hidden_field :image_cache %>
             <% end %>
         <% end %>
 
         <%= content_tag :div, class: 'form-actions' do %>
-            <%= button_tag 'Submit' %>
-            <%#= button_tag 'Cancel' %>
+            <%= button_tag 'Submit', class: 'btn btn-primary' %>
+            <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{admin_collection_collection_images_path(@category)}'".html_safe %>
         <% end %>
     <% end %>
 <% end %>

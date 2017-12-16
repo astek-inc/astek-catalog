@@ -17,7 +17,8 @@
             <% end %>
 
             <%= content_tag :div, class: 'form-actions' do %>
-                <%= button_tag 'Submit', class: 'btn btn-default' %>
+                <%= button_tag 'Submit', class: 'btn btn-primary' %>
+                <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{admin_collection_designs_path(@collection)}'".html_safe %>
             <% end %>
         <% end %>
     <% end %>
