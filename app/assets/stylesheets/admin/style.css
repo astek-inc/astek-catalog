@@ -18,3 +18,7 @@ td.actions {
 div.form-group div.image {
     margin-bottom: 10px;
 }
+
+.checkbox-inline label {
+    font-weight: 400;
+}

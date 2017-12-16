@@ -1,6 +1,8 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
+    before_action :set_websites, only: [:new, :edit]
+
     def index
       @collections = Collection.rank(:row_order).page params[:page]
       @position_start = (@collections.current_page.present? ? @collections.current_page - 1 : 0) * @collections.limit_value
@@ -54,8 +56,12 @@ module Admin
 
     private
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :category_id, :image, :image_cache)
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :category_id, website_ids: [])
     end
 
   end
