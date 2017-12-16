@@ -1,0 +1,18 @@
+<%= f.hidden_field :design_id, value: @design.id %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :name, 'Name' %> <span class="required">*</span>
+    <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :sku, 'SKU' %> <span class="required">*</span>
+    <%= f.text_field :sku, required: true, class: 'form-control' %>
+<% end %>
+
+<% if @color_way.persisted? %>
+    <%= content_tag :div, class: ['form-group'] do %>
+        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
+        <%= f.text_field :slug, required: true, class: 'form-control' %>
+    <% end %>
+<% end %>

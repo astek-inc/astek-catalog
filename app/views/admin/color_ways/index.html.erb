@@ -1,0 +1,65 @@
+<% content_for :header_left do %>
+    <%= content_tag :h1, [
+        link_to('Collections', admin_collections_path),
+        link_to(@collection.name, edit_admin_collection_path(@collection)),
+        link_to('Designs', admin_collection_designs_path(@collection)),
+        link_to(@design.name, edit_admin_design_path(@design)),
+        'Color Ways'
+    ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+    <%= link_to 'New Color Way', new_admin_design_color_way_path(@design), class: 'btn btn-default' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+    <%= content_tag :div, class: 'col-md-9' do %>
+
+        <% if @color_ways.any? %>
+            <%= content_tag :div, class: 'table-responsive' do %>
+                <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_design_color_ways_path %>" data-position-start="<%= @position_start %>">
+                  <thead>
+                  <tr>
+                    <th class="move-handle"></th>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>SKU</th>
+                    <th class="actions"></th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <% @color_ways.each do |color_way| %>
+                      <tr class="product_property fields" data-item-id=<%= "#{color_way.id}" %> data-hook="color_way">
+                        <td class="move-handle text-center">
+                          <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+                        </td>
+                        <td><%= color_way.name %></td>
+                        <td><%= color_way.slug %></td>
+                        <td><%= color_way.sku %></td>
+                        <td class="actions">
+                          <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                            <%= edit_button edit_admin_design_color_way_path @design, color_way %>
+                            <%= delete_button admin_design_color_way_path @design, color_way %>
+                          </div>
+                        </td>
+                      </tr>
+                  <% end %>
+                  </tbody>
+                </table>
+            <% end %>
+
+            <%= paginate @color_ways %>
+
+        <% else %>
+            <p>No color ways found. <%= link_to 'Create one.', new_admin_design_color_way_path(@design) %></p>
+        <% end %>
+
+    <% end %>
+
+    <%= content_tag :div, class: 'col-md-3' do %>
+        <%= render partial: 'admin/designs/subnav', locals: { current: 'color ways' } %>
+    <% end %>
+<% end %>

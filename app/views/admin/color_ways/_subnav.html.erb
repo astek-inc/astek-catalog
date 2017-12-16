@@ -1,0 +1,4 @@
+<div class="list-group">
+  <%= link_to 'Details', edit_admin_design_color_way_path(@design, @color_way), { class: current == 'details' ? 'list-group-item active' : 'list-group-item' } %>
+  <%= link_to 'Images', admin_color_way_color_way_images_path(@color_way), { class: current == 'images' ? 'list-group-item active' : 'list-group-item' } %>
+</div>

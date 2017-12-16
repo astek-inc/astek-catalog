@@ -1,7 +1,7 @@
 module Admin
   class DesignsController < Admin::BaseController
 
-    before_action :set_collection
+    before_action :set_collection, except: [:edit]
 
     def index
       @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
@@ -24,6 +24,7 @@ module Admin
 
     def edit
       @design = Design.friendly.find(params[:id])
+      @collection = @design.collection
     end
 
     def update

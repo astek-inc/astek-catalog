@@ -5,7 +5,6 @@ class CreateDesigns < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.text :keywords
-      t.text :sku, index: true
       t.datetime :available_on
       t.datetime :expires_on
       t.timestamps null: false

@@ -5,6 +5,7 @@ class CreateColorWays < ActiveRecord::Migration
       t.string :name
       t.text :sku, index: true
       t.string :slug, unique: true
+      t.integer :row_order, index: true
       t.timestamps null: false
       t.timestamp :deleted_at, index: true
     end

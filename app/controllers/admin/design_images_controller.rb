@@ -1,7 +1,7 @@
 module Admin
   class DesignImagesController < Admin::BaseController
 
-    before_action :get_design
+    before_action :get_design, :get_collection
 
     def index
     end
@@ -22,7 +22,7 @@ module Admin
     end
 
     def destroy
-      @design_image = Image.find(params[:id])
+      @design_image = DesignImage.find(params[:id])
       if @design_image.destroy!
         flash[:notice] = 'Image deleted.'
       else
@@ -43,6 +43,10 @@ module Admin
 
     def get_design
       @design = Design.friendly.find(params[:design_id])
+    end
+
+    def get_collection
+      @collection = @design.collection
     end
 
     def design_image_params
