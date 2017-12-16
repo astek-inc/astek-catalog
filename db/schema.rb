@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011172025) do
+ActiveRecord::Schema.define(version: 20171215223017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,11 +47,36 @@ ActiveRecord::Schema.define(version: 20171011172025) do
   add_index "collections", ["row_order"], name: "index_collections_on_row_order", using: :btree
   add_index "collections", ["slug"], name: "index_collections_on_slug", unique: true, using: :btree
 
+  create_table "collections_websites", id: false, force: :cascade do |t|
+    t.integer "collection_id", null: false
+    t.integer "website_id",    null: false
+  end
+
+  add_index "collections_websites", ["collection_id", "website_id"], name: "index_collections_websites_on_collection_id_and_website_id", using: :btree
+  add_index "collections_websites", ["website_id", "collection_id"], name: "index_collections_websites_on_website_id_and_collection_id", using: :btree
+
+  create_table "color_ways", force: :cascade do |t|
+    t.integer  "design_id"
+    t.string   "name"
+    t.text     "sku"
+    t.string   "slug"
+    t.integer  "row_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "color_ways", ["deleted_at"], name: "index_color_ways_on_deleted_at", using: :btree
+  add_index "color_ways", ["row_order"], name: "index_color_ways_on_row_order", using: :btree
+  add_index "color_ways", ["sku"], name: "index_color_ways_on_sku", using: :btree
+
   create_table "designs", force: :cascade do |t|
     t.integer  "collection_id"
     t.string   "name"
     t.text     "description"
     t.text     "keywords"
+    t.datetime "available_on"
+    t.datetime "expires_on"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.datetime "deleted_at"
@@ -126,5 +151,15 @@ ActiveRecord::Schema.define(version: 20171011172025) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
+
+  create_table "websites", force: :cascade do |t|
+    t.string   "name"
+    t.string   "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
 
 end
