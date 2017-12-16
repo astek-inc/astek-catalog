@@ -62,7 +62,7 @@ module Admin
     end
 
     def design_params
-      params.require(:design).permit(:name, :description, :keywords, :slug, :collection_id, :image, :image_cache)
+      params.require(:design).permit(:name, :description, :keywords, :slug, :collection_id, :available_on, :expires_on)
     end
 
   end

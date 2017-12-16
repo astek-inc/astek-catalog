@@ -4,6 +4,19 @@ $(function(){
     }, 5000);
 });
 
+// Datepicker
+handle_date_picker_fields = function(){
+    $('.datepicker').datepicker({
+        dateFormat: 'MM d, yy',
+        showOn: 'focus'
+    });
+};
+
+$(function() {
+    handle_date_picker_fields();
+});
+//
+
 $(function(){
     $('td.actions a[data-method="delete"]').click(function(){
         return confirm('Are you sure you want to delete this record?');
