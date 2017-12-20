@@ -61,6 +61,8 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
+    data_migrate (3.0.1)
+      rails (>= 4.0)
     devise (4.3.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -238,6 +240,7 @@ DEPENDENCIES
   cancancan
   carrierwave (~> 1.0)
   coffee-rails (~> 4.0.0)
+  data_migrate
   devise
   devise-bootstrap-views
   figaro
