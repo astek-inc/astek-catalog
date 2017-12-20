@@ -7,6 +7,8 @@ class Website < ActiveRecord::Base
   has_and_belongs_to_many :collections
 
   validates :name, presence: true
-  validates :domain, presence: true
+  validates :domain, presence: true, uniqueness: { scope: :deleted_at }
+
+  default_scope { order(name: :asc) }
 
 end
