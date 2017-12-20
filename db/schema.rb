@@ -70,6 +70,12 @@ ActiveRecord::Schema.define(version: 20171215223017) do
   add_index "color_ways", ["row_order"], name: "index_color_ways_on_row_order", using: :btree
   add_index "color_ways", ["sku"], name: "index_color_ways_on_sku", using: :btree
 
+  create_table "data_migrations", id: false, force: :cascade do |t|
+    t.string "version", null: false
+  end
+
+  add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
+
   create_table "designs", force: :cascade do |t|
     t.integer  "collection_id"
     t.string   "name"
