@@ -18,6 +18,8 @@ Rails.application.routes.draw do
 
     resources :websites
 
+    resources :properties
+
     resources :categories, concerns: :paginatable do
       post :update_row_order, on: :collection
       resources :category_images, only: [:index, :new, :create, :destroy], controller: :category_images do
@@ -39,7 +41,12 @@ Rails.application.routes.draw do
 
     resources :designs, concerns: :paginatable do
 
-      resources :design_images, only: [:index, :new, :create, :destroy], controller: :design_images do
+      resources :design_properties  do #, controller: :design_properties do
+        put :assign, on: :collection
+        post :update_row_order, on: :collection
+      end
+
+      resources :design_images, only: [:index, :new, :create, :destroy] do #, controller: :design_images do
         post :update_row_order, on: :collection
       end
 
@@ -49,7 +56,7 @@ Rails.application.routes.draw do
     end
 
     resources :color_ways, concerns: :paginatable do
-      resources :color_way_images, only: [:index, :new, :create, :destroy], controller: :color_way_images do
+      resources :color_way_images, only: [:index, :new, :create, :destroy] do #, controller: :color_way_images do
         post :update_row_order, on: :collection
       end
     end

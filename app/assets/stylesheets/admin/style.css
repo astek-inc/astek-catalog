@@ -22,3 +22,22 @@ div.form-group div.image {
 .checkbox-inline label {
     font-weight: 400;
 }
+
+
+
+.ui-autocomplete {
+    list-style: none;
+    padding: 0;
+}
+
+.ui-autocomplete li {
+    margin: 6px 0;
+}
+
+.ui-autocomplete li {
+    padding-left: 1em;
+}
+
+/*.ui-helper-hidden-accessible {*/
+    /*display: none;*/
+/*}*/

@@ -1,0 +1,19 @@
+<tr class="design_property fields" id="<%= f.object_id %>" data-item-id="<%= f.object.id %>" data-hook="design_property" data-index="<%= f.index %>">
+  <td class="move-handle text-center">
+    <% if f.object.persisted? %>
+        <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+        <%= f.hidden_field :id %>
+    <% end %>
+  </td>
+  <td class="property_name">
+    <%= f.text_field :property_name, class: 'autocomplete form-control' %>
+  </td>
+  <td class="value">
+    <%= f.text_field :value, class: "form-control" %>
+  </td>
+  <td class="actions actions-1">
+    <% if f.object.persisted? %>
+        <%= delete_button admin_design_design_property_path @design, f.object %>
+    <% end %>
+  </td>
+</tr>

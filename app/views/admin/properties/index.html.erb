@@ -1,0 +1,48 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, link_to('Properties', admin_properties_path) %>
+<% end %>
+
+<% content_for :header_right do %>
+    <%= link_to 'New Property', new_admin_property_path, class: 'btn btn-default' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div do %>
+
+  <% if @properties.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Presentation</th>
+            <th>Scope</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @properties.each do |property| %>
+              <tr class="property_property fields" data-item-id=<%= "#{property.id}" %> data-hook="property">
+                <td><%= property.name %></td>
+                <td><%= property.presentation %></td>
+                <td><%= property.klass_scope %></td>
+                <td class="actions">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <%= edit_button edit_admin_property_path property %>
+                    <%= delete_button admin_property_path property %>
+                  </div>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+  <% else %>
+    <p>No properties found. <%= link_to 'Create one.', new_admin_property_path %></p>
+  <% end %>
+
+<% end %>

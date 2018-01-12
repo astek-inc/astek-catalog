@@ -38,16 +38,21 @@ $('table.sortable').ready(function(){
         helper: fixHelper,
         update: function(event, ui) {
             url = $(ui.item).closest('table.sortable').data('sortable-link');
-            console.log(url);
+            //console.log(url);
 
+            // position_start is used with paginated data where we only see
+            // a portion of the total number of rows on a given page
             position_start = $(ui.item).closest('table.sortable').data('position-start');
-            console.log(position_start);
+            if (typeof position_start === 'undefined') {
+                position_start = 0;
+            }
+            // console.log(position_start);
 
             item_id = ui.item.data('item-id');
-            console.log(item_id);
+            // console.log(item_id);
 
             position = ui.item.index() + position_start;
-            console.log(position);
+            // console.log(position);
 
             $.ajax({
                 type: 'POST',

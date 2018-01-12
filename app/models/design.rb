@@ -14,4 +14,9 @@ class Design < ActiveRecord::Base
   has_many :color_ways
   has_many :design_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
+  has_many :design_properties, dependent: :destroy, inverse_of: :design
+  has_many :properties, through: :design_properties
+
+  accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
+
 end

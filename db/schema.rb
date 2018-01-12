@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171215223017) do
+ActiveRecord::Schema.define(version: 20171219182339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,19 @@ ActiveRecord::Schema.define(version: 20171215223017) do
 
   add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
 
+  create_table "design_properties", force: :cascade do |t|
+    t.integer  "design_id"
+    t.integer  "property_id"
+    t.string   "value"
+    t.integer  "row_order"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "design_properties", ["design_id", "property_id"], name: "index_design_properties_on_design_id_and_property_id", using: :btree
+  add_index "design_properties", ["property_id", "design_id"], name: "index_design_properties_on_property_id_and_design_id", using: :btree
+  add_index "design_properties", ["row_order"], name: "index_design_properties_on_row_order", using: :btree
+
   create_table "designs", force: :cascade do |t|
     t.integer  "collection_id"
     t.string   "name"
@@ -121,6 +134,17 @@ ActiveRecord::Schema.define(version: 20171215223017) do
   add_index "images", ["owner_id"], name: "index_images_on_owner_id", using: :btree
   add_index "images", ["row_order"], name: "index_images_on_row_order", using: :btree
   add_index "images", ["type"], name: "index_images_on_type", using: :btree
+
+  create_table "properties", force: :cascade do |t|
+    t.string   "name"
+    t.string   "presentation"
+    t.string   "klass_scope"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "properties", ["klass_scope"], name: "index_properties_on_klass_scope", using: :btree
+  add_index "properties", ["name"], name: "index_properties_on_name", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"

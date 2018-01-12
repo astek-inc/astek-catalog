@@ -12,5 +12,8 @@
  *
  *= require_tree .
  *= require_self
+ *= require jquery-ui/core
+ *= require jquery-ui/theme
  *= require jquery-ui/datepicker
+ *= require jquery-ui/autocomplete
  */

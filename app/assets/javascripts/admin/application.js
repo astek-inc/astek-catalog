@@ -14,5 +14,6 @@
 //= require jquery_ujs
 //= require jquery-ui/widgets/sortable
 //= require jquery-ui/widgets/datepicker
+//= require jquery-ui/widgets/autocomplete
 //= #require turbolinks
 //= require_tree .

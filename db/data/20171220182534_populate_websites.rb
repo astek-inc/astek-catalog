@@ -18,4 +18,5 @@ class PopulateWebsites < ActiveRecord::Migration
     end
     # raise ActiveRecord::IrreversibleMigration
   end
+
 end

@@ -1,0 +1,49 @@
+<%= javascript_tag do %>
+  var properties = <%= raw(@properties.to_json) %>;
+<% end %>
+
+<% content_for :header_left do %>
+    <%= content_tag :h1, [
+        link_to('Collections', admin_collections_path),
+        link_to(@collection.name, edit_admin_collection_path(@collection)),
+        link_to('Designs', admin_collection_designs_path(@collection)),
+        link_to(@design.name, edit_admin_design_path(@design)),
+        'Properties'
+    ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Design Property', '', class: 'btn btn-default', id: 'new-design-property' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+  <%= form_for @design, url: assign_admin_design_design_properties_path(@design), method: :put do |f| %>
+      <fieldset>
+        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_design_design_properties_path(@design) %>">
+          <thead>
+          <tr data-hook="design_properties_header">
+            <th colspan="2">Property</th>
+            <th>Value</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+          <tbody id="design-properties" data-hook>
+          <%= f.fields_for :design_properties do |dp_fields| %>
+              <%= render 'design_property_fields', f: dp_fields %>
+          <% end %>
+          </tbody>
+        </table>
+
+        <%= content_tag :div, class: 'form-actions' do %>
+            <%= button_tag 'Submit', class: 'btn btn-primary' %>
+            <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{edit_admin_design_path(@design)}'".html_safe %>
+        <% end %>
+      </fieldset>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/designs/subnav', locals: { current: 'properties' } %>
+<% end %>
