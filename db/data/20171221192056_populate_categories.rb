@@ -1,14 +1,23 @@
 class PopulateCategories < ActiveRecord::Migration
 
   CATEGORIES = [
-      { name: 'Astek Digital', description: 'Astek digitals are digital!', keywords: 'Wallcovering, wall, covering, digital' },
-      { name: 'Naturals', description: 'Naturals are natural!', keywords: 'Wallcovering, wall, covering, natural' },
-      { name: 'Specialty', description: 'Specialty wallcoverings are special!', keywords: 'Wallcovering, wall, covering, specialty' },
+      { name: 'Contact Paper', description: '', keywords: '', websites: ['designyourwall.com'] },
+      { name: 'Decals', description: '', keywords: '', websites: ['designyourwall.com'] },
+      { name: 'Designers', description: '', keywords: '', websites: ['designyourwall.com'] },
+      { name: 'Digital Collections', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Naturals', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Residential', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Specialty', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Window Film', description: '', keywords: '', websites: ['designyourwall.com'] }
   ]
 
   def self.up
     CATEGORIES.each do |cat|
-      Category.create!(cat)
+      websites = cat.delete(:websites)
+      category = Category.create!(cat)
+      websites.each do |w|
+        category.websites << Website.find_by(domain: w)
+      end
     end
   end
 
@@ -16,6 +25,5 @@ class PopulateCategories < ActiveRecord::Migration
     CATEGORIES.each do |cat|
       Category.find_by(name: cat[:name]).destroy!
     end
-    # raise ActiveRecord::IrreversibleMigration
   end
 end

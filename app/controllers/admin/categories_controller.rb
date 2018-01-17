@@ -1,6 +1,8 @@
 module Admin
   class CategoriesController < BaseController
 
+    before_action :load_websites, only: [:new, :edit]
+
     def index
       @categories = Category.rank(:row_order).page params[:page]
       @position_start = (@categories.current_page.present? ? @categories.current_page - 1 : 0) * @categories.limit_value
@@ -48,11 +50,15 @@ module Admin
 
     def destroy
       Category.friendly.find(params[:id]).destroy
-      flash[:notice] = "Category destroyed."
+      flash[:notice] = 'Category destroyed.'
       redirect_to(action: 'index')
     end
 
     private
+
+    def load_websites
+      @websites = Website.all
+    end
 
     def category_params
       params.require(:category).permit(:name, :description, :keywords, :slug) #, image_attributes: [:file, :imageable_id, :image_type])

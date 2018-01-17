@@ -12,5 +12,6 @@ class Category < ActiveRecord::Base
 
   has_many :collections, inverse_of: :category
   has_many :category_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_and_belongs_to_many :websites
 
 end
