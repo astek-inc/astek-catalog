@@ -1,7 +1,7 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
-    before_action :set_websites, only: [:new, :edit]
+    before_action :load_websites, only: [:new, :edit]
 
     def index
       @collections = Collection.rank(:row_order).page params[:page]
@@ -56,7 +56,7 @@ module Admin
 
     private
 
-    def set_websites
+    def load_websites
       @websites = Website.all
     end
 
