@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171219182339) do
+ActiveRecord::Schema.define(version: 20180118235116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,14 @@ ActiveRecord::Schema.define(version: 20171219182339) do
   add_index "categories", ["deleted_at"], name: "index_categories_on_deleted_at", using: :btree
   add_index "categories", ["row_order"], name: "index_categories_on_row_order", using: :btree
   add_index "categories", ["slug"], name: "index_categories_on_slug", unique: true, using: :btree
+
+  create_table "categories_websites", id: false, force: :cascade do |t|
+    t.integer "category_id", null: false
+    t.integer "website_id",  null: false
+  end
+
+  add_index "categories_websites", ["category_id", "website_id"], name: "index_categories_websites_on_category_id_and_website_id", using: :btree
+  add_index "categories_websites", ["website_id", "category_id"], name: "index_categories_websites_on_website_id_and_category_id", using: :btree
 
   create_table "collections", force: :cascade do |t|
     t.integer  "category_id"
@@ -107,6 +115,14 @@ ActiveRecord::Schema.define(version: 20171219182339) do
   add_index "designs", ["row_order"], name: "index_designs_on_row_order", using: :btree
   add_index "designs", ["slug"], name: "index_designs_on_slug", unique: true, using: :btree
 
+  create_table "designs_styles", id: false, force: :cascade do |t|
+    t.integer "design_id", null: false
+    t.integer "style_id",  null: false
+  end
+
+  add_index "designs_styles", ["design_id", "style_id"], name: "index_designs_styles_on_design_id_and_style_id", using: :btree
+  add_index "designs_styles", ["style_id", "design_id"], name: "index_designs_styles_on_style_id_and_design_id", using: :btree
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -156,6 +172,12 @@ ActiveRecord::Schema.define(version: 20171219182339) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
+
+  create_table "styles", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

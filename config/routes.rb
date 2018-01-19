@@ -18,6 +18,8 @@ Rails.application.routes.draw do
 
     resources :websites
 
+    resources :styles
+
     resources :properties
 
     resources :categories, concerns: :paginatable do
