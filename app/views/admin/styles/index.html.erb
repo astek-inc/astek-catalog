@@ -1,0 +1,44 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, link_to('Styles', admin_styles_path) %>
+<% end %>
+
+<% content_for :header_right do %>
+    <%= link_to 'New Style', new_admin_style_path, class: 'btn btn-default' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div do %>
+
+  <% if @styles.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @styles.each do |style| %>
+              <tr class="style_property fields" data-item-id=<%= "#{style.id}" %> data-hook="style">
+                <td><%= style.name %></td>
+                <td class="actions">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <%= edit_button edit_admin_style_path style %>
+                    <%= delete_button admin_style_path style %>
+                  </div>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+  <% else %>
+    <p>No styles found. <%= link_to 'Create one.', new_admin_style_path %></p>
+  <% end %>
+
+<% end %>
