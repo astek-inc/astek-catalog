@@ -19,7 +19,7 @@
             <th class="move-handle"></th>
             <th>Name</th>
             <th>Description</th>
-            <th>Visibility</th>
+            <!--<th>Image</th>-->
             <th class="actions"></th>
           </tr>
           </thead>
@@ -32,7 +32,7 @@
                 </td>
                 <td><%= category.name %></td>
                 <td><%= truncate(sanitize(category.description), length: 140) %></td>
-                <td><%= category.websites.map { |w| w.name }.join(', ') %></td>
+                <!--<td></td>-->
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                     <%= edit_button edit_admin_category_path category %>
