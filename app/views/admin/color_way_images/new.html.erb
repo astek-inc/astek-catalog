@@ -19,10 +19,7 @@
             <% end %>
         <% end %>
 
-        <%= content_tag :div, class: 'form-actions' do %>
-            <%= button_tag 'Submit', class: 'btn btn-primary' %>
-            <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{admin_color_way_color_way_images_path(@color_way)}'".html_safe %>
-        <% end %>
+        <%= form_buttons admin_color_way_color_way_images_path(@color_way) %>
     <% end %>
 <% end %>
 

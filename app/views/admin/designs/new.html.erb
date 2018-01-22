@@ -1,29 +1,26 @@
 <% content_for :header_left do %>
-    <%= content_tag(:h1, [
-        link_to('Collections', admin_collections_path),
-        link_to(@collection.name, edit_admin_collection_path(@collection)),
-        link_to('Designs', admin_collection_designs_path(@collection)),
-        'New Design'
-      ].join(' / ').html_safe) %>
+  <%= content_tag(:h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      link_to('Designs', admin_collection_designs_path(@collection)),
+      'New Design'
+  ].join(' / ').html_safe) %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'row' do %>
-    <%= content_tag :div, class: 'col-md-9' do %>
-        <%= form_for [:admin, @collection, @design], html: { multipart: true } do |f| %>
-            <%= field_set_tag nil, 'data-hook': 'design_edit' do %>
-                <%= render partial: 'form', locals: { f: f } %>
-            <% end %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, @collection, @design], html: { multipart: true } do |f| %>
+      <%= field_set_tag nil, 'data-hook': 'design_edit' do %>
+        <%= render partial: 'form', locals: { f: f } %>
+      <% end %>
 
-            <%= content_tag :div, class: 'form-actions' do %>
-                <%= button_tag 'Submit', class: 'btn btn-primary' %>
-                <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{admin_collection_designs_path(@collection)}'".html_safe %>
-            <% end %>
-        <% end %>
+      <%= form_buttons admin_collection_designs_path(@collection) %>
     <% end %>
+  <% end %>
 
-    <%= content_tag :div, class: 'col-md-3' do %>
-        <%= render partial: 'admin/collections/subnav', locals: { current: 'designs' } %>
-    <% end %>
+  <%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/collections/subnav', locals: { current: 'designs' } %>
+  <% end %>
 <% end %>

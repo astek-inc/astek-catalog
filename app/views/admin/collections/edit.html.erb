@@ -11,10 +11,7 @@
                 <%= render partial: 'form', locals: { f: f } %>
             <% end %>
 
-            <%= content_tag :div, class: 'form-actions' do %>
-                <%= button_tag 'Submit', class: 'btn btn-primary' %>
-                <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{admin_collections_path}'".html_safe %>
-            <% end %>
+            <%= form_buttons admin_collections_path %>
         <% end %>
     <% end %>
 
