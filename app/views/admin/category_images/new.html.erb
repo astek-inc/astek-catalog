@@ -20,10 +20,7 @@
             <% end %>
         <% end %>
 
-        <%= content_tag :div, class: 'form-actions' do %>
-            <%= button_tag 'Submit', class: 'btn btn-primary' %>
-            <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{admin_category_category_images_path(@category)}'".html_safe %>
-        <% end %>
+        <%= form_buttons admin_category_category_images_path(@category) %>
     <% end %>
 <% end %>
 

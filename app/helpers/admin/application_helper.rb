@@ -13,6 +13,18 @@ module Admin
       link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' }), path, { method: :delete, class: 'btn btn-default', 'aria-label': 'Delete', title: 'Delete' })
     end
 
+    def form_buttons path
+      content_tag :div, submit_button + ' ' + cancel_button(path), class: 'form-actions'
+    end
+
+    def submit_button
+      button_tag('Submit', class: 'btn btn-primary')
+    end
+
+    def cancel_button path
+      link_to( 'Cancel', path, class: 'btn btn-default')
+    end
+
     # https://coderwall.com/p/jzofog/ruby-on-rails-flash-messages-with-bootstrap
     def flash_class level
       case level

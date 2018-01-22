@@ -36,10 +36,7 @@
           </tbody>
         </table>
 
-        <%= content_tag :div, class: 'form-actions' do %>
-            <%= button_tag 'Submit', class: 'btn btn-primary' %>
-            <%= button_tag 'Cancel', type: 'button', class: 'btn btn-default', onclick: "document.location.href='#{edit_admin_design_path(@design)}'".html_safe %>
-        <% end %>
+        <%= form_buttons edit_admin_design_path(@design) %>
       </fieldset>
   <% end %>
 <% end %>
