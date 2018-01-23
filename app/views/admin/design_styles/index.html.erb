@@ -1,0 +1,35 @@
+<% content_for :header_left do %>
+    <%= content_tag :h1, [
+        link_to('Collections', admin_collections_path),
+        link_to(@collection.name, edit_admin_collection_path(@collection)),
+        link_to('Designs', admin_collection_designs_path(@collection)),
+        @design.name
+    ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+      <%= form_tag admin_design_design_styles_path(@design) do %>
+        <%= content_tag :div, class: 'form-group' do %>
+
+          <%= collection_check_boxes(:design, :style_ids, @styles, :id, :name) do |cb| %>
+            <%= content_tag :div, class: 'checkbox' do %>
+              <%= cb.label do %>
+                <%= cb.check_box %>
+                <%= cb.text %>
+              <% end %>
+            <% end %>
+          <% end %>
+
+        <% end %>
+
+        <%= form_buttons admin_collection_designs_path(@collection) %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-3' do %>
+      <%= render partial: 'admin/designs/subnav', locals: { current: 'styles' } %>
+  <% end %>
+<% end %>
