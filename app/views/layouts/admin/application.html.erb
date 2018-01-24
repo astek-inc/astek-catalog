@@ -50,6 +50,7 @@
             <% main_div_class = 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' %>
             <%= content_tag :div, class: 'col-sm-3 col-md-2 sidebar' do %>
                 <%= content_tag :ul, class: 'nav nav-sidebar' do %>
+                    <%= content_tag :li, link_to('Users', admin_users_path) %>
                     <%= content_tag :li, link_to('Websites', admin_websites_path) %>
                     <%= content_tag :li, link_to('Properties', admin_properties_path) %>
                     <%= content_tag :li, link_to('Categories', admin_categories_path) %>
