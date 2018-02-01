@@ -10,7 +10,12 @@
     <%= f.text_field :sku, required: true, class: 'form-control' %>
 <% end %>
 
-<% if @color_way.persisted? %>
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :price_code, 'Price Code' %> <span class="required">*</span>
+  <%= f.text_field :price_code, required: true, class: 'form-control' %>
+<% end %>
+
+<% if @variant.persisted? %>
     <%= content_tag :div, class: ['form-group'] do %>
         <%= f.label :slug, 'Slug' %> <span class="required">*</span>
         <%= f.text_field :slug, required: true, class: 'form-control' %>

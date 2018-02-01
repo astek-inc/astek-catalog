@@ -10,5 +10,5 @@
 
 <%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :klass_scope, 'Scope' %> <span class="required">*</span>
-    <%= f.select :klass_scope, options_for_select(%w[ColorWay Design], @property.klass_scope), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <%= f.select :klass_scope, options_for_select(%w[Variant Design], @property.klass_scope), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
 <% end %>

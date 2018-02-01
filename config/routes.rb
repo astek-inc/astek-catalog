@@ -52,13 +52,13 @@ Rails.application.routes.draw do
         post :update_row_order, on: :collection
       end
 
-      resources :color_ways, concerns: :paginatable do
+      resources :variants, concerns: :paginatable do
         post :update_row_order, on: :collection
       end
     end
 
-    resources :color_ways, concerns: :paginatable do
-      resources :color_way_images, only: [:index, :new, :create, :destroy] do #, controller: :color_way_images do
+    resources :variants, concerns: :paginatable do
+      resources :variant_images, only: [:index, :new, :create, :destroy] do #, controller: :variant_images do
         post :update_row_order, on: :collection
       end
     end
@@ -81,7 +81,7 @@ Rails.application.routes.draw do
       # resources :collection_images, only: [:create, :destroy]
 
       resources :designs, only: [:index, :show] do #, :create, :update, :destroy] do
-        resources :color_ways, only: [:index, :show]
+        resources :variants, only: [:index, :show]
       end
       # resources :design_images, only: [:create, :destroy]
 

@@ -4,8 +4,8 @@
         link_to(@collection.name, edit_admin_collection_path(@collection)),
         link_to('Designs', admin_collection_designs_path(@collection)),
         link_to(@design.name, edit_admin_design_path(@design)),
-        link_to('Color Ways', admin_design_color_ways_path(@design)),
-        @color_way.name
+        link_to('Variants', admin_design_variants_path(@design)),
+        @variant.name
     ].join(' / ').html_safe %>
 <% end %>
 
@@ -13,12 +13,12 @@
 
 <%= content_tag :div, class: 'row' do %>
     <%= content_tag :div, class: 'col-md-9' do %>
-        <%= form_for [:admin, @design, @color_way], html: { multipart: true } do |f| %>
+        <%= form_for [:admin, @design, @variant], html: { multipart: true } do |f| %>
             <%= field_set_tag nil, 'data-hook': 'design_edit' do %>
                 <%= render partial: 'form', locals: { f: f } %>
             <% end %>
 
-            <%= form_buttons admin_design_color_ways_path(@design) %>
+            <%= form_buttons admin_design_variants_path(@design) %>
         <% end %>
     <% end %>
 

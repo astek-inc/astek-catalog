@@ -1,4 +1,4 @@
-class ColorWayImageUploader < ImageUploader
+class VariantImageUploader < ImageUploader
 
   # Create different versions of your uploaded files:
   version :large do

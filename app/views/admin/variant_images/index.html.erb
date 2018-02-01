@@ -4,24 +4,24 @@
         link_to(@collection.name, edit_admin_collection_path(@collection)),
         link_to('Designs', admin_collection_designs_path(@collection)),
         link_to(@design.name, edit_admin_design_path(@design)),
-        link_to('Color Ways', admin_design_color_ways_path(@design)),
-        link_to(@color_way.name, edit_admin_color_way_path(@color_way)),
+        link_to('Variants', admin_design_variants_path(@design)),
+        link_to(@variant.name, edit_admin_variant_path(@variant)),
         'Images'
     ].join(' / ').html_safe %>
 <% end %>
 
 <% content_for :header_right do %>
-    <%= link_to 'New Image', new_admin_color_way_color_way_image_path(@color_way), class: 'btn btn-default' %>
+    <%= link_to 'New Image', new_admin_variant_variant_image_path(@variant), class: 'btn btn-default' %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'col-md-9' do %>
 
-  <% if @color_way.color_way_images.any? %>
+  <% if @variant.variant_images.any? %>
 
       <div class="table-responsive">
-        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_color_way_color_way_images_path %>" data-position-start="<%= @position_start %>">
+        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_variant_variant_images_path %>" data-position-start="<%= @position_start %>">
           <thead>
           <tr>
             <th class="move-handle"></th>
@@ -31,8 +31,8 @@
           </thead>
 
           <tbody>
-          <% @color_way.color_way_images.each do |image| %>
-              <tr class="color_way_image fields" data-item-id="<%= image.id %>" data-hook="color_way_image">
+          <% @variant.variant_images.each do |image| %>
+              <tr class="variant_image fields" data-item-id="<%= image.id %>" data-hook="variant_image">
                 <td class="move-handle text-center">
                   <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                 </td>
@@ -40,7 +40,7 @@
 
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                    <%= delete_button admin_color_way_color_way_image_path @color_way, image %>
+                    <%= delete_button admin_variant_variant_image_path @variant, image %>
                   </div>
                 </td>
               </tr>
@@ -50,11 +50,11 @@
       </div>
 
   <% else %>
-      <p>No images found. <%= link_to 'Create one.', new_admin_color_way_color_way_image_path %></p>
+      <p>No images found. <%= link_to 'Create one.', new_admin_variant_variant_image_path %></p>
   <% end %>
 
 <% end %>
 
 <%= content_tag :div, class: 'col-md-3' do %>
-    <%= render partial: 'admin/color_ways/subnav', locals: { current: 'images' } %>
+    <%= render partial: 'admin/variants/subnav', locals: { current: 'images' } %>
 <% end %>

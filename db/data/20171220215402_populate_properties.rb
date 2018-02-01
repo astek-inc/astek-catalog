@@ -1,7 +1,7 @@
 class PopulateProperties < ActiveRecord::Migration
 
   PROPERTIES = [
-      { name: 'color', presentation: 'Color', klass_scope: 'ColorWay' },
+      { name: 'color', presentation: 'Color', klass_scope: 'Variant' },
       { name: 'roll width', presentation: 'Roll width', klass_scope: 'Design' },
       { name: 'roll length', presentation: 'Roll length', klass_scope: 'Design' },
       { name: 'repeat width', presentation: 'Repeat Width', klass_scope: 'Design' },

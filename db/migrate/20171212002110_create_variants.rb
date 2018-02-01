@@ -1,9 +1,10 @@
-class CreateColorWays < ActiveRecord::Migration
+class CreateVariants < ActiveRecord::Migration
   def change
-    create_table :color_ways do |t|
+    create_table :variants do |t|
       t.integer :design_id
       t.string :name
       t.text :sku, index: true
+      t.text :price_code
       t.string :slug, unique: true
       t.integer :row_order, index: true
       t.timestamps null: false
