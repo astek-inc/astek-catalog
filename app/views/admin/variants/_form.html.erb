@@ -1,6 +1,11 @@
 <%= f.hidden_field :design_id, value: @design.id %>
 
 <%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :variant_type, 'Type' %> <span class="required">*</span>
+  <%= f.select :variant_type, options_for_select(Variant::TYPES.map { |t| [t[:presentation], t[:name]] }, @variant.variant_type), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :name, 'Name' %> <span class="required">*</span>
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>
