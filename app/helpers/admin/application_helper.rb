@@ -25,6 +25,11 @@ module Admin
       link_to( 'Cancel', path, class: 'btn btn-default')
     end
 
+    def subnav_link label, icon, path, state, current
+      text = content_tag(:span, nil, { class: 'glyphicon glyphicon-'+icon, 'aria-hidden': 'true' }) + ' ' + label
+      link_to text.html_safe, path, { class: current == state ? 'list-group-item active' : 'list-group-item' }
+    end
+
     # https://coderwall.com/p/jzofog/ruby-on-rails-flash-messages-with-bootstrap
     def flash_class level
       case level
