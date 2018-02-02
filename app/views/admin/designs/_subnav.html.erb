@@ -1,6 +1,6 @@
 <div class="list-group">
-  <%= link_to 'Details', edit_admin_collection_design_path(@collection, @design), { class: current == 'details' ? 'list-group-item active' : 'list-group-item' } %>
-  <%= link_to 'Properties', admin_design_design_properties_path(@design), { class: current == 'properties' ? 'list-group-item active' : 'list-group-item' } %>
-  <%= link_to 'Images', admin_design_design_images_path(@design), { class: current == 'images' ? 'list-group-item active' : 'list-group-item' } %>
-  <%= link_to 'Variants', admin_design_variants_path(@design), { class: current == 'variants' ? 'list-group-item active' : 'list-group-item' } %>
+  <%= subnav_link 'Details', 'pencil', edit_admin_collection_design_path(@collection, @design), 'details', current %>
+  <%= subnav_link 'Properties', 'list-alt', admin_design_design_properties_path(@design), 'properties', current %>
+  <%= subnav_link 'Images', 'picture', admin_design_design_images_path(@design), 'images', current %>
+  <%= subnav_link 'Variants', 'th-large', admin_design_variants_path(@design), 'variants', current %>
 </div>
