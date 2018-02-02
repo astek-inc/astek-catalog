@@ -18,7 +18,7 @@ module Admin
     end
 
     def submit_button
-      button_tag('Submit', class: 'btn btn-primary')
+      button_tag('Submit', class: 'btn btn-success')
     end
 
     def cancel_button path

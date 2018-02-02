@@ -7,7 +7,7 @@ div.page-header h1 {
 }
 
 div.page-header .header-right {
-    margin-top: 25px;
+    margin-top: 15px;
     text-align: right;
 }
 
@@ -41,3 +41,7 @@ div.form-group div.image {
 /*.ui-helper-hidden-accessible {*/
     /*display: none;*/
 /*}*/
+
+div.form-actions > button {
+    margin-right: 10px;
+}
