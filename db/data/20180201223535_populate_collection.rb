@@ -1,9 +1,13 @@
 class PopulateCollection < ActiveRecord::Migration
   def up
-    require 'pp'
 
     category = Category.find_by(name: 'Digital Collections')
-    websites = Website.where(domain: ['designyourwall.com', 'astekwallcovering.com'])
+    websites = Website.where(domain: %w[designyourwall.com astekwallcovering.com])
+    variant_data = [
+        {name: 'Lumen - Ash', sku: 'AD367-1', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Ash_web.jpg'},
+        {name: 'Lumen - Nova', sku: 'AD367-2', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Nova_web.jpg'},
+        {name: 'Lumen - Quasar', sku: 'AD367-3', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Quasar_web.jpg'}
+    ]
 
     collection = Collection.create({
       category: category,
@@ -21,15 +25,24 @@ class PopulateCollection < ActiveRecord::Migration
       available_on: Time.now
     })
 
-    variant = Variant.create({
-      design: design,
-      variant_type: 'color_way',
-      name: 'Lumen - Ash',
-      sku: 'AD367-1',
-      price_code: 'ABC-1'
-    })
+    variant_data.each do |data|
+      variant = Variant.create!({
+           design: design,
+           variant_type: 'color_way',
+           name: data[:name],
+           sku: data[:sku],
+           price_code: data[:price_code]
+       })
 
-    # raise
+      variant_image = VariantImage.new({
+           remote_file_url: data[:image_url],
+           type: 'VariantImage',
+           owner_id: variant.id
+       })
+
+      variant_image.save!
+    end
+
 
   end
 
