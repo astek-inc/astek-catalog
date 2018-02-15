@@ -24,6 +24,7 @@
                   <tr>
                     <th class="move-handle"></th>
                     <th>Name</th>
+                    <th>Type</th>
                     <th>Slug</th>
                     <th>SKU</th>
                     <th class="actions"></th>
@@ -37,6 +38,7 @@
                           <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                         </td>
                         <td><%= variant.name %></td>
+                        <td><%= Variant::TYPES.select{ |v| v[:name] == variant.variant_type }.first[:presentation] %></td>
                         <td><%= variant.slug %></td>
                         <td><%= variant.sku %></td>
                         <td class="actions">
