@@ -7,5 +7,7 @@ class CreateCollections < ActiveRecord::Migration
       t.text :keywords
       t.timestamps null: false
     end
+
+    add_foreign_key :collections, :categories
   end
 end

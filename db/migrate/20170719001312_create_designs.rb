@@ -9,5 +9,7 @@ class CreateDesigns < ActiveRecord::Migration
       t.datetime :expires_on
       t.timestamps null: false
     end
+
+    add_foreign_key :designs, :collections
   end
 end

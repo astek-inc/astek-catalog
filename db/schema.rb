@@ -175,23 +175,31 @@ ActiveRecord::Schema.define(version: 20171219182339) do
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
+  create_table "variant_types", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "variant_types", ["deleted_at"], name: "index_variant_types_on_deleted_at", using: :btree
+
   create_table "variants", force: :cascade do |t|
     t.integer  "design_id"
-    t.string   "variant_type"
+    t.integer  "variant_type_id"
     t.string   "name"
     t.text     "sku"
     t.text     "price_code"
     t.string   "slug"
     t.integer  "row_order"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
   end
 
   add_index "variants", ["deleted_at"], name: "index_variants_on_deleted_at", using: :btree
   add_index "variants", ["row_order"], name: "index_variants_on_row_order", using: :btree
   add_index "variants", ["sku"], name: "index_variants_on_sku", using: :btree
-  add_index "variants", ["variant_type"], name: "index_variants_on_variant_type", using: :btree
 
   create_table "websites", force: :cascade do |t|
     t.string   "name"
@@ -203,4 +211,8 @@ ActiveRecord::Schema.define(version: 20171219182339) do
 
   add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
 
+  add_foreign_key "collections", "categories"
+  add_foreign_key "designs", "collections"
+  add_foreign_key "variants", "designs"
+  add_foreign_key "variants", "variant_types"
 end

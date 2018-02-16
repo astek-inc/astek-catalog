@@ -25,10 +25,12 @@ class PopulateCollection < ActiveRecord::Migration
       available_on: Time.now
     })
 
+    variant_type = VariantType.find_by(name: 'Color Way')
+
     variant_data.each do |data|
       variant = Variant.create!({
            design: design,
-           variant_type: 'color_way',
+           variant_type: variant_type,
            name: data[:name],
            sku: data[:sku],
            price_code: data[:price_code]
