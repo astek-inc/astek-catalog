@@ -57,8 +57,6 @@ module Admin
 
     private
 
-    private
-
     def get_design
       @design = Design.friendly.find(params[:design_id])
     end
@@ -68,7 +66,7 @@ module Admin
     end
 
     def variant_params
-      params.require(:variant).permit(:variant_type, :name, :sku, :price_code, :keywords, :slug, :design_id)
+      params.require(:variant).permit(:variant_type_id, :name, :sku, :price_code, :keywords, :slug, :design_id)
     end
 
   end

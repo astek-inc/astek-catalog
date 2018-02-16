@@ -22,6 +22,8 @@ Rails.application.routes.draw do
 
     resources :properties
 
+    resources :variant_types, except: :show
+
     resources :categories, concerns: :paginatable do
       post :update_row_order, on: :collection
       resources :category_images, only: [:index, :new, :create, :destroy], controller: :category_images do
