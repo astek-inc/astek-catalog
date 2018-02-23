@@ -1,3 +1,7 @@
+div.sidebar {
+    top: 31px;
+}
+
 div.page-header {
     overflow: auto;
 }
