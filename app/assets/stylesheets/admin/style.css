@@ -1,5 +1,9 @@
 div.sidebar {
-    top: 31px;
+    top: 29px;
+}
+
+div.sidebar div#sidebar-menu div.nav-sidebar > a {
+    text-transform: uppercase;
 }
 
 div.page-header {

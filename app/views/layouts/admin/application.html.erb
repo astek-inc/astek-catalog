@@ -50,34 +50,35 @@
       <%= content_tag :div, id: 'sidebar-menu' do %>
         <%= content_tag :div, class: 'panel list-group nav-sidebar' do %>
 
-          <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-user pull-right')+' USERS', admin_users_path, class: 'list-group-item') %>
+          <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-user pull-right')+' Users', admin_users_path, class: 'list-group-item') %>
 
-          <a href="#" class="list-group-item" data-toggle="collapse" data-target="#configs" data-parent="#sidebar-menu">CONFIGURATION <span class="glyphicon glyphicon-wrench pull-right"></span></a>
+          <a href="#" class="list-group-item" data-toggle="collapse" data-target="#configs" data-parent="#sidebar-menu">Configuration <span class="glyphicon glyphicon-wrench pull-right"></span></a>
           <div id="configs" class="sublinks collapse">
             <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-chevron-right')+' Websites', admin_websites_path, class: 'list-group-item') %>
             <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-chevron-right')+' Variant Types', admin_variant_types_path, class: 'list-group-item') %>
             <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-chevron-right')+' Properties', admin_properties_path, class: 'list-group-item') %>
           </div>
-          <a href="#" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#sidebar-menu">TASKS <span class="glyphicon glyphicon-tag pull-right"></span></a>
+          <a href="#" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#sidebar-menu">Tasks <span class="glyphicon glyphicon-tag pull-right"></span></a>
           <div id="sl" class="sublinks collapse">
             <a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> saved tasks</a>
             <a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> add new task</a>
           </div>
-          <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-folder-open pull-right')+' CATEGORIES', admin_categories_path, class: 'list-group-item') %>
-          <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-book pull-right')+' COLLECTIONS', admin_collections_path, class: 'list-group-item') %>
+          <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-folder-open pull-right')+' Categories', admin_categories_path, class: 'list-group-item') %>
+          <%= link_to(content_tag(:span, '', class: 'glyphicon glyphicon-book pull-right')+' Collections', admin_collections_path, class: 'list-group-item') %>
 
         <% end %>
       <%end %>
 
+
+    <% end %>
+
+    <%= content_tag :div, class: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' do %>
+
+      <%= content_tag :div, class: 'row' do %>
+        <%= yield %>
       <% end %>
 
-      <%= content_tag :div, class: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' do %>
-
-        <%= content_tag :div, class: 'row' do %>
-            <%= yield %>
-        <% end %>
-
-      <% end %>
+    <% end %>
 
   <% end %>
 <% end %>
