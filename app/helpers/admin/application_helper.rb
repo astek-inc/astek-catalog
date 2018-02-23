@@ -1,6 +1,18 @@
 module Admin
   module ApplicationHelper
 
+    def nav_link label, icon, path
+      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-'+icon+' pull-right')+' '+label, path, class: 'list-group-item')
+    end
+
+    def subnav_group_header label, icon, data_target
+      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-'+icon+' pull-right')+' '+label, '#', class: 'list-group-item', 'data-toggle': 'collapse', 'data-target': data_target, 'data-parent': '#sidebar-menu')
+    end
+
+    def nav_sublink label, path
+      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-chevron-right')+' '+label, path, class: 'list-group-item')
+    end
+
     def new_button object_name
       link_to 'New '+object_name.titleize, eval("new_admin_#{object_name}_path"), { class: 'btn btn-default' }
     end
