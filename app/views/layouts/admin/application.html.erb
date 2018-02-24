@@ -45,34 +45,41 @@
 
 <%= content_tag :div, class: 'container-fluid' do %>
   <%= content_tag :div, class: 'row' do %>
-    <%= content_tag :div, class: 'col-sm-3 col-md-2 sidebar' do %>
 
-      <%= content_tag :div, id: 'sidebar-menu' do %>
-        <%= content_tag :div, class: 'panel list-group nav-sidebar' do %>
-          <%= nav_link 'Users', 'user', admin_users_path %>
+    <% if user_signed_in? %>
+      <% main_div_class = 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' %>
 
-          <%= subnav_group_header 'Configuration', 'wrench', '#configs' %>
-          <div id="configs" class="sublinks collapse">
-            <%= nav_sublink 'Websites', admin_websites_path %>
-            <%= nav_sublink 'Variant Types', admin_variant_types_path %>
-            <%= nav_sublink 'Properties', admin_properties_path %>
-          </div>
+      <%= content_tag :div, class: 'col-sm-3 col-md-2 sidebar' do %>
 
-          <%#= subnav_group_header 'Tasks', 'tag', '#sl' %>
-          <!--<div id="sl" class="sublinks collapse">-->
-            <!--<a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> saved tasks</a>-->
-            <!--<a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> add new task</a>-->
-          <!--</div>-->
-          
-          <%= nav_link 'Categories', 'folder-open', admin_categories_path %>
-          <%= nav_link 'Collections', 'book', admin_collections_path %>
-        <% end %>
-      <%end %>
+        <%= content_tag :div, id: 'sidebar-menu' do %>
+          <%= content_tag :div, class: 'panel list-group nav-sidebar' do %>
+            <%= nav_link 'Users', 'user', admin_users_path %>
 
+            <%= subnav_group_header 'Configuration', 'wrench', '#configs' %>
+            <div id="configs" class="sublinks collapse">
+              <%= nav_sublink 'Websites', admin_websites_path %>
+              <%= nav_sublink 'Variant Types', admin_variant_types_path %>
+              <%= nav_sublink 'Properties', admin_properties_path %>
+            </div>
 
+            <%#= subnav_group_header 'Tasks', 'tag', '#sl' %>
+            <!--<div id="sl" class="sublinks collapse">-->
+              <!--<a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> saved tasks</a>-->
+              <!--<a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> add new task</a>-->
+            <!--</div>-->
+
+            <%= nav_link 'Categories', 'folder-open', admin_categories_path %>
+            <%= nav_link 'Collections', 'book', admin_collections_path %>
+          <% end %>
+        <%end %>
+
+      <% end %>
+
+    <% else %>
+      <% main_div_class = 'col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 main' %>
     <% end %>
 
-    <%= content_tag :div, class: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' do %>
+    <%= content_tag :div, class: main_div_class do %>
 
       <%= content_tag :div, class: 'row' do %>
         <%= yield %>
