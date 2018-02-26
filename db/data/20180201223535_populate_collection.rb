@@ -3,11 +3,6 @@ class PopulateCollection < ActiveRecord::Migration
 
     category = Category.find_by(name: 'Digital Collections')
     websites = Website.where(domain: %w[designyourwall.com astekwallcovering.com])
-    variant_data = [
-        {name: 'Lumen - Ash', sku: 'AD367-1', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Ash_web.jpg'},
-        {name: 'Lumen - Nova', sku: 'AD367-2', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Nova_web.jpg'},
-        {name: 'Lumen - Quasar', sku: 'AD367-3', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Quasar_web.jpg'}
-    ]
 
     collection = Collection.create({
       category: category,
@@ -17,39 +12,11 @@ class PopulateCollection < ActiveRecord::Migration
       websites: websites
     })
 
-    design = Design.create({
-      collection: collection,
-      name: 'Lumen',
-      description: 'Our printers use a digital process which is eco-friendly, allows for a wide range of printing effects, low print minimums, fast turnarounds and detailed control over output and quality.',
-      keywords: 'super, awesome, amazing, fantastic, incredible',
-      available_on: Time.now
-    })
-
-    variant_type = VariantType.find_by(name: 'Color Way')
-
-    variant_data.each do |data|
-      variant = Variant.create!({
-           design: design,
-           variant_type: variant_type,
-           name: data[:name],
-           sku: data[:sku],
-           price_code: data[:price_code]
-       })
-
-      variant_image = VariantImage.new({
-           remote_file_url: data[:image_url],
-           type: 'VariantImage',
-           owner_id: variant.id
-       })
-
-      variant_image.save!
-    end
-
-
   end
 
   def down
+
     Collection.find_by(name: 'Micrographia').destroy!
-    # raise ActiveRecord::IrreversibleMigration
+
   end
 end
