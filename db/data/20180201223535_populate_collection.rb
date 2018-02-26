@@ -1,4 +1,12 @@
 class PopulateCollection < ActiveRecord::Migration
+
+  IMAGE_URLS = %w[
+    http://www.astekwallcovering.com/sites/default/files/micrographia_slides1.jpg
+    http://www.astekwallcovering.com/sites/default/files/micrographia_slides2.jpg
+    http://www.astekwallcovering.com/sites/default/files/micrographia_slides3.jpg
+    http://www.astekwallcovering.com/sites/default/files/micrographia_slides4.jpg
+  ]
+
   def up
 
     category = Category.find_by(name: 'Digital Collections')
@@ -11,6 +19,14 @@ class PopulateCollection < ActiveRecord::Migration
       keywords: 'mural, abstract, metallic, artistic, painterly, sci-fi, science',
       websites: websites
     })
+
+    IMAGE_URLS.each do |url|
+      CollectionImage.create!({
+        remote_file_url: url,
+        type: 'CollectionImage',
+        owner_id: collection.id
+      })
+    end
 
   end
 
