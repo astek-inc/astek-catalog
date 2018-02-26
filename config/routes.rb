@@ -50,10 +50,6 @@ Rails.application.routes.draw do
         post :update_row_order, on: :collection
       end
 
-      resources :design_images, only: [:index, :new, :create, :destroy] do #, controller: :design_images do
-        post :update_row_order, on: :collection
-      end
-
       resources :variants, concerns: :paginatable do
         post :update_row_order, on: :collection
       end
