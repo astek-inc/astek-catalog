@@ -21,6 +21,10 @@ module Admin
       end
     end
 
+    def show
+      @collection_image = CollectionImage.find(params[:id])
+    end
+
     def destroy
       @collection_image = Image.find(params[:id])
       if @collection_image.destroy!

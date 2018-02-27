@@ -1,8 +1,9 @@
 <% content_for :header_left do %>
-    <%= content_tag :h1,
-                    [link_to('Collections', admin_collections_path),
-                     link_to(@collection.name, edit_admin_collection_path(@collection)),
-                     'Images'].join(' / ').html_safe %>
+    <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      'Images'
+    ].join(' / ').html_safe %>
 <% end %>
 
 <% content_for :header_right do %>
@@ -35,6 +36,7 @@
 
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <%= view_button admin_collection_collection_image_path @collection, image %>
                     <%= delete_button admin_collection_collection_image_path @collection, image %>
                   </div>
                 </td>

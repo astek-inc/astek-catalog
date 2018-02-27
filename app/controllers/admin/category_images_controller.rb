@@ -21,6 +21,10 @@ module Admin
       end
     end
 
+    def show
+      @category_image = CategoryImage.find(params[:id])
+    end
+
     def destroy
       @category_image = Image.find(params[:id])
       if @category_image.destroy!

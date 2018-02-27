@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 
     resources :categories, concerns: :paginatable do
       post :update_row_order, on: :collection
-      resources :category_images, only: [:index, :new, :create, :destroy], controller: :category_images do
+      resources :category_images, only: [:index, :new, :create, :show, :destroy], controller: :category_images do
         post :update_row_order, on: :collection
       end
     end
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     resources :collections, concerns: :paginatable do
       post :update_row_order, on: :collection
 
-      resources :collection_images, only: [:index, :new, :create, :destroy], controller: :collection_images do
+      resources :collection_images, only: [:index, :new, :create, :show, :destroy], controller: :collection_images do
         post :update_row_order, on: :collection
       end
 

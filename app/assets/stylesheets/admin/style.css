@@ -19,6 +19,10 @@ div.page-header .header-right {
     text-align: right;
 }
 
+td.move-handle {
+    width: 60px;
+}
+
 td.actions {
     text-align: right;
 }
