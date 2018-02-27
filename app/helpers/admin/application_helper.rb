@@ -22,7 +22,7 @@ module Admin
     end
 
     def delete_button path
-      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' }), path, { method: :delete, class: 'btn btn-default', 'aria-label': 'Delete', title: 'Delete' })
+      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' }), path, { method: :delete, class: 'btn btn-danger', 'aria-label': 'Delete', title: 'Delete' })
     end
 
     def form_buttons path
