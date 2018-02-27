@@ -21,6 +21,10 @@ module Admin
       link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-pencil', 'aria-hidden': 'true' }), path, { class: 'btn btn-default', 'aria-label': 'Edit', title: 'Edit' })
     end
 
+    def view_button path
+      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-eye-open', 'aria-hidden': 'true' }), path, { class: 'btn btn-default', 'aria-label': 'View', title: 'View' })
+    end
+
     def delete_button path
       link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' }), path, { method: :delete, class: 'btn btn-danger', 'aria-label': 'Delete', title: 'Delete' })
     end

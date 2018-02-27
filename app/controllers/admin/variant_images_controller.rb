@@ -21,6 +21,10 @@ module Admin
       end
     end
 
+    def show
+      @variant_image = VariantImage.find(params[:id])
+    end
+
     def destroy
       @variant_image = VariantImage.find(params[:id])
       if @variant_image.destroy!

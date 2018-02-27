@@ -56,7 +56,7 @@ Rails.application.routes.draw do
     end
 
     resources :variants, concerns: :paginatable do
-      resources :variant_images, only: [:index, :new, :create, :destroy] do #, controller: :variant_images do
+      resources :variant_images, only: [:index, :new, :create, :show, :destroy] do #, controller: :variant_images do
         post :update_row_order, on: :collection
       end
     end
