@@ -1,0 +1,21 @@
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :name, 'Name' %> <span class="required">*</span>
+    <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :domain, 'Domain' %> <span class="required">*</span>
+    <%= f.text_field :domain, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= content_tag :div, class: ['row'] do %>
+    <%= content_tag :div, class: ['col-md-9'] do %>
+      <%= f.label :token, 'Token' %> <span class="required">*</span>
+      <%= f.text_field :token, required: true, class: 'form-control' %>
+    <% end %>
+    <%= content_tag :div, class: ['col-md-3'], id: 'generate-token-button' do %>
+      <%= link_to('Generate Token', admin_clients_generate_token_path, class: 'btn btn-default', remote: true) %>
+    <% end %>
+  <% end %>
+<% end %>

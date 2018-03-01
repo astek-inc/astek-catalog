@@ -1,22 +1,22 @@
 class PopulateCategories < ActiveRecord::Migration
 
   CATEGORIES = [
-      { name: 'Contact Paper', description: '', keywords: '', websites: ['designyourwall.com'] },
-      { name: 'Decals', description: '', keywords: '', websites: ['designyourwall.com'] },
-      { name: 'Designers', description: '', keywords: '', websites: ['designyourwall.com'] },
-      { name: 'Digital Collections', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
-      { name: 'Naturals', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
-      { name: 'Residential', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
-      { name: 'Specialty', description: '', keywords: '', websites: ['astekwallcovering.com', 'designyourwall.com'] },
-      { name: 'Window Film', description: '', keywords: '', websites: ['designyourwall.com'] }
+      { name: 'Contact Paper', description: '', keywords: '', clients: ['designyourwall.com'] },
+      { name: 'Decals', description: '', keywords: '', clients: ['designyourwall.com'] },
+      { name: 'Designers', description: '', keywords: '', clients: ['designyourwall.com'] },
+      { name: 'Digital Collections', description: '', keywords: '', clients: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Naturals', description: '', keywords: '', clients: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Residential', description: '', keywords: '', clients: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Specialty', description: '', keywords: '', clients: ['astekwallcovering.com', 'designyourwall.com'] },
+      { name: 'Window Film', description: '', keywords: '', clients: ['designyourwall.com'] }
   ]
 
   def self.up
     CATEGORIES.each do |cat|
-      websites = cat.delete(:websites)
+      clients = cat.delete(:clients)
       category = Category.create!(cat)
-      websites.each do |w|
-        category.websites << Website.find_by(domain: w)
+      clients.each do |w|
+        category.clients << Client.find_by(domain: w)
       end
     end
   end

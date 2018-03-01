@@ -1,4 +1,6 @@
-class Website < ActiveRecord::Base
+class Client < ActiveRecord::Base
+
+  include Tokenable
 
   resourcify
 

@@ -18,7 +18,8 @@ Rails.application.routes.draw do
 
     resources :users
 
-    resources :websites
+    get 'clients/generate_token' => 'clients#generate_token'
+    resources :clients, except: :show
 
     resources :properties
 

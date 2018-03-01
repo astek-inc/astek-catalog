@@ -1,22 +1,23 @@
-class PopulateWebsites < ActiveRecord::Migration
+class PopulateClients < ActiveRecord::Migration
 
-  WEBSITES = [
+  CLIENTS = [
       { name: 'Astek Wallcovering', domain: 'astekwallcovering.com' },
       { name: 'Design Your Wall', domain: 'designyourwall.com' },
       { name: 'OnAir Design', domain: 'onairdesignla.com' },
   ]
 
   def self.up
-    WEBSITES.each do |w|
-      Website.create!(w)
+    CLIENTS.each do |w|
+      site = Client.new(w)
+      site.token = Client.generate_token
+      site.save!(w)
     end
   end
 
   def self.down
-    WEBSITES.each do |w|
-      Website.find_by(domain: w[:domain]).destroy!
+    CLIENTS.each do |w|
+      Client.find_by(domain: w[:domain]).destroy!
     end
-    # raise ActiveRecord::IrreversibleMigration
   end
 
 end

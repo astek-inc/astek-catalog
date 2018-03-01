@@ -31,13 +31,32 @@ ActiveRecord::Schema.define(version: 20171219182339) do
   add_index "categories", ["row_order"], name: "index_categories_on_row_order", using: :btree
   add_index "categories", ["slug"], name: "index_categories_on_slug", unique: true, using: :btree
 
-  create_table "categories_websites", id: false, force: :cascade do |t|
+  create_table "categories_clients", id: false, force: :cascade do |t|
     t.integer "category_id", null: false
-    t.integer "website_id",  null: false
+    t.integer "client_id",   null: false
   end
 
-  add_index "categories_websites", ["category_id", "website_id"], name: "index_categories_websites_on_category_id_and_website_id", using: :btree
-  add_index "categories_websites", ["website_id", "category_id"], name: "index_categories_websites_on_website_id_and_category_id", using: :btree
+  add_index "categories_clients", ["category_id", "client_id"], name: "index_categories_clients_on_category_id_and_client_id", using: :btree
+  add_index "categories_clients", ["client_id", "category_id"], name: "index_categories_clients_on_client_id_and_category_id", using: :btree
+
+  create_table "clients", force: :cascade do |t|
+    t.string   "name"
+    t.string   "domain"
+    t.string   "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "clients", ["deleted_at"], name: "index_clients_on_deleted_at", using: :btree
+
+  create_table "clients_collections", id: false, force: :cascade do |t|
+    t.integer "collection_id", null: false
+    t.integer "client_id",     null: false
+  end
+
+  add_index "clients_collections", ["client_id", "collection_id"], name: "index_clients_collections_on_client_id_and_collection_id", using: :btree
+  add_index "clients_collections", ["collection_id", "client_id"], name: "index_clients_collections_on_collection_id_and_client_id", using: :btree
 
   create_table "collections", force: :cascade do |t|
     t.integer  "category_id"
@@ -54,14 +73,6 @@ ActiveRecord::Schema.define(version: 20171219182339) do
   add_index "collections", ["deleted_at"], name: "index_collections_on_deleted_at", using: :btree
   add_index "collections", ["row_order"], name: "index_collections_on_row_order", using: :btree
   add_index "collections", ["slug"], name: "index_collections_on_slug", unique: true, using: :btree
-
-  create_table "collections_websites", id: false, force: :cascade do |t|
-    t.integer "collection_id", null: false
-    t.integer "website_id",    null: false
-  end
-
-  add_index "collections_websites", ["collection_id", "website_id"], name: "index_collections_websites_on_collection_id_and_website_id", using: :btree
-  add_index "collections_websites", ["website_id", "collection_id"], name: "index_collections_websites_on_website_id_and_collection_id", using: :btree
 
   create_table "data_migrations", id: false, force: :cascade do |t|
     t.string "version", null: false
@@ -200,16 +211,6 @@ ActiveRecord::Schema.define(version: 20171219182339) do
   add_index "variants", ["deleted_at"], name: "index_variants_on_deleted_at", using: :btree
   add_index "variants", ["row_order"], name: "index_variants_on_row_order", using: :btree
   add_index "variants", ["sku"], name: "index_variants_on_sku", using: :btree
-
-  create_table "websites", force: :cascade do |t|
-    t.string   "name"
-    t.string   "domain"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
-  end
-
-  add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
 
   add_foreign_key "collections", "categories"
   add_foreign_key "designs", "collections"
