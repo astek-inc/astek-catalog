@@ -1,0 +1,22 @@
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label(:name, 'Name <span class="required">*</span>'.html_safe) %>
+  <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label(:name, 'Description <span class="required">*</span>'.html_safe) %>
+  <%= f.text_area :description, rows: 9, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label(:name, 'Keywords <span class="required">*</span>'.html_safe) %>
+  <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+<% end %>
+
+<% if @substrate_category.persisted? %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label(:name, 'Slug <span class="required">*</span>'.html_safe) %>
+    <%= f.text_field :slug, required: true, class: 'form-control' %>
+  <% end %>
+<% end %>

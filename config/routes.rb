@@ -16,6 +16,10 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    resources :substrates, except: :show, concerns: :paginatable do
+      post :update_row_order, on: :collection
+    end
+
     resources :users
 
     get 'clients/generate_token' => 'clients#generate_token'
