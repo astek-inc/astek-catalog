@@ -13,7 +13,7 @@
 
 <%= content_tag :div, class: 'row' do %>
     <%= content_tag :div, class: 'col-md-9' do %>
-        <%= form_for [:admin, @design, @variant], html: { multipart: true } do |f| %>
+        <%= form_for [:admin, @design, @variant] do |f| %>
             <%= field_set_tag nil, 'data-hook': 'design_edit' do %>
                 <%= render partial: 'form', locals: { f: f } %>
             <% end %>
