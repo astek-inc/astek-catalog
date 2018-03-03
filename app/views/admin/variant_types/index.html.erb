@@ -1,3 +1,9 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Variant Types'
+  ].join(' / ').html_safe %>
+<% end %>
+
 <% content_for :header_right do %>
   <%= link_to 'New Variant Type', new_admin_variant_type_path, class: 'btn btn-success' %>
 <% end %>
@@ -5,7 +11,7 @@
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'row' do %>
-  <%= content_tag :div, class: 'col-md-9' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
 
     <% if @variant_types.any? %>
 
