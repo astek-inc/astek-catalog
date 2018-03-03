@@ -20,14 +20,14 @@ Rails.application.routes.draw do
       post :update_row_order, on: :collection
     end
 
+    resources :substrate_categories, except: :show
+
     resources :users
 
     get 'clients/generate_token' => 'clients#generate_token'
     resources :clients, except: :show
 
     resources :properties
-
-    resources :variant_types, except: :show
 
     resources :categories, concerns: :paginatable do
       post :update_row_order, on: :collection
@@ -65,6 +65,8 @@ Rails.application.routes.draw do
         post :update_row_order, on: :collection
       end
     end
+
+    resources :variant_types, except: :show
 
   end
 
