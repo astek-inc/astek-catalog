@@ -18,8 +18,9 @@ Rails.application.routes.draw do
 
     resources :substrates, except: :show, concerns: :paginatable do
       post :update_row_order, on: :collection
-      get :categories, on: :member
-      # post :update_categories, on: :member
+      resources :substrate_images, only: [:index, :new, :create, :show, :destroy] do
+        post :update_row_order, on: :collection
+      end
     end
 
     resources :substrate_categories, except: :show

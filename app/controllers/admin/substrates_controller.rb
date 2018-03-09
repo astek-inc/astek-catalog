@@ -1,7 +1,8 @@
 module Admin
   class SubstratesController < Admin::BaseController
 
-    before_action :set_substrate, only: [:edit, :update, :destroy, :categories, :update_categories]
+    before_action :set_substrate, only: [:edit, :update, :destroy]
+    before_action :set_substrate_categories, only: [:new, :edit]
 
     def index
       @substrates = Substrate.rank(:row_order).page params[:page]
@@ -40,23 +41,15 @@ module Admin
       @substrate.destroy
     end
 
-    def categories
-      @substrate_categories = SubstrateCategory.all
-    end
-
-    def update_categories
-
-    end
-
     private
 
     def set_substrate
       @substrate = Substrate.friendly.find(params[:id])
     end
 
-    # def set_substrate_categories
-    #   @substrate_categories = SubstrateCategory.all
-    # end
+    def set_substrate_categories
+      @substrate_categories = SubstrateCategory.all
+    end
 
     def substrate_params
       params.require(:substrate).permit(:name, :description, :keywords, substrate_category_ids: [])

@@ -20,3 +20,17 @@
     <%= f.text_field :slug, required: true, class: 'form-control' %>
   <% end %>
 <% end %>
+
+<%= field_set_tag nil, 'data-hook': 'substrate_edit' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Categories', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:substrate, :substrate_category_ids, @substrate_categories, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%#= debug @substrate.substrate_categories %>
+<% end %>
