@@ -1,5 +1,5 @@
 module Admin
-  class DesignsController < Admin::BaseController
+  class CollectionDesignsController < Admin::BaseController
 
     before_action :set_collection, except: [:edit]
 

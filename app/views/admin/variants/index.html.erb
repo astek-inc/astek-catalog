@@ -3,7 +3,7 @@
         link_to('Collections', admin_collections_path),
         link_to(@collection.name, edit_admin_collection_path(@collection)),
         link_to('Designs', admin_collection_designs_path(@collection)),
-        link_to(@design.name, edit_admin_design_path(@design)),
+        link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
         'Variants'
     ].join(' / ').html_safe %>
 <% end %>
@@ -62,6 +62,6 @@
     <% end %>
 
     <%= content_tag :div, class: 'col-md-3' do %>
-        <%= render partial: 'admin/designs/subnav', locals: { current: 'variants' } %>
+        <%= render partial: 'admin/collection_designs/subnav', locals: { current: 'variants' } %>
     <% end %>
 <% end %>
