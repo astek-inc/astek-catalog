@@ -1,0 +1,48 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Substrate Categories'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Substrate Category', new_admin_substrate_category_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <% if @substrate_categories.any? %>
+
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped sortable" data-hook>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @substrate_categories.each do |substrate_category| %>
+            <tr class="substrate_category fields" data-item-id=<%= "#{substrate_category.id}" %> data-hook="variant">
+              <td><%= substrate_category.name %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_substrate_category_path substrate_category %>
+                  <%= delete_button admin_substrate_category_path substrate_category %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+    <% else %>
+      <p>No substrate categories found. <%= link_to 'Create one.', new_admin_substrate_category_path %></p>
+    <% end %>
+
+  <% end %>
+<% end %>

@@ -25,6 +25,7 @@ td.move-handle {
 
 td.actions {
     text-align: right;
+    min-width: 120px;
 }
 
 div.form-group div.image {
