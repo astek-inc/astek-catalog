@@ -21,7 +21,7 @@
             <th class="move-handle"></th>
             <th>Name</th>
             <th>Description</th>
-            <th>Slug</th>
+            <!--<th>Slug</th>-->
             <th class="actions"></th>
           </tr>
           </thead>
@@ -34,8 +34,7 @@
               </td>
               <td><%= substrate.name %></td>
               <td><%= truncate(sanitize(substrate.description), length: 140) %></td>
-              <td><%= substrate.slug %></td>
-
+              <!--<td><%#= substrate.slug %></td>-->
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                   <%= edit_button edit_admin_substrate_path substrate %>
