@@ -53,6 +53,8 @@ Rails.application.routes.draw do
 
     resources :designs, only: [] do
 
+      get :search, on: :collection
+
       resources :design_properties  do
         put :assign, on: :collection
         post :update_row_order, on: :collection
