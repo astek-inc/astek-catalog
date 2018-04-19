@@ -51,10 +51,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :designs, only: [] do
-
-      get :search, on: :collection
-
+    resources :designs, only: [:index], concerns: :paginatable do
       resources :design_properties  do
         put :assign, on: :collection
         post :update_row_order, on: :collection

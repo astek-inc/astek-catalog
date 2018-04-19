@@ -1,0 +1,86 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Designs',
+      'Search'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <%= content_tag :div, class: 'panel panel-default' do %>
+      <%= content_tag :div, class: 'panel-body' do %>
+
+        <%= search_form_for [:admin, @q] do |f| %>
+
+          <%= content_tag :div, class: 'form-group col-md-5' do %>
+            <!--# Search if the name field contains...-->
+            <%= f.label :name_cont %>
+            <%= f.search_field :name_cont, class: 'form-control' %>
+          <% end %>
+
+          <%= content_tag :div, class: 'form-group col-md-5' do %>
+            <%= f.label :sku_cont %>
+            <%= f.search_field :variants_sku_cont, class: 'form-control'  %>
+          <% end %>
+
+          <!--# Search if an associated articles.title starts with...-->
+          <%#= f.label :articles_title_start %>
+          <%#= f.search_field :articles_title_start %>
+
+          <!--# Attributes may be chained. Search multiple attributes for one value...-->
+          <%#= f.label :name_or_description_or_email_or_articles_title_cont %>
+          <%#= f.search_field :name_or_description_or_email_or_articles_title_cont %>
+
+          <%= content_tag :div, class: 'form-group col-md-2', style: 'padding-top: 25px' do %>
+            <button type="submit" class="btn btn-default">Submit</button>
+          <% end %>
+        <% end %>
+      <% end %>
+
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <% if @designs.any? %>
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped" data-hook>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <!--<th>Image</th>-->
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @designs.each do |design| %>
+            <tr class="design fields" data-item-id=<%= "#{design.id}" %> data-hook="design">
+              <td><%= design.name %></td>
+              <td><%= truncate(sanitize(design.description), length: 140) %></td>
+              <!--<td></td>-->
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_collection_design_path design.collection, design %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+      <%= paginate @designs %>
+
+    <% else %>
+      <%= content_tag :div, class: 'col-md-12' do %>
+        <p>No designs found.</p>
+      <% end %>
+    <% end %>
+
+  <% end %>
+<% end %>

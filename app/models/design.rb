@@ -10,6 +10,8 @@ class Design < ActiveRecord::Base
 
   acts_as_paranoid
 
+  default_scope { order(created_at: :desc) }
+
   belongs_to :collection
   has_many :variants, dependent: :destroy
 

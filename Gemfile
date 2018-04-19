@@ -36,7 +36,7 @@ gem 'fog-aws'
 gem 'carrierwave', '~> 1.0'
 gem 'mini_magick'
 
-# # Authentication and permissions
+# Authentication and permissions
 gem 'devise-bootstrap-views'
 gem 'devise'
 gem 'omniauth-google-oauth2'
@@ -44,6 +44,9 @@ gem 'cancancan'
 gem 'rolify'
 
 gem 'data_migrate'
+
+# Search
+gem 'ransack', github: 'activerecord-hackery/ransack'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
