@@ -4,17 +4,17 @@ class PopulateVariants < ActiveRecord::Migration
       {
           design: 'Lumen',
           variants:[
-            {name: 'Lumen - Ash', sku: 'AD367-1', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Ash_web.jpg'},
-            {name: 'Lumen - Nova', sku: 'AD367-2', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Nova_web.jpg'},
-            {name: 'Lumen - Quasar', sku: 'AD367-3', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Quasar_web.jpg'}
+            {name: 'Lumen - Ash', sku: 'AD367-1', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Ash_web.jpg', colors: ['Red', 'Black and White']},
+            {name: 'Lumen - Nova', sku: 'AD367-2', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Nova_web.jpg', colors: ['Green', 'Black and White']},
+            {name: 'Lumen - Quasar', sku: 'AD367-3', price_code: 'ABC-1', image_url: 'https://s3.us-west-2.amazonaws.com/astek-product-images/Lumen_Quasar_web.jpg', colors: ['Indigo', 'Black and White']},
           ]
       },
       {
           design: 'Apparition',
           variants:[
-              {name: 'Apparition - Ethereal', sku: 'AD365-2', price_code: 'ABC-1', image_url: 'http://astek.s3.amazonaws.com/styles/extra-large/s3/Apparition_Ethereal2.jpg'},
-              {name: 'Apparition - Figment', sku: 'AD365-3', price_code: 'ABC-1', image_url: 'http://astek.s3.amazonaws.com/styles/extra-large/s3/Apparition_Figment2.jpg'},
-              {name: 'Apparition - Cumulus', sku: 'AD365-1', price_code: 'ABC-1', image_url: 'http://www.astekwallcovering.com/sites/default/files/styles/extra-large/public/designs/Apparition_Cumulus2.jpg'}
+              {name: 'Apparition - Ethereal', sku: 'AD365-2', price_code: 'ABC-1', image_url: 'http://astek.s3.amazonaws.com/styles/extra-large/s3/Apparition_Ethereal2.jpg', colors: ['Orange', 'Black and White']},
+              {name: 'Apparition - Figment', sku: 'AD365-3', price_code: 'ABC-1', image_url: 'http://astek.s3.amazonaws.com/styles/extra-large/s3/Apparition_Figment2.jpg', colors: ['Blue', 'Black and White']},
+              {name: 'Apparition - Cumulus', sku: 'AD365-1', price_code: 'ABC-1', image_url: 'http://www.astekwallcovering.com/sites/default/files/styles/extra-large/public/designs/Apparition_Cumulus2.jpg', colors: ['Indigo', 'Black and White']},
           ]
       }
   ]
@@ -39,6 +39,8 @@ class PopulateVariants < ActiveRecord::Migration
           type: 'VariantImage',
           owner_id: variant.id
         })
+
+        variant.colors << Color.where(name: v[:colors])
 
       end
     end

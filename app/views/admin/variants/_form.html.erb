@@ -26,3 +26,16 @@
         <%= f.text_field :slug, required: true, class: 'form-control' %>
     <% end %>
 <% end %>
+
+<%= field_set_tag nil, 'data-hook': 'variant_colors' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Colors', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:variant, :color_ids, @colors, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
