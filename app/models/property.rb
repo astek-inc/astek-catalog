@@ -10,11 +10,4 @@ class Property < ActiveRecord::Base
 
   default_scope { order(:name) }
 
-  after_touch :touch_all_designs
-
-  private
-
-  def touch_all_designs
-    designs.update_all(updated_at: Time.current)
-  end
 end

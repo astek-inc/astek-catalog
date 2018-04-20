@@ -74,6 +74,24 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   add_index "collections", ["row_order"], name: "index_collections_on_row_order", using: :btree
   add_index "collections", ["slug"], name: "index_collections_on_slug", unique: true, using: :btree
 
+  create_table "colors", force: :cascade do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.integer  "row_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "colors", ["row_order"], name: "index_colors_on_row_order", using: :btree
+
+  create_table "colors_variants", id: false, force: :cascade do |t|
+    t.integer "variant_id", null: false
+    t.integer "color_id",   null: false
+  end
+
+  add_index "colors_variants", ["color_id", "variant_id"], name: "index_colors_variants_on_color_id_and_variant_id", using: :btree
+  add_index "colors_variants", ["variant_id", "color_id"], name: "index_colors_variants_on_variant_id_and_color_id", using: :btree
+
   create_table "data_migrations", id: false, force: :cascade do |t|
     t.string "version", null: false
   end

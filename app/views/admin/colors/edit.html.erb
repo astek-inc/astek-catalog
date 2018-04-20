@@ -1,0 +1,20 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Colors', admin_colors_path),
+      @color.name
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+    <%= form_for [:admin, @color] do |f| %>
+      <%= field_set_tag nil, 'data-hook': 'color_edit' do %>
+        <%= render partial: 'form', locals: { f: f } %>
+      <% end %>
+
+      <%= form_buttons admin_colors_path %>
+    <% end %>
+  <% end %>
+<% end %>
