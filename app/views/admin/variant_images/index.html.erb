@@ -3,7 +3,7 @@
         link_to('Collections', admin_collections_path),
         link_to(@collection.name, edit_admin_collection_path(@collection)),
         link_to('Designs', admin_collection_designs_path(@collection)),
-        link_to(@design.name, edit_admin_design_path(@design)),
+        link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
         link_to('Variants', admin_design_variants_path(@design)),
         link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
         'Images'
