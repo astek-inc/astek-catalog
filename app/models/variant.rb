@@ -21,8 +21,10 @@ class Variant < ActiveRecord::Base
   validates :price_code, presence: true
   validates :slug, presence: true, on: :update
 
-  def has_color? color
-    # self.colors.contains? color
-  end
+  # def has_color? find_color
+  #   self.colors.include? find_color
+  # end
+
+  scope :with_color, ->(color_name) { joins(:colors).where('colors.name = ?', color_name) }
 
 end

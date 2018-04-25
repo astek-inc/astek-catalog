@@ -20,4 +20,6 @@ class Design < ActiveRecord::Base
 
   accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
 
+  scope :has_variant_with_color, ->(color_name) { joins(:variants).merge(Variant.with_color(color_name)) }
+
 end
