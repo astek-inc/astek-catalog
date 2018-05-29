@@ -2,29 +2,25 @@ class PopulateStyles < ActiveRecord::Migration
 
   STYLES = [
     'Abstract',
-    'Animal Print',
-    'Architectural',
-    'Art Deco / Art Nouveau',
-    'Childrens',
+    'Animalia',
+    'Art Deco + Art Nouveau',
+    'Botanical',
+    'Children\'s',
     'Contemporary',
     'Damask',
     'Faux Finish',
-    'Floral',
     'Geometric',
     'Illustrative',
-    'Large Scale',
-    'Nature',
     'Painterly',
     'Photographic',
-    'Retro / Vintage',
-    'Scenic / Toile',
-    'Stripes / Plaid',
+    'Retro + Vintage',
+    'Scenic + Toile',
+    'Stripes + Plaid',
     'Textile (TBD)',
     'Textural',
     'Traditional',
     'Tropical',
-    'Whimsical',
-    'Vintage'
+    'Whimsical'
   ]
 
   def up
