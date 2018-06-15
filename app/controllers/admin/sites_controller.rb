@@ -43,15 +43,10 @@ module Admin
       redirect_to(action: 'index')
     end
 
-    def generate_token
-      token = Site.generate_token
-      render json: { token: token }
-    end
-
     private
 
     def site_params
-      params.require(:site).permit(:name, :domain, :token)
+      params.require(:site).permit(:name, :domain)
     end
 
   end

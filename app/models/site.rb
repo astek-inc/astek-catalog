@@ -1,7 +1,5 @@
 class Site < ActiveRecord::Base
 
-  include Tokenable
-
   resourcify
 
   acts_as_paranoid

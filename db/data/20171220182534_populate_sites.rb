@@ -9,7 +9,6 @@ class PopulateSites < ActiveRecord::Migration
   def self.up
     SITES.each do |w|
       site = Site.new(w)
-      site.token = Site.generate_token
       site.save!(w)
     end
   end
