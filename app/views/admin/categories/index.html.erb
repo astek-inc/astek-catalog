@@ -32,7 +32,7 @@
                 </td>
                 <td><%= category.name %></td>
                 <td><%= truncate(sanitize(category.description), length: 140) %></td>
-                <td><%= category.clients.map { |w| w.name }.join(', ') %></td>
+                <td><%= category.sites.map { |w| w.name }.join(', ') %></td>
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                     <%= edit_button edit_admin_category_path category %>

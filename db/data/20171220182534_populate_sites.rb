@@ -1,22 +1,22 @@
-class PopulateClients < ActiveRecord::Migration
+class PopulateSites < ActiveRecord::Migration
 
-  CLIENTS = [
+  SITES = [
       { name: 'Astek Wallcovering', domain: 'astekwallcovering.com' },
       { name: 'Design Your Wall', domain: 'designyourwall.com' },
       { name: 'OnAir Design', domain: 'onairdesignla.com' },
   ]
 
   def self.up
-    CLIENTS.each do |w|
-      site = Client.new(w)
-      site.token = Client.generate_token
+    SITES.each do |w|
+      site = Site.new(w)
+      site.token = Site.generate_token
       site.save!(w)
     end
   end
 
   def self.down
-    CLIENTS.each do |w|
-      Client.find_by(domain: w[:domain]).destroy!
+    SITES.each do |w|
+      Site.find_by(domain: w[:domain]).destroy!
     end
   end
 

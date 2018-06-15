@@ -1,7 +1,7 @@
 module Admin
   class CategoriesController < BaseController
 
-    before_action :load_clients, only: [:new, :edit]
+    before_action :load_sites, only: [:new, :edit]
 
     def index
       @categories = Category.rank(:row_order).page params[:page]
@@ -56,8 +56,8 @@ module Admin
 
     private
 
-    def load_clients
-      @clients = Client.all
+    def load_sites
+      @sites = Site.all
     end
 
     def category_params

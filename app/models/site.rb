@@ -1,4 +1,4 @@
-class Client < ActiveRecord::Base
+class Site < ActiveRecord::Base
 
   include Tokenable
 

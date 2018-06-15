@@ -1,6 +1,6 @@
-class CreateClients < ActiveRecord::Migration
+class CreateSites < ActiveRecord::Migration
   def change
-    create_table :clients do |t|
+    create_table :sites do |t|
       t.string :name
       t.string :domain
       t.string :token

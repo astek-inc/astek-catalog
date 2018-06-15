@@ -31,8 +31,8 @@ Rails.application.routes.draw do
 
     resources :users
 
-    get 'clients/generate_token' => 'clients#generate_token'
-    resources :clients, except: :show
+    get 'sites/generate_token' => 'sites#generate_token'
+    resources :sites, except: :show
 
     resources :properties
 
