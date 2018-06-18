@@ -33,7 +33,7 @@ Rails.application.routes.draw do
 
     resources :websites, except: :show
 
-    resources :styles
+    resources :styles, except: :show
 
     resources :properties
 
