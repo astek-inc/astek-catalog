@@ -2,6 +2,7 @@ module Admin
   class CollectionDesignsController < Admin::BaseController
 
     before_action :set_collection, except: [:edit]
+    before_action :set_styles, only: [:new, :edit]
 
     def index
       @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
@@ -59,6 +60,10 @@ module Admin
 
     def set_collection
       @collection = Collection.friendly.find(params[:collection_id])
+    end
+
+    def set_styles
+      @styles = Style.all
     end
 
     def design_params

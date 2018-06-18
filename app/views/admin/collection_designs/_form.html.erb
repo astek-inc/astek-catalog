@@ -37,3 +37,14 @@
         <%= f.text_field :slug, required: true, class: 'form-control' %>
     <% end %>
 <% end %>
+
+<%= content_tag :div, class: 'panel panel-default' do %>
+  <%= content_tag :div, 'Styles', class: 'panel-heading' %>
+  <%= content_tag :div, class: 'panel-body' do %>
+    <%= collection_check_boxes(:design, :style_ids, @styles, :id, :name) do |b| %>
+      <%= content_tag :div, class: 'checkbox-inline' do %>
+        <%= b.label() { b.check_box + b.text } %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
