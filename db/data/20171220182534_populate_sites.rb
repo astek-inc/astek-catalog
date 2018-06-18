@@ -1,21 +1,21 @@
-class PopulateSites < ActiveRecord::Migration
+class PopulateWebsites < ActiveRecord::Migration
 
-  SITES = [
-      { name: 'Astek Wallcovering', domain: 'astekwallcovering.com' },
-      { name: 'Design Your Wall', domain: 'designyourwall.com' },
-      { name: 'OnAir Design', domain: 'onairdesignla.com' },
+  WEBSITES = [
+      { name: 'Astek Wallcovering', domain: 'astek.com' },
+      { name: 'Design Your Wall', domain: 'astekhome.com' },
+      { name: 'OnAir Design', domain: 'onairdesign.com' },
   ]
 
   def self.up
-    SITES.each do |w|
-      site = Site.new(w)
-      site.save!(w)
+    WEBSITES.each do |w|
+      website = Website.new(w)
+      website.save!(w)
     end
   end
 
   def self.down
-    SITES.each do |w|
-      Site.find_by(domain: w[:domain]).destroy!
+    WEBSITES.each do |w|
+      Website.find_by(domain: w[:domain]).destroy!
     end
   end
 

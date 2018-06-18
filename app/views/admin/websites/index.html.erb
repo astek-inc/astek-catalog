@@ -1,16 +1,16 @@
 <% content_for :header_left do %>
-  <%= content_tag :h1, link_to('Sites', admin_sites_path) %>
+  <%= content_tag :h1, link_to('Websites', admin_websites_path) %>
 <% end %>
 
 <% content_for :header_right do %>
-    <%= link_to 'New Site', new_admin_site_path, class: 'btn btn-success' %>
+    <%= link_to 'New Website', new_admin_website_path, class: 'btn btn-success' %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div do %>
 
-  <% if @sites.any? %>
+  <% if @websites.any? %>
 
       <div class="table-responsive">
         <table class="table table-striped">
@@ -23,14 +23,14 @@
           </thead>
 
           <tbody>
-          <% @sites.each do |site| %>
-              <tr class="site_property fields" data-item-id=<%= "#{site.id}" %> data-hook="site">
-                <td><%= site.name %></td>
-                <td><%= site.domain %></td>
+          <% @websites.each do |website| %>
+              <tr class="website_property fields" data-item-id=<%= "#{website.id}" %> data-hook="website">
+                <td><%= website.name %></td>
+                <td><%= website.domain %></td>
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                    <%= edit_button edit_admin_site_path site %>
-                    <%= delete_button admin_site_path site %>
+                    <%= edit_button edit_admin_website_path website %>
+                    <%= delete_button admin_website_path website %>
                   </div>
                 </td>
               </tr>
@@ -40,7 +40,7 @@
       </div>
 
   <% else %>
-    <p>No sites found. <%= link_to 'Create one.', new_admin_site_path %></p>
+    <p>No websites found. <%= link_to 'Create one.', new_admin_website_path %></p>
   <% end %>
 
 <% end %>

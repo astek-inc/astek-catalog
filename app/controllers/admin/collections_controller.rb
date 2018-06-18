@@ -1,7 +1,7 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
-    before_action :load_sites, only: [:new, :edit]
+    before_action :load_websites, only: [:new, :edit]
 
     def index
       @collections = Collection.rank(:row_order).page params[:page]
@@ -56,12 +56,12 @@ module Admin
 
     private
 
-    def load_sites
-      @sites = Site.all
+    def load_websites
+      @websites = Website.all
     end
 
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :category_id, site_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :category_id, website_ids: [])
     end
 
   end

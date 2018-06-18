@@ -23,7 +23,7 @@
 <%= content_tag :div, class: 'panel panel-default' do %>
   <%= content_tag :div, 'Visibility', class: 'panel-heading' %>
   <%= content_tag :div, class: 'panel-body' do %>
-    <%= collection_check_boxes(:category, :site_ids, @sites, :id, :name) do |b| %>
+    <%= collection_check_boxes(:category, :website_ids, @websites, :id, :name) do |b| %>
       <%= content_tag :div, class: 'checkbox-inline' do %>
         <%= b.label() { b.check_box + b.text } %>
       <% end %>
