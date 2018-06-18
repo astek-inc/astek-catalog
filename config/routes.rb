@@ -16,7 +16,23 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
-    resources :websites
+    resources :colors, except: :show do
+      post :update_row_order, on: :collection
+    end
+
+    resources :substrates, except: :show, concerns: :paginatable do
+      post :update_row_order, on: :collection
+      resources :substrate_images, only: [:index, :new, :create, :show, :destroy] do
+        post :update_row_order, on: :collection
+      end
+    end
+
+    resources :substrate_categories, except: :show
+
+    resources :users
+
+    get 'sites/generate_token' => 'sites#generate_token'
+    resources :sites, except: :show
 
     resources :styles
 
@@ -24,7 +40,7 @@ Rails.application.routes.draw do
 
     resources :categories, concerns: :paginatable do
       post :update_row_order, on: :collection
-      resources :category_images, only: [:index, :new, :create, :destroy], controller: :category_images do
+      resources :category_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
     end
@@ -32,38 +48,36 @@ Rails.application.routes.draw do
     resources :collections, concerns: :paginatable do
       post :update_row_order, on: :collection
 
-      resources :collection_images, only: [:index, :new, :create, :destroy], controller: :collection_images do
+      resources :collection_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
 
-      resources :designs, concerns: :paginatable do
+      resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
       end
     end
 
-    resources :designs, concerns: :paginatable do
+    resources :designs, only: [] do
 
       resources :design_styles #, only: :index
 
-      resources :design_properties  do #, controller: :design_properties do
+      resources :design_properties  do
         put :assign, on: :collection
         post :update_row_order, on: :collection
       end
 
-      resources :design_images, only: [:index, :new, :create, :destroy] do #, controller: :design_images do
-        post :update_row_order, on: :collection
-      end
-
-      resources :color_ways, concerns: :paginatable do
+      resources :variants, concerns: :paginatable do
         post :update_row_order, on: :collection
       end
     end
 
-    resources :color_ways, concerns: :paginatable do
-      resources :color_way_images, only: [:index, :new, :create, :destroy] do #, controller: :color_way_images do
+    resources :variants, concerns: :paginatable do
+      resources :variant_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
     end
+
+    resources :variant_types, except: :show
 
   end
 
@@ -83,7 +97,7 @@ Rails.application.routes.draw do
       # resources :collection_images, only: [:create, :destroy]
 
       resources :designs, only: [:index, :show] do #, :create, :update, :destroy] do
-        resources :color_ways, only: [:index, :show]
+        resources :variants, only: [:index, :show]
       end
       # resources :design_images, only: [:create, :destroy]
 

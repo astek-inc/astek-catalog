@@ -1,0 +1,51 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Colors'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Color', new_admin_color_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <% if @colors.any? %>
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_colors_path %>" data-position-start="<%= @position_start %>">
+          <thead>
+          <tr>
+            <th class="move-handle"></th>
+            <th>Name</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @colors.each do |color| %>
+            <tr class="product_property fields" data-item-id=<%= "#{color.id}" %> data-hook="color">
+              <td class="move-handle text-center">
+                <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+              </td>
+              <td><%= color.name %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_color_path color %>
+                  <%= delete_button admin_color_path color %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+    <% else %>
+      <p>No colors found. <%= link_to 'Create one.', new_admin_color_path %></p>
+    <% end %>
+
+  <% end %>
+<% end %>

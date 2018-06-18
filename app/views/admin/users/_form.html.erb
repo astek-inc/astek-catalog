@@ -1,0 +1,20 @@
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :email, 'Email Address <span class="required">*</span>'.html_safe %>
+    <%= f.text_field :email, required: true, class: 'form-control' %>
+<% end %>
+
+<% unless @user.persisted? %>
+  <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :password, 'Password <span class="required">*</span>'.html_safe %>
+      <%= f.text_field :password, required: true, class: 'form-control' %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= content_tag :div, class: ['checkbox'] do %>
+    <%= f.label :is_admin do %>
+      <%= f.check_box :is_admin %>
+      Admin
+    <% end %>
+  <% end %>
+<% end %>

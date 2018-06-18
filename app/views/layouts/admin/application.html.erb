@@ -44,33 +44,60 @@
 <% end %>
 
 <%= content_tag :div, class: 'container-fluid' do %>
-    <%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'row' do %>
 
-        <% if user_signed_in? %>
-            <% main_div_class = 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' %>
-            <%= content_tag :div, class: 'col-sm-3 col-md-2 sidebar' do %>
-                <%= content_tag :ul, class: 'nav nav-sidebar' do %>
-                    <%= content_tag :li, link_to('Websites', admin_websites_path) %>
-                    <%= content_tag :li, link_to('Styles', admin_styles_path) %>
-                    <%= content_tag :li, link_to('Properties', admin_properties_path) %>
-                    <%= content_tag :li, link_to('Categories', admin_categories_path) %>
-                    <%= content_tag :li, link_to('Collections', admin_collections_path) %>
-                    <%#= content_tag :li, link_to('Designs', admin_designs_path) %>
-                <% end %>
+    <% if user_signed_in? %>
+      <% main_div_class = 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main' %>
+
+      <%= content_tag :div, class: 'col-sm-3 col-md-2 sidebar' do %>
+
+        <%= content_tag :div, id: 'sidebar-menu' do %>
+          <%= content_tag :div, class: 'panel list-group nav-sidebar' do %>
+            <%#= nav_link 'Users', 'user', admin_users_path %>
+
+            <%= subnav_group_header 'Configuration', 'wrench', '#configs' %>
+            <div id="configs" class="sublinks collapse">
+              <%= nav_sublink 'Users', admin_users_path %>
+              <%= nav_sublink 'Sites', admin_sites_path %>
+              <%= nav_sublink 'Variant Types', admin_variant_types_path %>
+              <%= nav_sublink 'Properties', admin_properties_path %>
+              <%= nav_sublink 'Colors', admin_colors_path %>
+              <%= nav_sublink 'Styles', admin_styles_path %>
+            </div>
+
+            <%#= subnav_group_header 'Tasks', 'tag', '#sl' %>
+            <!--<div id="sl" class="sublinks collapse">-->
+              <!--<a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> saved tasks</a>-->
+              <!--<a class="list-group-item"><span class="glyphicon glyphicon-chevron-right"></span> add new task</a>-->
+            <!--</div>-->
+
+            <%= nav_link 'Categories', 'folder-open', admin_categories_path %>
+            <%= nav_link 'Collections', 'book', admin_collections_path %>
+
+            <%= subnav_group_header 'Substrates', 'circle-arrow-down', '#substrates' %>
+            <%= content_tag :div, id: 'substrates', class: 'sublinks collapse' do %>
+              <%= nav_sublink 'Substrates', admin_substrates_path %>
+              <%= nav_sublink 'Substrate Categories', admin_substrate_categories_path %>
             <% end %>
-        <% else %>
-            <% main_div_class = 'col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 main' %>
-        <% end %>
 
-        <%= content_tag :div, class: main_div_class do %>
+          <% end %>
+        <%end %>
 
-            <%= content_tag :div, class: 'row' do %>
-                <%= yield %>
-            <% end %>
+      <% end %>
 
-        <% end %>
+    <% else %>
+      <% main_div_class = 'col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 main' %>
+    <% end %>
+
+    <%= content_tag :div, class: main_div_class do %>
+
+      <%= content_tag :div, class: 'row' do %>
+        <%= yield %>
+      <% end %>
 
     <% end %>
+
+  <% end %>
 <% end %>
 
 </body>

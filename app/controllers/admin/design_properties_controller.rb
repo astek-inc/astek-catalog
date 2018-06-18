@@ -48,7 +48,7 @@ module Admin
     end
 
     def get_properties
-      @properties = Property.pluck(:name)
+      @properties = Property.where(klass_scope: 'Design').pluck(:name)
     end
 
     def setup_property

@@ -7,13 +7,13 @@
         link_to('Collections', admin_collections_path),
         link_to(@collection.name, edit_admin_collection_path(@collection)),
         link_to('Designs', admin_collection_designs_path(@collection)),
-        link_to(@design.name, edit_admin_design_path(@design)),
+        link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
         'Properties'
     ].join(' / ').html_safe %>
 <% end %>
 
 <% content_for :header_right do %>
-  <%= link_to 'New Design Property', '', class: 'btn btn-default', id: 'new-design-property' %>
+  <%= link_to 'New Design Property', '', class: 'btn btn-success', id: 'new-design-property' %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
@@ -36,11 +36,11 @@
           </tbody>
         </table>
 
-        <%= form_buttons edit_admin_design_path(@design) %>
+        <%= form_buttons edit_admin_collection_design_path(@collection, @design) %>
       </fieldset>
   <% end %>
 <% end %>
 
 <%= content_tag :div, class: 'col-md-3' do %>
-    <%= render partial: 'admin/designs/subnav', locals: { current: 'properties' } %>
+    <%= render partial: 'admin/collection_designs/subnav', locals: { current: 'properties' } %>
 <% end %>

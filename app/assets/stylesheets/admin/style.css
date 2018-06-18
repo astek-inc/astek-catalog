@@ -1,3 +1,11 @@
+div.sidebar {
+    top: 29px;
+}
+
+div.sidebar div#sidebar-menu div.nav-sidebar > a {
+    text-transform: uppercase;
+}
+
 div.page-header {
     overflow: auto;
 }
@@ -7,12 +15,17 @@ div.page-header h1 {
 }
 
 div.page-header .header-right {
-    margin-top: 25px;
+    margin-top: 15px;
     text-align: right;
+}
+
+td.move-handle {
+    width: 60px;
 }
 
 td.actions {
     text-align: right;
+    min-width: 120px;
 }
 
 div.form-group div.image {
@@ -41,3 +54,7 @@ div.form-group div.image {
 /*.ui-helper-hidden-accessible {*/
     /*display: none;*/
 /*}*/
+
+div.form-actions > button {
+    margin-right: 10px;
+}

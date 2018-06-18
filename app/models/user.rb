@@ -1,5 +1,10 @@
 class User < ActiveRecord::Base
 
+  validates :email, presence: true, uniqueness: true
+  validates :password, presence: true, on: :create
+
+  attr_accessor :is_admin
+
   rolify
 
   # Include default devise modules. Others available are:
@@ -23,6 +28,10 @@ class User < ActiveRecord::Base
 
     user
 
+  end
+
+  def is_admin
+    self.has_role? :admin
   end
 
   def after_database_authentication

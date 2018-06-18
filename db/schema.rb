@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180118235116) do
+ActiveRecord::Schema.define(version: 20180302224641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,13 +31,13 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "categories", ["row_order"], name: "index_categories_on_row_order", using: :btree
   add_index "categories", ["slug"], name: "index_categories_on_slug", unique: true, using: :btree
 
-  create_table "categories_websites", id: false, force: :cascade do |t|
+  create_table "categories_sites", id: false, force: :cascade do |t|
     t.integer "category_id", null: false
-    t.integer "website_id",  null: false
+    t.integer "site_id",     null: false
   end
 
-  add_index "categories_websites", ["category_id", "website_id"], name: "index_categories_websites_on_category_id_and_website_id", using: :btree
-  add_index "categories_websites", ["website_id", "category_id"], name: "index_categories_websites_on_website_id_and_category_id", using: :btree
+  add_index "categories_sites", ["category_id", "site_id"], name: "index_categories_sites_on_category_id_and_site_id", using: :btree
+  add_index "categories_sites", ["site_id", "category_id"], name: "index_categories_sites_on_site_id_and_category_id", using: :btree
 
   create_table "collections", force: :cascade do |t|
     t.integer  "category_id"
@@ -55,28 +55,31 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "collections", ["row_order"], name: "index_collections_on_row_order", using: :btree
   add_index "collections", ["slug"], name: "index_collections_on_slug", unique: true, using: :btree
 
-  create_table "collections_websites", id: false, force: :cascade do |t|
+  create_table "collections_sites", id: false, force: :cascade do |t|
     t.integer "collection_id", null: false
-    t.integer "website_id",    null: false
+    t.integer "site_id",       null: false
   end
 
-  add_index "collections_websites", ["collection_id", "website_id"], name: "index_collections_websites_on_collection_id_and_website_id", using: :btree
-  add_index "collections_websites", ["website_id", "collection_id"], name: "index_collections_websites_on_website_id_and_collection_id", using: :btree
+  add_index "collections_sites", ["collection_id", "site_id"], name: "index_collections_sites_on_collection_id_and_site_id", using: :btree
+  add_index "collections_sites", ["site_id", "collection_id"], name: "index_collections_sites_on_site_id_and_collection_id", using: :btree
 
-  create_table "color_ways", force: :cascade do |t|
-    t.integer  "design_id"
+  create_table "colors", force: :cascade do |t|
     t.string   "name"
-    t.text     "sku"
     t.string   "slug"
     t.integer  "row_order"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
   end
 
-  add_index "color_ways", ["deleted_at"], name: "index_color_ways_on_deleted_at", using: :btree
-  add_index "color_ways", ["row_order"], name: "index_color_ways_on_row_order", using: :btree
-  add_index "color_ways", ["sku"], name: "index_color_ways_on_sku", using: :btree
+  add_index "colors", ["row_order"], name: "index_colors_on_row_order", using: :btree
+
+  create_table "colors_variants", id: false, force: :cascade do |t|
+    t.integer "variant_id", null: false
+    t.integer "color_id",   null: false
+  end
+
+  add_index "colors_variants", ["color_id", "variant_id"], name: "index_colors_variants_on_color_id_and_variant_id", using: :btree
+  add_index "colors_variants", ["variant_id", "color_id"], name: "index_colors_variants_on_variant_id_and_color_id", using: :btree
 
   create_table "data_migrations", id: false, force: :cascade do |t|
     t.string "version", null: false
@@ -173,11 +176,52 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "sites", force: :cascade do |t|
+    t.string   "name"
+    t.string   "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "sites", ["deleted_at"], name: "index_sites_on_deleted_at", using: :btree
+
   create_table "styles", force: :cascade do |t|
     t.string   "name",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "substrate_categories", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "substrate_categories", ["deleted_at"], name: "index_substrate_categories_on_deleted_at", using: :btree
+
+  create_table "substrate_categories_substrates", id: false, force: :cascade do |t|
+    t.integer "substrate_id",          null: false
+    t.integer "substrate_category_id", null: false
+  end
+
+  add_index "substrate_categories_substrates", ["substrate_category_id", "substrate_id"], name: "idx_substr_cats_substrs_on_substr_cat_id_and_substr_id", using: :btree
+  add_index "substrate_categories_substrates", ["substrate_id", "substrate_category_id"], name: "idx_substrs_substr_cats_on_substr_id_and_substr_cat_id", using: :btree
+
+  create_table "substrates", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.text     "keywords"
+    t.string   "slug"
+    t.integer  "row_order"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "substrates", ["deleted_at"], name: "index_substrates_on_deleted_at", using: :btree
+  add_index "substrates", ["row_order"], name: "index_substrates_on_row_order", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -204,14 +248,34 @@ ActiveRecord::Schema.define(version: 20180118235116) do
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
-  create_table "websites", force: :cascade do |t|
+  create_table "variant_types", force: :cascade do |t|
     t.string   "name"
-    t.string   "domain"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
   end
 
-  add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
+  add_index "variant_types", ["deleted_at"], name: "index_variant_types_on_deleted_at", using: :btree
 
+  create_table "variants", force: :cascade do |t|
+    t.integer  "design_id"
+    t.integer  "variant_type_id"
+    t.string   "name"
+    t.text     "sku"
+    t.text     "price_code"
+    t.string   "slug"
+    t.integer  "row_order"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "variants", ["deleted_at"], name: "index_variants_on_deleted_at", using: :btree
+  add_index "variants", ["row_order"], name: "index_variants_on_row_order", using: :btree
+  add_index "variants", ["sku"], name: "index_variants_on_sku", using: :btree
+
+  add_foreign_key "collections", "categories"
+  add_foreign_key "designs", "collections"
+  add_foreign_key "variants", "designs"
+  add_foreign_key "variants", "variant_types"
 end

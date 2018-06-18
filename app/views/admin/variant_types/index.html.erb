@@ -1,0 +1,48 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Variant Types'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Variant Type', new_admin_variant_type_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <% if @variant_types.any? %>
+
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped sortable" data-hook>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @variant_types.each do |variant_type| %>
+            <tr class="variant_type fields" data-item-id=<%= "#{variant_type.id}" %> data-hook="variant">
+              <td><%= variant_type.name %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_variant_type_path variant_type %>
+                  <%= delete_button admin_variant_type_path variant_type %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+    <% else %>
+      <p>No variant types found. <%= link_to 'Create one.', new_admin_variant_type_path %></p>
+    <% end %>
+
+  <% end %>
+<% end %>

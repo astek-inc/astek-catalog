@@ -1,0 +1,46 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, link_to('Sites', admin_sites_path) %>
+<% end %>
+
+<% content_for :header_right do %>
+    <%= link_to 'New Site', new_admin_site_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div do %>
+
+  <% if @sites.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Domain</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @sites.each do |site| %>
+              <tr class="site_property fields" data-item-id=<%= "#{site.id}" %> data-hook="site">
+                <td><%= site.name %></td>
+                <td><%= site.domain %></td>
+                <td class="actions">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <%= edit_button edit_admin_site_path site %>
+                    <%= delete_button admin_site_path site %>
+                  </div>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+  <% else %>
+    <p>No sites found. <%= link_to 'Create one.', new_admin_site_path %></p>
+  <% end %>
+
+<% end %>

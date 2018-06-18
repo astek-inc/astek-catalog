@@ -11,8 +11,7 @@ class Design < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :collection
-  has_many :color_ways
-  has_many :design_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_many :variants, dependent: :destroy
 
   has_many :design_properties, dependent: :destroy, inverse_of: :design
   has_many :properties, through: :design_properties
