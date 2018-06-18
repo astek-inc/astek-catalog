@@ -118,6 +118,14 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   add_index "designs", ["row_order"], name: "index_designs_on_row_order", using: :btree
   add_index "designs", ["slug"], name: "index_designs_on_slug", unique: true, using: :btree
 
+  create_table "designs_styles", id: false, force: :cascade do |t|
+    t.integer "design_id", null: false
+    t.integer "style_id",  null: false
+  end
+
+  add_index "designs_styles", ["design_id", "style_id"], name: "index_designs_styles_on_design_id_and_style_id", using: :btree
+  add_index "designs_styles", ["style_id", "design_id"], name: "index_designs_styles_on_style_id_and_design_id", using: :btree
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -177,6 +185,12 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   end
 
   add_index "sites", ["deleted_at"], name: "index_sites_on_deleted_at", using: :btree
+
+  create_table "styles", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "substrate_categories", force: :cascade do |t|
     t.string   "name"

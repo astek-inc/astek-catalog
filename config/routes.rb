@@ -33,6 +33,8 @@ Rails.application.routes.draw do
 
     resources :websites, except: :show
 
+    resources :styles, except: :show
+
     resources :properties
 
     resources :categories, concerns: :paginatable do
@@ -55,6 +57,8 @@ Rails.application.routes.draw do
     end
 
     resources :designs, only: [] do
+
+      resources :design_styles #, only: :index
 
       resources :design_properties  do
         put :assign, on: :collection
