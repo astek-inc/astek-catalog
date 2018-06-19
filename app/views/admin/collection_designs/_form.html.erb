@@ -41,10 +41,28 @@
 <%= content_tag :div, class: 'panel panel-default' do %>
   <%= content_tag :div, 'Styles', class: 'panel-heading' %>
   <%= content_tag :div, class: 'panel-body' do %>
+
+    <% column_count = 4.0 %>
+    <% divisor = (@styles.count / column_count).ceil %>
+    <% column_class = 'col-md-' + (12 / column_count).round.to_s %>
+    <% index = 0 %>
+
     <%= collection_check_boxes(:design, :style_ids, @styles, :id, :name) do |b| %>
-      <%= content_tag :div, class: 'checkbox-inline' do %>
-        <%= b.label() { b.check_box + b.text } %>
+
+      <% if index % divisor == 0 %>
+        <div class="<%= column_class %>">
       <% end %>
+
+      <%= content_tag :div, class: 'checkbox' do %>
+        <%= b.label { b.check_box + b.text } %>
+      <% end %>
+
+      <% if index % divisor == divisor - 1 %>
+        </div>
+      <% end %>
+
+      <% index += 1 %>
+
     <% end %>
   <% end %>
 <% end %>
