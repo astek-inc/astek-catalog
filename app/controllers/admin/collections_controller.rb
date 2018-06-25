@@ -61,7 +61,7 @@ module Admin
     end
 
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :category_id, website_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_type_id, website_ids: [])
     end
 
   end

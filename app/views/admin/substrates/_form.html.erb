@@ -23,7 +23,7 @@
 
 <%= field_set_tag nil, 'data-hook': 'substrate_edit' do %>
   <%= content_tag :div, class: 'panel panel-default' do %>
-    <%= content_tag :div, 'Categories', class: 'panel-heading' %>
+    <%= content_tag :div, 'Product Types', class: 'panel-heading' %>
     <%= content_tag :div, class: 'panel-body' do %>
       <%= collection_check_boxes(:substrate, :substrate_category_ids, @substrate_categories, :id, :name) do |b| %>
         <%= content_tag :div, class: 'checkbox-inline' do %>

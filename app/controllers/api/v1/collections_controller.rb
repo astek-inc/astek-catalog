@@ -34,7 +34,7 @@ module Api
       # private
       #
       # def collection_params
-      #   params.require(:collection).permit(:category_id, :name, :description, :keywords, :slug)
+      #   params.require(:collection).permit(:product_type_id, :name, :description, :keywords, :slug)
       # end
 
     end

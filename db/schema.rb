@@ -16,36 +16,13 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "categories", force: :cascade do |t|
-    t.string   "name"
-    t.text     "description"
-    t.text     "keywords"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.datetime "deleted_at"
-    t.string   "slug"
-    t.integer  "row_order"
-  end
-
-  add_index "categories", ["deleted_at"], name: "index_categories_on_deleted_at", using: :btree
-  add_index "categories", ["row_order"], name: "index_categories_on_row_order", using: :btree
-  add_index "categories", ["slug"], name: "index_categories_on_slug", unique: true, using: :btree
-
-  create_table "categories_websites", id: false, force: :cascade do |t|
-    t.integer "category_id", null: false
-    t.integer "website_id",  null: false
-  end
-
-  add_index "categories_websites", ["category_id", "website_id"], name: "index_categories_websites_on_category_id_and_website_id", using: :btree
-  add_index "categories_websites", ["website_id", "category_id"], name: "index_categories_websites_on_website_id_and_category_id", using: :btree
-
   create_table "collections", force: :cascade do |t|
-    t.integer  "category_id"
+    t.integer  "product_type_id"
     t.string   "name"
     t.text     "description"
     t.text     "keywords"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
@@ -153,6 +130,29 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   add_index "images", ["owner_id"], name: "index_images_on_owner_id", using: :btree
   add_index "images", ["row_order"], name: "index_images_on_row_order", using: :btree
   add_index "images", ["type"], name: "index_images_on_type", using: :btree
+
+  create_table "product_types", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.text     "keywords"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "deleted_at"
+    t.string   "slug"
+    t.integer  "row_order"
+  end
+
+  add_index "product_types", ["deleted_at"], name: "index_product_types_on_deleted_at", using: :btree
+  add_index "product_types", ["row_order"], name: "index_product_types_on_row_order", using: :btree
+  add_index "product_types", ["slug"], name: "index_product_types_on_slug", unique: true, using: :btree
+
+  create_table "product_types_websites", id: false, force: :cascade do |t|
+    t.integer "product_type_id", null: false
+    t.integer "website_id",      null: false
+  end
+
+  add_index "product_types_websites", ["product_type_id", "website_id"], name: "index_product_types_websites_on_product_type_id_and_website_id", using: :btree
+  add_index "product_types_websites", ["website_id", "product_type_id"], name: "index_product_types_websites_on_website_id_and_product_type_id", using: :btree
 
   create_table "properties", force: :cascade do |t|
     t.string   "name"
@@ -274,7 +274,7 @@ ActiveRecord::Schema.define(version: 20180302224641) do
 
   add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
 
-  add_foreign_key "collections", "categories"
+  add_foreign_key "collections", "product_types"
   add_foreign_key "designs", "collections"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "variant_types"

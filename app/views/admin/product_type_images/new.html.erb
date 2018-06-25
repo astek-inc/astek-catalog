@@ -1,0 +1,29 @@
+<% content_for :header_left do %>
+    <%= content_tag :h1,
+                    [link_to('Product Types', admin_product_types_path),
+                     link_to(@product_type.name, admin_product_type_path(@product_type)),
+                     link_to('Images', admin_product_type_product_type_images_path(@product_type)),
+                     'New Image'].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, :product_type, @product_type_image], html: { multipart: true } do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'product_type_image_new' do %>
+            <%= content_tag :div, class: ['form-group'] do %>
+                <%= f.label :file, 'Image' %> <span class="required">*</span>
+                <%= f.file_field :file, required: true, class: 'form-control' %>
+                <%= f.hidden_field :type, value: @product_type_image.class.name %>
+                <%= f.hidden_field :owner_id, value: @product_type.id %>
+                <%#= f.hidden_field :image_cache %>
+            <% end %>
+        <% end %>
+
+        <%= form_buttons admin_product_type_product_type_images_path(@product_type) %>
+    <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/product_types/subnav', locals: { current: 'images' } %>
+<% end %>

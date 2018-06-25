@@ -1,6 +1,6 @@
-class PopulateCategories < ActiveRecord::Migration
+class PopulateProductTypes < ActiveRecord::Migration
 
-  CATEGORIES = [
+  PRODUCT_TYPES = [
       { name: 'Contact Paper', description: '', keywords: '', websites: ['astekhome.com'] },
       { name: 'Decals', description: '', keywords: '', websites: ['astekhome.com'] },
       { name: 'Designers', description: '', keywords: '', websites: ['astekhome.com'] },
@@ -12,18 +12,18 @@ class PopulateCategories < ActiveRecord::Migration
   ]
 
   def self.up
-    CATEGORIES.each do |cat|
+    PRODUCT_TYPES.each do |cat|
       websites = cat.delete(:websites)
-      category = Category.create!(cat)
+      product_type = ProductType.create!(cat)
       websites.each do |w|
-        category.websites << Website.find_by(domain: w)
+        product_type.websites << Website.find_by(domain: w)
       end
     end
   end
 
   def self.down
-    CATEGORIES.each do |cat|
-      Category.find_by(name: cat[:name]).destroy!
+    PRODUCT_TYPES.each do |cat|
+      ProductType.find_by(name: cat[:name]).destroy!
     end
   end
 end

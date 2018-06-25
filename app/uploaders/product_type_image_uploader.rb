@@ -1,4 +1,4 @@
-class CategoryImageUploader < ImageUploader
+class ProductTypeImageUploader < ImageUploader
 
   version :large do
     process resize_to_fit: [1000, 600]

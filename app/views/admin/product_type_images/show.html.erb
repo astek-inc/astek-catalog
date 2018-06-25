@@ -1,0 +1,18 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+    link_to('Product Types', admin_product_types_path(@product_type)),
+    link_to(@product_type.name, admin_product_type_path(@product_type)),
+    link_to('Images', admin_product_type_product_type_images_path(@product_type)),
+    @product_type_image.file_identifier
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+  <%= image_tag(@product_type_image.file.url(:large)) %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+  <%= render partial: 'admin/product_types/subnav', locals: { current: 'images' } %>
+<% end %>

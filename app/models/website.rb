@@ -4,7 +4,7 @@ class Website < ActiveRecord::Base
 
   acts_as_paranoid
 
-  has_and_belongs_to_many :categories
+  has_and_belongs_to_many :product_types
   has_and_belongs_to_many :collections
 
   validates :name, presence: true

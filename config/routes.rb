@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-  root 'admin/categories#index'
+  root 'admin/product_types#index'
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
@@ -37,9 +37,9 @@ Rails.application.routes.draw do
 
     resources :properties
 
-    resources :categories, concerns: :paginatable do
+    resources :product_types, concerns: :paginatable do
       post :update_row_order, on: :collection
-      resources :category_images, only: [:index, :new, :create, :show, :destroy] do
+      resources :product_type_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
     end
@@ -83,11 +83,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
 
-      resources :categories, only: [:index, :show] do #, :create, :update, :destroy] do
+      resources :product_types, only: [:index, :show] do #, :create, :update, :destroy] do
         resources :collections, only: [:index, :show]
-        # resources :category_images, only: :index, controller: :category_images
+        # resources :product_type_images, only: :index, controller: :product_type_images
       end
-      # resources :category_images, only: [:create, :destroy]
+      # resources :product_type_images, only: [:create, :destroy]
 
       resources :collections, only: [:index, :show] do #, :create, :update, :destroy] do
         resources :designs, only: [:index, :show]

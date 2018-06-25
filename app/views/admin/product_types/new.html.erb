@@ -1,0 +1,15 @@
+<% content_for :header_left do %>
+    <%= content_tag(:h1, [link_to('Product Types', admin_product_types_path), 'New Product Type'].join(' / ').html_safe) %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-12' do %>
+    <%= form_for [:admin, @product_type], html: { multipart: true } do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'product_type_new' do %>
+            <%= render partial: 'form', locals: { f: f } %>
+        <% end %>
+
+        <%= form_buttons admin_product_types_path %>
+    <% end %>
+<% end %>
