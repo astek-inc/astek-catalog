@@ -1,0 +1,46 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, link_to('Vendors', admin_vendors_path) %>
+<% end %>
+
+<% content_for :header_right do %>
+    <%= link_to 'New Vendor', new_admin_vendor_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<div>
+
+  <% if @vendors.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @vendors.each do |vendor| %>
+              <tr class="product_property fields" data-item-id=<%= "#{vendor.id}" %> data-hook="vendor">
+                <td><%= vendor.name %></td>
+                <td><%= truncate(sanitize(vendor.description), length: 140) %></td>
+                <td class="actions">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <%= edit_button edit_admin_vendor_path vendor %>
+                    <%= delete_button admin_vendor_path vendor %>
+                  </div>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+  <% else %>
+    <p>No vendors found. <%= link_to 'Create one.', new_admin_vendor_path %></p>
+  <% end %>
+
+</div>

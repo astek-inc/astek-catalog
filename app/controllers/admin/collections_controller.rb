@@ -50,7 +50,7 @@ module Admin
 
     def destroy
       Collection.friendly.find(params[:id]).destroy
-      flash[:notice] = "Collection destroyed."
+      flash[:notice] = 'Collection destroyed.'
       redirect_to(action: 'index')
     end
 
@@ -61,7 +61,7 @@ module Admin
     end
 
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_type_id, website_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_type_id, :vendor_id, website_ids: [])
     end
 
   end

@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20180302224641) do
     t.integer  "product_type_id"
     t.string   "name"
     t.text     "description"
+    t.integer  "vendor_id"
     t.text     "keywords"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
@@ -264,6 +265,16 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   add_index "variants", ["row_order"], name: "index_variants_on_row_order", using: :btree
   add_index "variants", ["sku"], name: "index_variants_on_sku", using: :btree
 
+  create_table "vendors", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "vendors", ["deleted_at"], name: "index_vendors_on_deleted_at", using: :btree
+
   create_table "websites", force: :cascade do |t|
     t.string   "name"
     t.string   "domain"
@@ -275,6 +286,7 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
 
   add_foreign_key "collections", "product_types"
+  add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "variant_types"

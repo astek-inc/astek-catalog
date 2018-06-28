@@ -11,8 +11,11 @@ class Collection < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :product_type
+  belongs_to :vendor
+
   has_many :designs, dependent: :destroy
   has_many :collection_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+
   has_and_belongs_to_many :websites
 
 end

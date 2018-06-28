@@ -4,6 +4,11 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :vendor_id, 'Vendor' %> <span class="required">*</span>
+  <%= f.collection_select :vendor_id, Vendor.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :name, 'Name' %> <span class="required">*</span>
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>

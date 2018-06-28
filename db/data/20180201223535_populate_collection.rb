@@ -1,15 +1,16 @@
 class PopulateCollection < ActiveRecord::Migration
 
-  IMAGE_URLS = %w[
-    http://www.astekwallcovering.com/sites/default/files/micrographia_slides1.jpg
-    http://www.astekwallcovering.com/sites/default/files/micrographia_slides2.jpg
-    http://www.astekwallcovering.com/sites/default/files/micrographia_slides3.jpg
-    http://www.astekwallcovering.com/sites/default/files/micrographia_slides4.jpg
-  ]
+  # IMAGE_URLS = %w[
+  #   http://www.astekwallcovering.com/sites/default/files/micrographia_slides1.jpg
+  #   http://www.astekwallcovering.com/sites/default/files/micrographia_slides2.jpg
+  #   http://www.astekwallcovering.com/sites/default/files/micrographia_slides3.jpg
+  #   http://www.astekwallcovering.com/sites/default/files/micrographia_slides4.jpg
+  # ]
 
   def up
 
     product_type = ProductType.find_by(name: 'Digital Collections')
+    vendor = Vendor.find_by(name: 'Astek Inc.')
     websites = Website.where(domain: %w[astekhome.com astek.com])
 
     collection = Collection.create({
@@ -17,16 +18,17 @@ class PopulateCollection < ActiveRecord::Migration
       name: 'Micrographia',
       description: 'Inspired by life under a microscope, Micrographia offers a new and beautiful perspective on what you thought was familiar. Through creativity, abstraction, and material exploration, Astek\'s in-house design team used far ranging media such as paint, collage, sculpture, print-making, and photography to bring their ideas to life.',
       keywords: 'mural, abstract, metallic, artistic, painterly, sci-fi, science',
-      websites: websites
+      websites: websites,
+      vendor: vendor
     })
 
-    IMAGE_URLS.each do |url|
-      CollectionImage.create!({
-        remote_file_url: url,
-        type: 'CollectionImage',
-        owner_id: collection.id
-      })
-    end
+    # IMAGE_URLS.each do |url|
+    #   CollectionImage.create!({
+    #     remote_file_url: url,
+    #     type: 'CollectionImage',
+    #     owner_id: collection.id
+    #   })
+    # end
 
   end
 

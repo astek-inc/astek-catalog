@@ -35,6 +35,8 @@ Rails.application.routes.draw do
 
     resources :styles, except: :show
 
+    resources :vendors, except: [:show, :delete]
+
     resources :properties
 
     resources :product_types, concerns: :paginatable do
