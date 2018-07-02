@@ -18,7 +18,6 @@ class Variant < ActiveRecord::Base
   validates :variant_type_id, presence: true
   validates :name, presence: true
   validates :sku, presence: true
-  validates :price_code, presence: true
   validates :slug, presence: true, on: :update
 
   def has_color? color

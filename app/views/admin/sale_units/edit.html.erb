@@ -1,0 +1,20 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Sale Units', admin_sale_units_path),
+      @sale_unit.name
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+    <%= form_for [:admin, @sale_unit] do |f| %>
+      <%= field_set_tag nil, 'data-hook': 'sale_unit_edit' do %>
+        <%= render partial: 'form', locals: { f: f } %>
+      <% end %>
+
+      <%= form_buttons admin_sale_units_path %>
+    <% end %>
+  <% end %>
+<% end %>

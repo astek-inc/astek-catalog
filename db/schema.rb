@@ -83,10 +83,12 @@ ActiveRecord::Schema.define(version: 20180302224641) do
     t.string   "name"
     t.text     "description"
     t.text     "keywords"
+    t.decimal  "price",         precision: 8, scale: 2
+    t.integer  "sale_unit_id"
     t.datetime "available_on"
     t.datetime "expires_on"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
@@ -177,6 +179,19 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "sale_units", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "slug"
+    t.integer  "row_order"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "sale_units", ["deleted_at"], name: "index_sale_units_on_deleted_at", using: :btree
+  add_index "sale_units", ["row_order"], name: "index_sale_units_on_row_order", using: :btree
+
   create_table "styles", force: :cascade do |t|
     t.string   "name",       null: false
     t.datetime "created_at", null: false
@@ -253,7 +268,6 @@ ActiveRecord::Schema.define(version: 20180302224641) do
     t.integer  "variant_type_id"
     t.string   "name"
     t.text     "sku"
-    t.text     "price_code"
     t.string   "slug"
     t.integer  "row_order"
     t.datetime "created_at",      null: false
@@ -288,6 +302,7 @@ ActiveRecord::Schema.define(version: 20180302224641) do
   add_foreign_key "collections", "product_types"
   add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
+  add_foreign_key "designs", "sale_units"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "variant_types"
 end

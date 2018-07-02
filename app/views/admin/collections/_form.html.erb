@@ -1,5 +1,5 @@
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :product_type_id, 'ProductType' %> <span class="required">*</span>
+    <%= f.label :product_type_id, 'Product Type' %> <span class="required">*</span>
     <%= f.collection_select :product_type_id, ProductType.rank(:row_order), :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
 <% end %>
 
