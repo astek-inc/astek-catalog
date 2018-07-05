@@ -19,7 +19,7 @@ class PopulateDesign < ActiveRecord::Migration
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '96')
 
 
-    Design.create!({
+    design = Design.create!({
       collection: collection,
       name: 'Apparition',
       description: 'The ghostliness is tremendously eerie. Few can view this design without being scared out of their wits. Paste this on your walls if you dare.',
@@ -32,7 +32,7 @@ class PopulateDesign < ActiveRecord::Migration
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '200')
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '70')
 
-    Design.create!({
+    design = Design.create!({
        collection: Collection.find_by(name: 'Micrographia'),
        name: 'Xylem',
        description: 'Simply put, this is the single greatest design in the history of the world. No wall is worthy of it. Please select somethign else.',
