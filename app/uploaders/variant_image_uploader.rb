@@ -10,7 +10,7 @@ class VariantImageUploader < ImageUploader
   end
 
   version :thumb do
-    process resize_to_fit: [150, 90]
+    process resize_to_fit: [50, 30]
   end
 
 end
