@@ -12,7 +12,8 @@ class PopulateDesign < ActiveRecord::Migration
       keywords: 'super, awesome, amazing, fantastic, incredible',
       available_on: Time.now,
       sale_unit: sale_unit,
-      price: 179.99
+      price: 179.99,
+      styles: Style.where(name: 'Modern')
     })
 
     Design.create!({
@@ -22,7 +23,8 @@ class PopulateDesign < ActiveRecord::Migration
       keywords: 'unbelievable, awesome, stupendous, fantastic',
       available_on: Time.now,
       sale_unit: sale_unit,
-      price: 179.99
+      price: 179.99,
+      styles: Style.where(name: 'Modern')
     })
 
     Design.create!({
@@ -32,7 +34,8 @@ class PopulateDesign < ActiveRecord::Migration
        keywords: 'intense, terrific, astounding, wonderful',
        available_on: Time.now,
        sale_unit: sale_unit,
-       price: 179.99
+       price: 179.99,
+       styles: Style.where(name: ['Modern', 'Geometric'])
     })
 
   end

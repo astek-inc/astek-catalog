@@ -11,6 +11,7 @@ class PopulateStyles < ActiveRecord::Migration
     'Faux Finish',
     'Geometric',
     'Illustrative',
+    'Modern',
     'Painterly',
     'Photographic',
     'Retro + Vintage',
