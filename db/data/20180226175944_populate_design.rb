@@ -5,7 +5,7 @@ class PopulateDesign < ActiveRecord::Migration
     collection = Collection.find_by(name: 'Micrographia')
     sale_unit = SaleUnit.find_by(name: 'Set')
 
-    Design.create!({
+    design = Design.create!({
       collection: collection,
       name: 'Lumen',
       description: 'Some say the brilliance of this design is overwheming. Only the true elite can cope with its quality. Are you among them?',
@@ -15,6 +15,9 @@ class PopulateDesign < ActiveRecord::Migration
       price: 179.99,
       styles: Style.where(name: 'Modern')
     })
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '148.96')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '96')
+
 
     Design.create!({
       collection: collection,
@@ -26,6 +29,8 @@ class PopulateDesign < ActiveRecord::Migration
       price: 179.99,
       styles: Style.where(name: 'Modern')
     })
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '200')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '70')
 
     Design.create!({
        collection: Collection.find_by(name: 'Micrographia'),
@@ -37,6 +42,8 @@ class PopulateDesign < ActiveRecord::Migration
        price: 179.99,
        styles: Style.where(name: ['Modern', 'Geometric'])
     })
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '170.44')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '108')
 
   end
 

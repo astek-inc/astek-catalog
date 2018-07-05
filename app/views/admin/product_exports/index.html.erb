@@ -1,0 +1,23 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, link_to('Product Exports', admin_product_exports_path) %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div do %>
+
+  <%= form_tag admin_product_export_generate_csv_path, method: :get do %>
+    <%= content_tag :div, class: 'col-md-9' do %>
+      <%= content_tag :div, class: 'form-group' do %>
+        <%= label_tag 'collection_id', 'Collection' %> <span class="required">*</span>
+        <p class="help-block">Enter a collection name and submit to download a csv file of that colection's designs.</p>
+        <%= text_field_tag 'collection_name', nil, { class: 'form-control', required: true } %>
+        <%= hidden_field_tag 'collection_id' %>
+      <% end %>
+    <% end %>
+
+    <%= content_tag :div, { class: 'col-md-3', id: 'product-export-submit-container' } do %>
+      <%= submit_button %>
+    <% end %>
+  <% end %>
+<% end %>

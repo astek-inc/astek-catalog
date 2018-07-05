@@ -16,6 +16,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    get 'product_exports/generate_csv', to: 'product_exports#generate_csv', as: 'product_export_generate_csv', defaults: { format: 'csv' }
+    resources :product_exports, only: :index
+
     resources :colors, except: :show do
       post :update_row_order, on: :collection
     end
@@ -45,6 +48,8 @@ Rails.application.routes.draw do
         post :update_row_order, on: :collection
       end
     end
+
+    get 'collections/search', to: 'collections#search'
 
     resources :collections, concerns: :paginatable do
       post :update_row_order, on: :collection
