@@ -1,8 +1,13 @@
 class PopulateSaleUnits < ActiveRecord::Migration
+
   SALE_UNITS = [
+      { name: 'Meter', description: '' },
+      { name: 'Panel', description: '' },
       { name: 'Roll', description: '' },
-      { name: 'Square Foot', description: '' },
       { name: 'Set', description: '' },
+      { name: 'Sheet', description: '' },
+      { name: 'Square Foot', description: '' },
+      { name: 'Yard', description: '' },
   ]
 
   def up
