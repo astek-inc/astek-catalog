@@ -13,7 +13,7 @@ class PopulateDesign < ActiveRecord::Migration
       available_on: Time.now,
       sale_unit: sale_unit,
       price: 179.99,
-      styles: Style.where(name: 'Modern')
+      styles: Style.where(name: ['Abstract', 'Contemporary'])
     })
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '148.96')
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '96')
@@ -27,7 +27,7 @@ class PopulateDesign < ActiveRecord::Migration
       available_on: Time.now,
       sale_unit: sale_unit,
       price: 179.99,
-      styles: Style.where(name: 'Modern')
+      styles: Style.where(name: ['Abstract', 'Contemporary'])
     })
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '200')
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '70')
@@ -40,7 +40,7 @@ class PopulateDesign < ActiveRecord::Migration
        available_on: Time.now,
        sale_unit: sale_unit,
        price: 179.99,
-       styles: Style.where(name: ['Modern', 'Geometric'])
+       styles: Style.where(name: ['Abstract', 'Contemporary', 'Geometric'])
     })
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '170.44')
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '108')
