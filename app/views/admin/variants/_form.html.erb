@@ -2,7 +2,7 @@
 
 <%= content_tag :div, class: ['form-group'] do %>
   <%= f.label :variant_type, 'Type' %> <span class="required">*</span>
-  <%= f.select :variant_type, options_from_collection_for_select(VariantType.all, 'id', 'name', @variant.variant_type_id), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+  <%= f.select :variant_type_id, options_from_collection_for_select(VariantType.all, 'id', 'name', @variant.variant_type_id), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
