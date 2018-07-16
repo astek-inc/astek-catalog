@@ -19,6 +19,7 @@ class Design < ActiveRecord::Base
   has_many :properties, through: :design_properties
 
   has_and_belongs_to_many :styles
+  has_and_belongs_to_many :substrates
 
   accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
 

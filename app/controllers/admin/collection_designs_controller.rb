@@ -2,7 +2,7 @@ module Admin
   class CollectionDesignsController < Admin::BaseController
 
     before_action :set_collection, except: [:edit]
-    before_action :set_sale_units, :set_styles, only: [:new, :edit]
+    before_action :set_sale_units, :set_styles, :set_substrates, only: [:new, :edit]
 
     def index
       @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
@@ -70,8 +70,12 @@ module Admin
       @styles = Style.all
     end
 
+    def set_substrates
+      @substrates = Substrate.rank(:row_order)
+    end
+
     def design_params
-      params.require(:design).permit(:name, :description, :keywords, :slug, :collection_id, :price, :sale_unit_id, :available_on, :expires_on, style_ids: [])
+      params.require(:design).permit(:name, :description, :keywords, :slug, :collection_id, :price, :sale_unit_id, :available_on, :expires_on, style_ids: [], substrate_ids: [])
     end
 
   end
