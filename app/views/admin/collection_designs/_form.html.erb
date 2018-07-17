@@ -83,35 +83,3 @@
       <% end %>
     <% end %>
 <% end %>
-
-
-<%= content_tag :div, class: 'panel panel-default' do %>
-  <%= content_tag :div, 'Substrates', class: 'panel-heading' %>
-    <%= content_tag :div, class: 'panel-body' do %>
-
-      <% column_count = 4.0 %>
-      <% item_count = @substrates.count %>
-      <% divisor = (item_count / column_count).ceil %>
-      <% column_class = 'col-md-' + (12 / column_count).round.to_s %>
-      <% index = 0 %>
-
-      <%= collection_check_boxes(:design, :substrate_ids, @substrates, :id, :name) do |b| %>
-
-        <% if index % divisor == 0 %>
-          <div class="<%= column_class %>">
-        <% end %>
-
-        <%= content_tag :div, class: 'checkbox' do %>
-          <%= b.label { b.check_box + b.text } %>
-        <% end %>
-
-        <% if (index % divisor == divisor - 1) || (index == item_count - 1) %>
-          </div>
-        <% end %>
-
-        <% index += 1 %>
-
-      <% end %>
-    <% end %>
-  <% end %>
-

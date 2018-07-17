@@ -1,8 +1,8 @@
 module Admin
   class VariantsController < Admin::BaseController
 
-    before_action :get_design, :get_collection
-    before_action :get_colors, only: [:new, :edit]
+    before_action :set_design, :set_collection
+    before_action :set_colors, :set_substrates, only: [:new, :edit]
 
     def index
       @variants = Variant.where(design_id: @design.id).rank(:row_order).page params[:page]
@@ -58,20 +58,24 @@ module Admin
 
     private
 
-    def get_design
+    def set_design
       @design = Design.friendly.find(params[:design_id])
     end
 
-    def get_collection
+    def set_collection
       @collection = @design.collection
     end
 
-    def get_colors
+    def set_colors
       @colors = Color.rank(:row_order)
     end
 
+    def set_substrates
+      @substrates = Substrate.rank(:row_order)
+    end
+
     def variant_params
-      params.require(:variant).permit(:variant_type_id, :name, :sku, :keywords, :slug, :design_id, color_ids: [])
+      params.require(:variant).permit(:variant_type_id, :name, :sku, :keywords, :slug, :design_id, color_ids: [], substrate_ids: [])
     end
 
   end

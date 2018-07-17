@@ -106,14 +106,6 @@ ActiveRecord::Schema.define(version: 20180716192718) do
   add_index "designs_styles", ["design_id", "style_id"], name: "index_designs_styles_on_design_id_and_style_id", using: :btree
   add_index "designs_styles", ["style_id", "design_id"], name: "index_designs_styles_on_style_id_and_design_id", using: :btree
 
-  create_table "designs_substrates", id: false, force: :cascade do |t|
-    t.integer "design_id",    null: false
-    t.integer "substrate_id", null: false
-  end
-
-  add_index "designs_substrates", ["design_id", "substrate_id"], name: "index_designs_substrates_on_design_id_and_substrate_id", using: :btree
-  add_index "designs_substrates", ["substrate_id", "design_id"], name: "index_designs_substrates_on_substrate_id_and_design_id", using: :btree
-
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -236,6 +228,14 @@ ActiveRecord::Schema.define(version: 20180716192718) do
 
   add_index "substrates", ["deleted_at"], name: "index_substrates_on_deleted_at", using: :btree
   add_index "substrates", ["row_order"], name: "index_substrates_on_row_order", using: :btree
+
+  create_table "substrates_variants", id: false, force: :cascade do |t|
+    t.integer "substrate_id", null: false
+    t.integer "variant_id",   null: false
+  end
+
+  add_index "substrates_variants", ["substrate_id", "variant_id"], name: "index_substrates_variants_on_substrate_id_and_variant_id", using: :btree
+  add_index "substrates_variants", ["variant_id", "substrate_id"], name: "index_substrates_variants_on_variant_id_and_substrate_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
