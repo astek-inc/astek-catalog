@@ -1,15 +1,28 @@
 class PopulateColors < ActiveRecord::Migration
 
   DATA = [
-    {name: 'Red'},
-    {name: 'Orange'},
-    {name: 'Yellow'},
-    {name: 'Green'},
-    {name: 'Blue'},
-    {name: 'Indigo'},
-    {name: 'Violet'},
-    {name: 'Brown'},
-    {name: 'Black and White'},
+      {name: 'Black and White'},
+      {name: 'Beige'},
+      {name: 'Black'},
+      {name: 'Blue'},
+      {name: 'Bronze'},
+      {name: 'Brown'},
+      {name: 'Cream'},
+      {name: 'Gold'},
+      {name: 'Green'},
+      {name: 'Green'},
+      {name: 'Grey'},
+      {name: 'Grey'},
+      {name: 'Neutral'},
+      {name: 'Off-White'},
+      {name: 'Orange'},
+      {name: 'Pink'},
+      {name: 'Purple'},
+      {name: 'Red'},
+      {name: 'Silver'},
+      {name: 'White'},
+      {name: 'Yellow'},
+      {name: 'Multi'}
   ]
 
   def up
