@@ -3,7 +3,8 @@ class PopulateStyles < ActiveRecord::Migration
   STYLES = [
     'Abstract',
     'Animalia',
-    'Art Deco + Art Nouveau',
+    'Art Deco',
+    'Art Nouveau',
     'Botanical',
     'Children\'s',
     'Contemporary',
