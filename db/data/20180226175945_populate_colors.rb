@@ -10,8 +10,6 @@ class PopulateColors < ActiveRecord::Migration
       {name: 'Cream'},
       {name: 'Gold'},
       {name: 'Green'},
-      {name: 'Green'},
-      {name: 'Grey'},
       {name: 'Grey'},
       {name: 'Neutral'},
       {name: 'Off-White'},
