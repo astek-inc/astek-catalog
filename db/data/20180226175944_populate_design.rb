@@ -17,7 +17,7 @@ class PopulateDesign < ActiveRecord::Migration
     })
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '148.96')
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '96')
-
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire rating'), value: 'Class A')
 
     design = Design.create!({
       collection: collection,
@@ -31,6 +31,7 @@ class PopulateDesign < ActiveRecord::Migration
     })
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '200')
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '70')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire rating'), value: 'Class A')
 
     design = Design.create!({
        collection: Collection.find_by(name: 'Micrographia'),
@@ -44,6 +45,7 @@ class PopulateDesign < ActiveRecord::Migration
     })
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '170.44')
     design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '108')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire rating'), value: 'Class A')
 
   end
 
