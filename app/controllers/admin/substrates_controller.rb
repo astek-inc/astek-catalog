@@ -52,7 +52,7 @@ module Admin
     end
 
     def substrate_params
-      params.require(:substrate).permit(:name, :description, :keywords, substrate_category_ids: [])
+      params.require(:substrate).permit(:name, :description, :keywords, :backing_type_id, substrate_category_ids: [])
     end
 
   end

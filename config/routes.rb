@@ -32,6 +32,10 @@ Rails.application.routes.draw do
 
     resources :substrate_categories, except: :show
 
+    resources :backing_types, concerns: :paginatable do
+      post :update_row_order, on: :collection
+    end
+
     resources :users
 
     resources :websites, except: :show

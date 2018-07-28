@@ -16,6 +16,18 @@ ActiveRecord::Schema.define(version: 20180716192718) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "backing_types", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "row_order"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "backing_types", ["deleted_at"], name: "index_backing_types_on_deleted_at", using: :btree
+  add_index "backing_types", ["row_order"], name: "index_backing_types_on_row_order", using: :btree
+
   create_table "collections", force: :cascade do |t|
     t.integer  "product_type_id"
     t.string   "name"
@@ -220,9 +232,10 @@ ActiveRecord::Schema.define(version: 20180716192718) do
     t.text     "description"
     t.text     "keywords"
     t.string   "slug"
+    t.integer  "backing_type_id"
     t.integer  "row_order"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
   end
 
@@ -311,6 +324,7 @@ ActiveRecord::Schema.define(version: 20180716192718) do
   add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
   add_foreign_key "designs", "sale_units"
+  add_foreign_key "substrates", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "variant_types"
 end
