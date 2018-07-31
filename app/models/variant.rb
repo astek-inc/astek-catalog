@@ -12,6 +12,7 @@ class Variant < ActiveRecord::Base
 
   belongs_to :design
   belongs_to :variant_type
+  belongs_to :substrate
 
   has_many :variant_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 

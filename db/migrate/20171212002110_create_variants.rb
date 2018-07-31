@@ -6,6 +6,7 @@ class CreateVariants < ActiveRecord::Migration
       t.string :name
       t.text :sku, index: true
       t.string :slug, unique: true
+      t.integer :substrate_id
       t.integer :row_order, index: true
       t.timestamps null: false
       t.timestamp :deleted_at, index: true
@@ -13,5 +14,6 @@ class CreateVariants < ActiveRecord::Migration
 
     add_foreign_key :variants, :designs
     add_foreign_key :variants, :variant_types
+    add_foreign_key :variants, :substrates
   end
 end

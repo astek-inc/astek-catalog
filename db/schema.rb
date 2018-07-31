@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180716192718) do
+ActiveRecord::Schema.define(version: 20180118235116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,14 +242,6 @@ ActiveRecord::Schema.define(version: 20180716192718) do
   add_index "substrates", ["deleted_at"], name: "index_substrates_on_deleted_at", using: :btree
   add_index "substrates", ["row_order"], name: "index_substrates_on_row_order", using: :btree
 
-  create_table "substrates_variants", id: false, force: :cascade do |t|
-    t.integer "substrate_id", null: false
-    t.integer "variant_id",   null: false
-  end
-
-  add_index "substrates_variants", ["substrate_id", "variant_id"], name: "index_substrates_variants_on_substrate_id_and_variant_id", using: :btree
-  add_index "substrates_variants", ["variant_id", "substrate_id"], name: "index_substrates_variants_on_variant_id_and_substrate_id", using: :btree
-
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -290,6 +282,7 @@ ActiveRecord::Schema.define(version: 20180716192718) do
     t.string   "name"
     t.text     "sku"
     t.string   "slug"
+    t.integer  "substrate_id"
     t.integer  "row_order"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
@@ -326,5 +319,6 @@ ActiveRecord::Schema.define(version: 20180716192718) do
   add_foreign_key "designs", "sale_units"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "variants", "designs"
+  add_foreign_key "variants", "substrates"
   add_foreign_key "variants", "variant_types"
 end
