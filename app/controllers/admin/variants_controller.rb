@@ -1,6 +1,7 @@
 module Admin
   class VariantsController < Admin::BaseController
 
+    before_action :set_variant, only: [:edit, :update, :destroy]
     before_action :set_design, :set_collection
     before_action :set_colors, :set_substrates, only: [:new, :edit]
 
@@ -24,22 +25,15 @@ module Admin
     end
 
     def edit
-      @variant = Variant.friendly.find(params[:id])
-      # @collection = @variant.collection
     end
 
     def update
-      @variant = Variant.friendly.find(params[:id])
       if @variant.update_attributes(variant_params)
         flash[:notice] = 'Variant updated.'
         redirect_to(action: 'index')
       else
         render('edit')
       end
-    end
-
-    def delete
-      @variant = Variant.friendly.find(params[:id])
     end
 
     def update_row_order
@@ -51,12 +45,15 @@ module Admin
     end
 
     def destroy
-      Variant.friendly.find(params[:id]).destroy
       flash[:notice] = 'Variant destroyed.'
       redirect_to(action: 'index')
     end
 
     private
+
+    def set_variant
+      @variant = Variant.friendly.find(params[:id])
+    end
 
     def set_design
       @design = Design.friendly.find(params[:design_id])
