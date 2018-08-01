@@ -8,6 +8,7 @@ class CreateVariants < ActiveRecord::Migration
       t.string :slug, unique: true
       t.integer :substrate_id
       t.integer :row_order, index: true
+      t.string :tearsheet
       t.timestamps null: false
       t.timestamp :deleted_at, index: true
     end

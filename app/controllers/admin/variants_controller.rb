@@ -45,6 +45,7 @@ module Admin
     end
 
     def destroy
+      @variant.destroy
       flash[:notice] = 'Variant destroyed.'
       redirect_to(action: 'index')
     end

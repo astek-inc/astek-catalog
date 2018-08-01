@@ -91,7 +91,7 @@ module Admin
       primary_row_attributes = %w[
           sku
           name
-          description
+          body
           vendor
           type
           tags

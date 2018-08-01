@@ -22,4 +22,8 @@ class Design < ActiveRecord::Base
 
   accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
 
+  def property name
+    self.design_properties.joins(:property).find_by(properties: { name: name }).try(:value)
+  end
+
 end

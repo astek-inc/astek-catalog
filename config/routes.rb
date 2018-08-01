@@ -58,9 +58,9 @@ Rails.application.routes.draw do
     resources :collections, concerns: :paginatable do
       post :update_row_order, on: :collection
 
-      resources :collection_images, only: [:index, :new, :create, :show, :destroy] do
-        post :update_row_order, on: :collection
-      end
+      # resources :collection_images, only: [:index, :new, :create, :show, :destroy] do
+      #   post :update_row_order, on: :collection
+      # end
 
       resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
@@ -82,6 +82,9 @@ Rails.application.routes.draw do
     end
 
     resources :variants, concerns: :paginatable do
+      resource :tearsheet, only: [:show], controller: :variant_tearsheets do
+        post :generate, defaults: { format: 'pdf' }
+      end
       resources :variant_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end

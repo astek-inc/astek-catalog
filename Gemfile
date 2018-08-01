@@ -45,6 +45,9 @@ gem 'rolify'
 
 gem 'data_migrate'
 
+# PDF tearsheet generation
+gem 'prawn-rails'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
