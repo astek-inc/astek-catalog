@@ -18,6 +18,12 @@ module Admin
         flash[:notice] = 'Product type created.'
         redirect_to(action: 'index')
       else
+        if @product_type.errors.any?
+          msg = @product_type.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating product type.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

@@ -15,6 +15,12 @@ module Admin
         flash[:notice] = 'Property created.'
         redirect_to(action: 'index')
       else
+        if @property.errors.any?
+          msg = @property.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating property.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

@@ -20,6 +20,12 @@ module Admin
         flash[:notice] = 'Variant created.'
         redirect_to(action: 'index')
       else
+        if @variant.errors.any?
+          msg = @variant.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating variant.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

@@ -15,6 +15,12 @@ module Admin
         flash[:notice] = 'Style created.'
         redirect_to(action: 'index')
       else
+        if @style.errors.any?
+          msg = @style.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating style.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

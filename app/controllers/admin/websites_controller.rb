@@ -1,6 +1,8 @@
 module Admin
   class WebsitesController < Admin::BaseController
 
+    before_action :set_website, only: [:edit, :update, :delete, :destroy]
+
     def index
       @websites = Website.all
     end
@@ -15,16 +17,20 @@ module Admin
         flash[:notice] = 'Website created.'
         redirect_to(action: 'index')
       else
+        if @website.errors.any?
+          msg = @website.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating website.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end
 
     def edit
-      @website = Website.find(params[:id])
     end
 
     def update
-      @website = Website.find(params[:id])
       if @website.update_attributes(website_params)
         flash[:notice] = 'Website updated.'
         redirect_to(action: 'index')
@@ -34,16 +40,19 @@ module Admin
     end
 
     def delete
-      @website = Website.find(params[:id])
     end
 
     def destroy
-      Website.find(params[:id]).destroy
+      @website.destroy
       flash[:notice] = "Website destroyed."
       redirect_to(action: 'index')
     end
 
     private
+
+    def set_website
+      @website = Website.find(params[:id])
+    end
 
     def website_params
       params.require(:website).permit(:name, :domain)

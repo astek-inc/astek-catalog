@@ -15,6 +15,12 @@ module Admin
         flash[:notice] = 'Vendor created.'
         redirect_to(action: 'index')
       else
+        if @vendor.errors.any?
+          msg = @vendor.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating vendor.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

@@ -18,6 +18,12 @@ module Admin
         flash[:notice] = 'Collection created.'
         redirect_to(action: 'index')
       else
+        if @collection.errors.any?
+          msg = @collection.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating collection.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

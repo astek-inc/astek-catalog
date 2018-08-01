@@ -19,7 +19,12 @@ module Admin
         flash[:notice] = 'Substrate created.'
         redirect_to(action: 'index')
       else
-        flash[:error] = 'Error creating substrate.'
+        if @substrate.errors.any?
+          msg = @substrate.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating substrate.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

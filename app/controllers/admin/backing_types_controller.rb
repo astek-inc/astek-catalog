@@ -18,6 +18,12 @@ module Admin
         flash[:notice] = 'Product type created.'
         redirect_to(action: 'index')
       else
+        if @backing_type.errors.any?
+          msg = @backing_type.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating backing type.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end
