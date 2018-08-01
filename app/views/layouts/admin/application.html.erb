@@ -62,7 +62,6 @@
               <%= nav_sublink 'Vendors', admin_vendors_path %>
               <%= nav_sublink 'Product Types', admin_product_types_path %>
               <%= nav_sublink 'Variant Types', admin_variant_types_path %>
-              <%= nav_sublink 'Backing Types', admin_backing_types_path %>
               <%= nav_sublink 'Properties', admin_properties_path %>
               <%= nav_sublink 'Colors', admin_colors_path %>
               <%= nav_sublink 'Styles', admin_styles_path %>
@@ -78,6 +77,7 @@
             <%= content_tag :div, id: 'substrates', class: 'sublinks collapse' do %>
               <%= nav_sublink 'Substrates', admin_substrates_path %>
               <%= nav_sublink 'Substrate Categories', admin_substrate_categories_path %>
+              <%= nav_sublink 'Backing Types', admin_backing_types_path %>
             <% end %>
 
             <%= nav_link 'Collections', 'book', admin_collections_path %>
