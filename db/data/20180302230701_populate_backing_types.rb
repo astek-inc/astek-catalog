@@ -1,6 +1,6 @@
 class PopulateBackingTypes < ActiveRecord::Migration
   def up
-    %w[Woven Non-woven].each do |t|
+    %w[Woven Non-woven Paper].each do |t|
       BackingType.create(name: t)
     end
   end
