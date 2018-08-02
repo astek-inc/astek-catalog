@@ -19,6 +19,7 @@ class PopulateProperties < ActiveRecord::Migration
       { name: 'print type', presentation: 'Print type', klass_scope: 'Design' },
       { name: 'margin trim', presentation: 'Margin trim', klass_scope: 'Design' },
       { name: 'print to order', presentation: 'Print to order', klass_scope: 'Design' },
+      { name: 'minimum quantity', presentation: 'Minimum quantity', klass_scope: 'Design' }
   ]
 
   # require 'pp'
