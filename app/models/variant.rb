@@ -68,11 +68,18 @@ class Variant < ActiveRecord::Base
     self.design.price.to_s
   end
 
+  # Variants which should not show up in search results should have only the
+  # tag "legacy-sku", which tells the Shopify system not to display them except
+  # within their collections
   def tags
-    tags = []
-    tags << to_tags('color', self.colors.map { |c| c.name })
-    tags << self.design.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
-    tags.flatten.join(', ')
+    if self.suppress_from_searches
+      'legacy-sku'
+    else
+      tags = []
+      tags << to_tags('color', self.colors.map { |c| c.name })
+      tags << self.design.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
+      tags.flatten.join(', ')
+    end
   end
 
   def to_tags name, values

@@ -9,7 +9,7 @@ class PopulateCollection < ActiveRecord::Migration
 
   def up
 
-    product_type = ProductType.find_by(name: 'Digital Collections')
+    product_type = ProductType.find_by(name: 'Digital Mural')
     vendor = Vendor.find_by(name: 'Astek Inc.')
     websites = Website.where(domain: %w[astekhome.com astek.com])
 
