@@ -10,9 +10,22 @@
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :sku, 'SKU' %> <span class="required">*</span>
-    <%= f.text_field :sku, required: true, class: 'form-control' %>
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: ['col-md-8'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :sku, 'SKU' %> <span class="required">*</span>
+      <%= f.text_field :sku, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: ['col-md-4'] do %>
+    <%= content_tag :div, class: ['checkbox'], id: 'suppress-from-searches' do %>
+      <%= f.label :suppress_from_searches do %>
+        <%= f.check_box :suppress_from_searches %> Suppress this Item From Search Results
+      <% end %>
+
+    <% end %>
+  <% end %>
 <% end %>
 
 <% if @variant.persisted? %>

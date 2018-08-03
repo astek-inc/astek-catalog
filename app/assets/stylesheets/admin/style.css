@@ -63,3 +63,7 @@ div.form-group div.image {
 div.form-actions > button {
     margin-right: 10px;
 }
+
+div#suppress-from-searches {
+    padding-top: 20px;
+}

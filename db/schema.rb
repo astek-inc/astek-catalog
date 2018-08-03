@@ -285,8 +285,9 @@ ActiveRecord::Schema.define(version: 20180118235116) do
     t.integer  "substrate_id"
     t.integer  "row_order"
     t.string   "tearsheet"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.boolean  "suppress_from_searches", default: false, null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.datetime "deleted_at"
   end
 
