@@ -1,7 +1,7 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
-    before_action :load_websites, only: [:new, :edit]
+    before_action :set_product_type_groups, only: [:new, :edit]
 
     def index
       @collections = Collection.rank(:row_order).page params[:page]
@@ -68,8 +68,8 @@ module Admin
 
     private
 
-    def load_websites
-      @websites = Website.all
+    def set_product_type_groups
+      @product_type_groups = ProductTypeGroup.rank(:row_order)
     end
 
     def collection_params

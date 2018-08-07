@@ -1,7 +1,7 @@
 module Admin
   class ProductTypesController < BaseController
 
-    before_action :load_websites, only: [:new, :edit]
+    before_action :set_websites, :set_product_type_groups, only: [:new, :edit]
 
     def index
       @product_types = ProductType.rank(:row_order).page params[:page]
@@ -29,11 +29,11 @@ module Admin
     end
 
     def edit
-      @product_type = ProductType.friendly.find(params[:id])
+      @product_type = ProductType.find(params[:id])
     end
 
     def update
-      @product_type = ProductType.friendly.find(params[:id])
+      @product_type = ProductType.find(params[:id])
       if @product_type.update_attributes(product_type_params)
         flash[:notice] = 'Product type updated.'
         redirect_to(action: 'index')
@@ -43,7 +43,7 @@ module Admin
     end
 
     def delete
-      @product_type = ProductType.friendly.find(params[:id])
+      @product_type = ProductType.find(params[:id])
     end
 
     def update_row_order
@@ -55,19 +55,23 @@ module Admin
     end
 
     def destroy
-      ProductType.friendly.find(params[:id]).destroy
+      ProductType.find(params[:id]).destroy
       flash[:notice] = 'Product type destroyed.'
       redirect_to(action: 'index')
     end
 
     private
 
-    def load_websites
+    def set_websites
       @websites = Website.all
     end
 
+    def set_product_type_groups
+      @product_type_groups = ProductTypeGroup.rank(:row_order)
+    end
+
     def product_type_params
-      params.require(:product_type).permit(:name, :description, :keywords, :slug) #, image_attributes: [:file, :imageable_id, :image_type])
+      params.require(:product_type).permit(:name, :description, :product_type_group_id)
     end
 
   end

@@ -53,6 +53,10 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :product_type_groups, concerns: :paginatable do
+      post :update_row_order, on: :collection
+    end
+
     get 'collections/search', to: 'collections#search'
 
     resources :collections, concerns: :paginatable do

@@ -146,20 +146,30 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "images", ["row_order"], name: "index_images_on_row_order", using: :btree
   add_index "images", ["type"], name: "index_images_on_type", using: :btree
 
-  create_table "product_types", force: :cascade do |t|
+  create_table "product_type_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.text     "keywords"
+    t.integer  "row_order"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.datetime "deleted_at"
-    t.string   "slug"
+  end
+
+  add_index "product_type_groups", ["deleted_at"], name: "index_product_type_groups_on_deleted_at", using: :btree
+  add_index "product_type_groups", ["row_order"], name: "index_product_type_groups_on_row_order", using: :btree
+
+  create_table "product_types", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "product_type_group_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.datetime "deleted_at"
     t.integer  "row_order"
   end
 
   add_index "product_types", ["deleted_at"], name: "index_product_types_on_deleted_at", using: :btree
   add_index "product_types", ["row_order"], name: "index_product_types_on_row_order", using: :btree
-  add_index "product_types", ["slug"], name: "index_product_types_on_slug", unique: true, using: :btree
 
   create_table "product_types_websites", id: false, force: :cascade do |t|
     t.integer "product_type_id", null: false
@@ -319,6 +329,7 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
   add_foreign_key "designs", "sale_units"
+  add_foreign_key "product_types", "product_type_groups"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "substrates"

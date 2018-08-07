@@ -1,32 +1,14 @@
 <%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :product_type_group_id, 'Product Type Group' %> <span class="required">*</span>
+  <%= f.collection_select :product_type_group_id, @product_type_groups, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :name, 'Name' %> <span class="required">*</span>
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :description, 'Description' %> <span class="required">*</span>
-    <%= f.text_area :description, rows: 9, required: true, class: 'form-control' %>
-<% end %>
-
-<%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
-    <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
-<% end %>
-
-<% if @product_type.persisted? %>
-    <%= content_tag :div, class: ['form-group'] do %>
-        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
-        <%= f.text_field :slug, required: true, class: 'form-control' %>
-    <% end %>
-<% end %>
-
-<%= content_tag :div, class: 'panel panel-default' do %>
-  <%= content_tag :div, 'Visibility', class: 'panel-heading' %>
-  <%= content_tag :div, class: 'panel-body' do %>
-    <%= collection_check_boxes(:product_type, :website_ids, @websites, :id, :name) do |b| %>
-      <%= content_tag :div, class: 'checkbox-inline' do %>
-        <%= b.label() { b.check_box + b.text } %>
-      <% end %>
-    <% end %>
-  <% end %>
+    <%= f.text_area :description, rows: 6, required: true, class: 'form-control' %>
 <% end %>
