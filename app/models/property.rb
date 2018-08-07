@@ -7,6 +7,7 @@ class Property < ActiveRecord::Base
 
   validates :name, :presentation, :klass_scope, presence: true
   validates :name, uniqueness: { scope: :klass_scope }
+  validates :name, format: { with: /\A[a-z0-9_]+\z/, message: 'only allows lower-case letters, numerals, and underscores' }
 
   default_scope { order(:name) }
 
