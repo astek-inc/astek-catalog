@@ -1,7 +1,7 @@
 module Admin
   class ProductTypesController < BaseController
 
-    before_action :set_websites, :set_product_type_groups, only: [:new, :edit]
+    before_action :set_product_type_groups, only: [:new, :edit]
 
     def index
       @product_types = ProductType.rank(:row_order).page params[:page]
@@ -61,10 +61,6 @@ module Admin
     end
 
     private
-
-    def set_websites
-      @websites = Website.all
-    end
 
     def set_product_type_groups
       @product_type_groups = ProductTypeGroup.rank(:row_order)

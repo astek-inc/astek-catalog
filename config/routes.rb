@@ -38,8 +38,6 @@ Rails.application.routes.draw do
 
     resources :users
 
-    resources :websites, except: :show
-
     resources :styles, except: :show
 
     resources :vendors, except: [:show, :delete]
