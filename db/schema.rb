@@ -45,14 +45,6 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "collections", ["row_order"], name: "index_collections_on_row_order", using: :btree
   add_index "collections", ["slug"], name: "index_collections_on_slug", unique: true, using: :btree
 
-  create_table "collections_websites", id: false, force: :cascade do |t|
-    t.integer "collection_id", null: false
-    t.integer "website_id",    null: false
-  end
-
-  add_index "collections_websites", ["collection_id", "website_id"], name: "index_collections_websites_on_collection_id_and_website_id", using: :btree
-  add_index "collections_websites", ["website_id", "collection_id"], name: "index_collections_websites_on_website_id_and_collection_id", using: :btree
-
   create_table "colors", force: :cascade do |t|
     t.string   "name"
     t.string   "slug"
@@ -171,14 +163,6 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "product_types", ["deleted_at"], name: "index_product_types_on_deleted_at", using: :btree
   add_index "product_types", ["row_order"], name: "index_product_types_on_row_order", using: :btree
 
-  create_table "product_types_websites", id: false, force: :cascade do |t|
-    t.integer "product_type_id", null: false
-    t.integer "website_id",      null: false
-  end
-
-  add_index "product_types_websites", ["product_type_id", "website_id"], name: "index_product_types_websites_on_product_type_id_and_website_id", using: :btree
-  add_index "product_types_websites", ["website_id", "product_type_id"], name: "index_product_types_websites_on_website_id_and_product_type_id", using: :btree
-
   create_table "properties", force: :cascade do |t|
     t.string   "name"
     t.string   "presentation"
@@ -204,15 +188,12 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   create_table "sale_units", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.string   "slug"
-    t.integer  "row_order"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.datetime "deleted_at"
   end
 
   add_index "sale_units", ["deleted_at"], name: "index_sale_units_on_deleted_at", using: :btree
-  add_index "sale_units", ["row_order"], name: "index_sale_units_on_row_order", using: :btree
 
   create_table "styles", force: :cascade do |t|
     t.string   "name",       null: false
@@ -314,16 +295,6 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   end
 
   add_index "vendors", ["deleted_at"], name: "index_vendors_on_deleted_at", using: :btree
-
-  create_table "websites", force: :cascade do |t|
-    t.string   "name"
-    t.string   "domain"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
-  end
-
-  add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
 
   add_foreign_key "collections", "product_types"
   add_foreign_key "collections", "vendors"
