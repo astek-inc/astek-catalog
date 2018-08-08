@@ -26,7 +26,7 @@ csv.each do |row|
     sale_unit = SaleUnit.find_by!({ name: item.sale_unit })
     styles = Style.where(name: item.style.split(',').map { |s| s.strip })
     variant_type = VariantType.find_by!({ name: item.variant_type })
-    substrate = Substrate.find_by!(name: item.substrate)
+    substrate = Substrate.find_by(name: item.substrate)
 
     collection = Collection.find_or_create_by!({ name: item.collection, product_type: product_type, vendor: vendor })
 
