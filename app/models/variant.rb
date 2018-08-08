@@ -140,32 +140,32 @@ class Variant < ActiveRecord::Base
           pdf.move_down 6
         end
 
-        if match_type = self.design.property('repeat match type')
+        if match_type = self.design.property('repeat_match_type')
           pdf.text 'MATCH TYPE: '+match_type
           pdf.move_down 6
         end
 
-        if printed_width = self.design.property('printed width')
+        if printed_width = self.design.property('printed_width')
           pdf.text 'PRINTED WIDTH: '+printed_width
           pdf.move_down 6
         end
 
-        if repeat_height = self.design.property('repeat height')
+        if repeat_height = self.design.property('repeat_height')
           pdf.text 'VERTICAL REPEAT: '+repeat_height
           pdf.move_down 6
         end
 
-        if repeat_width = self.design.property('repeat width')
+        if repeat_width = self.design.property('repeat_width')
           pdf.text 'MOTIF WIDTH: '+repeat_width
           pdf.move_down 6
         end
 
-        if mural_width = self.design.property('mural width')
+        if mural_width = self.design.property('mural_width')
           pdf.text 'MURAL WIDTH: '+mural_width
           pdf.move_down 6
         end
 
-        if mural_height = self.design.property('mural height')
+        if mural_height = self.design.property('mural_height')
           pdf.text 'MURAL HEIGHT: '+mural_height
           pdf.move_down 6
         end
@@ -175,7 +175,7 @@ class Variant < ActiveRecord::Base
           pdf.move_down 6
         end
 
-        if fire_rating = self.design.property('fire rating')
+        if fire_rating = self.design.property('fire_rating')
           pdf.text 'FIRE RATING: '+fire_rating
         end
         
