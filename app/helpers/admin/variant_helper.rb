@@ -37,7 +37,7 @@ module Admin
         variant_tax_code: ''
     }
 
-    def variants_to_csv variants
+    def variants_to_csv variants, website
       header = [
           'Handle',
           'Title',
@@ -144,12 +144,12 @@ module Admin
 
         variants.each do |variant|
 
-          csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 0)) }
+          csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 0, website)) }
 
           if variant.variant_images.count > 1
 
             (1..variant.variant_images.count - 1).each do | image_index |
-              csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, image_index)) }
+              csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, image_index, website)) }
             end
           end
 
@@ -158,9 +158,20 @@ module Admin
 
     end
 
-    def attribute_value attr, variant, image_index
+    def attribute_value attr, variant, image_index, website
       if TEXT_VALUES[attr.to_sym]
         TEXT_VALUES[attr.to_sym]
+      elsif attr == 'body'
+
+        case website
+        when 'astek.com'    #compare to 1
+
+        when 'astekhome.com'
+          astek_home_description variant
+        else
+          astek_business_description variant
+        end
+
       elsif attr == 'image_position'
         image_index + 1
       elsif attr == 'image_url'
@@ -174,6 +185,46 @@ module Admin
           val
         end
       end
+
+    end
+
+    def astek_business_description variant
+      body = ''
+      if variant.description
+        body += format_description variant
+      end
+
+      body += format_properties variant
+
+      if variant.tearsheet.file
+        body += format_tearsheet_link variant
+      end
+    end
+
+    def astek_home_description variant
+      'Astek home description for '+variant.name
+    end
+
+    def format_description variant
+      '<div>
+          <p>'+variant.description+'</p>
+        </div>'
+    end
+
+    def format_properties variant
+      formatted = '<div class="description__formatted">'
+      variant.design.design_properties.each do |dp|
+        formatted += $/ + '<div>
+          <h5>'+dp.property.presentation+'</h5>
+          <p>'+dp.value+'</p>
+        </div>'
+      end
+      formatted += $/ + '</div>'
+      formatted
+    end
+
+    def format_tearsheet_link variant
+      '<!-- pdf -->' + $/ + ActionController::Base.helpers.link_to('Tear Sheet', variant.tearsheet.file.url, class: 'btn btn--small')
     end
 
   end

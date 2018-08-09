@@ -9,8 +9,10 @@ module Admin
 
     def generate_csv
       @collection = Collection.find(params[:collection_id])
+      website = params[:website]
+
       variants = @collection.designs.map { |d| d.variants }.flatten
-      csv_data = variants_to_csv variants
+      csv_data = variants_to_csv variants, website
 
       respond_to do |format|
         format.csv { send_data csv_data, type: 'text/csv; charset=utf-8; header=present', filename: "product-export-#{@collection.name.parameterize}-#{Date.today}.csv" }
