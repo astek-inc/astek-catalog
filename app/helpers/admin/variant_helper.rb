@@ -158,14 +158,15 @@ module Admin
 
     end
 
-    def attribute_value attr, variant, image_index, website
+    def attribute_value attr, variant, image_index, domain
+
       if TEXT_VALUES[attr.to_sym]
         TEXT_VALUES[attr.to_sym]
       elsif attr == 'body'
 
-        case website
-        when 'astek.com'    #compare to 1
-
+        case domain
+        when 'astek.com'
+          astek_business_description variant
         when 'astekhome.com'
           astek_home_description variant
         else
@@ -199,6 +200,8 @@ module Admin
       if variant.tearsheet.file
         body += format_tearsheet_link variant
       end
+
+      body
     end
 
     def astek_home_description variant
