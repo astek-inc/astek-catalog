@@ -11,6 +11,7 @@ class PopulateProductTypes < ActiveRecord::Migration
       { name: 'Cork', product_category: 'Naturals', description: '' },
       { name: 'Grasscloth', product_category: 'Naturals', description: '' },
       { name: 'Mica', product_category: 'Naturals', description: '' },
+      { name: 'Silk', product_category: 'Naturals', description: '' },
 
       # Specialty
       { name: 'Contact Paper', product_category: 'Specialty', description: '' },
