@@ -53,7 +53,7 @@ class Variant < ActiveRecord::Base
   end
 
   def type
-    self.design.collection.product_type.name
+    self.design.product_type.name
   end
 
   def image_url position
