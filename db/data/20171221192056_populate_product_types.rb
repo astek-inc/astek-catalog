@@ -3,28 +3,28 @@ class PopulateProductTypes < ActiveRecord::Migration
   PRODUCT_TYPES = [
 
       # Digital
-      { name: 'Featured Designers', product_type_group: 'Digital', description: '' },
-      { name: 'Murals', product_type_group: 'Digital', description: '' },
-      { name: 'Studio', product_type_group: 'Digital', description: '' },
+      { name: 'Featured Designers', product_category: 'Digital', description: '' },
+      { name: 'Murals', product_category: 'Digital', description: '' },
+      { name: 'Studio', product_category: 'Digital', description: '' },
 
       # Naturals
-      { name: 'Cork', product_type_group: 'Naturals', description: '' },
-      { name: 'Grasscloth', product_type_group: 'Naturals', description: '' },
-      { name: 'Mica', product_type_group: 'Naturals', description: '' },
+      { name: 'Cork', product_category: 'Naturals', description: '' },
+      { name: 'Grasscloth', product_category: 'Naturals', description: '' },
+      { name: 'Mica', product_category: 'Naturals', description: '' },
 
       # Specialty
-      { name: 'Contact Paper', product_type_group: 'Specialty', description: '' },
-      { name: 'Exclusive Lines', product_type_group: 'Specialty', description: '' },
-      { name: 'Metallic', product_type_group: 'Specialty', description: '' },
-      { name: 'Residential', product_type_group: 'Specialty', description: '' },
-      { name: 'Textured', product_type_group: 'Specialty', description: '' },
-      { name: 'Window Film', product_type_group: 'Specialty', description: '' },
+      { name: 'Contact Paper', product_category: 'Specialty', description: '' },
+      { name: 'Exclusive Lines', product_category: 'Specialty', description: '' },
+      { name: 'Metallic', product_category: 'Specialty', description: '' },
+      { name: 'Residential', product_category: 'Specialty', description: '' },
+      { name: 'Textured', product_category: 'Specialty', description: '' },
+      { name: 'Window Film', product_category: 'Specialty', description: '' },
 
   ]
 
   def self.up
     PRODUCT_TYPES.each do |type|
-      type[:product_type_group] = ProductTypeGroup.find_by(name: type[:product_type_group])
+      type[:product_category] = ProductCategory.find_by(name: type[:product_category])
       ProductType.create!(type)
     end
   end

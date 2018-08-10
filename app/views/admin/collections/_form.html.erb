@@ -1,6 +1,7 @@
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :product_type_id, 'Product Type' %> <span class="required">*</span>
-    <%= f.grouped_collection_select :product_type_id, @product_type_groups, :product_types, :name, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <%= f.label :product_category_id, 'Product Category' %> <span class="required">*</span>
+    <%#= f.grouped_collection_select :product_type_id, @product_categories, :product_types, :name, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <%= f.collection_select :product_category_id, @product_categories, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>

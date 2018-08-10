@@ -1,4 +1,4 @@
-class PopulateProductTypeGroups < ActiveRecord::Migration
+class PopulateProductCategories < ActiveRecord::Migration
 
   PRODUCT_TYPE_GROUPS = [
       { name: 'Digital', description: '' },
@@ -8,13 +8,13 @@ class PopulateProductTypeGroups < ActiveRecord::Migration
 
   def up
     PRODUCT_TYPE_GROUPS.each do |group|
-      ProductTypeGroup.create!(group)
+      ProductCategory.create!(group)
     end
   end
 
   def down
     PRODUCT_TYPE_GROUPS.each do |group|
-      ProductTypeGroup.find_by(name: group[:name]).destroy!
+      ProductCategory.find_by(name: group[:name]).destroy!
     end
   end
 

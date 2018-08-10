@@ -11,6 +11,7 @@ class Design < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :collection
+  belongs_to :product_type
   belongs_to :sale_unit
 
   has_many :variants, dependent: :destroy

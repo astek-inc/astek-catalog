@@ -2,6 +2,7 @@ class CreateDesigns < ActiveRecord::Migration
   def change
     create_table :designs do |t|
       t.integer :collection_id
+      t.integer :product_type_id
       t.string :name
       t.text :description
       t.text :keywords
@@ -13,6 +14,7 @@ class CreateDesigns < ActiveRecord::Migration
     end
 
     add_foreign_key :designs, :collections
+    add_foreign_key :designs, :product_types
     add_foreign_key :designs, :sale_units
   end
 end

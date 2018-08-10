@@ -46,12 +46,12 @@ Rails.application.routes.draw do
 
     resources :product_types, concerns: :paginatable do
       post :update_row_order, on: :collection
-      resources :product_type_images, only: [:index, :new, :create, :show, :destroy] do
-        post :update_row_order, on: :collection
-      end
+      # resources :product_type_images, only: [:index, :new, :create, :show, :destroy] do
+      #   post :update_row_order, on: :collection
+      # end
     end
 
-    resources :product_type_groups, concerns: :paginatable do
+    resources :product_categories, concerns: :paginatable do
       post :update_row_order, on: :collection
     end
 

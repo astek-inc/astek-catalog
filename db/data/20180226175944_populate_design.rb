@@ -2,6 +2,7 @@ class PopulateDesign < ActiveRecord::Migration
 
   def up
 
+    product_type = ProductType.find_by(name: 'Studio')
     collection = Collection.find_by(name: 'Micrographia')
     sale_unit = SaleUnit.find_by(name: 'Set')
 
@@ -11,6 +12,7 @@ class PopulateDesign < ActiveRecord::Migration
       description: 'Some say the brilliance of this design is overwheming. Only the true elite can cope with its quality. Are you among them?',
       keywords: 'super, awesome, amazing, fantastic, incredible',
       available_on: Time.now,
+      product_type: product_type,
       sale_unit: sale_unit,
       price: 179.99,
       styles: Style.where(name: ['Abstract', 'Contemporary'])
@@ -26,6 +28,7 @@ class PopulateDesign < ActiveRecord::Migration
       description: 'The ghostliness is tremendously eerie. Few can view this design without being scared out of their wits. Paste this on your walls if you dare.',
       keywords: 'unbelievable, awesome, stupendous, fantastic',
       available_on: Time.now,
+      product_type: product_type,
       sale_unit: sale_unit,
       price: 179.99,
       styles: Style.where(name: ['Abstract', 'Contemporary'])
@@ -41,6 +44,7 @@ class PopulateDesign < ActiveRecord::Migration
        description: 'Simply put, this is the single greatest design in the history of the world. No wall is worthy of it. Please select somethign else.',
        keywords: 'intense, terrific, astounding, wonderful',
        available_on: Time.now,
+       product_type: product_type,
        sale_unit: sale_unit,
        price: 179.99,
        styles: Style.where(name: ['Abstract', 'Contemporary', 'Geometric'])

@@ -20,7 +20,7 @@
     <%= content_tag :div, { class: 'col-md-3' } do %>
       <%= content_tag :div, class: 'form-group' do %>
         <%= label_tag 'website', 'Website' %> <span class="required">*</span>
-        <%= select_tag 'website', options_for_select([['Astek', 'astek.com'], ['Astek Home', 'astekhome.com']]), { include_blank: true, class: 'form-control', required: true } %>
+        <%= select_tag 'website', options_for_select([['Astek', 'astek.com'], ['Astek Home', 'astekhome.com']]), { prompt: 'Select', class: 'form-control', required: true } %>
       <%end %>
     <%end %>
 

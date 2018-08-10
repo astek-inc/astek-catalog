@@ -1,6 +1,6 @@
-class CreateProductTypeGroups < ActiveRecord::Migration
+class CreateProductCategories < ActiveRecord::Migration
   def change
-    create_table :product_type_groups do |t|
+    create_table :product_categories do |t|
       t.string :name
       t.text :description
       t.integer :row_order, index: true

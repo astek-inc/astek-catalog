@@ -1,6 +1,11 @@
 <%= f.hidden_field :collection_id, value: @collection.id %>
 
 <%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :product_type_id, 'Product Type' %> <span class="required">*</span>
+  <%= f.collection_select :product_type_id, @product_types, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :name, 'Name' %> <span class="required">*</span>
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>

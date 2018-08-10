@@ -1,7 +1,7 @@
 module Admin
   class ProductTypesController < BaseController
 
-    before_action :set_product_type_groups, only: [:new, :edit]
+    before_action :set_product_categories, only: [:new, :edit]
 
     def index
       @product_types = ProductType.rank(:row_order).page params[:page]
@@ -62,12 +62,12 @@ module Admin
 
     private
 
-    def set_product_type_groups
-      @product_type_groups = ProductTypeGroup.rank(:row_order)
+    def set_product_categories
+      @product_categories = ProductCategory.rank(:row_order)
     end
 
     def product_type_params
-      params.require(:product_type).permit(:name, :description, :product_type_group_id)
+      params.require(:product_type).permit(:name, :description, :product_category_id)
     end
 
   end

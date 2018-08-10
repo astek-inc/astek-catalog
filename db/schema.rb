@@ -29,13 +29,13 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "backing_types", ["row_order"], name: "index_backing_types_on_row_order", using: :btree
 
   create_table "collections", force: :cascade do |t|
-    t.integer  "product_type_id"
+    t.integer  "product_category_id"
     t.string   "name"
     t.text     "description"
     t.integer  "vendor_id"
     t.text     "keywords"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
@@ -84,15 +84,16 @@ ActiveRecord::Schema.define(version: 20180118235116) do
 
   create_table "designs", force: :cascade do |t|
     t.integer  "collection_id"
+    t.integer  "product_type_id"
     t.string   "name"
     t.text     "description"
     t.text     "keywords"
-    t.decimal  "price",         precision: 8, scale: 2
+    t.decimal  "price",           precision: 8, scale: 2
     t.integer  "sale_unit_id"
     t.datetime "available_on"
     t.datetime "expires_on"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
@@ -138,7 +139,7 @@ ActiveRecord::Schema.define(version: 20180118235116) do
   add_index "images", ["row_order"], name: "index_images_on_row_order", using: :btree
   add_index "images", ["type"], name: "index_images_on_type", using: :btree
 
-  create_table "product_type_groups", force: :cascade do |t|
+  create_table "product_categories", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.integer  "row_order"
@@ -147,15 +148,15 @@ ActiveRecord::Schema.define(version: 20180118235116) do
     t.datetime "deleted_at"
   end
 
-  add_index "product_type_groups", ["deleted_at"], name: "index_product_type_groups_on_deleted_at", using: :btree
-  add_index "product_type_groups", ["row_order"], name: "index_product_type_groups_on_row_order", using: :btree
+  add_index "product_categories", ["deleted_at"], name: "index_product_categories_on_deleted_at", using: :btree
+  add_index "product_categories", ["row_order"], name: "index_product_categories_on_row_order", using: :btree
 
   create_table "product_types", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "product_type_group_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.integer  "product_category_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.datetime "deleted_at"
     t.integer  "row_order"
   end
@@ -296,11 +297,12 @@ ActiveRecord::Schema.define(version: 20180118235116) do
 
   add_index "vendors", ["deleted_at"], name: "index_vendors_on_deleted_at", using: :btree
 
-  add_foreign_key "collections", "product_types"
+  add_foreign_key "collections", "product_categories"
   add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
+  add_foreign_key "designs", "product_types"
   add_foreign_key "designs", "sale_units"
-  add_foreign_key "product_types", "product_type_groups"
+  add_foreign_key "product_types", "product_categories"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "substrates"
