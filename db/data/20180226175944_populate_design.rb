@@ -17,10 +17,10 @@ class PopulateDesign < ActiveRecord::Migration
       price: 179.99,
       styles: Style.where(name: ['Abstract', 'Contemporary'])
     })
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '148.96')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '96')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'repeat match type'), value: 'Straight reversible')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire rating'), value: 'Class A')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural_width'), value: '148.96')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural_height'), value: '96')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'repeat_match_type'), value: 'Straight reversible')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire_rating'), value: 'Class A')
 
     design = Design.create!({
       collection: collection,
@@ -33,15 +33,15 @@ class PopulateDesign < ActiveRecord::Migration
       price: 179.99,
       styles: Style.where(name: ['Abstract', 'Contemporary'])
     })
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '200')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '70')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'repeat match type'), value: 'Straight reversible')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire rating'), value: 'Class A')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural_width'), value: '200')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural_height'), value: '70')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'repeat_match_type'), value: 'Straight reversible')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire_rating'), value: 'Class A')
 
     design = Design.create!({
        collection: Collection.find_by(name: 'Micrographia'),
        name: 'Xylem',
-       description: 'Simply put, this is the single greatest design in the history of the world. No wall is worthy of it. Please select somethign else.',
+       description: 'Simply put, this is the single greatest design in the history of the world. No wall is worthy of it. Please select something else.',
        keywords: 'intense, terrific, astounding, wonderful',
        available_on: Time.now,
        product_type: product_type,
@@ -49,10 +49,10 @@ class PopulateDesign < ActiveRecord::Migration
        price: 179.99,
        styles: Style.where(name: ['Abstract', 'Contemporary', 'Geometric'])
     })
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural width'), value: '170.44')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural height'), value: '108')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'repeat match type'), value: 'Straight reversible')
-    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire rating'), value: 'Class A')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural_width'), value: '170.44')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'mural_height'), value: '108')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'repeat_match_type'), value: 'Straight reversible')
+    design.design_properties << DesignProperty.create(design: design, property: Property.find_by(name: 'fire_rating'), value: 'Class A')
 
   end
 
