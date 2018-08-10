@@ -1,0 +1,9 @@
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :name, 'Name' %> <span class="required">*</span>
+    <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :domain, 'Domain' %> <span class="required">*</span>
+    <%= f.text_field :domain, required: true, class: 'form-control' %>
+<% end %>
