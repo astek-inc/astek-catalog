@@ -1,4 +1,4 @@
-class PopulateCollection < ActiveRecord::Migration
+class PopulateCollections < ActiveRecord::Migration
 
   # IMAGE_URLS = %w[
   #   http://www.astekwallcovering.com/sites/default/files/micrographia_slides1.jpg
@@ -11,13 +11,15 @@ class PopulateCollection < ActiveRecord::Migration
 
     product_category = ProductCategory.find_by(name: 'Digital')
     vendor = Vendor.find_by(name: 'Astek Inc.')
+    websites = Website.all
 
     collection = Collection.create({
       product_category: product_category,
       name: 'Micrographia',
       description: 'Inspired by life under a microscope, Micrographia offers a new and beautiful perspective on what you thought was familiar. Through creativity, abstraction, and material exploration, Astek\'s in-house design team used far ranging media such as paint, collage, sculpture, print-making, and photography to bring their ideas to life.',
       keywords: 'mural, abstract, metallic, artistic, painterly, sci-fi, science',
-      vendor: vendor
+      vendor: vendor,
+      websites: websites
     })
 
     # IMAGE_URLS.each do |url|

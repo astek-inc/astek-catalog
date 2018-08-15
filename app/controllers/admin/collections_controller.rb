@@ -1,7 +1,7 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
-    before_action :set_product_categories, only: [:new, :edit]
+    before_action :set_product_categories, :set_websites, only: [:new, :edit]
 
     def index
       @collections = Collection.rank(:row_order).page params[:page]
@@ -72,8 +72,12 @@ module Admin
       @product_categories = ProductCategory.rank(:row_order)
     end
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :vendor_id)
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :vendor_id, website_ids: [])
     end
 
   end

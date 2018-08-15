@@ -16,6 +16,8 @@ class Collection < ActiveRecord::Base
   has_many :designs, dependent: :destroy
   has_many :collection_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
+  has_and_belongs_to_many :websites
+
   # delegate :product_category, to: :product_type, allow_nil: true
 
 end
