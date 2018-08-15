@@ -191,6 +191,7 @@ module Admin
 
     def astek_business_description variant
       body = ''
+
       if variant.description
         body += format_description variant
       end
@@ -205,13 +206,21 @@ module Admin
     end
 
     def astek_home_description variant
-      'Astek home description for '+variant.name
+      body = ''
+
+      if variant.description
+        body += format_description variant
+      end
+
+      body += format_properties variant
+      
+      body
     end
 
     def format_description variant
       '<div>
           <p>'+variant.description+'</p>
-        </div>'
+      </div>'
     end
 
     def format_properties variant
