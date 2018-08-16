@@ -1,7 +1,7 @@
 class PopulateVendors < ActiveRecord::Migration
 
   VENDORS = [
-      { name: 'Astek Inc.', description: 'In-house design and production' },
+      { name: 'Astek', description: 'In-house design and production' },
       { name: 'Nina Hancock', description: '' },
       { name: 'Wallquest', description: '' },
   ]
