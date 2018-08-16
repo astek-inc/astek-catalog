@@ -37,7 +37,7 @@ module Admin
         variant_tax_code: ''
     }
 
-    def variants_to_csv variants, website
+    def variants_to_csv variants, website, include_header=true
       header = [
           'Handle',
           'Title',
@@ -140,7 +140,10 @@ module Admin
       secondary_row_attributes = 24.times.map { nil } + %w(image_url image_position image_alt_text) + 20.times.map { nil }
       
       CSV.generate(headers: true) do |csv|
-        csv << header
+
+        if include_header
+          csv << header
+        end
 
         variants.each do |variant|
 
