@@ -77,7 +77,11 @@ class Variant < ActiveRecord::Base
     else
       tags = []
       tags << to_tags('color', self.colors.map { |c| c.name })
-      tags << to_tags('keyword', self.design.keywords.split(',')).map { |k| k.strip }
+
+      if self.design.keywords
+        tags << to_tags('keyword', self.design.keywords.split(',')).map { |k| k.strip }
+      end
+
       tags << self.design.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
       tags.flatten.join(', ')
     end
