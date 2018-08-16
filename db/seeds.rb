@@ -14,24 +14,44 @@ require 'csv'
 # require 'pp'
 
 properties = Property.all
-path = File.join(__dir__, DATA_DIR, 'upload-test.csv')
+path = File.join(__dir__, DATA_DIR, 'Gronk.csv')
 csv = CSV.read(path, headers: true)
 
 csv.each do |row|
+
   item = OpenStruct.new(row.to_h)
+
+  puts 'Finding relevant information'
 
   vendor = Vendor.find_by!({ name: item.vendor })
   product_category = ProductCategory.find_by!( { name: item.product_category })
-  product_type = ProductType.find_by!( { name: item.product_type, product_category: product_category })
+  product_type = ProductType.find_by!( { name: item.product_type })
   sale_unit = SaleUnit.find_by!({ name: item.sale_unit })
   styles = Style.where(name: item.style.split(',').map { |s| s.strip }) unless item.style.nil?
   variant_type = VariantType.find_by!({ name: item.variant_type })
   substrate = Substrate.find_by(name: item.substrate)
 
-  collection = Collection.find_or_create_by!({ name: item.collection, product_type: product_type, vendor: vendor })
+  puts 'Finding or creating collection information'
+  collection = Collection.find_or_create_by!({ name: item.collection, product_category: product_category, vendor: vendor }) do |c|
+    # If we got here, this is a new record
+    domains = []
+    item.websites.split(',').map { |s| s.strip }.each do |key|
+      case key
+      when 'A'
+        domains << 'astek.com'
+      when 'H'
+        domains << 'astekhome.com'
+      when 'O'
+        domains << 'onairdesign.com'
+      end
+    end
+    c.websites << Website.where(domain: domains)
+  end
 
+  puts 'Finding or creating design information'
   design = Design.find_or_create_by!({ name: item.design_name, collection: collection }) do |d|
     # If we got here, this is a new record
+    d.product_type = product_type
     d.description = item.description
     d.keywords = item.keywords
     d.price = item.price
