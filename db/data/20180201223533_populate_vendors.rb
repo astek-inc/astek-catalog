@@ -1,7 +1,9 @@
 class PopulateVendors < ActiveRecord::Migration
 
   VENDORS = [
-      {name: 'Astek Inc.', description: "In-house design and production" }
+      { name: 'Astek Inc.', description: 'In-house design and production' },
+      { name: 'Nina Hancock', description: '' },
+      { name: 'Wallquest', description: '' },
   ]
 
   def up
@@ -11,6 +13,7 @@ class PopulateVendors < ActiveRecord::Migration
   end
 
   def down
-    Vendors..destroy_all
+    Vendors.destroy_all
   end
+  
 end
