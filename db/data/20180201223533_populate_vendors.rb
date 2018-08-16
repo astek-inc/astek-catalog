@@ -15,5 +15,5 @@ class PopulateVendors < ActiveRecord::Migration
   def down
     Vendors.destroy_all
   end
-  
+
 end
