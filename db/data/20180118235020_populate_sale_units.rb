@@ -7,6 +7,7 @@ class PopulateSaleUnits < ActiveRecord::Migration
       { name: 'Set', description: '' },
       { name: 'Sheet', description: '' },
       { name: 'Square Foot', description: '' },
+      { name: 'Tile', description: '' },
       { name: 'Yard', description: '' },
   ]
 
