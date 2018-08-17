@@ -9,7 +9,7 @@
 
 <%= content_tag :div, class: 'row' do %>
   <%= content_tag :div, class: 'col-md-12' do %>
-  <%= form_for [:admin, @sale_unit] do |f| %>
+    <%= form_for [:admin, @sale_unit] do |f| %>
       <%= field_set_tag nil, 'data-hook': 'sale_unit_new' do %>
         <%= render partial: 'form', locals: { f: f } %>
       <% end %>

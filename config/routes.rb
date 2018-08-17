@@ -38,11 +38,13 @@ Rails.application.routes.draw do
 
     resources :users
 
-    resources :websites, except: :show
+    resources :websites, except: [:show, :delete]
 
-    resources :styles, except: :show
+    resources :styles, except: [:show, :delete]
 
     resources :vendors, except: [:show, :delete]
+
+    resources :sale_units, except: [:show, :delete]
 
     resources :properties
 
