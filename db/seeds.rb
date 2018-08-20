@@ -21,7 +21,16 @@ dirpath = File.join(__dir__, DATA_DIR)
 Dir.glob(dirpath+'/*.csv') do |filepath|
 
   puts '- '*40
-  puts 'Reading '+filepath
+
+  filename = File.basename(filepath)
+  # next if Seed.find_by filename: filename
+  if Seed.find_by filename: filename
+    puts filename+' already processed'
+    puts $\
+    next
+  end
+
+  puts 'Reading '+filename
   puts $\
 
   csv = CSV.read(filepath, headers: true)
@@ -106,6 +115,8 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
 
     puts $\
   end
+
+  Seed.create!(filename: filename)
 
 end
 
