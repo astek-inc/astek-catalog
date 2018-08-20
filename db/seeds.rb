@@ -13,13 +13,17 @@ require 'csv'
 DATA_DIR = 'seeds'
 
 puts 'Seeding product data'
+puts $\
 
 properties = Property.all
 
 dirpath = File.join(__dir__, DATA_DIR)
 Dir.glob(dirpath+'/*.csv') do |filepath|
 
+  puts '- '*40
   puts 'Reading '+filepath
+  puts $\
+
   csv = CSV.read(filepath, headers: true)
 
   csv.each do |row|
@@ -40,17 +44,19 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     collection = Collection.find_or_create_by!({ name: item.collection, product_category: product_category, vendor: vendor }) do |c|
       # If we got here, this is a new record
       domains = []
-      item.websites.split(',').map { |s| s.strip }.each do |key|
-        case key
-        when 'A'
-          domains << 'astek.com'
-        when 'H'
-          domains << 'astekhome.com'
-        when 'O'
-          domains << 'onairdesign.com'
+      unless item.websites.nil?
+        item.websites.split(',').map { |s| s.strip }.each do |key|
+          case key
+          when 'A'
+            domains << 'astek.com'
+          when 'H'
+            domains << 'astekhome.com'
+          when 'O'
+            domains << 'onairdesign.com'
+          end
         end
+        c.websites << Website.where(domain: domains)
       end
-      c.websites << Website.where(domain: domains)
     end
 
     puts 'Finding or creating design information'
@@ -74,6 +80,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       end
     end
 
+    puts 'Creating variants'
     variant = Variant.create!({
       design: design,
       variant_type: variant_type,
@@ -82,6 +89,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       substrate: substrate
     })
 
+    puts 'Processing images'
     item.images.split(',').map { |i| i.strip }.each do |url|
       VariantImage.create!({
         remote_file_url: url,
@@ -100,3 +108,5 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
   end
 
 end
+
+puts 'Done'
