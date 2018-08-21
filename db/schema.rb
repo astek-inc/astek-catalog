@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 20180820200105) do
     t.text     "keywords"
     t.decimal  "price",           precision: 8, scale: 2
     t.integer  "sale_unit_id"
+    t.decimal  "weight",          precision: 5, scale: 2
     t.datetime "available_on"
     t.datetime "expires_on"
     t.datetime "created_at",                              null: false
