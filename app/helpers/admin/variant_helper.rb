@@ -15,6 +15,9 @@ module Admin
         variant_inventory_policy: 'Continue',
         variant_fulfillment_service: 'Manual',
         variant_compare_at_price: '',
+        image_src: '',
+        image_position: '',
+        image_alt_text: '',
         gift_card: 'FALSE',
         google_shopping_mpn: '',
         google_shopping_age_group: '',
@@ -29,7 +32,6 @@ module Admin
         google_shopping_custom_label_2: '',
         google_shopping_custom_label_3: '',
         google_shopping_custom_label_4: '',
-        variant_image: '',
         variant_weight_unit: 'lb',
         variant_tax_code: ''
     }
@@ -110,7 +112,7 @@ module Admin
           variant_requires_shipping
           variant_taxable
           variant_barcode
-          image_url
+          image_src
           image_position
           image_alt_text
           gift_card
@@ -129,12 +131,12 @@ module Admin
           google_shopping_custom_label_2
           google_shopping_custom_label_3
           google_shopping_custom_label_4
-          variant_image
+          image_url
           variant_weight_unit
           variant_tax_code
           collection
       ]
-      secondary_row_attributes = 24.times.map { nil } + %w(image_url image_position image_alt_text) + 20.times.map { nil }
+      secondary_row_attributes = 43.times.map { nil } + %w(image_url) + 3.times.map { nil }
       
       CSV.generate(headers: true) do |csv|
 
@@ -178,10 +180,6 @@ module Admin
           astek_business_description variant
         end
 
-      elsif attr == 'image_position'
-        image_index + 1
-      elsif attr == 'image_url'
-        variant.image_url image_index.to_i
       elsif attr == 'option_2_value'
 
         case variant_type
@@ -211,6 +209,9 @@ module Admin
           nil
         end
 
+      elsif attr == 'image_url'
+        variant.image_url image_index.to_i
+        
       else
         val = variant.send(attr)
         if [true, false].include? val

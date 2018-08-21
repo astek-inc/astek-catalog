@@ -80,10 +80,6 @@ class Variant < ActiveRecord::Base
     self.variant_images[position].file.url
   end
 
-  def image_alt_text
-    "#{self.name} #{self.type} wallcovering design"
-  end
-
   def price
     self.design.price.to_s
   end
