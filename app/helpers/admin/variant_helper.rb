@@ -4,20 +4,17 @@ module Admin
     require 'csv'
 
     TEXT_VALUES = {
-        option_1_name: 'Title',
-        option_2_name: '',
-        option_2_value: '',
-        option_3_name: '',
-        option_3_value: '',
-        variant_grams: 14.5,
+        option_1_name: 'Color',
+        option_2_name: 'Size',
+        option_3_name: 'Material',
         variant_requires_shipping: 'TRUE',
         variant_taxable: 'TRUE',
         variant_barcode: '',
         variant_inventory_tracker: '',
         variant_inventory_qty: 1,
-        variant_inventory_policy: 'continue',
-        variant_fulfillment_service: 'manual',
-        variant_compare_at_price: 999.99,
+        variant_inventory_policy: 'Continue',
+        variant_fulfillment_service: 'Manual',
+        variant_compare_at_price: '',
         gift_card: 'FALSE',
         google_shopping_mpn: '',
         google_shopping_age_group: '',
@@ -89,8 +86,8 @@ module Admin
       ]
 
       primary_row_attributes = %w[
-          sku
-          name
+          handle
+          title
           body
           vendor
           type
@@ -147,13 +144,18 @@ module Admin
 
         variants.each do |variant|
 
-          csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 0, website)) }
+          csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', 0, website)) }
 
           if variant.variant_images.count > 1
-
             (1..variant.variant_images.count - 1).each do | image_index |
-              csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, image_index, website)) }
+              csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', image_index, website)) }
             end
+          end
+
+          csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+
+          if variant.design.product_type.product_category.name == 'Digital'
+            csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'custom', 0, website)) }
           end
 
         end
@@ -161,7 +163,7 @@ module Admin
 
     end
 
-    def attribute_value attr, variant, image_index, domain
+    def attribute_value attr, variant, variant_type, image_index, domain
 
       if TEXT_VALUES[attr.to_sym]
         TEXT_VALUES[attr.to_sym]
@@ -180,6 +182,26 @@ module Admin
         image_index + 1
       elsif attr == 'image_url'
         variant.image_url image_index.to_i
+      elsif attr == 'option_2_value'
+
+        case variant_type
+        when 'sample', 'full'
+          variant_type.capitalize
+        else
+          'Full'
+        end
+
+      elsif attr == 'sku'
+
+        case variant_type
+        when 'sample'
+          variant.sku+'-s'
+        when 'custom'
+          variant.sku+'-c'
+        else
+          variant.sku
+        end
+
       else
         val = variant.send(attr)
         if [true, false].include? val

@@ -32,6 +32,26 @@ class Variant < ActiveRecord::Base
     # self.colors.contains? color
   end
 
+  def handle
+    if self.variant_type.name == 'Master'
+      self.sku
+    else
+      self.sku.gsub(/-\d+\z/, '')
+    end
+  end
+
+  def title
+    self.design.name
+  end
+
+  def option_3_value
+    self.substrate.name
+  end
+
+  def variant_grams
+    self.design.weight * 453.592
+  end
+
   def published?
     self.design.available_on < Time.now && ( self.design.expires_on.nil? || self.design.expires_on > Time.now ) && self.design.deleted_at.nil?
   end
@@ -53,7 +73,7 @@ class Variant < ActiveRecord::Base
   end
 
   def type
-    self.design.product_type.name
+    self.design.product_type.product_category.name
   end
 
   def image_url position
@@ -73,10 +93,17 @@ class Variant < ActiveRecord::Base
   # to display them except within their collections.
   def tags
     if self.suppress_from_searches
-      'legacy-sku'
+      'legacy__SKU'
     else
       tags = []
+
       tags << to_tags('color', self.colors.map { |c| c.name })
+      tags << to_tags('style', self.design.styles.map { |s| s.name })
+      tags << to_tag('type', self.design.product_type.name)
+
+      if self.design.product_type.product_category.name == 'Digital'
+        tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
+      end
 
       if self.design.keywords
         tags << to_tags('keyword', self.design.keywords.split(',')).map { |k| k.strip }
@@ -189,11 +216,6 @@ class Variant < ActiveRecord::Base
       pdf.move_down 12
       pdf.stroke_horizontal_rule
       pdf.move_down 12
-
-
-
-
-
 
       pdf.font_size 9
 

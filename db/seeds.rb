@@ -64,7 +64,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
             domains << 'onairdesign.com'
           end
         end
-        c.websites << Website.where(domain: domains)
+        c.websites = Website.where(domain: domains)
       end
     end
 
@@ -76,9 +76,10 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.keywords = item.keywords
       d.price = item.price
       d.sale_unit = sale_unit
+      d.weight = item.weight
       d.available_on = Time.now
+      d.styles = styles
     end
-    design.styles << styles
 
     properties.each do |p|
       if ip = item.send(p.name)
