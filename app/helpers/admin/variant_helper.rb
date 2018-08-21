@@ -202,6 +202,15 @@ module Admin
           variant.sku
         end
 
+      elsif attr == 'collection'
+
+        case domain
+        when 'astek.com'
+          variant.collection
+        when 'astekhome.com'
+          nil
+        end
+
       else
         val = variant.send(attr)
         if [true, false].include? val
