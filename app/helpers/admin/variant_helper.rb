@@ -136,7 +136,22 @@ module Admin
           variant_tax_code
           collection
       ]
-      secondary_row_attributes = 43.times.map { nil } + %w(image_url) + 3.times.map { nil }
+      image_row_attributes = %w[handle] + 42.times.map { nil } + %w(image_url) + 3.times.map { nil }
+      variant_row_attributes = %w[handle] + 7.times.map { nil } + ['name', nil, 'option_2_value', nil] +
+        %w[
+            option_3_value
+            sku
+            variant_grams
+            variant_inventory_tracker
+            variant_inventory_qty
+            variant_inventory_policy
+            variant_fulfillment_service
+            price
+            variant_compare_at_price
+            variant_requires_shipping
+            variant_taxable
+            variant_barcode
+        ] + 23.times.map { nil }
       
       CSV.generate(headers: true) do |csv|
 
@@ -150,14 +165,16 @@ module Admin
 
           if variant.variant_images.count > 1
             (1..variant.variant_images.count - 1).each do | image_index |
-              csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', image_index, website)) }
+              csv << image_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', image_index, website)) }
             end
           end
 
-          csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
-
-          if variant.design.product_type.product_category.name == 'Digital'
-            csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'custom', 0, website)) }
+          if website == 'astekhome.com'
+            csv << variant_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+            if variant.design.product_type.product_category.name == 'Digital'
+              csv << variant_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'custom', 0, website)) }
+              csv << variant_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'custom_sample', 0, website)) }
+            end
           end
 
         end
@@ -168,16 +185,18 @@ module Admin
     def attribute_value attr, variant, variant_type, image_index, domain
 
       if TEXT_VALUES[attr.to_sym]
+
         TEXT_VALUES[attr.to_sym]
+
       elsif attr == 'body'
 
         case domain
         when 'astek.com'
           astek_business_description variant
         when 'astekhome.com'
-          astek_home_description variant
-        else
-          astek_business_description variant
+          if variant_type == 'full'
+            astek_home_description variant
+          end
         end
 
       elsif attr == 'option_2_value'
@@ -196,8 +215,28 @@ module Admin
           variant.sku+'-s'
         when 'custom'
           variant.sku+'-c'
+        when 'custom_sample'
+          variant.sku+'-c-s'
         else
           variant.sku
+        end
+
+      elsif attr == 'variant_grams'
+        if variant_type == 'sample'
+          (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
+        else
+          variant.variant_grams
+        end
+
+      elsif attr == 'price'
+        if variant_type == 'sample' || variant_type == 'custom_sample'
+          if variant.design.product_type.product_category.name == 'Digital'
+            10.99.to_s
+          else
+            5.99.to_s
+          end
+        else
+          variant.price
         end
 
       elsif attr == 'collection'

@@ -52,6 +52,7 @@ class Variant < ActiveRecord::Base
     end
   end
 
+  # Sites require weight in grams, in whole numbers (no decimals)
   def variant_grams
     (self.design.weight * BigDecimal('453.592')).round.to_s
   end
