@@ -231,7 +231,7 @@ module Admin
         body += format_description variant
       end
 
-      body += format_properties variant
+      body += format_business_properties variant
 
       if variant.tearsheet.file
         body += format_tearsheet_link variant
@@ -247,7 +247,7 @@ module Admin
         body += format_description variant
       end
 
-      body += format_properties variant
+      body += format_home_properties variant
       
       body
     end
@@ -258,11 +258,23 @@ module Admin
       </div>'
     end
 
-    def format_properties variant
+    def format_business_properties variant
       formatted = '<div class="description__formatted">'
       variant.design.design_properties.each do |dp|
         formatted += $/ + '<div>
           <h5>'+dp.property.presentation+'</h5>
+          <p>'+dp.value+'</p>
+        </div>'
+      end
+      formatted += $/ + '</div>'
+      formatted
+    end
+
+    def format_home_properties variant
+      formatted = '<div class="description__formatted">'
+      variant.design.design_properties.each do |dp|
+        formatted += $/ + '<div>
+          <h6>'+dp.property.presentation+'</h6>
           <p>'+dp.value+'</p>
         </div>'
       end
