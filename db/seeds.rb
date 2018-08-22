@@ -56,7 +56,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       raise 'No substrate/backing information provided'
     end
 
-    puts 'Finding or creating collection information'
+    puts 'Finding or creating collection information for '+item.collection
     collection = Collection.find_or_create_by!({ name: item.collection, product_category: product_category, vendor: vendor }) do |c|
       # If we got here, this is a new record
       domains = []
@@ -75,15 +75,15 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       end
     end
 
-    puts 'Finding or creating design information'
+    puts 'Finding or creating design information for '+item.design_name
     design = Design.find_or_create_by!({ name: item.design_name, collection: collection }) do |d|
       # If we got here, this is a new record
       d.product_type = product_type
       d.description = item.description
       d.keywords = item.keywords
-      d.price = item.price
+      d.price = BigDecimal(item.price.gsub(/,/, ''), 2)
       d.sale_unit = sale_unit
-      d.weight = item.weight
+      d.weight = BigDecimal(item.weight.gsub(/,/, ''), 2)
       d.available_on = Time.now
       d.styles = styles
     end

@@ -49,7 +49,7 @@ class Variant < ActiveRecord::Base
   end
 
   def variant_grams
-    self.design.weight * 453.592
+    (self.design.weight * BigDecimal('453.592')).round.to_s
   end
 
   def published?
