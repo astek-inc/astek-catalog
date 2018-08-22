@@ -3,7 +3,7 @@ module Admin
 
     before_action :set_variant, only: [:edit, :update, :destroy]
     before_action :set_design, :set_collection
-    before_action :set_colors, :set_substrates, only: [:new, :edit]
+    before_action :set_colors, :set_substrates, :set_backing_types, only: [:new, :edit]
 
     def index
       @variants = Variant.where(design_id: @design.id).rank(:row_order).page params[:page]
@@ -78,8 +78,12 @@ module Admin
       @substrates = Substrate.rank(:row_order)
     end
 
+    def set_backing_types
+      @backing_types = BackingType.rank(:row_order)
+    end
+
     def variant_params
-      params.require(:variant).permit(:variant_type_id, :name, :sku, :keywords, :slug, :design_id, :substrate_id, :suppress_from_searches, color_ids: [])
+      params.require(:variant).permit(:variant_type_id, :name, :sku, :keywords, :slug, :design_id, :substrate_id, :backing_type_id, :suppress_from_searches, color_ids: [])
     end
 
   end

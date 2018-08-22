@@ -14,7 +14,6 @@ class PopulateProperties < ActiveRecord::Migration
       { name: 'removability', presentation: 'Removability', klass_scope: 'Design' },
       { name: 'washability', presentation: 'Washability', klass_scope: 'Design' },
       { name: 'color_fastness', presentation: 'Color fastness', klass_scope: 'Design' },
-      { name: 'backing', presentation: 'Backing', klass_scope: 'Design' },
       { name: 'fire_rating', presentation: 'Fire rating', klass_scope: 'Design' },
       { name: 'print_type', presentation: 'Print type', klass_scope: 'Design' },
       { name: 'margin_trim', presentation: 'Margin trim', klass_scope: 'Design' },

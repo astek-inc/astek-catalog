@@ -290,6 +290,7 @@ ActiveRecord::Schema.define(version: 20180820200105) do
     t.text     "sku"
     t.string   "slug"
     t.integer  "substrate_id"
+    t.integer  "backing_type_id"
     t.integer  "row_order"
     t.string   "tearsheet"
     t.boolean  "suppress_from_searches", default: false, null: false
@@ -329,6 +330,7 @@ ActiveRecord::Schema.define(version: 20180820200105) do
   add_foreign_key "designs", "sale_units"
   add_foreign_key "product_types", "product_categories"
   add_foreign_key "substrates", "backing_types"
+  add_foreign_key "variants", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "substrates"
   add_foreign_key "variants", "variant_types"

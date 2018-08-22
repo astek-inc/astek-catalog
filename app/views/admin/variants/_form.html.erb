@@ -48,7 +48,14 @@
   <% end %>
 <% end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label :substrate_id, 'Substrate' %> <span class="required">*</span>
-  <%= f.collection_select :substrate_id, @substrates, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% if @design.product_type.product_category.name == 'Digital' %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :substrate_id, 'Substrate' %> <span class="required">*</span>
+    <%= f.collection_select :substrate_id, @substrates, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+  <% end %>
+<% else %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :backing_type_id, 'Backing' %> <span class="required">*</span>
+    <%= f.collection_select :backing_type_id, @backing_types, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+  <% end %>
 <% end %>

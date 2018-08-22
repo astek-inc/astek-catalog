@@ -50,10 +50,12 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
 
     if item.substrate
       substrate = Substrate.find_by(name: item.substrate)
+      backing = nil
     elsif item.backing
-      substrate = Substrate.find_by(name: item.backing)
+      backing_type = BackingType.find_by(name: item.backing)
+      substrate = nil
     else
-      raise 'No substrate/backing information provided'
+      raise 'Invalid or missing substrate/backing information'
     end
 
     puts 'Finding or creating collection information for '+item.collection
@@ -103,7 +105,8 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       variant_type: variant_type,
       name: item.variant_name,
       sku: item.sku,
-      substrate: substrate
+      substrate: substrate,
+      backing_type: backing_type
     })
 
     puts 'Processing images'

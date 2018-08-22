@@ -17,11 +17,11 @@ class Variant < ActiveRecord::Base
   belongs_to :design
   belongs_to :variant_type
   belongs_to :substrate
+  belongs_to :backing_type
 
   has_many :variant_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
   has_and_belongs_to_many :colors
-  has_and_belongs_to_many :substrates
 
   validates :variant_type_id, presence: true
   validates :name, presence: true
@@ -45,7 +45,11 @@ class Variant < ActiveRecord::Base
   end
 
   def option_3_value
-    self.substrate.name
+    if self.substrate
+      self.substrate.name
+    elsif backing = self.design.property('backing')
+      backing
+    end
   end
 
   def variant_grams
