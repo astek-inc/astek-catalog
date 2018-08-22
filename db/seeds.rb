@@ -47,7 +47,14 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     sale_unit = SaleUnit.find_by!({ name: item.sale_unit })
     styles = Style.where(name: item.style.split(',').map { |s| s.strip }) unless item.style.nil?
     variant_type = VariantType.find_by!({ name: item.variant_type })
-    substrate = Substrate.find_by(name: item.substrate)
+
+    if item.substrate
+      substrate = Substrate.find_by(name: item.substrate)
+    elsif item.backing
+      substrate = Substrate.find_by(name: item.backing)
+    else
+      raise 'No substrate/backing information provided'
+    end
 
     puts 'Finding or creating collection information'
     collection = Collection.find_or_create_by!({ name: item.collection, product_category: product_category, vendor: vendor }) do |c|
