@@ -78,7 +78,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     end
 
     puts 'Finding or creating design information for '+item.design_name
-    design = Design.find_or_create_by!({ name: item.design_name, collection: collection }) do |d|
+    design = Design.find_or_create_by!({ sku: item.design_sku, name: item.design_name, collection: collection }) do |d|
       # If we got here, this is a new record
       d.product_type = product_type
       d.description = item.description

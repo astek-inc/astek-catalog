@@ -21,6 +21,9 @@ class Design < ActiveRecord::Base
 
   has_and_belongs_to_many :styles
 
+  validates :name, presence: true
+  validates :sku, presence: true
+
   accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
 
   def property name
