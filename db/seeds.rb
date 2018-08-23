@@ -90,6 +90,18 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.styles = styles
     end
 
+    puts 'Processing design images'
+    if item.design_images
+      item.design_images.split(',').map { |i| i.strip }.each do |url|
+        DesignImage.create!({
+          remote_file_url: url,
+          type: 'DesignImage',
+          owner_id: design.id
+        })
+      end
+    end
+
+    puts 'Processing design properties'
     properties.each do |p|
       if ip = item.send(p.name)
         # puts p.presentation + ': ' + ip
@@ -109,7 +121,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       backing_type: backing_type
     })
 
-    puts 'Processing images'
+    puts 'Processing variant images'
     item.images.split(',').map { |i| i.strip }.each do |url|
       VariantImage.create!({
         remote_file_url: url,
