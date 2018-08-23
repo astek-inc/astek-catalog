@@ -47,8 +47,8 @@ class Variant < ActiveRecord::Base
   def option_3_value
     if self.substrate
       self.substrate.name
-    elsif backing = self.design.property('backing')
-      backing
+    elsif self.backing_type
+      self.backing_type.name
     end
   end
 

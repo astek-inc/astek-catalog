@@ -5,13 +5,8 @@ module Admin
 
     TEXT_VALUES = {
         option_1_name: 'Color',
-        option_2_name: 'Size',
-        option_3_name: 'Material',
-        variant_requires_shipping: 'TRUE',
-        variant_taxable: 'TRUE',
         variant_barcode: '',
         variant_inventory_tracker: '',
-        variant_inventory_qty: 1,
         variant_inventory_policy: 'Continue',
         variant_fulfillment_service: 'Manual',
         variant_compare_at_price: '',
@@ -32,7 +27,6 @@ module Admin
         google_shopping_custom_label_2: '',
         google_shopping_custom_label_3: '',
         google_shopping_custom_label_4: '',
-        variant_weight_unit: 'lb',
         variant_tax_code: ''
     }
 
@@ -199,13 +193,41 @@ module Admin
           end
         end
 
-      elsif attr == 'option_2_value'
+      elsif attr == 'option_2_name'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          'Size'
+        end
 
-        case variant_type
-        when 'sample', 'full'
-          variant_type.capitalize
-        else
-          'Full'
+      elsif attr == 'option_2_value'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          case variant_type
+          when 'sample', 'full'
+            variant_type.capitalize
+          else
+            'Full'
+          end
+        end
+
+      elsif attr == 'option_3_name'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          'Material'
+        end
+
+      elsif attr == 'option_3_value'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          variant.option_3_value
         end
 
       elsif attr == 'sku'
@@ -222,21 +244,63 @@ module Admin
         end
 
       elsif attr == 'variant_grams'
-        if variant_type == 'sample'
-          (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
-        else
-          variant.variant_grams
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          if variant_type == 'sample'
+            (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
+          else
+            variant.variant_grams
+          end
+        end
+
+      elsif attr == 'variant_inventory_qty'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          1
         end
 
       elsif attr == 'price'
-        if variant_type == 'sample' || variant_type == 'custom_sample'
-          if variant.design.product_type.product_category.name == 'Digital'
-            10.99.to_s
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          if variant_type == 'sample' || variant_type == 'custom_sample'
+            if variant.design.product_type.product_category.name == 'Digital'
+              10.99.to_s
+            else
+              5.99.to_s
+            end
           else
-            5.99.to_s
+            variant.price
           end
-        else
-          variant.price
+        end
+
+      elsif attr == 'variant_requires_shipping'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          'TRUE'
+        end
+
+      elsif attr == 'variant_taxable'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          'TRUE'
+        end
+
+      elsif attr == 'variant_weight_unit'
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          'lb'
         end
 
       elsif attr == 'collection'
