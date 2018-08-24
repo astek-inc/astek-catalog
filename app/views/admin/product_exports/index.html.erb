@@ -1,9 +1,9 @@
 <script type="text/javascript">
-    // if (navigator.userAgent.toLowerCase().indexOf('chrome') >= 0) {
-    //     setTimeout(function () {
-    //         document.getElementById('foo').autocomplete = 'off';
-    //     }, 1);
-    // }
+    if (navigator.userAgent.toLowerCase().indexOf('chrome') >= 0) {
+        setTimeout(function () {
+            document.getElementById('collection_name').autocomplete = 'off';
+        }, 1);
+    }
 </script>
 
 <% content_for :header_left do %>
@@ -20,7 +20,7 @@
     <%= content_tag :div, class: 'col-md-6' do %>
       <%= content_tag :div, class: 'form-group' do %>
         <%= label_tag 'collection_id', 'Collection' %> <span class="required">*</span>
-        <%= text_field_tag 'collection_name', nil, { class: 'form-control', required: true, autocomplete: 'false' } %>
+        <%= text_field_tag 'collection_name', nil, { id: 'collection_name', class: 'form-control', required: true, autocomplete: 'false' } %>
         <%= hidden_field_tag 'collection_id' %>
       <% end %>
     <% end %>
