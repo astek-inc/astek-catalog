@@ -10,10 +10,6 @@ module Admin
         variant_inventory_policy: 'Continue',
         variant_fulfillment_service: 'Manual',
         variant_compare_at_price: '',
-        image_src: '',
-        image_position: '',
-        image_alt_text: '',
-        gift_card: 'FALSE',
         google_shopping_mpn: '',
         google_shopping_age_group: '',
         google_shopping_gender: '',
@@ -30,7 +26,7 @@ module Admin
         variant_tax_code: ''
     }
 
-    def variants_to_csv variants, website, include_header=true
+    def variants_to_csv design, website, include_header=true
       header = [
           'Handle',
           'Title',
@@ -90,7 +86,7 @@ module Admin
           tags
           published?
           option_1_name
-          name
+          option_1_value
           option_2_name
           option_2_value
           option_3_name
@@ -125,52 +121,72 @@ module Admin
           google_shopping_custom_label_2
           google_shopping_custom_label_3
           google_shopping_custom_label_4
-          image_url
+          image_src
           variant_weight_unit
           variant_tax_code
           collection
       ]
-      image_row_attributes = %w[handle] + 42.times.map { nil } + %w(image_url) + 3.times.map { nil }
-      variant_row_attributes = %w[handle] + 7.times.map { nil } + ['name', nil, 'option_2_value', nil] +
-        %w[
-            option_3_value
-            sku
-            variant_grams
-            variant_inventory_tracker
-            variant_inventory_qty
-            variant_inventory_policy
-            variant_fulfillment_service
-            price
-            variant_compare_at_price
-            variant_requires_shipping
-            variant_taxable
-            variant_barcode
+
+      secondary_row_attributes = ['handle', nil, nil, nil, nil, 'tags', nil, nil, 'option_1_value', nil, 'option_2_value', nil] +
+          %w[
+          option_3_value
+          sku
+          variant_grams
+          variant_inventory_tracker
+          variant_inventory_qty
+          variant_inventory_policy
+          variant_fulfillment_service
+          price
+          variant_compare_at_price
+          variant_requires_shipping
+          variant_taxable
+          variant_barcode
+          image_src
+          image_position
         ] + 23.times.map { nil }
-      
+
       CSV.generate(headers: true) do |csv|
 
         if include_header
           csv << header
         end
 
-        variants.each do |variant|
+        total_image_count = design.design_images.count + design.variants.count
+        @custom_image_index = total_image_count
+        # puts 'custom image index: '+@custom_image_index.to_s
 
-          csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', 0, website)) }
+        first_row = true
+        design.variants.each_with_index do |variant, i|
+          @image_index = i
+          # puts 'variant - image index: '+@image_index.to_s
 
-          if variant.variant_images.count > 1
-            (1..variant.variant_images.count - 1).each do | image_index |
-              csv << image_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', image_index, website)) }
-            end
+          if first_row
+            csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
+            first_row = false
+          else
+            csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
           end
 
           if website == 'astekhome.com'
-            csv << variant_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
-            if variant.design.product_type.product_category.name == 'Digital'
-              csv << variant_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'custom', 0, website)) }
-              csv << variant_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'custom_sample', 0, website)) }
-            end
+            csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
           end
+        end
 
+        if website == 'astekhome.com' && design.product_type.product_category.name == 'Digital'
+          csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website)) }
+          csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website)) }
+        end
+
+        if design.design_images
+          design.design_images.each do |image|
+            @image_index += 1
+            # puts 'design - image index: '+@image_index.to_s
+            # puts '= '*30
+
+            csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 21.times.map { nil }
+
+            # csv << design_image_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
+          end
         end
       end
 
@@ -182,16 +198,61 @@ module Admin
 
         TEXT_VALUES[attr.to_sym]
 
-      elsif attr == 'body'
+      elsif attr == 'handle'
+        'D-'+variant.design.sku
 
-        case domain
-        when 'astek.com'
-          astek_business_description variant
-        when 'astekhome.com'
-          if variant_type == 'full'
-            astek_home_description variant
+      elsif attr == 'body'
+        # if variant_type == 'full'
+          case domain
+          when 'astek.com'
+            astek_business_description variant
+          when 'astekhome.com'
+            # if variant_type == 'full'
+              astek_home_description variant
+            # end
           end
+        # end
+
+      elsif attr == 'tags'
+        if variant_type == 'full'
+          variant.tags domain
         end
+
+      elsif attr == 'option_1_value'
+        case variant_type
+        when 'custom', 'custom_sample'
+          'Custom'
+        else
+          variant.name
+        end
+
+      elsif attr == 'image_src'
+        case variant_type
+        when 'full'
+          variant.image_url 0
+        when 'custom'
+          'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
+        else
+          nil
+        end
+
+      elsif attr == 'image_alt_text'
+        if variant.design.product_type.product_category.name == 'Digital'
+          'Digital wallcovering image'
+        else
+          'In-stock wallcovering image'
+        end
+
+      elsif attr == 'image_position'
+        case variant_type
+        when 'sample', 'custom_sample'
+          nil
+        else
+          image_index + 1
+        end
+
+      elsif attr == 'gift_card'
+        'FALSE'
 
       elsif attr == 'option_2_name'
         case domain
@@ -209,26 +270,30 @@ module Admin
           case variant_type
           when 'sample', 'full'
             variant_type.capitalize
+          when 'custom_sample'
+            'Sample'
           else
             'Full'
           end
         end
 
       elsif attr == 'option_3_name'
-        case domain
-        when 'astek.com'
-          nil
-        when 'astekhome.com'
-          'Material'
-        end
+        # case domain
+        # when 'astek.com'
+        #   nil
+        # when 'astekhome.com'
+        #   'Material'
+        # end
+        nil
 
       elsif attr == 'option_3_value'
-        case domain
-        when 'astek.com'
-          nil
-        when 'astekhome.com'
-          variant.option_3_value
-        end
+        # case domain
+        # when 'astek.com'
+        #   nil
+        # when 'astekhome.com'
+        #   variant.option_3_value
+        # end
+        nil
 
       elsif attr == 'sku'
 
@@ -236,9 +301,9 @@ module Admin
         when 'sample'
           variant.sku+'-s'
         when 'custom'
-          variant.sku+'-c'
+          variant.design.sku+'-c'
         when 'custom_sample'
-          variant.sku+'-c-s'
+          variant.design.sku+'-c-s'
         else
           variant.sku
         end
@@ -248,7 +313,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if variant_type == 'sample'
+          if variant_type == 'sample' || variant_type == 'custom_sample'
             (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
           else
             variant.variant_grams
@@ -300,7 +365,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          'lb'
+          'g'
         end
 
       elsif attr == 'collection'
@@ -311,9 +376,6 @@ module Admin
         when 'astekhome.com'
           nil
         end
-
-      elsif attr == 'image_url'
-        variant.image_url image_index.to_i
         
       else
         val = variant.send(attr)
