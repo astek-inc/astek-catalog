@@ -32,14 +32,6 @@ class Variant < ActiveRecord::Base
     # self.colors.contains? color
   end
 
-  def handle
-    if self.variant_type.name == 'Master'
-      self.sku
-    else
-      self.sku.gsub(/-\d+\z/, '')
-    end
-  end
-
   def title
     self.design.name
   end
@@ -82,7 +74,9 @@ class Variant < ActiveRecord::Base
   end
 
   def image_url position
-    self.variant_images[position].file.url
+    if self.variant_images
+      self.variant_images[position].file.url
+    end
   end
 
   def price
