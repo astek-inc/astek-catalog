@@ -23,10 +23,29 @@ namespace :db do
       end
     end
 
-    File.open("#{Rails.root}/tmp/#{website.name.parameterize}-bulk-export-#{Date.today}.csv", 'w+') do |f|
-      f.write(csv_data)
-    end
+    filename = "#{website.name.parameterize}-bulk-export-#{Date.today}.csv"
+    # filepath = "#{Rails.root}/tmp/#{filename}"
 
+    # File.open(filepath, 'w+') do |f|
+    #   f.write(csv_data)
+    # end
+
+    storage = Fog::Storage.new(
+        provider: 'AWS',
+        aws_access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+        aws_secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+        region: 'us-west-2',
+        path_style: true
+    )
+
+    directory = storage.directories.get('product-data-export')
+    uploaded = directory.files.create(
+        key: filename,
+        body: csv_data,
+        public: true
+    )
+
+    # puts uploaded
     puts 'Done'
   end
 end
