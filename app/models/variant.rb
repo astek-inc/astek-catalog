@@ -84,11 +84,12 @@ class Variant < ActiveRecord::Base
   end
 
   # Variants which should not show up in search results should have only the
-  # tag "legacy-sku" assigned to them. This will tell the Shopify system not
+  # tag "legacy__SKU" assigned to them. This will tell the Shopify system not
   # to display them except within their collections.
-  def tags
+  def tags domain
+
     if self.suppress_from_searches
-      'legacy__SKU'
+      tags = ['legacy__SKU']
     else
       tags = []
 
@@ -105,8 +106,14 @@ class Variant < ActiveRecord::Base
       end
 
       tags << self.design.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
-      tags.flatten.join(', ')
     end
+
+    if domain == 'astekhome.com'
+      tags << self.design.calculator_tag
+    end
+
+    tags.flatten.join(', ')
+
   end
 
   def to_tags name, values
