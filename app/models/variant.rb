@@ -128,10 +128,6 @@ class Variant < ActiveRecord::Base
     "#{name}__#{value}"
   end
 
-  def collection
-    self.design.collection.name
-  end
-
   def generate_tearsheet
     filename = Rails.root.join('tmp', self.sku+'.pdf')
 
