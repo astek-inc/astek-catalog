@@ -20,4 +20,6 @@ class Collection < ActiveRecord::Base
 
   # delegate :product_category, to: :product_type, allow_nil: true
 
+  validates_presence_of :name
+
 end
