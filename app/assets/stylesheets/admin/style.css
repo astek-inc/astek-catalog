@@ -64,6 +64,7 @@ div.form-actions > button {
     margin-right: 10px;
 }
 
-div#suppress-from-searches {
+div#suppress-from-searches,
+div#suppress-from-display {
     padding-top: 20px;
 }

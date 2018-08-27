@@ -4,9 +4,21 @@
     <%= f.collection_select :product_category_id, @product_categories, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
 <% end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label :vendor_id, 'Vendor' %> <span class="required">*</span>
-  <%= f.collection_select :vendor_id, Vendor.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: ['col-md-7'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :vendor_id, 'Vendor' %> <span class="required">*</span>
+      <%= f.collection_select :vendor_id, Vendor.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: ['col-md-5'] do %>
+    <%= content_tag :div, class: ['checkbox'], id: 'suppress-from-display' do %>
+      <%= f.label :suppress_from_display do %>
+        <%= f.check_box :suppress_from_display %> Do not show this collection on websites (but do show its designs)
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
@@ -15,13 +27,13 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :description, 'Description' %> <span class="required">*</span>
-    <%= f.text_area :description, rows: 6, required: true, class: 'form-control' %>
+    <%= f.label :description, 'Description' %>
+    <%= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
-    <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+    <%= f.label :keywords, 'Keywords' %>
+    <%= f.text_area :keywords, rows: 3, required: false, class: 'form-control' %>
 <% end %>
 
 <% if @collection.persisted? %>
