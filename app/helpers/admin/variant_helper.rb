@@ -369,10 +369,12 @@ module Admin
         end
 
       elsif attr == 'collection'
-
         case domain
         when 'astek.com'
-          variant.collection
+          # Digital Library is a catchall for random designs, not a true collection
+          if variant.collection != 'Digital Library'
+            variant.collection
+          end
         when 'astekhome.com'
           nil
         end
