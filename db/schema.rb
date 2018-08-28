@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180827205100) do
+ActiveRecord::Schema.define(version: 20180828223120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,23 +98,25 @@ ActiveRecord::Schema.define(version: 20180827205100) do
     t.string   "name"
     t.text     "description"
     t.text     "keywords"
-    t.decimal  "price",           precision: 8, scale: 2
+    t.decimal  "price",                  precision: 8, scale: 2
     t.integer  "sale_unit_id"
-    t.decimal  "weight",          precision: 5, scale: 2
+    t.decimal  "weight",                 precision: 5, scale: 2
     t.datetime "available_on"
     t.datetime "expires_on"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
     t.string   "sku"
+    t.boolean  "suppress_from_searches",                         default: false
   end
 
   add_index "designs", ["deleted_at"], name: "index_designs_on_deleted_at", using: :btree
   add_index "designs", ["row_order"], name: "index_designs_on_row_order", using: :btree
   add_index "designs", ["sku"], name: "index_designs_on_sku", using: :btree
   add_index "designs", ["slug"], name: "index_designs_on_slug", unique: true, using: :btree
+  add_index "designs", ["suppress_from_searches"], name: "index_designs_on_suppress_from_searches", using: :btree
 
   create_table "designs_styles", id: false, force: :cascade do |t|
     t.integer "design_id", null: false
@@ -297,9 +299,8 @@ ActiveRecord::Schema.define(version: 20180827205100) do
     t.integer  "backing_type_id"
     t.integer  "row_order"
     t.string   "tearsheet"
-    t.boolean  "suppress_from_searches", default: false, null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
   end
 
