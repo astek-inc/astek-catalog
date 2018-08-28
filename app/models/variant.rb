@@ -83,49 +83,8 @@ class Variant < ActiveRecord::Base
     self.design.price.to_s
   end
 
-  # Designs which should not show up in search results should have only the
-  # tag "legacy__SKU" assigned to them. This will tell the Shopify system not
-  # to display them except within their collections.
-  def tags domain
-
-    if self.suppress_from_searches
-      tags = ['legacy__SKU']
-    else
-      tags = []
-
-      tags << to_tags('color', self.colors.map { |c| c.name })
-      tags << to_tags('style', self.design.styles.map { |s| s.name })
-      tags << to_tag('type', self.design.product_type.name)
-
-      if self.design.product_type.product_category.name == 'Digital'
-        tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
-      end
-
-      if self.design.keywords
-        tags << to_tags('keyword', self.design.keywords.split(',')).map { |k| k.strip }
-      end
-
-      tags << self.design.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
-    end
-
-    if domain == 'astekhome.com'
-      tags << self.design.calculator_tag
-    end
-
-    tags.flatten.join(', ')
-
-  end
-
-  def to_tags name, values
-    tags = []
-    values.each do |value|
-      tags << to_tag(name, value)
-    end
-    tags
-  end
-
-  def to_tag name, value
-    "#{name}__#{value}"
+  def sku_with_colors
+    self.sku + '-' + self.colors.map { |c| c.name.gsub(/\s+/, '').downcase }.join('-')
   end
 
   def generate_tearsheet
