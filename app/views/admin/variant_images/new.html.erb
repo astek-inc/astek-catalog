@@ -1,9 +1,14 @@
 <% content_for :header_left do %>
-    <%= content_tag :h1,
-                    [link_to('Variants', admin_variants_path(@variant)),
-                     link_to(@variant.name, admin_variant_path(@variant)),
-                     link_to('Images', admin_variant_variant_images_path(@variant)),
-                     'New Image'].join(' / ').html_safe %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      link_to('Designs', admin_collection_designs_path(@collection)),
+      link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
+      link_to('Variants', admin_design_variants_path(@design)),
+      link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
+      link_to('Images', admin_variant_variant_images_path(@variant)),
+      'New Image'
+  ].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
