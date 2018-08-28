@@ -127,7 +127,7 @@ module Admin
           collection
       ]
 
-      secondary_row_attributes = ['handle', nil, nil, nil, nil, 'tags', nil, nil, 'option_1_value', nil, 'option_2_value', nil] +
+      secondary_row_attributes = ['handle', nil, nil, nil, nil, nil, nil, nil, 'option_1_value', nil, 'option_2_value', nil] +
           %w[
           option_3_value
           sku
@@ -215,7 +215,7 @@ module Admin
 
       elsif attr == 'tags'
         if variant_type == 'full'
-          variant.tags domain
+          variant.design.tags domain
         end
 
       elsif attr == 'option_1_value'
@@ -304,8 +304,8 @@ module Admin
           variant.design.sku+'-c'
         when 'custom_sample'
           variant.design.sku+'-c-s'
-        else
-          variant.sku
+        when 'full'
+          variant.sku_with_colors
         end
 
       elsif attr == 'variant_grams'

@@ -32,6 +32,50 @@ class Design < ActiveRecord::Base
     self.design_properties.joins(:property).find_by(properties: { name: name }).try(:value)
   end
 
+  def tags domain
+    
+    # Designs which should not show up in search results should have only the
+    # tag "legacy__SKU" assigned to them. This will tell the Shopify system not
+    # to display them except within their collections.
+    if self.suppress_from_searches
+      tags = ['legacy__SKU']
+    else
+      tags = []
+
+      tags << to_tags('style', self.styles.map { |s| s.name })
+      tags << to_tag('type', self.product_type.name)
+
+      if self.product_type.product_category.name == 'Digital'
+        tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
+      end
+
+      if self.keywords
+        tags << to_tags('keyword', self.keywords.split(',')).map { |k| k.strip }
+      end
+
+      tags << self.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
+    end
+
+    if domain == 'astekhome.com'
+      tags << self.calculator_tag
+    end
+
+    tags.flatten.join(', ')
+
+  end
+
+  def to_tags name, values
+    tags = []
+    values.each do |value|
+      tags << to_tag(name, value)
+    end
+    tags
+  end
+
+  def to_tag name, value
+    "#{name}__#{value}"
+  end
+
   def calculator_tag
     case sale_unit.name
     when 'Roll'
