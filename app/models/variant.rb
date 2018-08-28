@@ -83,7 +83,7 @@ class Variant < ActiveRecord::Base
     self.design.price.to_s
   end
 
-  # Variants which should not show up in search results should have only the
+  # Designs which should not show up in search results should have only the
   # tag "legacy__SKU" assigned to them. This will tell the Shopify system not
   # to display them except within their collections.
   def tags domain
