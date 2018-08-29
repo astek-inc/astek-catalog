@@ -83,8 +83,9 @@ class Variant < ActiveRecord::Base
     self.design.price.to_s
   end
 
+  # For export to Shopify websites
   def sku_with_colors
-    self.sku + '-' + self.colors.map { |c| c.name.gsub(/\s+/, '').downcase }.join('-')
+    self.sku + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
   end
 
   def generate_tearsheet
