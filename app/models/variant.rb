@@ -114,7 +114,7 @@ class Variant < ActiveRecord::Base
         pdf.fill_color 'ffffff'
         pdf.move_down 8
         pdf.indent(10) do
-          pdf.text self.name.upcase + ' / ' + self.sku.upcase
+          pdf.text self.design.name.upcase + ' • ' + self.name.upcase + ' / ' + self.sku.upcase
         end
         pdf.fill_color '000000'
       end
