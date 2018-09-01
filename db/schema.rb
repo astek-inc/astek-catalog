@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180828223120) do
+ActiveRecord::Schema.define(version: 20180831225414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,14 @@ ActiveRecord::Schema.define(version: 20180828223120) do
   add_index "designs", ["sku"], name: "index_designs_on_sku", using: :btree
   add_index "designs", ["slug"], name: "index_designs_on_slug", unique: true, using: :btree
   add_index "designs", ["suppress_from_searches"], name: "index_designs_on_suppress_from_searches", using: :btree
+
+  create_table "designs_product_types", id: false, force: :cascade do |t|
+    t.integer "design_id",       null: false
+    t.integer "product_type_id", null: false
+  end
+
+  add_index "designs_product_types", ["design_id", "product_type_id"], name: "index_designs_product_types_on_design_id_and_product_type_id", using: :btree
+  add_index "designs_product_types", ["product_type_id", "design_id"], name: "index_designs_product_types_on_product_type_id_and_design_id", using: :btree
 
   create_table "designs_styles", id: false, force: :cascade do |t|
     t.integer "design_id", null: false
