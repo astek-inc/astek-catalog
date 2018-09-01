@@ -172,7 +172,7 @@ module Admin
           end
         end
 
-        if website == 'astekhome.com' && design.product_type.product_category.name == 'Digital'
+        if website == 'astekhome.com' && design.digital?
           csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website)) }
           csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website)) }
         end
@@ -237,7 +237,7 @@ module Admin
         end
 
       elsif attr == 'image_alt_text'
-        if variant.design.product_type.product_category.name == 'Digital'
+        if variant.design.digital?
           'Digital wallcovering image'
         else
           'In-stock wallcovering image'
@@ -334,7 +334,7 @@ module Admin
           nil
         when 'astekhome.com'
           if variant_type == 'sample' || variant_type == 'custom_sample'
-            if variant.design.product_type.product_category.name == 'Digital'
+            if variant.design.digital?
               10.99.to_s
             else
               5.99.to_s

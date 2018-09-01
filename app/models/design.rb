@@ -11,7 +11,6 @@ class Design < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :collection
-  belongs_to :product_type
   belongs_to :sale_unit
 
   has_many :variants, dependent: :destroy
@@ -22,6 +21,7 @@ class Design < ActiveRecord::Base
   has_many :properties, through: :design_properties
 
   has_and_belongs_to_many :styles
+  has_and_belongs_to_many :product_types
 
   validates :name, presence: true
   validates :sku, presence: true
@@ -30,6 +30,10 @@ class Design < ActiveRecord::Base
 
   def property name
     self.design_properties.joins(:property).find_by(properties: { name: name }).try(:value)
+  end
+
+  def digital?
+    self.product_types.map { |t| t.product_category.name }.include? 'Digital'
   end
 
   def tags domain
