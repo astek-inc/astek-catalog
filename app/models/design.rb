@@ -32,6 +32,10 @@ class Design < ActiveRecord::Base
     self.design_properties.joins(:property).find_by(properties: { name: name }).try(:value)
   end
 
+  def digital?
+    self.product_types.map { |t| t.product_category.name }.include? 'Digital'
+  end
+
   def tags domain
     
     # Designs which should not show up in search results should have only the
