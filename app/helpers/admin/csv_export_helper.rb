@@ -473,7 +473,7 @@ module Admin
     end
 
     def format_tearsheet_link variant
-      '<!-- pdf -->' + $/ + ActionController::Base.helpers.link_to('Tear Sheet', variant.tearsheet.file.url, class: 'btn btn--small')
+      '<!-- pdf -->' + $/ + ActionController::Base.helpers.link_to('Tear Sheet', variant.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
     end
 
   end
