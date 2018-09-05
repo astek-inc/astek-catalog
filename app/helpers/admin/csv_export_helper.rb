@@ -121,7 +121,7 @@ module Admin
           google_shopping_custom_label_2
           google_shopping_custom_label_3
           google_shopping_custom_label_4
-          image_src
+          variant_image
           variant_weight_unit
           variant_tax_code
           collection
@@ -143,7 +143,7 @@ module Admin
           variant_barcode
           image_src
           image_position
-        ] + 23.times.map { nil }
+        ] + 17.times.map { nil } + ['variant_image'] + 3.times.map { nil }
 
       CSV.generate(headers: true) do |csv|
 
@@ -368,6 +368,14 @@ module Admin
           'g'
         end
 
+      elsif attr == 'variant_image'
+        case variant_type
+        when 'full'
+          variant.image_url 0
+        else
+          nil
+        end
+
       elsif attr == 'collection'
         case domain
         when 'astek.com'
@@ -432,6 +440,7 @@ module Admin
           <p>'+dp.value+'</p>
         </div>'
       end
+
       formatted += $/ + '</div>'
       formatted
     end
