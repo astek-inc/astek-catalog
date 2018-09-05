@@ -47,7 +47,7 @@ class Design < ActiveRecord::Base
       tags = []
 
       tags << to_tags('style', self.styles.map { |s| s.name })
-      tags << to_tag('type', self.product_type.name)
+      tags << to_tags('type', self.product_types.map { |t| t.name })
 
       if self.product_type.product_category.name == 'Digital'
         tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
