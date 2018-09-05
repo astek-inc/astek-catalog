@@ -41,9 +41,9 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
 
     puts 'Finding relevant information'
 
-    vendor = Vendor.find_by!({ name: item.vendor })
+    vendor = Vendor.find_by!({ name: item.vendor.strip })
     product_category = ProductCategory.find_by!( { name: item.product_category })
-    sale_unit = SaleUnit.find_by!({ name: item.sale_unit })
+    sale_unit = SaleUnit.find_by!({ name: item.sale_unit.strip })
     product_types = ProductType.where(name: item.product_type.split(',').map { |t| t.strip }) unless item.product_type.nil?
     styles = Style.where(name: item.style.split(',').map { |s| s.strip }) unless item.style.nil?
     variant_type = VariantType.find_by!({ name: item.variant_type })
