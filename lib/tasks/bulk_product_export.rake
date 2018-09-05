@@ -1,5 +1,5 @@
-require "#{Rails.root}/app/helpers/admin/variant_helper.rb"
-include Admin::VariantHelper
+require "#{Rails.root}/app/helpers/admin/csv_export_helper.rb"
+include Admin::CsvExportHelper
 
 namespace :db do
   desc 'Export all products that are flagged to show on a given domain'

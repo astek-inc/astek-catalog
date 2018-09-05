@@ -1,5 +1,5 @@
 module Admin
-  module VariantHelper
+  module CsvExportHelper
 
     require 'csv'
 
