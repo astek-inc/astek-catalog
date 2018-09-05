@@ -42,24 +42,24 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     puts 'Finding relevant information'
 
     vendor = Vendor.find_by!({ name: item.vendor.strip })
-    product_category = ProductCategory.find_by!( { name: item.product_category })
+    product_category = ProductCategory.find_by!( { name: item.product_category.strip })
     sale_unit = SaleUnit.find_by!({ name: item.sale_unit.strip })
     product_types = ProductType.where(name: item.product_type.split(',').map { |t| t.strip }) unless item.product_type.nil?
     styles = Style.where(name: item.style.split(',').map { |s| s.strip }) unless item.style.nil?
-    variant_type = VariantType.find_by!({ name: item.variant_type })
+    variant_type = VariantType.find_by!({ name: item.variant_type.strip })
 
     if item.substrate
-      substrate = Substrate.find_by(name: item.substrate)
+      substrate = Substrate.find_by(name: item.substrate.strip)
       backing = nil
     elsif item.backing
-      backing_type = BackingType.find_by(name: item.backing)
+      backing_type = BackingType.find_by(name: item.backing.strip)
       substrate = nil
     else
       raise 'Invalid or missing substrate/backing information'
     end
 
     puts 'Finding or creating collection information for '+item.collection
-    collection = Collection.find_or_create_by!({ name: item.collection, product_category: product_category, vendor: vendor }) do |c|
+    collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category, vendor: vendor }) do |c|
       # If we got here, this is a new record
       domains = []
       unless item.websites.nil?
@@ -78,13 +78,15 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     end
 
     puts 'Finding or creating design information for '+item.design_name
-    design = Design.find_or_create_by!({ sku: item.design_sku, name: item.design_name, collection: collection }) do |d|
+    design = Design.find_or_create_by!({ sku: item.design_sku.strip, name: item.design_name.strip, collection: collection }) do |d|
       # If we got here, this is a new record
-      d.description = item.description
-      d.keywords = item.keywords
-      d.price = BigDecimal(item.price.gsub(/,/, ''), 2)
+      d.description = item.description.strip unless item.description.nil?
+      d.keywords = item.keywords.strip
+      d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
       d.sale_unit = sale_unit
-      d.weight = BigDecimal(item.weight.gsub(/,/, ''), 2)
+      d.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
+      d.sale_quantity = item.sale_quantity.strip
+      d.minimum_quantity = item.minimum_quantity.strip
       d.available_on = Time.now
       d.product_types = product_types
       d.styles = styles
@@ -115,8 +117,8 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     variant = Variant.create!({
       design: design,
       variant_type: variant_type,
-      name: item.variant_name,
-      sku: item.sku,
+      name: item.variant_name.strip,
+      sku: item.sku.strip,
       substrate: substrate,
       backing_type: backing_type
     })
