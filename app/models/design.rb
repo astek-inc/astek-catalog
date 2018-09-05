@@ -57,6 +57,8 @@ class Design < ActiveRecord::Base
         tags << to_tags('keyword', self.keywords.split(',')).map { |k| k.strip }
       end
 
+      tags << [to_tag('Minimum quantity', self.minimum_quantity), to_tag('Sold in quantities of', self.sale_quantity)]
+
       tags << self.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
     end
 
@@ -114,7 +116,11 @@ class Design < ActiveRecord::Base
         when '16.3'
           'sold-by__RollF'
         when '8'
-          'sold-by__RollG'
+          if self.minimum_quantity == 3
+            'sold-by__RollGMin3'
+          else
+            'sold-by__RollG'
+          end
         when '11'
           'sold-by__RollH'
         when '12'
@@ -124,7 +130,11 @@ class Design < ActiveRecord::Base
       when '39'
         case roll_length
         when '11'
-          'sold-by__RollJ'
+          if self.minimum_quantity == 3
+            'sold-by__RollJMin3'
+          else
+            'sold-by__RollJ'
+          end
         when '22.9659'
           # This is by meter, it needs a separate sale unit
           'sold-by__RollK'
@@ -139,17 +149,34 @@ class Design < ActiveRecord::Base
       when '36'
         case roll_length
         when '55'
-          'sold-by__YardA'
+          if self.minimum_quantity == 4
+            'sold-by__YardAMin4'
+          else
+            'sold-by__YardA'
+          end
         end
       when '48'
         case roll_length
         when '55'
-          'sold-by__YardB'
+          if self.minimum_quantity == 4
+            'sold-by__YardBMin4'
+          else
+            'sold-by__YardB'
+          end
         end
       when '54'
         case roll_length
         when '10','55'
-          'sold-by__YardC'
+          case self.minimum_quantity
+          when 4
+            'sold-by__YardCMin4'
+          when 6
+            'sold-by__YardCMin6'
+          when 10
+            'sold-by__YardCMin10'
+          else
+            'sold-by__YardC'
+          end
         end
       end
 
@@ -159,7 +186,11 @@ class Design < ActiveRecord::Base
 
       case roll_width
       when '39'
-        'sold-by__MeterA'
+        if self.minimum_quantity == 10
+          'sold-by__MeterAMin10'
+        else
+          'sold-by__MeterA'
+        end
       end
 
     when 'Square Foot'

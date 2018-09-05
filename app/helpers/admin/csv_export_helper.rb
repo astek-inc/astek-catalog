@@ -453,6 +453,21 @@ module Admin
           <p>'+dp.value+'</p>
         </div>'
       end
+
+      if variant.design.minimum_quantity > 1
+        formatted += $/ + '<div>
+          <h6>Minimum quantity</h6>
+          <p>'+variant.design.minimum_quantity.to_s+'</p>
+        </div>'
+      end
+
+      if variant.design.sale_quantity > 1
+        formatted += $/ + '<div>
+          <h6>Sold in quantities of</h6>
+          <p>'+variant.design.sale_quantity.to_s+'</p>
+        </div>'
+      end
+
       formatted += $/ + '</div>'
       formatted
     end

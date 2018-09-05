@@ -56,24 +56,40 @@
 <% end %>
 
 <%= content_tag :div, class: 'row' do %>
-  <%= content_tag :div, class: 'col-md-4' do %>
+  <%= content_tag :div, class: 'col-md-6' do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= f.label :price, 'Price' %> <span class="required">*</span>
       <%= f.text_field :price, value: number_to_currency(f.object.price.to_f, delimiter: '', unit: ''), required: true, class: 'form-control' %>
     <% end %>
   <% end %>
 
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :weight, 'Weight' %> <span class="required">*</span>
+      <%= f.text_field :weight, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'row' do %>
   <%= content_tag :div, class: 'col-md-4' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-        <%= f.label :sale_unit, 'Sale Unit' %> <span class="required">*</span>
-        <%= f.collection_select :sale_unit_id, SaleUnit.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+      <%= f.label :sale_unit, 'Sale Unit' %> <span class="required">*</span>
+      <%= f.collection_select :sale_unit_id, SaleUnit.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
     <% end %>
   <% end %>
 
   <%= content_tag :div, class: 'col-md-4' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :weight, 'Weight' %> <span class="required">*</span>
-      <%= f.text_field :weight, required: true, class: 'form-control' %>
+      <%= f.label :sale_quantity, 'Sale Quantity' %> <span class="required">*</span>
+      <%= f.number_field :sale_quantity, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-4' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :minimum_quantity, 'Minimum Order' %> <span class="required">*</span>
+      <%= f.number_field :minimum_quantity, required: true, class: 'form-control' %>
     <% end %>
   <% end %>
 <% end %>
