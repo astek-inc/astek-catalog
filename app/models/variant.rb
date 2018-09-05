@@ -70,7 +70,7 @@ class Variant < ActiveRecord::Base
   end
 
   def type
-    self.design.product_type.product_category.name
+    self.design.product_types.map { |t| t.name }.join(',')
   end
 
   def image_url position
