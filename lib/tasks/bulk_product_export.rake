@@ -23,7 +23,7 @@ namespace :db do
       end
     end
 
-    filename = "#{website.name.parameterize}-bulk-export-#{Date.today}.csv"
+    filename = "#{website.name.parameterize}-bulk-export-#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv"
     # filepath = "#{Rails.root}/tmp/#{filename}"
 
     # File.open(filepath, 'w+') do |f|
@@ -44,6 +44,8 @@ namespace :db do
         body: csv_data,
         public: true
     )
+
+    puts 'Uploaded file '+filename+' to S3'
 
     # puts uploaded
     puts 'Done'
