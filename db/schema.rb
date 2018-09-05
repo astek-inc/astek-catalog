@@ -101,6 +101,8 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.decimal  "price",                  precision: 8, scale: 2
     t.integer  "sale_unit_id"
     t.decimal  "weight",                 precision: 5, scale: 2
+    t.integer  "sale_quantity",                                  default: 1
+    t.integer  "minimum_quantity",                               default: 1
     t.datetime "available_on"
     t.datetime "expires_on"
     t.datetime "created_at",                                                     null: false
