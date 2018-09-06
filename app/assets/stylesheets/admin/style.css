@@ -65,6 +65,7 @@ div.form-actions > button {
 }
 
 div#suppress-from-searches,
-div#suppress-from-display {
-    padding-top: 20px;
+div#suppress-from-display,
+div#user-can-select-material {
+    padding-top: 10px;
 }

@@ -77,7 +77,7 @@ module Admin
     end
 
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :vendor_id, :suppress_from_display, website_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
     end
 
   end

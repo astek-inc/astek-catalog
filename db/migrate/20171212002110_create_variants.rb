@@ -10,7 +10,6 @@ class CreateVariants < ActiveRecord::Migration
       t.integer :backing_type_id
       t.integer :row_order, index: true
       t.string :tearsheet
-      t.boolean :suppress_from_searches, default: :false, null: false
       t.timestamps null: false
       t.timestamp :deleted_at, index: true
     end

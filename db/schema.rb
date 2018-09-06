@@ -34,12 +34,13 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.text     "description"
     t.integer  "vendor_id"
     t.text     "keywords"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.boolean  "suppress_from_display",    default: false, null: false
+    t.boolean  "user_can_select_material", default: false, null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
-    t.boolean  "suppress_from_display", default: false, null: false
   end
 
   add_index "collections", ["deleted_at"], name: "index_collections_on_deleted_at", using: :btree
@@ -96,6 +97,7 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.integer  "collection_id"
     t.integer  "product_type_id"
     t.string   "name"
+    t.string   "sku"
     t.text     "description"
     t.text     "keywords"
     t.decimal  "price",                  precision: 8, scale: 2
@@ -103,6 +105,7 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.decimal  "weight",                 precision: 5, scale: 2
     t.integer  "sale_quantity",                                  default: 1
     t.integer  "minimum_quantity",                               default: 1
+    t.boolean  "suppress_from_searches",                         default: false
     t.datetime "available_on"
     t.datetime "expires_on"
     t.datetime "created_at",                                                     null: false
@@ -110,8 +113,6 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
-    t.string   "sku"
-    t.boolean  "suppress_from_searches",                         default: false
   end
 
   add_index "designs", ["deleted_at"], name: "index_designs_on_deleted_at", using: :btree

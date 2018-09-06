@@ -4,6 +4,7 @@ class CreateDesigns < ActiveRecord::Migration
       t.integer :collection_id
       t.integer :product_type_id
       t.string :name
+      t.string :sku, index: true
       t.text :description
       t.text :keywords
       t.decimal :price, precision: 8, scale: 2
@@ -11,6 +12,7 @@ class CreateDesigns < ActiveRecord::Migration
       t.decimal :weight, precision: 5, scale: 2
       t.integer :sale_quantity, default: 1
       t.integer :minimum_quantity, default: 1
+      t.boolean :suppress_from_searches, default: false, index: true
       t.datetime :available_on
       t.datetime :expires_on
       t.timestamps null: false
