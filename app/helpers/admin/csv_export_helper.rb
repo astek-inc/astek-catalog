@@ -151,8 +151,8 @@ module Admin
           variant_barcode
           image_src
           image_position
-        ] + 17.times.map { nil } + ['variant_image'] + 3.times.map { nil }
-
+        ] + 17.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 2.times.map { nil }
+      
       CSV.generate(headers: true) do |csv|
 
         if include_header
