@@ -3,6 +3,14 @@ module Admin
 
     require 'csv'
 
+    MATERIALS = [
+        { name: 'Paper', surcharge: '0' },
+        { name: 'Type II Commercial Vinyl', surcharge: '0.50' },
+        { name: 'Peel & Stick Wall Tiles', surcharge: '1.50' },
+        { name: 'Gold Mylar', surcharge: '1.00' },
+        { name: 'Silver Mylar', surcharge: '1.00' },
+    ]
+
     TEXT_VALUES = {
         option_1_name: 'Color',
         variant_barcode: '',
@@ -155,44 +163,63 @@ module Admin
         @custom_image_index = total_image_count
         # puts 'custom image index: '+@custom_image_index.to_s
 
-        first_row = true
+        @first_row = true
         design.variants.each_with_index do |variant, i|
           @image_index = i
-          # puts 'variant - image index: '+@image_index.to_s
+          first_variant_row = true
 
-          if first_row
-            csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
-            first_row = false
+          if website == 'astekhome.com' && design.collection.user_can_select_material
+            MATERIALS.each do |material|
+              if @first_row
+                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material[:name], first_variant_row)) }
+                @first_row = false
+              else
+                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material[:name], first_variant_row)) }
+              end
+
+              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material[:name])) }
+              first_variant_row = false
+            end
           else
-            csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
-          end
+            if @first_row
+              csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
+              @first_row = false
+            else
+              csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
+            end
 
-          if website == 'astekhome.com'
-            csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+            if website == 'astekhome.com'
+              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+            end
           end
         end
 
-        if website == 'astekhome.com' && design.digital?
-          csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website)) }
-          csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website)) }
+        if website == 'astekhome.com'
+          if design.collection.user_can_select_material
+            first_custom_row = true
+            MATERIALS.each do |material|
+              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website, material[:name], first_custom_row)) }
+              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website, material[:name], first_custom_row)) }
+              first_custom_row = false
+            end
+          elsif design.digital?
+            csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website)) }
+            csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website)) }
+          end
         end
 
         if design.design_images
           design.design_images.each do |image|
             @image_index += 1
-            # puts 'design - image index: '+@image_index.to_s
-            # puts '= '*30
-
             csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 21.times.map { nil }
 
-            # csv << design_image_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
           end
         end
       end
 
     end
 
-    def attribute_value attr, variant, variant_type, image_index, domain
+    def attribute_value attr, variant, variant_type, image_index, domain, material=nil, show_image=true
 
       if TEXT_VALUES[attr.to_sym]
 
@@ -227,11 +254,15 @@ module Admin
         end
 
       elsif attr == 'image_src'
-        case variant_type
-        when 'full'
-          variant.image_url 0
-        when 'custom'
-          'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
+        if show_image
+          case variant_type
+          when 'full'
+              variant.image_url 0
+          when 'custom'
+              'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
+          else
+            nil
+          end
         else
           nil
         end
@@ -248,7 +279,11 @@ module Admin
         when 'sample', 'custom_sample'
           nil
         else
-          image_index + 1
+          if show_image
+            image_index + 1
+          else
+            nil
+          end
         end
 
       elsif attr == 'gift_card'
@@ -278,22 +313,20 @@ module Admin
         end
 
       elsif attr == 'option_3_name'
-        # case domain
-        # when 'astek.com'
-        #   nil
-        # when 'astekhome.com'
-        #   'Material'
-        # end
-        nil
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          'Material'
+        end
 
       elsif attr == 'option_3_value'
-        # case domain
-        # when 'astek.com'
-        #   nil
-        # when 'astekhome.com'
-        #   variant.option_3_value
-        # end
-        nil
+        case domain
+        when 'astek.com'
+          nil
+        when 'astekhome.com'
+          material
+        end
 
       elsif attr == 'sku'
 
@@ -369,9 +402,13 @@ module Admin
         end
 
       elsif attr == 'variant_image'
-        case variant_type
-        when 'full'
-          variant.image_url 0
+        if show_image
+          case variant_type
+          when 'full'
+            variant.image_url 0
+          else
+            nil
+          end
         else
           nil
         end
