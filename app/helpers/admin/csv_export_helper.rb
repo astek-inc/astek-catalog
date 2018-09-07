@@ -406,16 +406,18 @@ module Admin
         end
 
       elsif attr == 'variant_image'
-        if show_image
+        # if show_image
           case variant_type
-          when 'full'
+          when 'full','sample'
             variant.image_url 0
+          when 'custom','custom_sample'
+            'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
           else
             nil
           end
-        else
-          nil
-        end
+        # else
+        #   nil
+        # end
 
       elsif attr == 'collection'
         case domain
