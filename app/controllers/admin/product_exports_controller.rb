@@ -18,7 +18,7 @@ module Admin
       end
 
       respond_to do |format|
-        format.csv { send_data csv_data, type: 'text/csv; charset=utf-8; header=present', filename: "#{website.name.parameterize}-product-export-#{collection.name.parameterize}-#{Date.today}.csv" }
+        format.csv { send_data csv_data, type: 'text/csv; charset=utf-8; header=present', filename: "#{website.name.parameterize}-product-export-#{collection.name.parameterize}-#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv" }
       end
     end
 
