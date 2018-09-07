@@ -227,6 +227,7 @@ module Admin
         TEXT_VALUES[attr.to_sym]
 
       elsif attr == 'handle'
+        # Add a prefix to ensure that this is distinct from any variant SKU
         'D-'+variant.design.sku
 
       elsif attr == 'body'
