@@ -231,16 +231,12 @@ module Admin
         'D-'+variant.design.sku
 
       elsif attr == 'body'
-        # if variant_type == 'full'
-          case domain
-          when 'astek.com'
-            astek_business_description variant
-          when 'astekhome.com'
-            # if variant_type == 'full'
-              astek_home_description variant
-            # end
-          end
-        # end
+        case domain
+        when 'astek.com'
+          astek_business_description variant
+        when 'astekhome.com'
+          astek_home_description variant
+        end
 
       elsif attr == 'tags'
         if variant_type == 'full'
