@@ -74,6 +74,14 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
           end
         end
         c.websites = Website.where(domain: domains)
+
+        if ['Digital_Library', 'Vintage'].include? c.name
+          c.user_can_select_material = true
+        end
+
+        if ['Digital_Library'].include? c.name
+          c.suppress_from_display = true
+        end
       end
     end
 
