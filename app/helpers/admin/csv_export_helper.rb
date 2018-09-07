@@ -152,7 +152,7 @@ module Admin
           image_src
           image_position
         ] + 17.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 2.times.map { nil }
-      
+
       CSV.generate(headers: true) do |csv|
 
         if include_header
@@ -171,14 +171,15 @@ module Admin
           if website == 'astekhome.com' && design.collection.user_can_select_material
             MATERIALS.each do |material|
               if @first_row
-                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material[:name], first_variant_row)) }
+                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
                 @first_row = false
               else
-                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material[:name], first_variant_row)) }
+                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
               end
-
-              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material[:name])) }
               first_variant_row = false
+
+              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
+
             end
           else
             if @first_row
@@ -198,8 +199,8 @@ module Admin
           if design.collection.user_can_select_material
             first_custom_row = true
             MATERIALS.each do |material|
-              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website, material[:name], first_custom_row)) }
-              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website, material[:name], first_custom_row)) }
+              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website, material, first_custom_row)) }
+              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website, material, first_custom_row)) }
               first_custom_row = false
             end
           elsif design.digital?
@@ -325,7 +326,9 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          material
+          if material
+            material[:name]
+          end
         end
 
       elsif attr == 'sku'
@@ -373,7 +376,11 @@ module Admin
               5.99.to_s
             end
           else
-            variant.price
+            if material
+              (BigDecimal(variant.price) + BigDecimal(material[:surcharge])).to_s
+            else
+              variant.price
+            end
           end
         end
 
