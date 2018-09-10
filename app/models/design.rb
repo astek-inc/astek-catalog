@@ -33,7 +33,7 @@ class Design < ActiveRecord::Base
   end
 
   def digital?
-    self.product_types.map { |t| t.product_category.name }.include? 'Digital'
+    self.collection.product_category.name == 'Digital'
   end
 
   def tags domain
