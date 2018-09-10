@@ -60,6 +60,8 @@ class Design < ActiveRecord::Base
       tags << [to_tag('Minimum quantity', self.minimum_quantity), to_tag('Sold in quantities of', self.sale_quantity)]
 
       tags << self.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
+
+      tags << to_tags('type', self.product_types.map { |t| t.name })
     end
 
     if domain == 'astekhome.com'
