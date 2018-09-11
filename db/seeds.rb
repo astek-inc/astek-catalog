@@ -121,7 +121,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       end
     end
 
-    puts 'Creating variants'
+    puts 'Creating variants: '+item.variant_name
     variant = Variant.create!({
       design: design,
       variant_type: variant_type,
@@ -131,8 +131,9 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       backing_type: backing_type
     })
 
-    puts 'Processing variant images'
+
     item.images.split(',').map { |i| i.strip }.each do |url|
+      puts 'Processing variant images: '+url
       VariantImage.create!({
         remote_file_url: url,
         type: 'VariantImage',
