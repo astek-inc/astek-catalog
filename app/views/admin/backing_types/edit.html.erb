@@ -1,0 +1,18 @@
+<% content_for :header_left do %>
+    <%= content_tag(:h1, [
+        link_to('Backing Types', admin_backing_types_path),
+        @backing_type.name
+      ].join(' / ').html_safe) %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-12' do %>
+    <%= form_for [:admin, @backing_type] do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'backing_type_edit' do %>
+            <%= render partial: 'form', locals: { f: f } %>
+        <% end %>
+
+        <%= form_buttons admin_backing_types_path %>
+    <% end %>
+<% end %>

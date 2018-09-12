@@ -6,6 +6,11 @@ div.sidebar div#sidebar-menu div.nav-sidebar > a {
     text-transform: uppercase;
 }
 
+div.sidebar div#sidebar-menu .list-group-item {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
 div.page-header {
     overflow: auto;
 }
@@ -57,4 +62,10 @@ div.form-group div.image {
 
 div.form-actions > button {
     margin-right: 10px;
+}
+
+div#suppress-from-searches,
+div#suppress-from-display,
+div#user-can-select-material {
+    padding-top: 10px;
 }

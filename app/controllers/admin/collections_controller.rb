@@ -1,7 +1,7 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
-    before_action :load_clients, only: [:new, :edit]
+    before_action :set_product_categories, :set_websites, only: [:new, :edit]
 
     def index
       @collections = Collection.rank(:row_order).page params[:page]
@@ -18,6 +18,12 @@ module Admin
         flash[:notice] = 'Collection created.'
         redirect_to(action: 'index')
       else
+        if @collection.errors.any?
+          msg = @collection.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating collection.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end
@@ -50,18 +56,28 @@ module Admin
 
     def destroy
       Collection.friendly.find(params[:id]).destroy
-      flash[:notice] = "Collection destroyed."
+      flash[:notice] = 'Collection destroyed.'
       redirect_to(action: 'index')
+    end
+
+    def search
+      @collections = Collection.joins(:websites).where('collections.name LIKE ?', params[:term] + '%').where('websites.id = ?', params[:website_id])
+      render json: @collections, each_serializer: CollectionSearchResultSerializer, root: nil, adapter: :attributes
+      # render json: @collections.map { |c| { id: c.id, value: c.name } }.to_json
     end
 
     private
 
-    def load_clients
-      @clients = Client.all
+    def set_product_categories
+      @product_categories = ProductCategory.rank(:row_order)
+    end
+
+    def set_websites
+      @websites = Website.all
     end
 
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :category_id, client_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
     end
 
   end

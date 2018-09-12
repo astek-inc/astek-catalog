@@ -14,7 +14,9 @@
 # Ignore all logfiles and tempfiles.
 /log/*
 !/log/.keep
-/tmp
+/tmp/*
+!/tmp/.keep
+/public/uploads/tmp/*
 
 # Ignore application configuration
 /config/application.yml

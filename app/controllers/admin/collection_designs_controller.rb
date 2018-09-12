@@ -2,6 +2,7 @@ module Admin
   class CollectionDesignsController < Admin::BaseController
 
     before_action :set_collection, except: [:edit]
+    before_action :set_product_types, :set_sale_units, :set_styles, only: [:new, :edit]
 
     def index
       @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
@@ -18,6 +19,12 @@ module Admin
         flash[:notice] = 'Design created.'
         redirect_to(action: 'index')
       else
+        if @design.errors.any?
+          msg = @design.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating design.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end
@@ -61,8 +68,20 @@ module Admin
       @collection = Collection.friendly.find(params[:collection_id])
     end
 
+    def set_product_types
+      @product_types = ProductType.rank(:row_order)
+    end
+
+    def set_sale_units
+      @sale_units = SaleUnit.all
+    end
+
+    def set_styles
+      @styles = Style.all
+    end
+
     def design_params
-      params.require(:design).permit(:name, :description, :keywords, :slug, :collection_id, :available_on, :expires_on)
+      params.require(:design).permit(:sku, :name, :description, :keywords, :slug, :collection_id, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity, :available_on, :expires_on, :suppress_from_searches, product_type_ids: [], style_ids: [])
     end
 
   end

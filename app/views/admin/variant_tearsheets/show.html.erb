@@ -1,0 +1,36 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      link_to('Designs', admin_collection_designs_path(@collection)),
+      link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
+      link_to('Variants', admin_design_variants_path(@design)),
+      @variant.name,
+      'Tearsheet'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+
+    <%= content_tag :div, class: 'panel panel-default' do %>
+      <div class="panel-heading">Tearsheet file</div>
+      <div class="panel-body">
+        <% if @variant.tearsheet.file %>
+          <%= link_to h(@variant.tearsheet.url), @variant.tearsheet.url, { target: '_blank' } %>
+        <% else %>
+          No tearsheet available.
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= link_to 'Generate Tearsheet', generate_admin_variant_tearsheet_path(@variant), { method: :post, class: 'btn btn-success' } %>
+
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/variants/subnav', locals: { current: 'tearsheet' } %>
+  <% end %>
+<% end %>

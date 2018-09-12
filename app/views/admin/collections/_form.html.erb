@@ -1,6 +1,36 @@
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :category_id, 'Category' %> <span class="required">*</span>
-    <%= f.collection_select :category_id, Category.rank(:row_order), :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <%= f.label :product_category_id, 'Product Category' %> <span class="required">*</span>
+    <%#= f.grouped_collection_select :product_type_id, @product_categories, :product_types, :name, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <%= f.collection_select :product_category_id, @product_categories, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: ['col-md-6'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :vendor_id, 'Vendor' %> <span class="required">*</span>
+      <%= f.collection_select :vendor_id, Vendor.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: ['col-md-3'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= content_tag :div, class: ['checkbox'], id: 'suppress-from-display' do %>
+        <%= f.label :suppress_from_display do %>
+          <%= f.check_box :suppress_from_display %> Do not show this collection on websites (but show its designs)
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: ['col-md-3'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= content_tag :div, class: ['checkbox'], id: 'user-can-select-material' do %>
+        <%= f.label :user_can_select_material do %>
+          <%= f.check_box :user_can_select_material %> Allow user to select material on websites
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
@@ -9,13 +39,13 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :description, 'Description' %> <span class="required">*</span>
-    <%= f.text_area :description, rows: 9, required: true, class: 'form-control' %>
+    <%= f.label :description, 'Description' %>
+    <%= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
-    <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+    <%= f.label :keywords, 'Keywords' %>
+    <%= f.text_area :keywords, rows: 3, required: false, class: 'form-control' %>
 <% end %>
 
 <% if @collection.persisted? %>
@@ -25,13 +55,15 @@
     <% end %>
 <% end %>
 
-<%= content_tag :div, class: 'panel panel-default' do %>
-    <%= content_tag :div, 'Visibility', class: 'panel-heading' %>
+<%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Websites', class: 'panel-heading' %>
     <%= content_tag :div, class: 'panel-body' do %>
-        <%= collection_check_boxes(:collection, :client_ids, @clients, :id, :name) do |b| %>
-            <%= content_tag :div, class: 'checkbox-inline' do %>
-                <%= b.label() { b.check_box + b.text } %>
-            <% end %>
+      <%= collection_check_boxes(:collection, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box + b.text } %>
         <% end %>
+      <% end %>
     <% end %>
+  <% end %>
 <% end %>

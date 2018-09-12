@@ -1,15 +1,15 @@
-class CategoryImageSerializer < ActiveModel::Serializer
+class ProductTypeImageSerializer < ActiveModel::Serializer
 
   attributes :id, :file, :type, :owner_id
 
-  # belongs_to :category
+  # belongs_to :product_type
 
   # link :self do
-  #   api_v1_category_image_path object
+  #   api_v1_product_type_image_path object
   # end
 
-  # link :category do
-  #   api_v1_category_path object.category
+  # link :product_type do
+  #   api_v1_product_type_path object.product_type
   # end
 
 end

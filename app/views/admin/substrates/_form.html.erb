@@ -5,13 +5,13 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label(:name, 'Description <span class="required">*</span>'.html_safe) %>
-  <%= f.text_area :description, rows: 9, required: true, class: 'form-control' %>
+  <%= f.label(:name, 'Description') %>
+  <%= f.text_area :description, rows: 6, class: 'form-control' %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label(:name, 'Keywords <span class="required">*</span>'.html_safe) %>
-  <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+  <%= f.label(:name, 'Keywords') %>
+  <%= f.text_area :keywords, rows: 3, class: 'form-control' %>
 <% end %>
 
 <% if @substrate.persisted? %>
@@ -32,5 +32,9 @@
       <% end %>
     <% end %>
   <% end %>
-  <%#= debug @substrate.substrate_categories %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :backing_type, 'Backing Type' %>
+  <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { prompt: 'Select' }, { class: 'form-control' } %>
 <% end %>

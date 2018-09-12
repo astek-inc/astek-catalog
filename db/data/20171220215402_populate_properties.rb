@@ -1,13 +1,24 @@
 class PopulateProperties < ActiveRecord::Migration
 
   PROPERTIES = [
-      # { name: 'color', presentation: 'Color', klass_scope: 'Variant' },
-      { name: 'roll width', presentation: 'Roll width', klass_scope: 'Design' },
-      { name: 'roll length', presentation: 'Roll length', klass_scope: 'Design' },
-      { name: 'repeat width', presentation: 'Repeat Width', klass_scope: 'Design' },
-      { name: 'repeat length', presentation: 'Repeat Length', klass_scope: 'Design' },
-      { name: 'mural width', presentation: 'Mural width', klass_scope: 'Design' },
-      { name: 'mural height', presentation: 'Mural height', klass_scope: 'Design' },
+      { name: 'roll_width', presentation: 'Roll width (inches)', klass_scope: 'Design' },
+      { name: 'roll_length', presentation: 'Roll length (yards)', klass_scope: 'Design' },
+      { name: 'mural_width', presentation: 'Mural width (inches)', klass_scope: 'Design' },
+      { name: 'mural_height', presentation: 'Mural height (inches)', klass_scope: 'Design' },
+      { name: 'motif_height', presentation: 'Motif height (inches)', klass_scope: 'Design' },
+      { name: 'motif_width', presentation: 'Motif width (inches)', klass_scope: 'Design' },
+      { name: 'repeat_match_type', presentation: 'Repeat match type', klass_scope: 'Design' },
+      { name: 'printed_width', presentation: 'Printed width (inches)', klass_scope: 'Design' },
+      # { name: 'sale_quantity', presentation: 'Sold in quantities of', klass_scope: 'Design' },
+      { name: 'application', presentation: 'Application', klass_scope: 'Design' },
+      { name: 'removability', presentation: 'Removability', klass_scope: 'Design' },
+      { name: 'washability', presentation: 'Washability', klass_scope: 'Design' },
+      { name: 'color_fastness', presentation: 'Color fastness', klass_scope: 'Design' },
+      { name: 'fire_rating', presentation: 'Fire rating', klass_scope: 'Design' },
+      { name: 'print_type', presentation: 'Print type', klass_scope: 'Design' },
+      { name: 'margin_trim', presentation: 'Margin trim', klass_scope: 'Design' },
+      { name: 'print_to_order', presentation: 'Print to order', klass_scope: 'Design' },
+      # { name: 'minimum_quantity', presentation: 'Minimum quantity', klass_scope: 'Design' }
   ]
 
   # require 'pp'
@@ -19,10 +30,7 @@ class PopulateProperties < ActiveRecord::Migration
   end
 
   def self.down
-    PROPERTIES.each do |p|
-      Property.find_by(name: p[:name]).destroy!
-    end
-    # raise ActiveRecord::IrreversibleMigration
+    Property.destroy_all
   end
 
 end

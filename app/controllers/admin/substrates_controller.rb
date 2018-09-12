@@ -19,7 +19,12 @@ module Admin
         flash[:notice] = 'Substrate created.'
         redirect_to(action: 'index')
       else
-        flash[:error] = 'Error creating substrate.'
+        if @substrate.errors.any?
+          msg = @substrate.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating substrate.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end
@@ -52,7 +57,7 @@ module Admin
     end
 
     def substrate_params
-      params.require(:substrate).permit(:name, :description, :keywords, substrate_category_ids: [])
+      params.require(:substrate).permit(:name, :description, :keywords, :backing_type_id, substrate_category_ids: [])
     end
 
   end

@@ -2,7 +2,7 @@
 
 <%= content_tag :div, class: ['form-group'] do %>
   <%= f.label :variant_type, 'Type' %> <span class="required">*</span>
-  <%= f.select :variant_type, options_from_collection_for_select(VariantType.all, 'id', 'name', @variant.variant_type_id), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+  <%= f.select :variant_type_id, options_from_collection_for_select(VariantType.all, 'id', 'name', @variant.variant_type_id), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
@@ -11,13 +11,8 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :sku, 'SKU' %> <span class="required">*</span>
-    <%= f.text_field :sku, required: true, class: 'form-control' %>
-<% end %>
-
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label :price_code, 'Price Code' %> <span class="required">*</span>
-  <%= f.text_field :price_code, required: true, class: 'form-control' %>
+  <%= f.label :sku, 'SKU' %> <span class="required">*</span>
+  <%= f.text_field :sku, required: true, class: 'form-control' %>
 <% end %>
 
 <% if @variant.persisted? %>
@@ -37,5 +32,17 @@
         <% end %>
       <% end %>
     <% end %>
+  <% end %>
+<% end %>
+
+<% if @design.digital? %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :substrate_id, 'Substrate' %> <span class="required">*</span>
+    <%= f.collection_select :substrate_id, @substrates, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+  <% end %>
+<% else %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :backing_type_id, 'Backing' %> <span class="required">*</span>
+    <%= f.collection_select :backing_type_id, @backing_types, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
   <% end %>
 <% end %>

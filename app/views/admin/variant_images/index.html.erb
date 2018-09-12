@@ -36,7 +36,7 @@
                 <td class="move-handle text-center">
                   <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                 </td>
-                <td><%= image_tag(image.file.url(:thumb)) %></td>
+                <td><%= link_to(image_tag(image.file.url(:thumb)), admin_variant_variant_image_path(@variant, image)) %></td>
 
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

@@ -1,0 +1,15 @@
+<% content_for :header_left do %>
+    <%= content_tag(:h1, [link_to('Vendors', admin_vendors_path), 'New Vendor'].join(' / ').html_safe) %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-12' do %>
+    <%= form_for [:admin, @vendor] do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'vendor_new' do %>
+            <%= render partial: 'form', locals: { f: f } %>
+        <% end %>
+
+        <%= form_buttons admin_vendors_path %>
+    <% end %>
+<% end %>

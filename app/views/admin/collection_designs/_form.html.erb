@@ -1,13 +1,30 @@
 <%= f.hidden_field :collection_id, value: @collection.id %>
 
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: ['col-md-6'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :sku, 'SKU' %> <span class="required">*</span>
+      <%= f.text_field :sku, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: ['col-md-6'] do %>
+    <%= content_tag :div, class: ['checkbox'], id: 'suppress-from-searches' do %>
+      <%= f.label :suppress_from_searches do %>
+        <%= f.check_box :suppress_from_searches %> Suppress this item from search results
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
 <%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :name, 'Name' %> <span class="required">*</span>
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :description, 'Description' %> <span class="required">*</span>
-    <%= f.text_area :description, rows: 9, required: true, class: 'form-control' %>
+    <%= f.label :description, 'Description' %>
+    <%= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
@@ -35,5 +52,104 @@
     <%= content_tag :div, class: ['form-group'] do %>
         <%= f.label :slug, 'Slug' %> <span class="required">*</span>
         <%= f.text_field :slug, required: true, class: 'form-control' %>
+    <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :price, 'Price' %> <span class="required">*</span>
+      <%= f.text_field :price, value: number_to_currency(f.object.price.to_f, delimiter: '', unit: ''), required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :weight, 'Weight' %> <span class="required">*</span>
+      <%= f.text_field :weight, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-4' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :sale_unit, 'Sale Unit' %> <span class="required">*</span>
+      <%= f.collection_select :sale_unit_id, SaleUnit.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-4' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :sale_quantity, 'Sale Quantity' %> <span class="required">*</span>
+      <%= f.number_field :sale_quantity, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-4' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :minimum_quantity, 'Minimum Order' %> <span class="required">*</span>
+      <%= f.number_field :minimum_quantity, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'panel panel-default' do %>
+  <%= content_tag :div, 'Product Types', class: 'panel-heading' %>
+  <%= content_tag :div, class: 'panel-body' do %>
+
+    <% column_count = 4.0 %>
+    <% item_count = @product_types.count %>
+    <% divisor = (item_count / column_count).ceil %>
+    <% column_class = 'col-md-' + (12 / column_count).round.to_s %>
+    <% index = 0 %>
+
+    <%= collection_check_boxes(:design, :product_type_ids, @product_types, :id, :name) do |b| %>
+
+      <% if index % divisor == 0 %>
+        <div class="<%= column_class %>">
+      <% end %>
+
+      <%= content_tag :div, class: 'checkbox' do %>
+        <%= b.label { b.check_box + b.text } %>
+      <% end %>
+
+      <% if (index % divisor == divisor - 1) || (index == item_count - 1) %>
+        </div>
+      <% end %>
+
+      <% index += 1 %>
+
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'panel panel-default' do %>
+  <%= content_tag :div, 'Styles', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+
+      <% column_count = 4.0 %>
+      <% item_count = @styles.count %>
+      <% divisor = (item_count / column_count).ceil %>
+      <% column_class = 'col-md-' + (12 / column_count).round.to_s %>
+      <% index = 0 %>
+
+      <%= collection_check_boxes(:design, :style_ids, @styles, :id, :name) do |b| %>
+
+        <% if index % divisor == 0 %>
+          <div class="<%= column_class %>">
+        <% end %>
+
+        <%= content_tag :div, class: 'checkbox' do %>
+          <%= b.label { b.check_box + b.text } %>
+        <% end %>
+
+        <% if (index % divisor == divisor - 1) || (index == item_count - 1) %>
+          </div>
+        <% end %>
+
+        <% index += 1 %>
+
+      <% end %>
     <% end %>
 <% end %>

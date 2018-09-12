@@ -1,16 +1,16 @@
 class CollectionSerializer < ActiveModel::Serializer
 
-  attributes :id, :category_id, :name, :description, :keywords, :slug
+  attributes :id, :product_type_id, :name, :description, :keywords, :slug
 
-  belongs_to :category
+  belongs_to :product_type
   # has_many :designs
 
   link :self do
     api_v1_collection_path object
   end
 
-  link :category do
-    api_v1_category_path object.category
+  link :product_type do
+    api_v1_product_type_path object.product_type
   end
 
   # link :designs do

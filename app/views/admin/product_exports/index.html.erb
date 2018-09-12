@@ -1,0 +1,31 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, link_to('Product Exports', admin_product_exports_path) %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div do %>
+
+  <p class="help-block" style="margin-left: 20px;">Enter a collection name and submit to download a csv file of that colection's designs.</p>
+
+  <%= form_tag admin_product_export_generate_csv_path, method: :get do %>
+    <%= content_tag :div, { class: 'col-md-3' } do %>
+      <%= content_tag :div, class: 'form-group' do %>
+        <%= label_tag 'website_id', 'Website' %> <span class="required">*</span>
+        <%= select_tag 'website_id', options_from_collection_for_select(@websites, :id, :name), { prompt: 'Select', id: 'website_id', class: 'form-control', required: true } %>
+      <%end %>
+    <%end %>
+
+    <%= content_tag :div, class: 'col-md-6' do %>
+      <%= content_tag :div, class: 'form-group' do %>
+        <%= label_tag 'collection_id', 'Collection' %> <span class="required">*</span>
+        <%= text_field_tag 'collection_name', nil, { id: 'collection_name', class: 'form-control', required: true, autocomplete: 'false' } %>
+        <%= hidden_field_tag 'collection_id' %>
+      <% end %>
+    <% end %>
+
+    <%= content_tag :div, { class: 'col-md-3', id: 'product-export-submit-container' } do %>
+      <%= submit_button %>
+    <% end %>
+  <% end %>
+<% end %>

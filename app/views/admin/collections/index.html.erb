@@ -20,6 +20,7 @@
             <th>Name</th>
             <th>Description</th>
             <th>Slug</th>
+            <th>Websites</th>
             <th class="actions"></th>
           </tr>
           </thead>
@@ -33,6 +34,7 @@
                 <td><%= collection.name %></td>
                 <td><%= truncate(sanitize(collection.description), length: 140) %></td>
                 <td><%= collection.slug %></td>
+                <td><%= collection.websites.map { |w| w.name }.join(', ') %></td>
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                     <%= edit_button edit_admin_collection_path collection %>

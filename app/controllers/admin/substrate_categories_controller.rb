@@ -15,6 +15,12 @@ module Admin
         flash[:notice] = 'Substrate category created.'
         redirect_to(action: 'index')
       else
+        if @substrate_category.errors.any?
+          msg = @substrate_category.errors.full_messages.join(', ')
+        else
+          msg = 'Error creating substrate category.'
+        end
+        flash[:error] = msg
         render('new')
       end
     end

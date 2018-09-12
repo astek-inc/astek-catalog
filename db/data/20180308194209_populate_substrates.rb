@@ -18,22 +18,25 @@ class PopulateSubstrates < ActiveRecord::Migration
       substrate = Substrate.create!({
           name: item.name,
           description: item.description,
-          keywords: item.keywords
+          keywords: item.keywords,
+          backing_type: (item.backing_type ? BackingType.find_or_create_by!(name: item.backing_type) : nil)
       })
 
       unless item.categories.nil?
         substrate.substrate_categories << SubstrateCategory.where(name: item.categories.split(',').map(&:strip))
       end
 
-      unless item.images.nil?
-        item.images.split(',').map(&:strip).each do |image_url|
-          SubstrateImage.create!({
-            remote_file_url: image_url,
-            type: 'SubstrateImage',
-            owner_id: substrate.id
-          })
-        end
-      end
+      # unless item.images.nil?
+      #   item.images.split(',').map(&:strip).each do |image_url|
+      #     SubstrateImage.create!({
+      #       remote_file_url: image_url,
+      #       type: 'SubstrateImage',
+      #       owner_id: substrate.id
+      #     })
+      #   end
+      # end
+
+
 
     end
 

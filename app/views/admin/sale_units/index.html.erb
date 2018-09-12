@@ -1,0 +1,49 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Sale Units'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Sale Unit', new_admin_sale_unit_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <% if @sale_units.any? %>
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped" data-hook>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @sale_units.each do |sale_unit| %>
+            <tr class="product_property fields" data-item-id=<%= "#{sale_unit.id}" %> data-hook="sale_unit">
+              <td><%= sale_unit.name %></td>
+              <td><%= truncate(sanitize(sale_unit.description), length: 140) %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_sale_unit_path sale_unit %>
+                  <%= delete_button admin_sale_unit_path sale_unit %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+    <% else %>
+      <p>No sale units found. <%= link_to 'Create one.', new_admin_sale_unit_path %></p>
+    <% end %>
+
+  <% end %>
+<% end %>

@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-  root 'admin/categories#index'
+  root 'admin/collections#index'
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+
+    get 'product_exports/generate_csv', to: 'product_exports#generate_csv', as: 'product_export_generate_csv', defaults: { format: 'csv' }
+    resources :product_exports, only: :index
 
     resources :colors, except: :show do
       post :update_row_order, on: :collection
@@ -29,26 +32,41 @@ Rails.application.routes.draw do
 
     resources :substrate_categories, except: :show
 
+    resources :backing_types, concerns: :paginatable do
+      post :update_row_order, on: :collection
+    end
+
     resources :users
 
-    get 'clients/generate_token' => 'clients#generate_token'
-    resources :clients, except: :show
+    resources :websites, except: [:show, :delete]
+
+    resources :styles, except: [:show, :delete]
+
+    resources :vendors, except: [:show, :delete]
+
+    resources :sale_units, except: [:show, :delete]
 
     resources :properties
 
-    resources :categories, concerns: :paginatable do
+    resources :product_types, concerns: :paginatable do
       post :update_row_order, on: :collection
-      resources :category_images, only: [:index, :new, :create, :show, :destroy] do
-        post :update_row_order, on: :collection
-      end
+      # resources :product_type_images, only: [:index, :new, :create, :show, :destroy] do
+      #   post :update_row_order, on: :collection
+      # end
     end
+
+    resources :product_categories, concerns: :paginatable do
+      post :update_row_order, on: :collection
+    end
+
+    get 'collections/search', to: 'collections#search'
 
     resources :collections, concerns: :paginatable do
       post :update_row_order, on: :collection
 
-      resources :collection_images, only: [:index, :new, :create, :show, :destroy] do
-        post :update_row_order, on: :collection
-      end
+      # resources :collection_images, only: [:index, :new, :create, :show, :destroy] do
+      #   post :update_row_order, on: :collection
+      # end
 
       resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
@@ -56,6 +74,13 @@ Rails.application.routes.draw do
     end
 
     resources :designs, only: [:index], concerns: :paginatable do
+
+      # resources :design_styles #, only: :index
+
+      resources :design_images, only: [:index, :new, :create, :show, :destroy] do
+        post :update_row_order, on: :collection
+      end
+
       resources :design_properties  do
         put :assign, on: :collection
         post :update_row_order, on: :collection
@@ -67,6 +92,9 @@ Rails.application.routes.draw do
     end
 
     resources :variants, concerns: :paginatable do
+      resource :tearsheet, only: [:show], controller: :variant_tearsheets do
+        post :generate, defaults: { format: 'pdf' }
+      end
       resources :variant_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
@@ -79,11 +107,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
 
-      resources :categories, only: [:index, :show] do #, :create, :update, :destroy] do
+      resources :product_types, only: [:index, :show] do #, :create, :update, :destroy] do
         resources :collections, only: [:index, :show]
-        # resources :category_images, only: :index, controller: :category_images
+        # resources :product_type_images, only: :index, controller: :product_type_images
       end
-      # resources :category_images, only: [:create, :destroy]
+      # resources :product_type_images, only: [:create, :destroy]
 
       resources :collections, only: [:index, :show] do #, :create, :update, :destroy] do
         resources :designs, only: [:index, :show]

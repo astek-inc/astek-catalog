@@ -1,0 +1,54 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, link_to('Product Types', admin_product_types_path) %>
+<% end %>
+
+<% content_for :header_right do %>
+    <%= link_to 'New Product Type', new_admin_product_type_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<div>
+
+  <% if @product_types.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_product_types_path %>" data-position-start="<%= @position_start %>">
+          <thead>
+          <tr>
+            <th class="move-handle"></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Group</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @product_types.each do |product_type| %>
+              <tr class="product_property fields" data-item-id=<%= "#{product_type.id}" %> data-hook="product_type">
+                <td class="move-handle text-center">
+                  <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+                </td>
+                <td><%= product_type.name %></td>
+                <td><%= truncate(sanitize(product_type.description), length: 140) %></td>
+                <td><%= product_type.product_category.name %></td>
+                <td class="actions">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <%= edit_button edit_admin_product_type_path product_type %>
+                    <%= delete_button admin_product_type_path product_type %>
+                  </div>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <%= paginate @product_types %>
+
+  <% else %>
+    <p>No product types found. <%= link_to 'Create one.', new_admin_product_type_path %></p>
+  <% end %>
+
+</div>
