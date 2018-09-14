@@ -3,4 +3,5 @@ class Vendor < ActiveRecord::Base
   acts_as_paranoid
   has_many :collections
   default_scope { order(:name) }
+  validates :name, presence: true
 end
