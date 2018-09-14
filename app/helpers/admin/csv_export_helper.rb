@@ -315,7 +315,9 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          'Material'
+          if variant.design.collection.user_can_select_material
+            'Material'
+          end
         end
 
       elsif attr == 'option_3_value'
