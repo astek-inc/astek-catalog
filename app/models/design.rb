@@ -51,8 +51,10 @@ class Design < ActiveRecord::Base
 
       if self.digital?
         tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
+      else
+        tags << %w[feature__instock feature__lead-time feature__return-policy feature__pricing]
       end
-
+      
       if self.keywords
         tags << to_tags('keyword', self.keywords.split(',')).map { |k| k.strip }
       end
