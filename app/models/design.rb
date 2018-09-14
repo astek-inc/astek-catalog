@@ -64,6 +64,8 @@ class Design < ActiveRecord::Base
       tags << self.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
 
       tags << to_tags('type', self.product_types.map { |t| t.name })
+
+      tags << to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten)
     end
 
     if domain == 'astekhome.com'
