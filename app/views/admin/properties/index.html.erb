@@ -18,7 +18,6 @@
           <tr>
             <th>Name</th>
             <th>Presentation</th>
-            <th>Scope</th>
             <th class="actions"></th>
           </tr>
           </thead>
@@ -28,7 +27,6 @@
               <tr class="property_property fields" data-item-id=<%= "#{property.id}" %> data-hook="property">
                 <td><%= property.name %></td>
                 <td><%= property.presentation %></td>
-                <td><%= property.klass_scope %></td>
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                     <%= edit_button edit_admin_property_path property %>

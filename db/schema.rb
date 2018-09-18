@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180831225414) do
+ActiveRecord::Schema.define(version: 20180918233205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
 
   create_table "backing_types", force: :cascade do |t|
     t.string   "name"
@@ -193,12 +194,10 @@ ActiveRecord::Schema.define(version: 20180831225414) do
   create_table "properties", force: :cascade do |t|
     t.string   "name"
     t.string   "presentation"
-    t.string   "klass_scope"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
 
-  add_index "properties", ["klass_scope"], name: "index_properties_on_klass_scope", using: :btree
   add_index "properties", ["name"], name: "index_properties_on_name", using: :btree
 
   create_table "roles", force: :cascade do |t|

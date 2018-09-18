@@ -52,7 +52,7 @@ module Admin
     private
 
     def property_params
-      params.require(:property).permit(:name, :presentation, :klass_scope)
+      params.require(:property).permit(:name, :presentation)
     end
 
   end
