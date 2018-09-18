@@ -12,7 +12,7 @@ module Admin
     ]
 
     TEXT_VALUES = {
-        option_1_name: 'Color',
+        option_1_name: 'Colorway',
         variant_barcode: '',
         variant_inventory_tracker: '',
         variant_inventory_policy: 'Continue',
