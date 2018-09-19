@@ -9,7 +9,7 @@ namespace :db do
 
     cmd = nil
     with_config do |app, host, db, user|
-      cmd = "pg_dump --host #{host} --username #{user} --verbose --clean --no-owner --no-acl --format=c #{db}"
+      cmd = "pg_dump --host #{host} --verbose --clean --no-owner --no-acl --format=c #{db}"
     end
     puts cmd
     backup, status = Open3.capture2(cmd)
