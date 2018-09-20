@@ -460,15 +460,7 @@ module Admin
     end
 
     def astek_home_description variant
-      body = ''
-
-      if variant.description
-        body += format_description variant
-      end
-
-      body += format_home_properties variant
-      
-      body
+      format_home_properties variant
     end
 
     def format_description variant
