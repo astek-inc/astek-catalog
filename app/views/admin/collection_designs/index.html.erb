@@ -22,6 +22,7 @@
                 <tr>
                   <th class="move-handle"></th>
                   <th>Name</th>
+                  <th>SKU</th>
                   <th>Description</th>
                   <!--<th>Image</th>-->
                   <th class="actions"></th>
@@ -35,6 +36,7 @@
                         <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                       </td>
                       <td><%= design.name %></td>
+                      <td><%= design.sku %></td>
                       <td><%= truncate(sanitize(design.description), length: 140) %></td>
                       <!--<td></td>-->
                       <td class="actions">
