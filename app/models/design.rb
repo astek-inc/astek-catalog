@@ -59,10 +59,6 @@ class Design < ActiveRecord::Base
         tags << to_tags('keyword', self.keywords.split(',')).map { |k| k.strip }
       end
 
-      tags << [to_tag('Minimum quantity', self.minimum_quantity), to_tag('Sold in quantities of', self.sale_quantity)]
-
-      tags << self.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
-
       tags << to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
     end
 
