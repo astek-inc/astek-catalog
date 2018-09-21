@@ -12,7 +12,6 @@ module Admin
     ]
 
     TEXT_VALUES = {
-        option_1_name: 'Colorway',
         variant_barcode: '',
         variant_inventory_tracker: '',
         variant_inventory_policy: 'Continue',
@@ -243,12 +242,38 @@ module Admin
           variant.design.tags domain
         end
 
+      elsif attr == 'option_1_name'
+        case domain
+        when 'astek.com'
+          'Colorway'
+        when 'astekhome.com'
+          if variant.variant_type.name == 'Color Way'
+            'Colorway'
+          else
+            nil
+          end
+        end
+
       elsif attr == 'option_1_value'
-        case variant_type
-        when 'custom', 'custom_sample'
-          'Custom'
-        else
-          variant.name
+        case domain
+        when 'astek.com'
+          case variant_type
+          when 'custom', 'custom_sample'
+            'Custom'
+          else
+            variant.name
+          end
+        when 'astekhome.com'
+          if variant.variant_type.name == 'Color Way'
+            case variant_type
+            when 'custom', 'custom_sample'
+              'Custom'
+            else
+              variant.name
+            end
+          else
+            nil
+          end
         end
 
       elsif attr == 'image_src'
