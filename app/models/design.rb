@@ -49,10 +49,12 @@ class Design < ActiveRecord::Base
       tags << to_tags('style', self.styles.map { |s| s.name })
       tags << to_tags('type', self.product_types.map { |t| t.name })
 
-      if self.digital?
-        tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
-      else
-        tags << %w[feature__instock feature__lead-time feature__return-policy feature__pricing]
+      if domain == 'astek.com'
+        if self.digital?
+          tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
+        else
+          tags << %w[feature__instock feature__lead-time feature__return-policy feature__pricing]
+        end
       end
 
       if self.keywords
