@@ -58,7 +58,7 @@ class Design < ActiveRecord::Base
       end
 
       if self.keywords
-        tags << to_tags('keyword', self.keywords.split(',')).map { |k| k.strip }
+        tags << to_tags('keyword', self.keywords.split(',').map { |k| k.strip })
       end
 
       tags << to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
