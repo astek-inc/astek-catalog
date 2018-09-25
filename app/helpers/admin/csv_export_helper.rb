@@ -496,6 +496,12 @@ module Admin
 
     def format_business_properties variant
       formatted = '<div class="description__formatted">'
+
+      formatted += $/ + '<div>
+          <h5>Collection</h5>
+          <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+        </div>'
+
       variant.design.design_properties.each do |dp|
         formatted += $/ + '<div>
           <h5>'+dp.property.presentation+'</h5>
@@ -509,6 +515,12 @@ module Admin
 
     def format_home_properties variant
       formatted = '<div class="description__formatted">'
+
+      formatted += $/ + '<div>
+          <h6>Collection</h6>
+          <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+        </div>'
+
       variant.design.design_properties.each do |dp|
         formatted += $/ + '<div>
           <h6>'+dp.property.presentation+'</h6>
