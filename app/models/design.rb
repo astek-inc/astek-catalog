@@ -81,7 +81,7 @@ class Design < ActiveRecord::Base
   end
 
   def to_tag name, value
-    "#{name}__#{value}"
+    "#{name}__#{value.strip}"
   end
 
   def calculator_tag
