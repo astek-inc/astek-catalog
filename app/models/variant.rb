@@ -108,10 +108,10 @@ class Variant < ActiveRecord::Base
       pdf.image variant_img, fit: [510, 300]
       pdf.move_down 12
 
-      pdf.bounding_box([0, pdf.cursor], width: 300, height: 25) do
+      pdf.bounding_box([0, pdf.cursor], width: 400, height: 25) do
         pdf.stroke_color '000000'
         pdf.fill_color '000000'
-        pdf.fill_and_stroke_rectangle [pdf.cursor-25, pdf.cursor], 300, 25
+        pdf.fill_and_stroke_rectangle [pdf.cursor-25, pdf.cursor], 400, 25
 
         pdf.fill_color 'ffffff'
         pdf.move_down 8

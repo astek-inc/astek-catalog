@@ -53,19 +53,19 @@ class Design < ActiveRecord::Base
       tags << to_tags('style', self.styles.map { |s| s.name })
       tags << to_tags('type', self.product_types.map { |t| t.name })
 
-      if self.digital?
-        tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
+      if domain == 'astek.com'
+        if self.digital?
+          tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
+        else
+          tags << %w[feature__instock feature__lead-time feature__return-policy feature__pricing]
+        end
       end
 
       if self.keywords
-        tags << to_tags('keyword', self.keywords.split(',')).map { |k| k.strip }
+        tags << to_tags('keyword', self.keywords.split(',').map { |k| k.strip })
       end
 
-      tags << [to_tag('Minimum quantity', self.minimum_quantity), to_tag('Sold in quantities of', self.sale_quantity)]
-
-      tags << self.design_properties.map { |dp| to_tag(dp.property.presentation, dp.value) }
-
-      tags << to_tags('type', self.product_types.map { |t| t.name })
+      tags << to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
     end
 
     if domain == 'astekhome.com'
@@ -85,7 +85,7 @@ class Design < ActiveRecord::Base
   end
 
   def to_tag name, value
-    "#{name}__#{value}"
+    "#{name}__#{value.strip}"
   end
 
   def calculator_tag

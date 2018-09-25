@@ -12,7 +12,6 @@ module Admin
     ]
 
     TEXT_VALUES = {
-        option_1_name: 'Color',
         variant_barcode: '',
         variant_inventory_tracker: '',
         variant_inventory_policy: 'Continue',
@@ -243,12 +242,38 @@ module Admin
           variant.design.tags domain
         end
 
+      elsif attr == 'option_1_name'
+        case domain
+        when 'astek.com'
+          'Colorway'
+        when 'astekhome.com'
+          if variant.variant_type.name == 'Color Way'
+            'Colorway'
+          else
+            nil
+          end
+        end
+
       elsif attr == 'option_1_value'
-        case variant_type
-        when 'custom', 'custom_sample'
-          'Custom'
-        else
-          variant.name
+        case domain
+        when 'astek.com'
+          case variant_type
+          when 'custom', 'custom_sample'
+            'Custom'
+          else
+            variant.name
+          end
+        when 'astekhome.com'
+          if variant.variant_type.name == 'Color Way'
+            case variant_type
+            when 'custom', 'custom_sample'
+              'Custom'
+            else
+              variant.name
+            end
+          else
+            nil
+          end
         end
 
       elsif attr == 'image_src'
@@ -315,7 +340,9 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          'Material'
+          if variant.design.collection.user_can_select_material
+            'Material'
+          end
         end
 
       elsif attr == 'option_3_value'
@@ -458,15 +485,7 @@ module Admin
     end
 
     def astek_home_description variant
-      body = ''
-
-      if variant.description
-        body += format_description variant
-      end
-
-      body += format_home_properties variant
-      
-      body
+      format_home_properties variant
     end
 
     def format_description variant
@@ -477,6 +496,12 @@ module Admin
 
     def format_business_properties variant
       formatted = '<div class="description__formatted">'
+
+      formatted += $/ + '<div>
+          <h5>Collection</h5>
+          <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+        </div>'
+
       variant.design.design_properties.each do |dp|
         formatted += $/ + '<div>
           <h5>'+dp.property.presentation+'</h5>
@@ -490,6 +515,12 @@ module Admin
 
     def format_home_properties variant
       formatted = '<div class="description__formatted">'
+
+      formatted += $/ + '<div>
+          <h6>Collection</h6>
+          <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+        </div>'
+
       variant.design.design_properties.each do |dp|
         formatted += $/ + '<div>
           <h6>'+dp.property.presentation+'</h6>
