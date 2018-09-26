@@ -61,6 +61,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     puts 'Finding or creating collection information for '+item.collection
     collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category, vendor: vendor }) do |c|
       # If we got here, this is a new record
+
       domains = []
       unless item.websites.nil?
         item.websites.split(',').map { |s| s.strip }.each do |key|
@@ -74,14 +75,18 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
           end
         end
         c.websites = Website.where(domain: domains)
+      end
 
-        if ['Digital Library', 'Vintage'].include? c.name
-          c.user_can_select_material = true
-        end
+      if ['Digital Library', 'Vintage'].include? c.name
+        c.user_can_select_material = true
+      end
 
-        if ['Digital Library'].include? c.name
-          c.suppress_from_display = true
-        end
+      if ['Digital Library'].include? c.name
+        c.suppress_from_display = true
+      end
+
+      if item.respond_to? 'lead_time'
+        c.lead_time_id = LeadTime.find_by!(name: item.lead_time).id
       end
     end
 

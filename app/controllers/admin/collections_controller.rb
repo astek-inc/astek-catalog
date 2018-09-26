@@ -1,7 +1,7 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
-    before_action :set_product_categories, :set_websites, only: [:new, :edit]
+    before_action :set_product_categories, :set_websites, :set_lead_times, only: [:new, :edit]
 
     def index
       @collections = Collection.rank(:row_order).page params[:page]
@@ -76,8 +76,12 @@ module Admin
       @websites = Website.all
     end
 
+    def set_lead_times
+      @lead_times = LeadTime.rank(:row_order)
+    end
+
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :lead_time_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
     end
 
   end

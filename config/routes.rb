@@ -23,6 +23,10 @@ Rails.application.routes.draw do
       post :update_row_order, on: :collection
     end
 
+    resources :lead_times, except: :show do
+      post :update_row_order, on: :collection
+    end
+
     resources :substrates, except: :show, concerns: :paginatable do
       post :update_row_order, on: :collection
       resources :substrate_images, only: [:index, :new, :create, :show, :destroy] do

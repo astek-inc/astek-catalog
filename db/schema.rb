@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180918233205) do
+ActiveRecord::Schema.define(version: 20180926161312) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 20180918233205) do
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
+    t.integer  "lead_time_id"
   end
 
   add_index "collections", ["deleted_at"], name: "index_collections_on_deleted_at", using: :btree
@@ -165,6 +166,18 @@ ActiveRecord::Schema.define(version: 20180918233205) do
   add_index "images", ["owner_id"], name: "index_images_on_owner_id", using: :btree
   add_index "images", ["row_order"], name: "index_images_on_row_order", using: :btree
   add_index "images", ["type"], name: "index_images_on_type", using: :btree
+
+  create_table "lead_times", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "row_order"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "lead_times", ["deleted_at"], name: "index_lead_times_on_deleted_at", using: :btree
+  add_index "lead_times", ["row_order"], name: "index_lead_times_on_row_order", using: :btree
 
   create_table "product_categories", force: :cascade do |t|
     t.string   "name"
@@ -338,6 +351,7 @@ ActiveRecord::Schema.define(version: 20180918233205) do
 
   add_index "websites", ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
 
+  add_foreign_key "collections", "lead_times"
   add_foreign_key "collections", "product_categories"
   add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
