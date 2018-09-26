@@ -481,11 +481,13 @@ module Admin
         body += format_tearsheet_link variant
       end
 
+      body = body.gsub(/\n+/, ' ')
       body
     end
 
     def astek_home_description variant
-      format_home_properties variant
+      body = format_home_properties(variant).gsub(/\n+/, ' ')
+      body
     end
 
     def format_description variant
@@ -497,52 +499,52 @@ module Admin
     def format_business_properties variant
       formatted = '<div class="description__formatted">'
 
-      formatted += $/ + '<div>
+      formatted += '<div>
           <h5>Collection</h5>
           <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
         </div>'
 
       variant.design.design_properties.each do |dp|
-        formatted += $/ + '<div>
+        formatted += '<div>
           <h5>'+dp.property.presentation+'</h5>
           <p>'+dp.value+'</p>
         </div>'
       end
 
-      formatted += $/ + '</div>'
+      formatted += '</div>'
       formatted
     end
 
     def format_home_properties variant
       formatted = '<div class="description__formatted">'
 
-      formatted += $/ + '<div>
+      formatted += '<div>
           <h6>Collection</h6>
           <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
         </div>'
 
       variant.design.design_properties.each do |dp|
-        formatted += $/ + '<div>
+        formatted += '<div>
           <h6>'+dp.property.presentation+'</h6>
           <p>'+dp.value+'</p>
         </div>'
       end
 
       if variant.design.minimum_quantity > 1
-        formatted += $/ + '<div>
+        formatted += '<div>
           <h6>Minimum quantity</h6>
           <p>'+variant.design.minimum_quantity.to_s+'</p>
         </div>'
       end
 
       if variant.design.sale_quantity > 1
-        formatted += $/ + '<div>
+        formatted += '<div>
           <h6>Sold in quantities of</h6>
           <p>'+variant.design.sale_quantity.to_s+'</p>
         </div>'
       end
 
-      formatted += $/ + '</div>'
+      formatted += '</div>'
       formatted
     end
 
