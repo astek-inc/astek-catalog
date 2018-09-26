@@ -35,12 +35,13 @@ Astek.product_exports = Astek.product_exports || {
 };
 
 $(function() {
-    Astek.product_exports.collection_name_autocomplete();
-
-    if (navigator.userAgent.toLowerCase().indexOf('chrome') >= 0) {
-        setTimeout(function () {
-            document.getElementById('collection_name').autocomplete = 'off';
-        }, 1);
+    if ($('#collection_name').length) {
+        Astek.product_exports.collection_name_autocomplete();
+        if (navigator.userAgent.toLowerCase().indexOf('chrome') >= 0) {
+            setTimeout(function () {
+                document.getElementById('collection_name').autocomplete = 'off';
+            }, 1);
+        }
     }
 });
 
