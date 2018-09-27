@@ -1,5 +1,5 @@
 module Admin
-  module CsvExportHelper
+  module ProductExportCsvHelper
 
     require 'csv'
 

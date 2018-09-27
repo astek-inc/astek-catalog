@@ -19,6 +19,9 @@ Rails.application.routes.draw do
     get 'product_exports/generate_csv', to: 'product_exports#generate_csv', as: 'product_export_generate_csv', defaults: { format: 'csv' }
     resources :product_exports, only: :index
 
+    get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
+    resources :order_limits_exports, only: :index
+
     resources :colors, except: :show do
       post :update_row_order, on: :collection
     end

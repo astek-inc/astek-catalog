@@ -1,7 +1,7 @@
 module Admin
   class ProductExportsController < Admin::BaseController
 
-    include CsvExportHelper
+    include ProductExportCsvHelper
 
     def index
       @websites = Website.all
