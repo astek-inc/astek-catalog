@@ -5,6 +5,7 @@ class CreateCollections < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.integer :vendor_id
+      t.integer :lead_time_id
       t.text :keywords
       t.boolean :suppress_from_display, default: :false, null: false, index: true
       t.boolean :user_can_select_material, default: :false, null: false
@@ -13,5 +14,6 @@ class CreateCollections < ActiveRecord::Migration
 
     add_foreign_key :collections, :product_categories
     add_foreign_key :collections, :vendors
+    add_foreign_key :collections, :lead_times
   end
 end
