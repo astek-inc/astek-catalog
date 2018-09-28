@@ -1,7 +1,7 @@
 class PopulateWebsites < ActiveRecord::Migration
 
   WEBSITES = [
-      { name: 'Astek Wallcovering', domain: 'astek.com' },
+      { name: 'Astek Business', domain: 'astek.com' },
       { name: 'Astek Home', domain: 'astekhome.com' },
       { name: 'OnAir Design', domain: 'onairdesign.com' },
   ]
