@@ -47,6 +47,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     product_types = ProductType.where(name: item.product_type.split(',').map { |t| t.strip }) unless item.product_type.nil?
     styles = Style.where(name: item.style.split(',').map { |s| s.strip }) unless item.style.nil?
     variant_type = VariantType.find_by!({ name: item.variant_type.strip })
+    colors = Color.where(name: item.color.split(',').map { |c| c.strip }) unless item.color.nil?
 
     if item.substrate
       substrate = Substrate.find_by(name: item.substrate.strip)
@@ -101,7 +102,6 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.sale_quantity = item.sale_quantity.strip
       d.minimum_quantity = item.minimum_quantity.strip
       d.available_on = Time.now
-      d.product_types = product_types
       d.styles = styles
     end
 
@@ -126,16 +126,17 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       end
     end
 
-    puts 'Creating variants: '+item.variant_name
+    puts 'Creating variant: '+item.variant_name
     variant = Variant.create!({
       design: design,
       variant_type: variant_type,
       name: item.variant_name.strip,
       sku: item.sku.strip,
       substrate: substrate,
-      backing_type: backing_type
+      backing_type: backing_type,
+      product_types: product_types,
+      colors: colors
     })
-
 
     item.images.split(',').map { |i| i.strip }.each do |url|
       puts 'Processing variant images: '+url
@@ -145,8 +146,6 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
         owner_id: variant.id
       })
     end
-
-    variant.colors << Color.where(name: item.color.split(',').map { |c| c.strip }) unless item.color.nil?
 
     if collection.product_category.name == 'Digital'
       variant.generate_tearsheet

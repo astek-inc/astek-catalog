@@ -7,9 +7,7 @@ class ProductType < ActiveRecord::Base
 
   acts_as_paranoid
 
-  has_many :designs, inverse_of: :product_type
-
-  # has_many :product_type_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_many :variants, inverse_of: :product_type
 
   belongs_to :product_category, inverse_of: :product_types
 

@@ -21,6 +21,7 @@ class Variant < ActiveRecord::Base
 
   has_many :variant_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
+  has_and_belongs_to_many :product_types
   has_and_belongs_to_many :colors
 
   validates :variant_type_id, presence: true

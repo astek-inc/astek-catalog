@@ -21,7 +21,6 @@ class Design < ActiveRecord::Base
   has_many :properties, through: :design_properties
 
   has_and_belongs_to_many :styles
-  has_and_belongs_to_many :product_types
 
   validates :name, presence: true
   validates :sku, presence: true
@@ -47,7 +46,7 @@ class Design < ActiveRecord::Base
       tags = []
 
       tags << to_tags('style', self.styles.map { |s| s.name })
-      tags << to_tags('type', self.product_types.map { |t| t.name })
+      tags << to_tags('type', self.variants.map { |v| v.product_types.map { |t| t.name } }.flatten.uniq)
 
       if domain == 'astek.com'
         if self.digital?
