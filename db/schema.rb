@@ -11,11 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180926161312) do
+ActiveRecord::Schema.define(version: 20180831225414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "pg_stat_statements"
 
   create_table "backing_types", force: :cascade do |t|
     t.string   "name"
@@ -34,6 +33,7 @@ ActiveRecord::Schema.define(version: 20180926161312) do
     t.string   "name"
     t.text     "description"
     t.integer  "vendor_id"
+    t.integer  "lead_time_id"
     t.text     "keywords"
     t.boolean  "suppress_from_display",    default: false, null: false
     t.boolean  "user_can_select_material", default: false, null: false
@@ -42,7 +42,6 @@ ActiveRecord::Schema.define(version: 20180926161312) do
     t.datetime "deleted_at"
     t.string   "slug"
     t.integer  "row_order"
-    t.integer  "lead_time_id"
   end
 
   add_index "collections", ["deleted_at"], name: "index_collections_on_deleted_at", using: :btree
@@ -76,12 +75,6 @@ ActiveRecord::Schema.define(version: 20180926161312) do
   add_index "colors_variants", ["color_id", "variant_id"], name: "index_colors_variants_on_color_id_and_variant_id", using: :btree
   add_index "colors_variants", ["variant_id", "color_id"], name: "index_colors_variants_on_variant_id_and_color_id", using: :btree
 
-  create_table "data_migrations", id: false, force: :cascade do |t|
-    t.string "version", null: false
-  end
-
-  add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
-
   create_table "design_properties", force: :cascade do |t|
     t.integer  "design_id"
     t.integer  "property_id"
@@ -97,7 +90,6 @@ ActiveRecord::Schema.define(version: 20180926161312) do
 
   create_table "designs", force: :cascade do |t|
     t.integer  "collection_id"
-    t.integer  "product_type_id"
     t.string   "name"
     t.string   "sku"
     t.text     "description"
@@ -122,14 +114,6 @@ ActiveRecord::Schema.define(version: 20180926161312) do
   add_index "designs", ["sku"], name: "index_designs_on_sku", using: :btree
   add_index "designs", ["slug"], name: "index_designs_on_slug", unique: true, using: :btree
   add_index "designs", ["suppress_from_searches"], name: "index_designs_on_suppress_from_searches", using: :btree
-
-  create_table "designs_product_types", id: false, force: :cascade do |t|
-    t.integer "design_id",       null: false
-    t.integer "product_type_id", null: false
-  end
-
-  add_index "designs_product_types", ["design_id", "product_type_id"], name: "index_designs_product_types_on_design_id_and_product_type_id", using: :btree
-  add_index "designs_product_types", ["product_type_id", "design_id"], name: "index_designs_product_types_on_product_type_id_and_design_id", using: :btree
 
   create_table "designs_styles", id: false, force: :cascade do |t|
     t.integer "design_id", null: false
@@ -203,6 +187,14 @@ ActiveRecord::Schema.define(version: 20180926161312) do
 
   add_index "product_types", ["deleted_at"], name: "index_product_types_on_deleted_at", using: :btree
   add_index "product_types", ["row_order"], name: "index_product_types_on_row_order", using: :btree
+
+  create_table "product_types_variants", id: false, force: :cascade do |t|
+    t.integer "variant_id",      null: false
+    t.integer "product_type_id", null: false
+  end
+
+  add_index "product_types_variants", ["product_type_id", "variant_id"], name: "index_product_types_variants_on_product_type_id_and_variant_id", using: :btree
+  add_index "product_types_variants", ["variant_id", "product_type_id"], name: "index_product_types_variants_on_variant_id_and_product_type_id", using: :btree
 
   create_table "properties", force: :cascade do |t|
     t.string   "name"
@@ -318,6 +310,7 @@ ActiveRecord::Schema.define(version: 20180926161312) do
     t.string   "name"
     t.text     "sku"
     t.string   "slug"
+    t.integer  "product_type_id"
     t.integer  "substrate_id"
     t.integer  "backing_type_id"
     t.integer  "row_order"
@@ -355,12 +348,12 @@ ActiveRecord::Schema.define(version: 20180926161312) do
   add_foreign_key "collections", "product_categories"
   add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
-  add_foreign_key "designs", "product_types"
   add_foreign_key "designs", "sale_units"
   add_foreign_key "product_types", "product_categories"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "variants", "backing_types"
   add_foreign_key "variants", "designs"
+  add_foreign_key "variants", "product_types"
   add_foreign_key "variants", "substrates"
   add_foreign_key "variants", "variant_types"
 end
