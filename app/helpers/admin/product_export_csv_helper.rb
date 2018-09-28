@@ -471,7 +471,7 @@ module Admin
     def astek_business_description variant
       body = ''
 
-      if variant.description
+      if variant.design.description
         body += format_description variant
       end
 
@@ -492,7 +492,7 @@ module Admin
 
     def format_description variant
       '<div>
-          <p>'+variant.description+'</p>
+          <p>'+variant.design.description+'</p>
       </div>'
     end
 
