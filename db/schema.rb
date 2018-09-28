@@ -75,6 +75,12 @@ ActiveRecord::Schema.define(version: 20180831225414) do
   add_index "colors_variants", ["color_id", "variant_id"], name: "index_colors_variants_on_color_id_and_variant_id", using: :btree
   add_index "colors_variants", ["variant_id", "color_id"], name: "index_colors_variants_on_variant_id_and_color_id", using: :btree
 
+  create_table "data_migrations", id: false, force: :cascade do |t|
+    t.string "version", null: false
+  end
+
+  add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
+
   create_table "design_properties", force: :cascade do |t|
     t.integer  "design_id"
     t.integer  "property_id"
