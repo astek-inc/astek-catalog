@@ -391,7 +391,7 @@ module Admin
       elsif attr == 'price'
         case domain
         when 'astek.com'
-          nil
+          0
         when 'astekhome.com'
           if variant_type == 'sample' || variant_type == 'custom_sample'
             if variant.design.digital?
