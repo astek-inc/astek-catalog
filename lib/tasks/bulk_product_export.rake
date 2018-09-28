@@ -23,7 +23,7 @@ namespace :db do
       end
     end
 
-    filename = "#{website.name.parameterize}-bulk-export-#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv"
+    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-bulk-product-export.csv"
     # filepath = "#{Rails.root}/tmp/#{filename}"
 
     # File.open(filepath, 'w+') do |f|
