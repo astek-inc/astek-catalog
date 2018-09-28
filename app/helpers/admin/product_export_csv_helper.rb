@@ -497,7 +497,7 @@ module Admin
     end
 
     def format_business_properties variant
-      formatted = '<div class="description__formatted">'
+      formatted = '<div class="description__meta">'
 
       formatted += '<div>
           <h5>Collection</h5>
@@ -516,7 +516,7 @@ module Admin
     end
 
     def format_home_properties variant
-      formatted = '<div class="description__formatted">'
+      formatted = '<div class="description__meta">'
 
       formatted += '<div>
           <h6>Collection</h6>
