@@ -478,7 +478,7 @@ module Admin
       body += format_business_properties variant
 
       if variant.tearsheet.file
-        body += format_tearsheet_link variant
+        body += format_tearsheet_links variant
       end
 
       body = body.gsub(/\n+/, ' ')
@@ -548,8 +548,12 @@ module Admin
       formatted
     end
 
-    def format_tearsheet_link variant
-      '<!-- pdf -->' + $/ + ActionController::Base.helpers.link_to('Tear Sheet', variant.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
+    def format_tearsheet_links variant
+      out = '<!-- pdf -->'
+      variant.design.variants.each do |v|
+        out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
+      end
+      out
     end
 
   end
