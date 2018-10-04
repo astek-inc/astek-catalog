@@ -1,6 +1,8 @@
 module Admin
   class ProductCategoriesController < BaseController
 
+    before_action :set_product_category, only: [:edit, :update, :delete]
+
     def index
       @product_categories = ProductCategory.rank(:row_order).page params[:page]
       @position_start = (@product_categories.current_page.present? ? @product_categories.current_page - 1 : 0) * @product_categories.limit_value
@@ -27,11 +29,9 @@ module Admin
     end
 
     def edit
-      @product_category = ProductCategory.find(params[:id])
     end
 
     def update
-      @product_category = ProductCategory.find(params[:id])
       if @product_category.update_attributes(product_category_params)
         flash[:notice] = 'Product type group updated.'
         redirect_to(action: 'index')
@@ -41,7 +41,6 @@ module Admin
     end
 
     def delete
-      @product_category = ProductCategory.find(params[:id])
     end
 
     def update_row_order
@@ -62,6 +61,10 @@ module Admin
 
     def product_category_params
       params.require(:product_category).permit(:name, :description)
+    end
+
+    def set_product_category
+      @product_category = ProductCategory.find(params[:id])
     end
 
   end
