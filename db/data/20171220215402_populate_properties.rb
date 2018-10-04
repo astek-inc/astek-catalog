@@ -5,6 +5,8 @@ class PopulateProperties < ActiveRecord::Migration
       { name: 'roll_length', presentation: 'Roll length (yards)' },
       { name: 'mural_width', presentation: 'Mural width (inches)' },
       { name: 'mural_height', presentation: 'Mural height (inches)' },
+      { name: 'tile_width', presentation: 'Tile width (inches)' },
+      { name: 'tile_height', presentation: 'Tile height (inches)' },
       { name: 'motif_height', presentation: 'Motif height (inches)' },
       { name: 'motif_width', presentation: 'Motif width (inches)' },
       { name: 'repeat_match_type', presentation: 'Repeat match type' },
