@@ -11,6 +11,8 @@ class ProductType < ActiveRecord::Base
 
   belongs_to :product_category, inverse_of: :product_types
 
+  has_and_belongs_to_many :websites
+
   validates_presence_of :name, :product_category_id
 
 end

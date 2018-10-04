@@ -72,12 +72,6 @@ ActiveRecord::Schema.define(version: 20180831225414) do
   add_index "colors_variants", ["color_id", "variant_id"], name: "index_colors_variants_on_color_id_and_variant_id", using: :btree
   add_index "colors_variants", ["variant_id", "color_id"], name: "index_colors_variants_on_variant_id_and_color_id", using: :btree
 
-  create_table "data_migrations", id: false, force: :cascade do |t|
-    t.string "version", null: false
-  end
-
-  add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
-
   create_table "design_properties", force: :cascade do |t|
     t.integer  "design_id"
     t.integer  "property_id"
@@ -183,6 +177,14 @@ ActiveRecord::Schema.define(version: 20180831225414) do
 
   add_index "product_types_variants", ["product_type_id", "variant_id"], name: "index_product_types_variants_on_product_type_id_and_variant_id", using: :btree
   add_index "product_types_variants", ["variant_id", "product_type_id"], name: "index_product_types_variants_on_variant_id_and_product_type_id", using: :btree
+
+  create_table "product_types_websites", id: false, force: :cascade do |t|
+    t.integer "product_type_id", null: false
+    t.integer "website_id",      null: false
+  end
+
+  add_index "product_types_websites", ["product_type_id", "website_id"], name: "index_product_types_websites_on_product_type_id_and_website_id", using: :btree
+  add_index "product_types_websites", ["website_id", "product_type_id"], name: "index_product_types_websites_on_website_id_and_product_type_id", using: :btree
 
   create_table "properties", force: :cascade do |t|
     t.string   "name"

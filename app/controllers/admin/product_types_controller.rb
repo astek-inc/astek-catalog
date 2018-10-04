@@ -2,6 +2,7 @@ module Admin
   class ProductTypesController < BaseController
 
     before_action :set_product_categories, only: [:new, :edit]
+    before_action :set_websites, only: [:index, :new, :edit]
 
     def index
       @product_types = ProductType.rank(:row_order).page params[:page]
@@ -66,8 +67,12 @@ module Admin
       @product_categories = ProductCategory.rank(:row_order)
     end
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def product_type_params
-      params.require(:product_type).permit(:name, :description, :product_category_id)
+      params.require(:product_type).permit(:name, :description, :product_category_id, website_ids: [])
     end
 
   end
