@@ -3,7 +3,7 @@ module Api
     class ProductTypeImagesController < BaseController
 
       # def index
-      #   @product_type = ProductType.friendly.find(params[:product_type_id])
+      #   @product_type = ProductType.find(params[:product_type_id])
       #   @product_type_images = ProductTypeImage.find_by(owner_id: @product_type.id)
       #   if @product_type_images
       #     render json: @product_type_images

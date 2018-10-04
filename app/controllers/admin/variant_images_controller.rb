@@ -46,7 +46,7 @@ module Admin
     private
 
     def get_variant
-      @variant = Variant.friendly.find(params[:variant_id])
+      @variant = Variant.find(params[:variant_id])
     end
 
     def get_design

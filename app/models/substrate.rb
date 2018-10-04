@@ -2,9 +2,6 @@ class Substrate < ActiveRecord::Base
 
   resourcify
 
-  extend FriendlyId
-  friendly_id :name, use: :slugged
-
   include RankedModel
   ranks :row_order
 

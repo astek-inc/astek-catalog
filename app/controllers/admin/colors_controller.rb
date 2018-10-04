@@ -61,11 +61,11 @@ module Admin
     private
 
     def set_color
-      @color = Color.friendly.find(params[:id])
+      @color = Color.find(params[:id])
     end
 
     def color_params
-      params.require(:color).permit(:name, :slug)
+      params.require(:color).permit(:name)
     end
 
   end

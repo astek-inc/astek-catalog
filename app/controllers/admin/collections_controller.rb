@@ -29,11 +29,11 @@ module Admin
     end
 
     def edit
-      @collection = Collection.friendly.find(params[:id])
+      @collection = Collection.find(params[:id])
     end
 
     def update
-      @collection = Collection.friendly.find(params[:id])
+      @collection = Collection.find(params[:id])
       if @collection.update_attributes(collection_params)
         flash[:notice] = 'Collection updated.'
         redirect_to(action: 'index')
@@ -43,7 +43,7 @@ module Admin
     end
 
     def delete
-      @collection = Collection.friendly.find(params[:id])
+      @collection = Collection.find(params[:id])
     end
 
     def update_row_order
@@ -55,7 +55,7 @@ module Admin
     end
 
     def destroy
-      Collection.friendly.find(params[:id]).destroy
+      Collection.find(params[:id]).destroy
       flash[:notice] = 'Collection destroyed.'
       redirect_to(action: 'index')
     end
@@ -81,7 +81,7 @@ module Admin
     end
 
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :lead_time_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :product_category_id, :lead_time_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
     end
 
   end

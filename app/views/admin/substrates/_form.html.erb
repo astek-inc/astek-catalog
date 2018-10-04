@@ -14,13 +14,6 @@
   <%= f.text_area :keywords, rows: 3, class: 'form-control' %>
 <% end %>
 
-<% if @substrate.persisted? %>
-  <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label(:name, 'Slug <span class="required">*</span>'.html_safe) %>
-    <%= f.text_field :slug, required: true, class: 'form-control' %>
-  <% end %>
-<% end %>
-
 <%= field_set_tag nil, 'data-hook': 'substrate_edit' do %>
   <%= content_tag :div, class: 'panel panel-default' do %>
     <%= content_tag :div, 'Categories', class: 'panel-heading' %>

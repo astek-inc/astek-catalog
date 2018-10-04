@@ -5,7 +5,6 @@ class CreateVariants < ActiveRecord::Migration
       t.integer :variant_type_id
       t.string :name
       t.text :sku, index: true
-      t.string :slug, unique: true
       t.integer :product_type_id
       t.integer :substrate_id
       t.integer :backing_type_id

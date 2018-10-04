@@ -14,12 +14,12 @@ module Api
       # end
 
       def show
-        @product_type = ProductType.friendly.find(params[:id])
+        @product_type = ProductType.find(params[:id])
         render json: @product_type, include: [:product_type_images, :collections]
       end
 
       # def update
-      #   @product_type = ProductType.friendly.find(params[:id])
+      #   @product_type = ProductType.find(params[:id])
       #   if @product_type.update_attributes(product_type_params)
       #     render json: @product_type
       #   else
@@ -28,13 +28,13 @@ module Api
       # end
 
       # def destroy
-      #   ProductType.friendly.find(params[:id]).destroy
+      #   ProductType.find(params[:id]).destroy
       # end
 
       # private
       #
       # def product_type_params
-      #   params.require(:product_type).permit(:name, :description, :keywords, :slug)
+      #   params.require(:product_type).permit(:name, :description, :keywords)
       # end
 
     end

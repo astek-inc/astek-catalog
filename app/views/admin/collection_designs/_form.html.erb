@@ -48,13 +48,6 @@
     <% end %>
 <% end %>
 
-<% if @design.persisted? %>
-    <%= content_tag :div, class: ['form-group'] do %>
-        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
-        <%= f.text_field :slug, required: true, class: 'form-control' %>
-    <% end %>
-<% end %>
-
 <%= content_tag :div, class: 'row' do %>
   <%= content_tag :div, class: 'col-md-6' do %>
     <%= content_tag :div, class: ['form-group'] do %>

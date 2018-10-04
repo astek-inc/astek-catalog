@@ -40,13 +40,11 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.datetime "deleted_at"
-    t.string   "slug"
     t.integer  "row_order"
   end
 
   add_index "collections", ["deleted_at"], name: "index_collections_on_deleted_at", using: :btree
   add_index "collections", ["row_order"], name: "index_collections_on_row_order", using: :btree
-  add_index "collections", ["slug"], name: "index_collections_on_slug", unique: true, using: :btree
   add_index "collections", ["suppress_from_display"], name: "index_collections_on_suppress_from_display", using: :btree
 
   create_table "collections_websites", id: false, force: :cascade do |t|
@@ -59,7 +57,6 @@ ActiveRecord::Schema.define(version: 20180831225414) do
 
   create_table "colors", force: :cascade do |t|
     t.string   "name"
-    t.string   "slug"
     t.integer  "row_order"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -111,14 +108,12 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.datetime "created_at",                                                     null: false
     t.datetime "updated_at",                                                     null: false
     t.datetime "deleted_at"
-    t.string   "slug"
     t.integer  "row_order"
   end
 
   add_index "designs", ["deleted_at"], name: "index_designs_on_deleted_at", using: :btree
   add_index "designs", ["row_order"], name: "index_designs_on_row_order", using: :btree
   add_index "designs", ["sku"], name: "index_designs_on_sku", using: :btree
-  add_index "designs", ["slug"], name: "index_designs_on_slug", unique: true, using: :btree
   add_index "designs", ["suppress_from_searches"], name: "index_designs_on_suppress_from_searches", using: :btree
 
   create_table "designs_styles", id: false, force: :cascade do |t|
@@ -128,19 +123,6 @@ ActiveRecord::Schema.define(version: 20180831225414) do
 
   add_index "designs_styles", ["design_id", "style_id"], name: "index_designs_styles_on_design_id_and_style_id", using: :btree
   add_index "designs_styles", ["style_id", "design_id"], name: "index_designs_styles_on_style_id_and_design_id", using: :btree
-
-  create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string   "slug",                      null: false
-    t.integer  "sluggable_id",              null: false
-    t.string   "sluggable_type", limit: 50
-    t.string   "scope"
-    t.datetime "created_at"
-  end
-
-  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
-  add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
-  add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
-  add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
   create_table "images", force: :cascade do |t|
     t.string   "file"
@@ -265,7 +247,6 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.string   "name"
     t.text     "description"
     t.text     "keywords"
-    t.string   "slug"
     t.integer  "backing_type_id"
     t.integer  "row_order"
     t.datetime "created_at",      null: false
@@ -315,7 +296,6 @@ ActiveRecord::Schema.define(version: 20180831225414) do
     t.integer  "variant_type_id"
     t.string   "name"
     t.text     "sku"
-    t.string   "slug"
     t.integer  "product_type_id"
     t.integer  "substrate_id"
     t.integer  "backing_type_id"

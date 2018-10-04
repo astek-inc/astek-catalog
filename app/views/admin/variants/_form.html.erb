@@ -15,13 +15,6 @@
   <%= f.text_field :sku, required: true, class: 'form-control' %>
 <% end %>
 
-<% if @variant.persisted? %>
-    <%= content_tag :div, class: ['form-group'] do %>
-        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
-        <%= f.text_field :slug, required: true, class: 'form-control' %>
-    <% end %>
-<% end %>
-
 <%= content_tag :div, class: 'panel panel-default' do %>
   <%= content_tag :div, 'Product Types', class: 'panel-heading' %>
   <%= content_tag :div, class: 'panel-body' do %>

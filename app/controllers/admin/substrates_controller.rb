@@ -49,7 +49,7 @@ module Admin
     private
 
     def set_substrate
-      @substrate = Substrate.friendly.find(params[:id])
+      @substrate = Substrate.find(params[:id])
     end
 
     def set_substrate_categories

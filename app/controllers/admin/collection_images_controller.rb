@@ -46,7 +46,7 @@ module Admin
     private
 
     def get_collection
-      @collection = Collection.friendly.find(params[:collection_id])
+      @collection = Collection.find(params[:collection_id])
     end
 
     def collection_image_params

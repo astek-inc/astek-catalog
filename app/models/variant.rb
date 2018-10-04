@@ -4,9 +4,6 @@ class Variant < ActiveRecord::Base
 
   resourcify
 
-  extend FriendlyId
-  friendly_id :name, use: :slugged
-
   include RankedModel
   ranks :row_order, with_same: :design_id
 
@@ -27,7 +24,6 @@ class Variant < ActiveRecord::Base
   validates :variant_type_id, presence: true
   validates :name, presence: true
   validates :sku, presence: true
-  validates :slug, presence: true, on: :update
 
   def has_color? color
     # self.colors.contains? color

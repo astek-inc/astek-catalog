@@ -40,7 +40,7 @@ module Admin
     private
 
     def get_design
-      @design = Design.friendly.find(params[:design_id])
+      @design = Design.find(params[:design_id])
     end
 
     def get_collection

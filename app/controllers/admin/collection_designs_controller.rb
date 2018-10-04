@@ -30,12 +30,12 @@ module Admin
     end
 
     def edit
-      @design = Design.friendly.find(params[:id])
+      @design = Design.find(params[:id])
       @collection = @design.collection
     end
 
     def update
-      @design = Design.friendly.find(params[:id])
+      @design = Design.find(params[:id])
       if @design.update_attributes(design_params)
         flash[:notice] = 'Design updated.'
         redirect_to(action: 'index')
@@ -45,7 +45,7 @@ module Admin
     end
 
     def delete
-      @design = Design.friendly.find(params[:id])
+      @design = Design.find(params[:id])
     end
 
     def update_row_order
@@ -57,7 +57,7 @@ module Admin
     end
 
     def destroy
-      Design.friendly.find(params[:id]).destroy
+      Design.find(params[:id]).destroy
       flash[:notice] = "Design destroyed."
       redirect_to(action: 'index')
     end
@@ -65,7 +65,7 @@ module Admin
     private
 
     def set_collection
-      @collection = Collection.friendly.find(params[:collection_id])
+      @collection = Collection.find(params[:collection_id])
     end
 
     def set_sale_units
@@ -77,7 +77,7 @@ module Admin
     end
 
     def design_params
-      params.require(:design).permit(:sku, :name, :description, :keywords, :slug, :collection_id, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity, :available_on, :expires_on, :suppress_from_searches, style_ids: [])
+      params.require(:design).permit(:sku, :name, :description, :keywords, :collection_id, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity, :available_on, :expires_on, :suppress_from_searches, style_ids: [])
     end
 
   end

@@ -24,7 +24,6 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 
 gem 'acts_as_paranoid', '~> 0.5.0'
-gem 'friendly_id', '~> 5.1.0'
 
 gem 'ranked-model'
 gem 'jquery-ui-rails'

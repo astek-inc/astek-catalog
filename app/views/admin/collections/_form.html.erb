@@ -59,13 +59,6 @@
     <%= f.text_area :keywords, rows: 3, required: false, class: 'form-control' %>
 <% end %>
 
-<% if @collection.persisted? %>
-    <%= content_tag :div, class: ['form-group'] do %>
-        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
-        <%= f.text_field :slug, required: true, class: 'form-control' %>
-    <% end %>
-<% end %>
-
 <%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
   <%= content_tag :div, class: 'panel panel-default' do %>
     <%= content_tag :div, 'Websites', class: 'panel-heading' %>
