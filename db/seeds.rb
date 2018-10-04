@@ -106,8 +106,14 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     end
 
     puts 'Processing design images'
-    if item.design_images
-      item.design_images.split(',').map { |i| i.strip }.each do |url|
+    if item.install_images
+      design_images = item.install_images
+    elsif item.design_images
+      design_images = item.design_images
+    end
+
+    if design_images
+      design_images.split(',').map { |i| i.strip }.each do |url|
         DesignImage.create!({
           remote_file_url: url,
           type: 'DesignImage',
