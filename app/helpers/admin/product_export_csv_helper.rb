@@ -507,7 +507,7 @@ module Admin
       variant.design.design_properties.each do |dp|
         formatted += '<div>
           <h5>'+dp.property.presentation+'</h5>
-          <p>'+dp.value+'</p>
+          <p>'+format_property_value(dp)+'</p>
         </div>'
       end
 
@@ -526,7 +526,7 @@ module Admin
       variant.design.design_properties.each do |dp|
         formatted += '<div>
           <h6>'+dp.property.presentation+'</h6>
-          <p>'+dp.value+'</p>
+          <p>'+format_property_value(dp)+'</p>
         </div>'
       end
 
@@ -554,6 +554,17 @@ module Admin
         out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
       end
       out
+    end
+
+    def format_property_value dp
+      if matches = dp.property.name.match(/_(?<unit>inches|yards|meters)\Z/)
+        "#{dp.value} #{matches[:unit]}"
+      elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Untrimmed].include?(dp.value)
+        # Value for margin trim can be numeric, but we display "Untrimmed"
+        'Untrimmed'
+      else
+        dp.value
+      end
     end
 
   end
