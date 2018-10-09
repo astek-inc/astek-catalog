@@ -23,7 +23,7 @@ gem 'coffee-rails', '~> 4.0.0'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
-gem 'acts_as_paranoid', '~> 0.5.0'
+gem 'paranoia', '~> 2.2'
 
 gem 'ranked-model'
 gem 'jquery-ui-rails'
@@ -35,7 +35,7 @@ gem 'fog-aws'
 gem 'carrierwave', '~> 1.0'
 gem 'mini_magick'
 
-# # Authentication and permissions
+# Authentication and permissions
 gem 'devise-bootstrap-views'
 gem 'devise'
 gem 'omniauth-google-oauth2'
