@@ -95,7 +95,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     design = Design.find_or_create_by!({ sku: item.design_sku.strip, name: item.design_name.strip, collection: collection }) do |d|
       # If we got here, this is a new record
       d.description = item.description.strip unless item.description.nil?
-      d.keywords = item.keywords.strip
+      d.keywords = item.keywords.strip.chomp(',').strip
       d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
       d.sale_unit = sale_unit
       d.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
