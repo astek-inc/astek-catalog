@@ -150,7 +150,8 @@ module Admin
           variant_barcode
           image_src
           image_position
-        ] + 17.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 2.times.map { nil }
+          image_alt_text
+        ] + 16.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 2.times.map { nil }
 
       CSV.generate(headers: true) do |csv|
 
@@ -291,10 +292,12 @@ module Admin
         end
 
       elsif attr == 'image_alt_text'
-        if variant.design.digital?
-          'Digital wallcovering image'
-        else
-          'In-stock wallcovering image'
+        if show_image
+          if variant.design.digital?
+            'Digital wallcovering image'
+          else
+            'In-stock wallcovering image'
+          end
         end
 
       elsif attr == 'image_position'
