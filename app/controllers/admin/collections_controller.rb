@@ -4,8 +4,7 @@ module Admin
     before_action :set_product_categories, :set_websites, :set_lead_times, only: [:new, :edit]
 
     def index
-      @collections = Collection.rank(:row_order).page params[:page]
-      @position_start = (@collections.current_page.present? ? @collections.current_page - 1 : 0) * @collections.limit_value
+      @collections = Collection.all.page params[:page]
     end
 
     def new

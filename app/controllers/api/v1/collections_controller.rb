@@ -3,7 +3,7 @@ module Api
     class CollectionsController < BaseController
 
       def index
-        @collections = Collection.rank(:row_order).all
+        @collections = Collection.all.all
         render json: @collections
       end
 

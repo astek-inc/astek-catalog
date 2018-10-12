@@ -2,9 +2,6 @@ class Collection < ActiveRecord::Base
 
   resourcify
 
-  include RankedModel
-  ranks :row_order, with_same: :product_category_id
-
   acts_as_paranoid
 
   belongs_to :product_category, inverse_of: :collections
@@ -17,7 +14,7 @@ class Collection < ActiveRecord::Base
 
   has_and_belongs_to_many :websites
 
-  # delegate :product_category, to: :product_type, allow_nil: true
+  default_scope { order(name: :asc) }
 
   validates_presence_of :name
 

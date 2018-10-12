@@ -69,12 +69,6 @@ Rails.application.routes.draw do
     get 'collections/search', to: 'collections#search'
 
     resources :collections, concerns: :paginatable do
-      post :update_row_order, on: :collection
-
-      # resources :collection_images, only: [:index, :new, :create, :show, :destroy] do
-      #   post :update_row_order, on: :collection
-      # end
-
       resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
       end
