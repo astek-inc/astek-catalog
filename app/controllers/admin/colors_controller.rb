@@ -4,7 +4,7 @@ module Admin
     before_action :set_color, only: [:edit, :update, :destroy]
 
     def index
-      @colors = Color.rank(:row_order).page params[:page]
+      @colors = Color.page params[:page]
       @position_start = (@colors.current_page.present? ? @colors.current_page - 1 : 0) * @colors.limit_value
     end
 
@@ -44,14 +44,6 @@ module Admin
         flash[:error] = msg
         render('edit')
       end
-    end
-
-    def update_row_order
-      @color = Color.find(params[:item_id])
-      @color.row_order_position = params[:row_order_position]
-      @color.save
-
-      render nothing: true
     end
 
     def destroy

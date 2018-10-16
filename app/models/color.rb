@@ -2,10 +2,9 @@ class Color < ActiveRecord::Base
 
   resourcify
 
-  include RankedModel
-  ranks :row_order
-
   has_and_belongs_to_many :variants
+
+  default_scope { order(name: :asc) }
 
   validates :name, presence: true, uniqueness: true
 

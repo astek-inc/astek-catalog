@@ -4,7 +4,7 @@ module Admin
     before_action :set_lead_time, only: [:edit, :update, :destroy]
 
     def index
-      @lead_times = LeadTime.rank(:row_order).page params[:page]
+      @lead_times = LeadTime.page params[:page]
       @position_start = (@lead_times.current_page.present? ? @lead_times.current_page - 1 : 0) * @lead_times.limit_value
     end
 
@@ -48,14 +48,6 @@ module Admin
 
     def destroy
       @lead_time.destroy
-    end
-
-    def update_row_order
-      @lead_time = LeadTime.find(params[:item_id])
-      @lead_time.row_order_position = params[:row_order_position]
-      @lead_time.save
-
-      render nothing: true
     end
 
     private
