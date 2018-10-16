@@ -71,19 +71,19 @@ module Admin
     end
 
     def set_product_types
-      @product_types = ProductType.rank(:row_order)
+      @product_types = ProductType.all
     end
 
     def set_colors
-      @colors = Color.rank(:row_order)
+      @colors = Color.all
     end
 
     def set_substrates
-      @substrates = Substrate.rank(:row_order)
+      @substrates = Substrate.all
     end
 
     def set_backing_types
-      @backing_types = BackingType.rank(:row_order)
+      @backing_types = BackingType.all
     end
 
     def variant_params

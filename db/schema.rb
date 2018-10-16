@@ -11,22 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181012172903) do
+ActiveRecord::Schema.define(version: 20181016225138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
 
   create_table "backing_types", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "row_order"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.datetime "deleted_at"
   end
 
   add_index "backing_types", ["deleted_at"], name: "index_backing_types_on_deleted_at", using: :btree
-  add_index "backing_types", ["row_order"], name: "index_backing_types_on_row_order", using: :btree
 
   create_table "collections", force: :cascade do |t|
     t.integer  "product_category_id"
@@ -55,12 +54,9 @@ ActiveRecord::Schema.define(version: 20181012172903) do
 
   create_table "colors", force: :cascade do |t|
     t.string   "name"
-    t.integer  "row_order"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
-  add_index "colors", ["row_order"], name: "index_colors_on_row_order", using: :btree
 
   create_table "colors_variants", id: false, force: :cascade do |t|
     t.integer "variant_id", null: false
@@ -140,26 +136,22 @@ ActiveRecord::Schema.define(version: 20181012172903) do
   create_table "lead_times", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "row_order"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.datetime "deleted_at"
   end
 
   add_index "lead_times", ["deleted_at"], name: "index_lead_times_on_deleted_at", using: :btree
-  add_index "lead_times", ["row_order"], name: "index_lead_times_on_row_order", using: :btree
 
   create_table "product_categories", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.integer  "row_order"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.datetime "deleted_at"
   end
 
   add_index "product_categories", ["deleted_at"], name: "index_product_categories_on_deleted_at", using: :btree
-  add_index "product_categories", ["row_order"], name: "index_product_categories_on_row_order", using: :btree
 
   create_table "product_types", force: :cascade do |t|
     t.string   "name"
@@ -168,11 +160,9 @@ ActiveRecord::Schema.define(version: 20181012172903) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.datetime "deleted_at"
-    t.integer  "row_order"
   end
 
   add_index "product_types", ["deleted_at"], name: "index_product_types_on_deleted_at", using: :btree
-  add_index "product_types", ["row_order"], name: "index_product_types_on_row_order", using: :btree
 
   create_table "product_types_variants", id: false, force: :cascade do |t|
     t.integer "variant_id",      null: false
@@ -254,14 +244,12 @@ ActiveRecord::Schema.define(version: 20181012172903) do
     t.text     "description"
     t.text     "keywords"
     t.integer  "backing_type_id"
-    t.integer  "row_order"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
   end
 
   add_index "substrates", ["deleted_at"], name: "index_substrates_on_deleted_at", using: :btree
-  add_index "substrates", ["row_order"], name: "index_substrates_on_row_order", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

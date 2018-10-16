@@ -54,7 +54,7 @@ module Admin
     end
 
     def set_product_categories
-      @product_categories = ProductCategory.rank(:row_order)
+      @product_categories = ProductCategory.all
     end
 
     def set_websites

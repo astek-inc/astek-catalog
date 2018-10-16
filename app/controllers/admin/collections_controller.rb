@@ -59,7 +59,7 @@ module Admin
     end
 
     def set_product_categories
-      @product_categories = ProductCategory.rank(:row_order)
+      @product_categories = ProductCategory.all
     end
 
     def set_websites
@@ -67,7 +67,7 @@ module Admin
     end
 
     def set_lead_times
-      @lead_times = LeadTime.rank(:row_order)
+      @lead_times = LeadTime.all
     end
 
     def collection_params
