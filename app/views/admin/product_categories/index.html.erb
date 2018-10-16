@@ -13,10 +13,9 @@
   <% if @product_categories.any? %>
 
       <div class="table-responsive">
-        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_product_categories_path %>" data-position-start="<%= @position_start %>">
+        <table class="table table-striped" data-hook>
           <thead>
           <tr>
-            <th class="move-handle"></th>
             <th>Name</th>
             <th>Description</th>
             <th class="actions"></th>
@@ -25,10 +24,7 @@
 
           <tbody>
           <% @product_categories.each do |product_category| %>
-              <tr class="product_property fields" data-item-id=<%= "#{product_category.id}" %> data-hook="product_category">
-                <td class="move-handle text-center">
-                  <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
-                </td>
+              <tr class="product_property fields" data-hook="product_category">
                 <td><%= product_category.name %></td>
                 <td><%= truncate(sanitize(product_category.description), length: 140) %></td>
                 <td class="actions">

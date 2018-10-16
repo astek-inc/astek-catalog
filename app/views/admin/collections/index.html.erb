@@ -26,7 +26,7 @@
 
           <tbody>
           <% @collections.each do |collection| %>
-              <tr class="product_property fields" data-item-id=<%= "#{collection.id}" %> data-hook="collection">
+              <tr class="product_property fields" data-hook="collection">
                 <td><%= collection.name %></td>
                 <td><%= collection.product_category.name %></td>
                 <td><%= truncate(sanitize(collection.description), length: 140) %></td>

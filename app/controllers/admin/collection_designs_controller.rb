@@ -58,7 +58,7 @@ module Admin
 
     def destroy
       Design.find(params[:id]).destroy
-      flash[:notice] = "Design destroyed."
+      flash[:notice] = "Design removed."
       redirect_to(action: 'index')
     end
 

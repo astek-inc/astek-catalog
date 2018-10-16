@@ -4,7 +4,7 @@ module Admin
     before_action :set_sale_unit, only: [:edit, :update, :destroy]
 
     def index
-      @sale_units = SaleUnit.all
+      @sale_units = SaleUnit.page params[:page]
     end
 
     def new
@@ -47,6 +47,8 @@ module Admin
 
     def destroy
       @sale_unit.destroy
+      flash[:notice] = 'Sale unit removed.'
+      redirect_to(action: 'index')
     end
 
     private

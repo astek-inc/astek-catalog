@@ -45,7 +45,7 @@ module Admin
 
     def destroy
       Vendor.find(params[:id]).destroy
-      flash[:notice] = "Vendor destroyed."
+      flash[:notice] = "Vendor removed."
       redirect_to(action: 'index')
     end
 

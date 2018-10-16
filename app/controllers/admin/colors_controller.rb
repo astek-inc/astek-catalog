@@ -5,7 +5,6 @@ module Admin
 
     def index
       @colors = Color.page params[:page]
-      @position_start = (@colors.current_page.present? ? @colors.current_page - 1 : 0) * @colors.limit_value
     end
 
     def new

@@ -5,8 +5,7 @@ module Admin
     before_action :set_substrate_categories, only: [:new, :edit]
 
     def index
-      @substrates = Substrate.rank(:row_order).page params[:page]
-      @position_start = (@substrates.current_page.present? ? @substrates.current_page - 1 : 0) * @substrates.limit_value
+      @substrates = Substrate.page params[:page]
     end
 
     def new

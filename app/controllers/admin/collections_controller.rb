@@ -1,10 +1,11 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
+    before_action :set_collection, only: [:edit, :update, :destroy]
     before_action :set_product_categories, :set_websites, :set_lead_times, only: [:new, :edit]
 
     def index
-      @collections = Collection.all.page params[:page]
+      @collections = Collection.page params[:page]
     end
 
     def new
@@ -28,11 +29,9 @@ module Admin
     end
 
     def edit
-      @collection = Collection.find(params[:id])
     end
 
     def update
-      @collection = Collection.find(params[:id])
       if @collection.update_attributes(collection_params)
         flash[:notice] = 'Collection updated.'
         redirect_to(action: 'index')
@@ -41,21 +40,9 @@ module Admin
       end
     end
 
-    def delete
-      @collection = Collection.find(params[:id])
-    end
-
-    def update_row_order
-      @collection = Collection.find(params[:item_id])
-      @collection.row_order_position = params[:row_order_position]
-      @collection.save
-
-      render nothing: true
-    end
-
     def destroy
-      Collection.find(params[:id]).destroy
-      flash[:notice] = 'Collection destroyed.'
+      @collection.destroy
+      flash[:notice] = 'Collection removed.'
       redirect_to(action: 'index')
     end
 
@@ -66,6 +53,10 @@ module Admin
     end
 
     private
+
+    def set_collection
+      @collection = Collection.find(params[:id])
+    end
 
     def set_product_categories
       @product_categories = ProductCategory.rank(:row_order)

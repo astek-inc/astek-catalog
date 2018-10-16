@@ -4,8 +4,7 @@ module Admin
     before_action :set_backing_type, only: [:edit, :update, :destroy]
 
     def index
-      @backing_types = BackingType.rank(:row_order).page params[:page]
-      @position_start = (@backing_types.current_page.present? ? @backing_types.current_page - 1 : 0) * @backing_types.limit_value
+      @backing_types = BackingType.page params[:page]
     end
 
     def new
@@ -40,17 +39,9 @@ module Admin
       end
     end
 
-    def update_row_order
-      @backing_type = BackingType.find(params[:item_id])
-      @backing_type.row_order_position = params[:row_order_position]
-      @backing_type.save
-
-      render nothing: true
-    end
-
     def destroy
       @backing_type.destroy
-      flash[:notice] = 'Product type destroyed.'
+      flash[:notice] = 'Product type removed.'
       redirect_to(action: 'index')
     end
 

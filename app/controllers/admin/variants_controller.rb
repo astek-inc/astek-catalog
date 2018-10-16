@@ -52,7 +52,7 @@ module Admin
 
     def destroy
       @variant.destroy
-      flash[:notice] = 'Variant destroyed.'
+      flash[:notice] = 'Variant removed.'
       redirect_to(action: 'index')
     end
 

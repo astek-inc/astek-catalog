@@ -25,7 +25,7 @@
 
           <tbody>
           <% @colors.each do |color| %>
-            <tr class="product_property fields" data-item-id=<%= "#{color.id}" %> data-hook="color">
+            <tr class="product_property fields" data-hook="color">
               <td><%= color.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
@@ -38,6 +38,8 @@
           </tbody>
         </table>
       <% end %>
+
+      <%= paginate @colors %>
 
     <% else %>
       <p>No colors found. <%= link_to 'Create one.', new_admin_color_path %></p>

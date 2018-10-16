@@ -16,7 +16,7 @@
     <% if @variant_types.any? %>
 
       <%= content_tag :div, class: 'table-responsive' do %>
-        <table class="table table-striped sortable" data-hook>
+        <table class="table table-striped" data-hook>
           <thead>
           <tr>
             <th>Name</th>
@@ -26,7 +26,7 @@
 
           <tbody>
           <% @variant_types.each do |variant_type| %>
-            <tr class="variant_type fields" data-item-id=<%= "#{variant_type.id}" %> data-hook="variant">
+            <tr class="variant_type fields" data-hook="variant">
               <td><%= variant_type.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

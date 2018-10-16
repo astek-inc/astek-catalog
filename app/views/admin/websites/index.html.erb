@@ -24,7 +24,7 @@
 
           <tbody>
           <% @websites.each do |website| %>
-              <tr class="website_property fields" data-item-id=<%= "#{website.id}" %> data-hook="website">
+              <tr class="website_property fields" data-hook="website">
                 <td><%= website.name %></td>
                 <td><%= website.domain %></td>
                 <td class="actions">

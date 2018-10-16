@@ -44,7 +44,7 @@ module Admin
 
     def destroy
       @website.destroy
-      flash[:notice] = "Website destroyed."
+      flash[:notice] = "Website removed."
       redirect_to(action: 'index')
     end
 

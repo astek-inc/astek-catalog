@@ -5,7 +5,6 @@ module Admin
 
     def index
       @lead_times = LeadTime.page params[:page]
-      @position_start = (@lead_times.current_page.present? ? @lead_times.current_page - 1 : 0) * @lead_times.limit_value
     end
 
     def new

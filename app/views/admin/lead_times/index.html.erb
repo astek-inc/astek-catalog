@@ -26,7 +26,7 @@
 
           <tbody>
           <% @lead_times.each do |lead_time| %>
-            <tr class="lead_time fields" data-item-id=<%= "#{lead_time.id}" %> data-hook="lead_time">
+            <tr class="lead_time fields" data-hook="lead_time">
               <td><%= lead_time.name %></td>
               <td><%= truncate(sanitize(lead_time.description), length: 140) %></td>
               <td class="actions">
@@ -40,6 +40,8 @@
           </tbody>
         </table>
       <% end %>
+
+      <%= paginate @lead_times %>
 
     <% else %>
       <p>No lead times found. <%= link_to 'Create one.', new_admin_lead_time_path %></p>

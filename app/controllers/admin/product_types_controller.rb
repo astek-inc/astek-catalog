@@ -1,12 +1,12 @@
 module Admin
   class ProductTypesController < BaseController
 
+    before_action :set_product_type, only: [:edit, :update, :destroy]
     before_action :set_product_categories, only: [:new, :edit]
     before_action :set_websites, only: [:index, :new, :edit]
 
     def index
-      @product_types = ProductType.rank(:row_order).page params[:page]
-      @position_start = (@product_types.current_page.present? ? @product_types.current_page - 1 : 0) * @product_types.limit_value
+      @product_types = ProductType.page params[:page]
     end
 
     def new
@@ -30,11 +30,9 @@ module Admin
     end
 
     def edit
-      @product_type = ProductType.find(params[:id])
     end
 
     def update
-      @product_type = ProductType.find(params[:id])
       if @product_type.update_attributes(product_type_params)
         flash[:notice] = 'Product type updated.'
         redirect_to(action: 'index')
@@ -43,25 +41,17 @@ module Admin
       end
     end
 
-    def delete
-      @product_type = ProductType.find(params[:id])
-    end
-
-    def update_row_order
-      @product_type = ProductType.find(params[:item_id])
-      @product_type.row_order_position = params[:row_order_position]
-      @product_type.save
-
-      render nothing: true
-    end
-
     def destroy
       ProductType.find(params[:id]).destroy
-      flash[:notice] = 'Product type destroyed.'
+      flash[:notice] = 'Product type removed.'
       redirect_to(action: 'index')
     end
 
     private
+
+    def set_product_type
+      @product_type = ProductType.find(params[:id])
+    end
 
     def set_product_categories
       @product_categories = ProductCategory.rank(:row_order)

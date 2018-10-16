@@ -4,8 +4,7 @@ module Admin
     before_action :set_product_category, only: [:edit, :update, :delete]
 
     def index
-      @product_categories = ProductCategory.rank(:row_order).page params[:page]
-      @position_start = (@product_categories.current_page.present? ? @product_categories.current_page - 1 : 0) * @product_categories.limit_value
+      @product_categories = ProductCategory.page params[:page]
     end
 
     def new
@@ -43,17 +42,9 @@ module Admin
     def delete
     end
 
-    def update_row_order
-      @product_category = ProductCategory.find(params[:item_id])
-      @product_category.row_order_position = params[:row_order_position]
-      @product_category.save
-
-      render nothing: true
-    end
-
     def destroy
       ProductCategory.find(params[:id]).destroy
-      flash[:notice] = 'Product type group destroyed.'
+      flash[:notice] = 'Product type group removed.'
       redirect_to(action: 'index')
     end
 
