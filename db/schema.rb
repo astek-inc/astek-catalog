@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181016225138) do
+ActiveRecord::Schema.define(version: 20181016225555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,9 +103,11 @@ ActiveRecord::Schema.define(version: 20181016225138) do
     t.datetime "updated_at",                                                     null: false
     t.datetime "deleted_at"
     t.integer  "row_order"
+    t.string   "master_sku"
   end
 
   add_index "designs", ["deleted_at"], name: "index_designs_on_deleted_at", using: :btree
+  add_index "designs", ["master_sku"], name: "index_designs_on_master_sku", using: :btree
   add_index "designs", ["row_order"], name: "index_designs_on_row_order", using: :btree
   add_index "designs", ["sku"], name: "index_designs_on_sku", using: :btree
   add_index "designs", ["suppress_from_searches"], name: "index_designs_on_suppress_from_searches", using: :btree

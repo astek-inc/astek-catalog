@@ -77,7 +77,10 @@ module Admin
     end
 
     def design_params
-      params.require(:design).permit(:sku, :name, :description, :keywords, :collection_id, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity, :available_on, :expires_on, :suppress_from_searches, style_ids: [])
+      params.require(:design).permit(
+          :sku, :name, :description, :keywords, :collection_id, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity,
+          :available_on, :expires_on, :suppress_from_searches, :master_sku, style_ids: []
+      )
     end
 
   end

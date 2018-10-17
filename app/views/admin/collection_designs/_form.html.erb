@@ -1,18 +1,25 @@
 <%= f.hidden_field :collection_id, value: @collection.id %>
 
 <%= content_tag :div, class: 'row' do %>
-  <%= content_tag :div, class: ['col-md-6'] do %>
+  <%= content_tag :div, class: ['col-md-4'] do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= f.label :sku, 'SKU' %> <span class="required">*</span>
       <%= f.text_field :sku, required: true, class: 'form-control' %>
     <% end %>
   <% end %>
 
-  <%= content_tag :div, class: ['col-md-6'] do %>
+  <%= content_tag :div, class: ['col-md-4'] do %>
     <%= content_tag :div, class: ['checkbox'], id: 'suppress-from-searches' do %>
       <%= f.label :suppress_from_searches do %>
         <%= f.check_box :suppress_from_searches %> Crossover SKU (suppress this item from search results)
       <% end %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: ['col-md-4'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :sku, 'Master SKU' %>
+      <%= f.text_field :master_sku, class: 'form-control' %>
     <% end %>
   <% end %>
 <% end %>
