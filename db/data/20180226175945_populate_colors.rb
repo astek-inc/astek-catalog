@@ -18,6 +18,7 @@ class PopulateColors < ActiveRecord::Migration
       {name: 'Purple'},
       {name: 'Red'},
       {name: 'Silver'},
+      { name: 'Translucent' },
       {name: 'White'},
       {name: 'Yellow'},
       {name: 'Multi'}
