@@ -103,6 +103,15 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.minimum_quantity = item.minimum_quantity.strip
       d.available_on = Time.now
       d.styles = styles
+
+      # This is a duplicate of a design in another collection,
+      # suppress it from display except with its collection
+      if item.respond_to? 'master_sku'
+        unless item.master_sku.nil?
+          d.suppress_from_searches = true
+          d.master_sku = item.master_sku
+        end
+      end
     end
 
     puts 'Processing design images'
