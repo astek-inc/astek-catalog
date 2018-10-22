@@ -6,7 +6,7 @@
       link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
       link_to('Variants', admin_design_variants_path(@design)),
       link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
-      link_to('Images', admin_variant_variant_images_path(@variant)),
+      link_to('Install Images', admin_variant_variant_install_images_path(@variant)),
       'New Image'
   ].join(' / ').html_safe %>
 <% end %>
@@ -14,17 +14,17 @@
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'col-md-9' do %>
-    <%= form_for [:admin, :variant, @variant_image], html: { multipart: true } do |f| %>
-        <%= field_set_tag nil, 'data-hook': 'variant_image_new' do %>
+    <%= form_for [:admin, :variant, @variant_install_image], html: { multipart: true } do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'variant_install_image_new' do %>
             <%= content_tag :div, class: ['form-group'] do %>
                 <%= f.label :file, 'Image' %> <span class="required">*</span>
                 <%= f.file_field :file, required: true, class: 'form-control' %>
-                <%= f.hidden_field :image_type, value: @variant_image.class.name %>
+                <%= f.hidden_field :image_type, value: @variant_install_image.class.name %>
                 <%= f.hidden_field :owner_id, value: @variant.id %>
             <% end %>
         <% end %>
 
-        <%= form_buttons admin_variant_variant_images_path(@variant) %>
+        <%= form_buttons admin_variant_variant_install_images_path(@variant) %>
     <% end %>
 <% end %>
 

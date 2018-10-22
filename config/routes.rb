@@ -82,7 +82,12 @@ Rails.application.routes.draw do
       resource :tearsheet, only: [:show], controller: :variant_tearsheets do
         post :generate, defaults: { format: 'pdf' }
       end
-      resources :variant_images, only: [:index, :new, :create, :show, :destroy] do
+
+      resources :variant_swatch_images, only: [:index, :new, :create, :show, :destroy] do
+        post :update_row_order, on: :collection
+      end
+
+      resources :variant_install_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
     end

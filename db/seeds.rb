@@ -114,23 +114,6 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       end
     end
 
-    puts 'Processing design images'
-    if item.install_images
-      design_images = item.install_images
-    elsif item.design_images
-      design_images = item.design_images
-    end
-
-    if design_images
-      design_images.split(',').map { |i| i.strip }.each do |url|
-        DesignImage.create!({
-          remote_file_url: url,
-          type: 'DesignImage',
-          owner_id: design.id
-        })
-      end
-    end
-
     puts 'Processing design properties'
     properties.each do |p|
       if ip = item.send(p.name)
@@ -154,15 +137,33 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     })
 
     item.images.split(',').map { |i| i.strip }.each do |url|
-      puts 'Processing variant images: '+url
-      VariantImage.create!({
+      puts 'Processing variant image: '+url
+      VariantSwatchImage.create!({
         remote_file_url: url,
-        type: 'VariantImage',
+        type: 'VariantSwatchImage',
         owner_id: variant.id
       })
     end
 
+    if item.install_images
+      install_images = item.install_images
+    elsif item.design_images
+      install_images = item.design_images
+    end
+
+    if install_images
+      install_images.split(',').map { |i| i.strip }.each do |url|
+        puts 'Processing install image: '+url
+        VariantInstallImage.create!({
+            remote_file_url: url,
+            type: 'VariantInstallImage',
+            owner_id: variant.id
+        })
+      end
+    end
+
     if collection.product_category.name == 'Digital'
+      puts 'Generating tearsheet'
       variant.generate_tearsheet
     end
 

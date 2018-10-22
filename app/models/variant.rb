@@ -16,7 +16,8 @@ class Variant < ActiveRecord::Base
   belongs_to :substrate
   belongs_to :backing_type
 
-  has_many :variant_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_many :variant_swatch_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_many :variant_install_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
   has_and_belongs_to_many :product_types
   has_and_belongs_to_many :colors
@@ -70,9 +71,9 @@ class Variant < ActiveRecord::Base
     self.design.collection.product_category.name
   end
 
-  def image_url position
-    if self.variant_images
-      self.variant_images[position].file.url
+  def swatch_image_url position
+    if self.variant_swatch_images
+      self.variant_swatch_images[position].file.url
     end
   end
 
@@ -89,7 +90,7 @@ class Variant < ActiveRecord::Base
     filename = Rails.root.join('tmp', self.sku+'.pdf')
 
     logo_img = open('https://s3.amazonaws.com/astek/Logo/ASTEK_LOGO_BLACK.png')
-    variant_img = open(self.variant_images.first.file.large.url)
+    variant_img = open(self.variant_swatch_images.first.file.large.url)
 
     Prawn::Document.new(margin: [20, 50]) do |pdf|
 

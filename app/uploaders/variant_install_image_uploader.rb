@@ -1,4 +1,4 @@
-class VariantImageUploader < ImageUploader
+class VariantInstallImageUploader < ImageUploader
 
   # Create different versions of your uploaded files:
   version :large do

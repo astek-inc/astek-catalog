@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20181016225555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "pg_stat_statements"
 
   create_table "backing_types", force: :cascade do |t|
     t.string   "name"

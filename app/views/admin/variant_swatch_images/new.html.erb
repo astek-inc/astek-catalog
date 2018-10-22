@@ -1,0 +1,33 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      link_to('Designs', admin_collection_designs_path(@collection)),
+      link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
+      link_to('Variants', admin_design_variants_path(@design)),
+      link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
+      link_to('Swatch Images', admin_variant_variant_swatch_images_path(@variant)),
+      'New Image'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, :variant, @variant_swatch_image], html: { multipart: true } do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'variant_swatch_image_new' do %>
+            <%= content_tag :div, class: ['form-group'] do %>
+                <%= f.label :file, 'Image' %> <span class="required">*</span>
+                <%= f.file_field :file, required: true, class: 'form-control' %>
+                <%= f.hidden_field :image_type, value: @variant_swatch_image.class.name %>
+                <%= f.hidden_field :owner_id, value: @variant.id %>
+            <% end %>
+        <% end %>
+
+        <%= form_buttons admin_variant_variant_swatch_images_path(@variant) %>
+    <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/variants/subnav', locals: { current: 'images' } %>
+<% end %>

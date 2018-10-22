@@ -6,15 +6,15 @@
       link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
       link_to('Variants', admin_design_variants_path(@design)),
       link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
-      link_to('Images', admin_variant_variant_images_path(@variant)),
-      @variant_image.file_identifier
+      link_to('Swatch Images', admin_variant_variant_swatch_images_path(@variant)),
+      @variant_swatch_image.file_identifier
     ].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'col-md-9' do %>
-  <%= image_tag(@variant_image.file.url(:large)) %>
+  <%= image_tag(@variant_swatch_image.file.url(:large)) %>
 <% end %>
 
 <%= content_tag :div, class: 'col-md-3' do %>

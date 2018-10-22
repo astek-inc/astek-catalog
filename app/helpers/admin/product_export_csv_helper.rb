@@ -159,7 +159,8 @@ module Admin
           csv << header
         end
 
-        total_image_count = design.design_images.count + design.variants.count
+        total_image_count = design.variants.count + design.variants.select { |v| v.variant_install_images.any? }.count
+
         @custom_image_index = total_image_count
         # puts 'custom image index: '+@custom_image_index.to_s
 
@@ -193,6 +194,8 @@ module Admin
               csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
             end
           end
+
+
         end
 
         if website == 'astekhome.com'
@@ -209,11 +212,13 @@ module Admin
           end
         end
 
-        if design.design_images
-          design.design_images.each do |image|
-            @image_index += 1
-            csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 21.times.map { nil }
+        design.variants.each do |variant|
+          if variant.variant_install_images
+            variant.variant_install_images.each do |image|
+              @image_index += 1
+              csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 21.times.map { nil }
 
+            end
           end
         end
       end
@@ -281,7 +286,7 @@ module Admin
         if show_image
           case variant_type
           when 'full'
-              variant.image_url 0
+              variant.swatch_image_url 0
           when 'custom'
               'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
           else
@@ -439,7 +444,7 @@ module Admin
         # if show_image
           case variant_type
           when 'full','sample'
-            variant.image_url 0
+            variant.swatch_image_url 0
           when 'custom','custom_sample'
             'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
           else
