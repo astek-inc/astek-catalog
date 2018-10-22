@@ -5,7 +5,6 @@ class CreateSubstrates < ActiveRecord::Migration
       t.text :description
       t.text :keywords
       t.integer :backing_type_id
-      t.integer :row_order, index: true
       t.timestamps null: false
       t.timestamp :deleted_at, index: true
     end
