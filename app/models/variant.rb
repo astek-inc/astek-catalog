@@ -92,6 +92,8 @@ class Variant < ActiveRecord::Base
     logo_img = open('https://s3.amazonaws.com/astek/Logo/ASTEK_LOGO_BLACK.png')
     variant_img = open(self.variant_swatch_images.first.file.large.url)
 
+    Prawn::Font::AFM.hide_m17n_warning = true
+
     Prawn::Document.new(margin: [20, 50]) do |pdf|
 
       pdf.line_width = 1.5
@@ -120,56 +122,11 @@ class Variant < ActiveRecord::Base
       pdf.move_down 12
       pdf.stroke_horizontal_rule
 
-      pdf.move_down 15
-      pdf.indent(10) do
-
-        if self.substrate
-          pdf.text 'MATERIAL: '+self.substrate.name
-          pdf.move_down 6
-        end
-
-        if match_type = self.design.property('repeat_match_type')
-          pdf.text 'MATCH TYPE: '+match_type
-          pdf.move_down 6
-        end
-
-        if printed_width = self.design.property('printed_width_inches')
-          pdf.text 'PRINTED WIDTH: '+printed_width+' inches'
-          pdf.move_down 6
-        end
-
-        if repeat_height = self.design.property('motif_height_inches')
-          pdf.text 'VERTICAL REPEAT: '+repeat_height+' inches'
-          pdf.move_down 6
-        end
-
-        if repeat_width = self.design.property('motif_width_inches')
-          pdf.text 'MOTIF WIDTH: '+repeat_width+' inches'
-          pdf.move_down 6
-        end
-
-        if mural_width = self.design.property('mural_width_inches')
-          pdf.text 'MURAL WIDTH: '+mural_width+' inches'
-          pdf.move_down 6
-        end
-
-        if mural_height = self.design.property('mural_height_inches')
-          pdf.text 'MURAL HEIGHT: '+mural_height+' inches'
-          pdf.move_down 6
-        end
-
-        if self.substrate && self.substrate.backing_type
-          pdf.text 'BACKING/TYPE: '+self.substrate.backing_type.name
-          pdf.move_down 6
-        end
-
-        if fire_rating = self.design.property('fire_rating')
-          pdf.text 'FIRE RATING: '+fire_rating
-        end
-        
-      end
-
       pdf.move_down 12
+      pdf.table(
+          self.product_info_to_columns, cell_style: { borders: [] }, column_widths: 250
+      )
+
       pdf.stroke_horizontal_rule
       pdf.move_down 12
 
@@ -194,18 +151,11 @@ class Variant < ActiveRecord::Base
 
       pdf.fill_color '000000'
 
-      # pdf.move_down 12
-      #
       pdf.font_size 10
-
       pdf.bounding_box([0, 20], width: 500, height: 30) do
         pdf.text '15924 Arminta St., Van Nuys CA 91406', align: :center
         pdf.text '818.901.9876  astek.com  info@astek.com  @astekinc', align: :center
       end
-
-      # pdf.text Time.now.to_s
-
-
 
       pdf.render_file filename
 
@@ -214,6 +164,40 @@ class Variant < ActiveRecord::Base
     file = File.new(filename)
     self.tearsheet = file
     self.save!
+  end
+
+  def product_info_to_columns
+
+    info = []
+    if self.substrate
+      info << 'MATERIAL: '+self.substrate.name
+    end
+
+    self.design.design_properties.each do |dp|
+      info << "#{dp.property.presentation.upcase}: #{format_property_value(dp)}"
+    end
+
+    mid = info.count / 2.ceil
+    first_col = info[0..mid - 1]
+    second_col = info[mid + 1..info.count - 1]
+
+    data = []
+    (0..mid).each do |i|
+      data << [first_col[i], second_col[i]]
+    end
+
+    data
+  end
+
+  def format_property_value dp
+    if matches = dp.property.name.match(/_(?<unit>inches|yards|meters)\Z/)
+      "#{dp.value} #{matches[:unit]}"
+    elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Untrimmed].include?(dp.value)
+      # Value for margin trim can be numeric, but we display "Untrimmed"
+      'Untrimmed'
+    else
+      dp.value
+    end
   end
 
 end
