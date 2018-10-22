@@ -133,27 +133,27 @@ class Variant < ActiveRecord::Base
         end
 
         if printed_width = self.design.property('printed_width_inches')
-          pdf.text 'PRINTED WIDTH: '+printed_width+' INCHES'
+          pdf.text 'PRINTED WIDTH: '+printed_width+' inches'
           pdf.move_down 6
         end
 
         if repeat_height = self.design.property('motif_height_inches')
-          pdf.text 'VERTICAL REPEAT: '+repeat_height+' INCHES'
+          pdf.text 'VERTICAL REPEAT: '+repeat_height+' inches'
           pdf.move_down 6
         end
 
         if repeat_width = self.design.property('motif_width_inches')
-          pdf.text 'MOTIF WIDTH: '+repeat_width+' INCHES'
+          pdf.text 'MOTIF WIDTH: '+repeat_width+' inches'
           pdf.move_down 6
         end
 
         if mural_width = self.design.property('mural_width_inches')
-          pdf.text 'MURAL WIDTH: '+mural_width+' INCHES'
+          pdf.text 'MURAL WIDTH: '+mural_width+' inches'
           pdf.move_down 6
         end
 
         if mural_height = self.design.property('mural_height_inches')
-          pdf.text 'MURAL HEIGHT: '+mural_height+' INCHES'
+          pdf.text 'MURAL HEIGHT: '+mural_height+' inches'
           pdf.move_down 6
         end
 
