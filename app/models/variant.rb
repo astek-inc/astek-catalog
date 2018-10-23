@@ -170,7 +170,7 @@ class Variant < ActiveRecord::Base
 
     info = []
     if self.substrate
-      info << 'MATERIAL: '+self.substrate.name
+      info << 'MATERIAL: '+self.format_substrate_name
     end
 
     self.design.design_properties.each do |dp|
@@ -187,6 +187,29 @@ class Variant < ActiveRecord::Base
     end
 
     data
+  end
+
+  def format_substrate_name
+
+    name = self.substrate.name
+
+    category_names = self.substrate.substrate_categories.map { |c| c.name }
+    paren_items = []
+
+    if category_names.include? 'Type II'
+      paren_items << 'Type II'
+    end
+
+    # if category_names.include? 'Vinyl'
+    #   paren_items << 'Commercial Vinyl'
+    # end
+
+    if paren_items.any?
+      name += ' (' + paren_items.join(' ') + ')'
+    end
+
+    name
+
   end
 
   def format_property_value dp

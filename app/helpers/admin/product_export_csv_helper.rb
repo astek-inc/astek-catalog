@@ -515,7 +515,7 @@ module Admin
       if variant.substrate
         formatted += '<div>
           <h5>Substrate</h5>
-          <p>'+variant.substrate.name+' (Type II)</p>
+          <p>'+variant.format_substrate_name+'</p>
         </div>'
       end
 
