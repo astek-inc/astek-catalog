@@ -12,7 +12,7 @@ module Admin
     end
 
     def create
-      @variant_install_image = VariantInstallImage.new(variant_image_params)
+      @variant_install_image = VariantInstallImage.new(variant_install_image_params)
       if @variant_install_image.save!
         flash[:notice] = 'Image added.'
         redirect_to(action: 'index')
