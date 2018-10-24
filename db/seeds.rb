@@ -137,7 +137,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     })
 
     item.images.split(',').map { |i| i.strip }.each do |url|
-      puts 'Processing variant image: '+url
+      puts 'Processing swatch image: '+url
       VariantSwatchImage.create!({
         remote_file_url: url,
         type: 'VariantSwatchImage',
