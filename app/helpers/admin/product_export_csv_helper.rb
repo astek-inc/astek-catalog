@@ -566,7 +566,9 @@ module Admin
     def format_tearsheet_links variant
       out = '<!-- pdf -->'
       variant.design.variants.each do |v|
-        out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
+        if v.tearsheet.file
+          out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
+        end
       end
       out
     end
