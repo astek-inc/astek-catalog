@@ -512,12 +512,14 @@ module Admin
           <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
         </div>'
 
-      # if variant.substrate
-      #   formatted += '<div>
-      #     <h5>Substrate</h5>
-      #     <p>'+variant.format_substrate_name+'</p>
-      #   </div>'
-      # end
+      if variant.substrate
+        formatted += '<div>
+          <h5>Substrate</h5>
+          <p>Type II</p>
+        </div>'
+      end
+
+      # '+variant.format_substrate_name+'
 
       variant.design.design_properties.each do |dp|
         formatted += '<div>
