@@ -298,11 +298,18 @@ module Admin
 
       elsif attr == 'image_alt_text'
         if show_image
-          if variant.design.digital?
-            'Digital wallcovering image'
+          case variant_type
+          when 'full'
+            if variant.design.digital?
+              'Digital wallcovering image'
+            else
+              'In-stock wallcovering image'
+            end
           else
-            'In-stock wallcovering image'
+            nil
           end
+        else
+          nil
         end
 
       elsif attr == 'image_position'
