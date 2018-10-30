@@ -117,7 +117,7 @@ module Admin
           google_shopping_age_group
           google_shopping_gender
           google_shopping_google_product_category
-          name
+          seo_title
           description
           google_shopping_adwords_grouping
           google_shopping_adwords_labels
@@ -460,6 +460,9 @@ module Admin
         # else
         #   nil
         # end
+
+      elsif attr == 'seo_title'
+        variant.design.name
 
       elsif attr == 'collection'
         case domain
