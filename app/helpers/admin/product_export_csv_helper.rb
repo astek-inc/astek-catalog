@@ -507,10 +507,12 @@ module Admin
     def format_business_properties variant
       formatted = '<div class="description__meta">'
 
-      formatted += '<div>
-          <h5>Collection</h5>
-          <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
-        </div>'
+      unless variant.design.collection.suppress_from_display
+        formatted += '<div>
+            <h5>Collection</h5>
+            <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+          </div>'
+      end
 
       if variant.substrate
         formatted += '<div>
@@ -535,10 +537,12 @@ module Admin
     def format_home_properties variant
       formatted = '<div class="description__meta">'
 
-      formatted += '<div>
-          <h6>Collection</h6>
-          <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
-        </div>'
+      unless variant.design.collection.suppress_from_display
+        formatted += '<div>
+            <h6>Collection</h6>
+            <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+          </div>'
+      end
 
       variant.design.design_properties.each do |dp|
         formatted += '<div>
