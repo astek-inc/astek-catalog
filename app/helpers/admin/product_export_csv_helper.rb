@@ -249,16 +249,7 @@ module Admin
         end
 
       elsif attr == 'option_1_name'
-        case domain
-        when 'astek.com'
-          'Colorway'
-        when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way'
-            'Colorway'
-          else
-            nil
-          end
-        end
+        'Colorway'
 
       elsif attr == 'option_1_value'
         case domain
@@ -270,16 +261,16 @@ module Admin
             variant.name
           end
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way'
+          # if variant.variant_type.name == 'Color Way'
             case variant_type
             when 'custom', 'custom_sample'
               'Custom'
             else
               variant.name
             end
-          else
-            nil
-          end
+          # else
+          #   nil
+          # end
         end
 
       elsif attr == 'image_src'
