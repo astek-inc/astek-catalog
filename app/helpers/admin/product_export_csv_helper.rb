@@ -523,6 +523,13 @@ module Admin
       end
       # '+variant.format_substrate_name+'
 
+      if variant.backing_type
+        formatted += '<div>
+          <h5>Backing</h5>
+          <p>'+variant.backing_type.name+'</p>
+        </div>'
+      end
+
       formatted += '<div>
           <h5>Sold By</h5>
           <p>'+variant.design.sale_unit.name+'</p>
