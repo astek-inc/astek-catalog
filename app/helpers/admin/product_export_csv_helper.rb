@@ -521,10 +521,15 @@ module Admin
           <p>Type II</p>
         </div>'
       end
-
       # '+variant.format_substrate_name+'
 
+      formatted += '<div>
+          <h5>Sold By</h5>
+          <p>'+variant.design.sale_unit.name+'</p>
+        </div>'
+
       variant.design.design_properties.each do |dp|
+        next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
         formatted += '<div>
           <h5>'+dp.property.presentation+'</h5>
           <p>'+format_property_value(dp)+'</p>
