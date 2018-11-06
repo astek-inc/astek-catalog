@@ -28,6 +28,19 @@ class Design < ActiveRecord::Base
     self.design_properties.joins(:property).find_by(properties: { name: name }).try(:value)
   end
 
+  def set_property name, value
+      property = Property.find_by(name: name)
+      design_property = DesignProperty.where(design: self, property: property).first_or_initialize
+      design_property.value = value
+      design_property.save!
+  end
+
+  def delete_property name
+    if dp = self.design_properties.joins(:property).find_by(properties: { name: name })
+      dp.destroy
+    end
+  end
+
   def digital?
     self.collection.product_category.name == 'Digital'
   end
