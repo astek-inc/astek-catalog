@@ -251,6 +251,19 @@ module Admin
       elsif attr == 'option_1_name'
         'Colorway'
 
+        # case domain
+        # when 'astek.com'
+        #   'Colorway'
+        # when 'astekhome.com'
+        #   if variant.variant_type.name == 'Color Way'
+        #    'Colorway'
+        #   else
+        #     nil
+        #   end
+        # else
+        #   nil
+        # end
+
       elsif attr == 'option_1_value'
         case domain
         when 'astek.com'
