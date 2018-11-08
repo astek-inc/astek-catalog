@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181016225555) do
+ActiveRecord::Schema.define(version: 20181108184527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
 
   create_table "backing_types", force: :cascade do |t|
     t.string   "name"
@@ -103,6 +104,7 @@ ActiveRecord::Schema.define(version: 20181016225555) do
     t.datetime "deleted_at"
     t.integer  "row_order"
     t.string   "master_sku"
+    t.string   "price_code"
   end
 
   add_index "designs", ["deleted_at"], name: "index_designs_on_deleted_at", using: :btree
