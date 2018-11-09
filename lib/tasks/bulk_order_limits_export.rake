@@ -1,15 +1,13 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
-include Admin::ProductDataCsvGenerator
+require "#{Rails.root}/lib/admin/order_limits_csv_generator.rb"
+include Admin::OrderLimitsCsvGenerator
 
 namespace :db do
-  desc 'Export all products that are flagged to show on a given domain'
-  task :bulk_product_export => :environment do
+  desc 'Export all order limits'
+  task :bulk_order_limits_export => :environment do
 
-    if !domain = ENV['DOMAIN']
-      raise 'Domain not specified'
-    end
+    domain = 'astekhome.com'
 
-    puts 'Getting product information to export for '+domain
+    puts 'Getting order limits information to export for '+domain
 
     website = Website.find_by!(domain: domain)
     collections = Collection.includes(:websites).where(websites: { domain: domain })
@@ -19,11 +17,11 @@ namespace :db do
       puts 'Getting data for '+collection.name
 
       collection.designs.each do |design|
-        csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
+        csv_data += Admin::OrderLimitsCsvGenerator.order_limits_csv design
       end
     end
 
-    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-bulk-product-export.csv"
+    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-bulk-order-limits-export.csv"
 
     storage = Fog::Storage.new(
         provider: 'AWS',

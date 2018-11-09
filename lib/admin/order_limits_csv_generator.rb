@@ -1,9 +1,9 @@
 module Admin
-  module OrderLimitsExportCsvHelper
+  module OrderLimitsCsvGenerator
 
     require 'csv'
 
-    def variants_to_csv design
+    def order_limits_csv design
       CSV.generate do |csv|
         design.variants.each do |variant|
           csv << [variant.sku + '-s', 1, 1]

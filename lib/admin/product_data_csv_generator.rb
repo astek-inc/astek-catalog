@@ -1,5 +1,5 @@
 module Admin
-  module ProductExportCsvHelper
+  module ProductDataCsvGenerator
 
     require 'csv'
 
@@ -33,7 +33,7 @@ module Admin
         variant_tax_code: ''
     }
 
-    def variants_to_csv design, website, include_header=true
+    def product_data_csv design, website, include_header=true
       header = [
           'Handle',
           'Title',

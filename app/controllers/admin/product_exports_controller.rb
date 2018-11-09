@@ -1,7 +1,9 @@
+require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+
 module Admin
   class ProductExportsController < Admin::BaseController
 
-    include ProductExportCsvHelper
+    include ProductDataCsvGenerator
 
     def index
       @websites = Website.all
@@ -14,7 +16,7 @@ module Admin
 
       csv_data = ''
       collection.designs.each do |design|
-        csv_data += variants_to_csv design, website.domain, csv_data.empty?
+        csv_data += product_data_csv design, website.domain, csv_data.empty?
       end
 
       respond_to do |format|
