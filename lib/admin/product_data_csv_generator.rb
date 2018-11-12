@@ -469,7 +469,9 @@ module Admin
             variant.design.collection.name
           end
         when 'astekhome.com'
-          nil
+          unless variant.design.collection.suppress_from_display
+            variant.design.collection.name
+          end
         end
         
       else
@@ -583,12 +585,12 @@ module Admin
     def format_home_properties variant
       formatted = '<div class="description__meta">'
 
-      # unless variant.design.collection.suppress_from_display
-      #   formatted += '<div>
-      #       <h6>Collection</h6>
-      #       <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
-      #     </div>'
-      # end
+      unless variant.design.collection.suppress_from_display
+        formatted += '<div>
+            <h6>Collection</h6>
+            <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+          </div>'
+      end
 
       variant.design.design_properties.each do |dp|
         formatted += '<div>
