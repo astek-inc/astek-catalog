@@ -24,7 +24,7 @@
                   <th>Name</th>
                   <th>SKU</th>
                   <th>Description</th>
-                  <!--<th>Image</th>-->
+                  <th>Status</th>
                   <th class="actions"></th>
                 </tr>
                 </thead>
@@ -38,7 +38,7 @@
                       <td><%= design.name %></td>
                       <td><%= design.sku %></td>
                       <td><%= truncate(sanitize(design.description), length: 140) %></td>
-                      <!--<td></td>-->
+                      <td><span class="label label-<%= design.available? ? 'success' : 'danger' %>"><%= design.available? ? 'available' : 'discontinued' %></span></td>
                       <td class="actions">
                         <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                           <%= edit_button edit_admin_collection_design_path @collection, design %>

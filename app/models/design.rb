@@ -7,6 +7,8 @@ class Design < ActiveRecord::Base
 
   acts_as_paranoid
 
+  scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
+
   belongs_to :collection
   belongs_to :sale_unit
 
@@ -39,6 +41,10 @@ class Design < ActiveRecord::Base
     if dp = self.design_properties.joins(:property).find_by(properties: { name: name })
       dp.destroy
     end
+  end
+
+  def available?
+    self.expires_on.nil? || self.expires_on > Time.now
   end
 
   def digital?

@@ -18,7 +18,7 @@ namespace :db do
     collections.each_with_index do |collection, i|
       puts 'Getting data for '+collection.name
 
-      collection.designs.each do |design|
+      collection.designs.available.each do |design|
         csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
       end
     end

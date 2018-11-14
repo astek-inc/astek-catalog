@@ -15,7 +15,7 @@ module Admin
 
 
       csv_data = ''
-      collection.designs.each do |design|
+      collection.designs.available.each do |design|
         csv_data += product_data_csv design, website.domain, csv_data.empty?
       end
 
