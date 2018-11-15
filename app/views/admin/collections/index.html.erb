@@ -12,38 +12,40 @@
 
   <% if @collections.any? %>
 
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Websites</th>
-            <th class="actions"></th>
-          </tr>
-          </thead>
+    <%= paginate @collections %>
 
-          <tbody>
-          <% @collections.each do |collection| %>
-              <tr class="product_property fields" data-hook="collection">
-                <td><%= collection.name %></td>
-                <td><%= collection.product_category.name %></td>
-                <td><%= truncate(sanitize(collection.description), length: 140) %></td>
-                <td><%= collection.websites.map { |w| w.name }.join(', ') %></td>
-                <td class="actions">
-                  <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                    <%= edit_button edit_admin_collection_path collection %>
-                    <%= delete_button admin_collection_path collection %>
-                  </div>
-                </td>
-              </tr>
-          <% end %>
-          </tbody>
-        </table>
-      </div>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Websites</th>
+          <th class="actions"></th>
+        </tr>
+        </thead>
 
-      <%= paginate @collections %>
+        <tbody>
+        <% @collections.each do |collection| %>
+            <tr class="product_property fields" data-hook="collection">
+              <td><%= collection.name %></td>
+              <td><%= collection.product_category.name %></td>
+              <td><%= truncate(sanitize(collection.description), length: 140) %></td>
+              <td><%= collection.websites.map { |w| w.name }.join(', ') %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_collection_path collection %>
+                  <%= delete_button admin_collection_path collection %>
+                </div>
+              </td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= paginate @collections %>
 
   <% else %>
     <p>No collections found. <%= link_to 'Create one.', new_admin_collection_path %></p>
