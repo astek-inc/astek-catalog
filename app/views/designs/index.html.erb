@@ -1,0 +1,6 @@
+<% @designs.each do |design| %>
+  <%#= debug design %>
+  <%= image_tag(design.variants.first.variant_swatch_images.first.file.url(:small)) %>
+  <%= link_to(design.name, design_path(design)) %>
+  <br>
+<% end %>
