@@ -1,7 +1,7 @@
 class DesignsController < BaseController
 
   def index
-    @designs = Design.all
+    @designs = Design.rank(:row_order).page params[:page]
   end
 
   def show

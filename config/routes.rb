@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     get '(page/:page)', action: :index, on: :collection, as: ''
   end
 
-  resources :designs, only: [:index, :show]
+  resources :designs, only: [:index, :show], concerns: :paginatable
 
   namespace :admin do
 
