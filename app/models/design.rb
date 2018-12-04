@@ -103,8 +103,8 @@ class Design < ActiveRecord::Base
   def calculator_tag
     case sale_unit.name
     when 'Roll'
-      roll_width = self.property('roll_width')
-      roll_length = self.property 'roll_length'
+      roll_width = self.property('roll_width_inches')
+      roll_length = self.property('roll_length_yards')
 
       case roll_width
       when '18'
@@ -160,8 +160,8 @@ class Design < ActiveRecord::Base
       end
 
     when 'Yard'
-      roll_width = self.property('roll_width')
-      roll_length = self.property 'roll_length'
+      roll_width = self.property('roll_width_inches')
+      roll_length = self.property('roll_length_yards')
 
       case roll_width
       when '36'
@@ -199,8 +199,8 @@ class Design < ActiveRecord::Base
       end
 
     when 'Meter'
-      roll_width = self.property('roll_width')
-      # roll_length = self.property 'roll_length'
+      roll_width = self.property('roll_width_inches')
+      # roll_length = self.property 'roll_length_meters'
 
       case roll_width
       when '39'
