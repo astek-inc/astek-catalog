@@ -26,6 +26,10 @@ class Design < ActiveRecord::Base
 
   accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
 
+  def install_images
+    self.variants.map { |v| v.variant_install_images.first.nil? ? nil : { variant_id: v.id, install_image: v.variant_install_images.first } }.compact
+  end
+
   def property name
     self.design_properties.joins(:property).find_by(properties: { name: name }).try(:value)
   end
@@ -49,6 +53,10 @@ class Design < ActiveRecord::Base
 
   def digital?
     self.collection.product_category.name == 'Digital'
+  end
+
+  def has_colorways?
+    self.variants.map { |v| v.variant_type.name }.include? 'Color Way'
   end
 
   def tags domain

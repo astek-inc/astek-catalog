@@ -165,6 +165,16 @@ module Admin
         # puts 'custom image index: '+@custom_image_index.to_s
 
         @first_row = true
+
+        # On astekhome.com, if a design has colorways, we don't show the install images separately.
+        # Instead, we mix a random install image in with the swatch images
+        @random_install_image = nil
+        if website == 'astekhome.com' && design.has_colorways?
+          if install_images = design.install_images
+            @random_install_image = install_images.sample
+          end
+        end
+
         design.variants.each_with_index do |variant, i|
           @image_index = i
           first_variant_row = true
@@ -194,8 +204,6 @@ module Admin
               csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
             end
           end
-
-
         end
 
         if website == 'astekhome.com'
@@ -212,12 +220,15 @@ module Admin
           end
         end
 
-        design.variants.each do |variant|
-          if variant.variant_install_images
-            variant.variant_install_images.each do |image|
-              @image_index += 1
-              csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 21.times.map { nil }
+        # On astekhome.com, if a design has colorways, we don't show the install images separately, we mix a random install image in with the swatch images
+        if website == 'astek.com' || (website == 'astekhome.com' && !design.has_colorways?)
+          design.variants.each do |variant|
+            if variant.variant_install_images
+              variant.variant_install_images.each do |image|
+                @image_index += 1
+                csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 21.times.map { nil }
 
+              end
             end
           end
         end
@@ -281,7 +292,11 @@ module Admin
         if show_image
           case variant_type
           when 'full'
+            if @random_install_image && @random_install_image[:variant_id] == variant.id
+              @random_install_image[:install_image].file.url
+            else
               variant.swatch_image_url 0
+            end
           when 'custom'
               'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
           else
@@ -449,7 +464,11 @@ module Admin
         # if show_image
           case variant_type
           when 'full','sample'
-            variant.swatch_image_url 0
+            if @random_install_image && @random_install_image[:variant_id] == variant.id
+              @random_install_image[:install_image].file.url
+            else
+              variant.swatch_image_url 0
+            end
           when 'custom','custom_sample'
             'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
           else
