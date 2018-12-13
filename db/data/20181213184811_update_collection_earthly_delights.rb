@@ -1,4 +1,4 @@
-class UpdateCollectionSheerIntuition < ActiveRecord::Migration
+class UpdateCollectionEarthlyDelights < ActiveRecord::Migration
 
   DATA_FILE = '2018-12-13_earthly_delights_update.csv'
 
