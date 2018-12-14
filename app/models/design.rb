@@ -165,6 +165,13 @@ class Design < ActiveRecord::Base
           # This is by meter, it needs a separate sale unit
           'sold-by__RollK'
         end
+
+      when '40.5'
+        case roll_length
+        when '7.5'
+          'sold-by__RollL'
+        end
+
       end
 
     when 'Yard'
