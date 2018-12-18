@@ -150,7 +150,11 @@ class Design < ActiveRecord::Base
         when '11'
           'sold-by__RollH'
         when '12'
-          'sold-by__RollI'
+          if self.minimum_quantity == 3
+            'sold-by__RollIMin3'
+          else
+            'sold-by__RollI'
+          end
         end
 
       when '39'
