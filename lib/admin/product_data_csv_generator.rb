@@ -297,8 +297,8 @@ module Admin
             else
               variant.swatch_image_url 0
             end
-          when 'custom'
-              'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
+          # when 'custom'
+          #     'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
           else
             nil
           end
@@ -324,7 +324,7 @@ module Admin
 
       elsif attr == 'image_position'
         case variant_type
-        when 'sample', 'custom_sample'
+        when 'sample', 'custom', 'custom_sample'
           nil
         else
           if show_image
@@ -469,8 +469,8 @@ module Admin
             else
               variant.swatch_image_url 0
             end
-          when 'custom','custom_sample'
-            'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
+          # when 'custom','custom_sample'
+          #   'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
           else
             nil
           end
