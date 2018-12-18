@@ -139,8 +139,8 @@ class Design < ActiveRecord::Base
 
       when '36'
         case roll_length
-        when '16.3'
-          'sold-by__RollF'
+        when '6'
+          'sold-by__RollM'
         when '8'
           if self.minimum_quantity == 3
             'sold-by__RollGMin3'
@@ -155,6 +155,8 @@ class Design < ActiveRecord::Base
           else
             'sold-by__RollI'
           end
+        when '16.3'
+          'sold-by__RollF'
         end
 
       when '39'
