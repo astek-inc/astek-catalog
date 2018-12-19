@@ -112,6 +112,10 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
           d.master_sku = item.master_sku
         end
       end
+
+      if item.respond_to? 'price_code'
+        d.price_code = item.price_code.strip
+      end
     end
 
     puts 'Processing design properties'
