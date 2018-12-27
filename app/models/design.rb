@@ -115,9 +115,13 @@ class Design < ActiveRecord::Base
       roll_length = self.property('roll_length_yards')
 
       case roll_width
-      when '18'
+      when '17.72'
         case roll_length
-        when '16.3'
+        when '5.47'
+          'sold-by__RollO'
+        when '10.94'
+          'sold-by__RollP'
+        when '16.4'
           'sold-by__RollA'
         end
 
@@ -125,6 +129,12 @@ class Design < ActiveRecord::Base
         case roll_length
         when '11'
           'sold-by__RollB'
+        end
+
+      when '26.57'
+        case roll_length
+        when '10.94'
+          'sold-by__RollQ'
         end
 
       when '27'
@@ -141,6 +151,14 @@ class Design < ActiveRecord::Base
         case roll_length
         when '15'
           'sold-by__RollN'
+        end
+
+      when '35.43'
+        case roll_length
+        when '10.94'
+          'sold-by__RollR'
+        when '16.4'
+          'sold-by__RollF'
         end
 
       when '36'
@@ -161,8 +179,6 @@ class Design < ActiveRecord::Base
           else
             'sold-by__RollI'
           end
-        when '16.3'
-          'sold-by__RollF'
         end
 
       when '39'
