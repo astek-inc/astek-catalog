@@ -49,11 +49,9 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     variant_type = VariantType.find_by!({ name: item.variant_type.strip })
     colors = Color.where(name: item.color.split(',').map { |c| c.strip }.reject { |c| c.empty? }) unless item.color.nil?
 
-    if item.substrate
-      substrate = Substrate.find_by(name: item.substrate.strip)
+    if item.substrate && substrate = Substrate.find_by(name: item.substrate.strip)
       backing = nil
-    elsif item.backing
-      backing_type = BackingType.find_by(name: item.backing.strip)
+    elsif item.backing && backing_type = BackingType.find_by(name: item.backing.strip)
       substrate = nil
     else
       raise 'Invalid or missing substrate/backing information'
