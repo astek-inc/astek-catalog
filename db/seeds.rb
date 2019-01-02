@@ -50,7 +50,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     colors = Color.where(name: item.color.split(',').map { |c| c.strip }.reject { |c| c.empty? }) unless item.color.nil?
 
     if item.substrate && substrate = Substrate.find_by(name: item.substrate.strip)
-      backing = nil
+      backing_type = nil
     elsif item.backing && backing_type = BackingType.find_by(name: item.backing.strip)
       substrate = nil
     else
