@@ -3,7 +3,7 @@ include Admin::ProductDataCsvGenerator
 
 namespace :db do
   desc 'Export a collection of products that are flagged to show on a given domain'
-  task :product_export => :environment do
+  task :collection_export => :environment do
 
     if !domain = ENV['DOMAIN']
       raise 'Domain not specified'
