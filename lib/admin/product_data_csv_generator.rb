@@ -622,7 +622,7 @@ module Admin
       if variant.design.minimum_quantity > 1
         formatted += '<div>
           <h6>Minimum quantity</h6>
-          <p>'+variant.design.minimum_quantity.to_s+' '+variant.design.sale_unit.name.pluralize+'</p>
+          <p>'+variant.design.minimum_quantity.to_s+' '+variant.design.sale_unit.name.pluralize.titleize+'</p>
         </div>'
       end
 
