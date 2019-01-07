@@ -255,7 +255,11 @@ class Design < ActiveRecord::Base
       end
 
     when 'Square Foot'
-      'sold-by__CustomA'
+      if self.minimum_quantity > 1
+        'sold-by__CustomAMin'+self.minimum_quantity.to_s
+      else
+        'sold-by__CustomA'
+      end
     end
   end
 
