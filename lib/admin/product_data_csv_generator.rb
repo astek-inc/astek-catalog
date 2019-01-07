@@ -612,6 +612,7 @@ module Admin
       end
 
       variant.design.design_properties.each do |dp|
+        next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
         formatted += '<div>
           <h6>'+dp.property.presentation+'</h6>
           <p>'+format_property_value(dp)+'</p>
@@ -621,7 +622,7 @@ module Admin
       if variant.design.minimum_quantity > 1
         formatted += '<div>
           <h6>Minimum quantity</h6>
-          <p>'+variant.design.minimum_quantity.to_s+'</p>
+          <p>'+variant.design.minimum_quantity.to_s+' '+variant.design.sale_unit.name.pluralize+'</p>
         </div>'
       end
 
