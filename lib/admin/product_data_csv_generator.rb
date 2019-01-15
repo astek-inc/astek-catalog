@@ -604,10 +604,22 @@ module Admin
     def format_home_properties variant
       formatted = '<div class="description__meta">'
 
+      formatted += '<div>
+            <h6>SKU</h6>
+            <p>'+variant.design.sku+'</p>
+          </div>'
+
       unless variant.design.collection.suppress_from_display
         formatted += '<div>
             <h6>Collection</h6>
             <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+          </div>'
+      end
+
+      if variant.design.collection.lead_time
+        formatted += '<div>
+            <h6>Lead Time</h6>
+            <p>'+variant.design.collection.lead_time.name+'</p>
           </div>'
       end
 
