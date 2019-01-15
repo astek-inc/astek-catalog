@@ -206,19 +206,19 @@ module Admin
           end
         end
 
-        if website == 'astekhome.com'
-          if design.collection.user_can_select_material
-            first_custom_row = true
-            MATERIALS.each do |material|
-              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website, material, first_custom_row)) }
-              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website, material, first_custom_row)) }
-              first_custom_row = false
-            end
-          elsif design.digital?
-            csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website)) }
-            csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website)) }
-          end
-        end
+        # if website == 'astekhome.com'
+        #   if design.collection.user_can_select_material
+        #     first_custom_row = true
+        #     MATERIALS.each do |material|
+        #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website, material, first_custom_row)) }
+        #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website, material, first_custom_row)) }
+        #       first_custom_row = false
+        #     end
+        #   elsif design.digital?
+        #     csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website)) }
+        #     csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website)) }
+        #   end
+        # end
 
         # On astekhome.com, if a design has colorways, we don't show the install images separately, we mix a random install image in with the swatch images
         if website == 'astek.com' || (website == 'astekhome.com' && !design.has_colorways?)
@@ -264,7 +264,7 @@ module Admin
         when 'astek.com'
           'Colorway'
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way' || variant.design.digital?
+          if variant.variant_type.name == 'Color Way'
            'Colorway'
           else
             'Size'
@@ -281,7 +281,7 @@ module Admin
             variant.name
           end
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way' || variant.design.digital?
+          if variant.variant_type.name == 'Color Way'
             astek_home_colorway_value variant_type, variant.name
           else
             astek_home_size_value variant_type
@@ -342,7 +342,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way' || variant.design.digital?
+          if variant.variant_type.name == 'Color Way'
             'Size'
           else
             if variant.design.collection.user_can_select_material
@@ -356,7 +356,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way' || variant.design.digital?
+          if variant.variant_type.name == 'Color Way'
             astek_home_size_value variant_type
           else
             astek_home_material_value material
@@ -368,7 +368,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.collection.user_can_select_material
+          if (variant.variant_type.name == 'Color Way') && variant.design.collection.user_can_select_material
             'Material'
           end
         end
@@ -378,7 +378,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.collection.user_can_select_material
+          if (variant.variant_type.name == 'Color Way') && variant.design.collection.user_can_select_material
             astek_home_material_value material
           end
         end
