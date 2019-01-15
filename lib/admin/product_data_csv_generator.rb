@@ -264,7 +264,7 @@ module Admin
         when 'astek.com'
           'Colorway'
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way'
+          if variant.variant_type.name == 'Color Way' || variant.design.digital?
            'Colorway'
           else
             'Size'
@@ -281,7 +281,7 @@ module Admin
             variant.name
           end
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way'
+          if variant.variant_type.name == 'Color Way' || variant.design.digital?
             astek_home_colorway_value variant_type, variant.name
           else
             astek_home_size_value variant_type
@@ -342,7 +342,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way'
+          if variant.variant_type.name == 'Color Way' || variant.design.digital?
             'Size'
           else
             if variant.design.collection.user_can_select_material
@@ -356,7 +356,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if variant.variant_type.name == 'Color Way'
+          if variant.variant_type.name == 'Color Way' || variant.design.digital?
             astek_home_size_value variant_type
           else
             astek_home_material_value material
@@ -368,7 +368,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if (variant.variant_type.name == 'Color Way') && variant.design.collection.user_can_select_material
+          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.collection.user_can_select_material
             'Material'
           end
         end
@@ -378,7 +378,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if (variant.variant_type.name == 'Color Way') && variant.design.collection.user_can_select_material
+          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.collection.user_can_select_material
             astek_home_material_value material
           end
         end
