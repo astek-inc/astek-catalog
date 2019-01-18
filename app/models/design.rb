@@ -182,8 +182,6 @@ class Design < ActiveRecord::Base
         when '12'
           if self.minimum_quantity == 3
             'sold-by__RollIMin3'
-          else
-            'sold-by__RollI'
           end
         end
 
@@ -192,8 +190,6 @@ class Design < ActiveRecord::Base
         when '11'
           if self.minimum_quantity == 3
             'sold-by__RollJMin3'
-          else
-            'sold-by__RollJ'
           end
         when '22.9659'
           # This is by meter, it needs a separate sale unit
@@ -205,45 +201,26 @@ class Design < ActiveRecord::Base
         when '7.5'
           'sold-by__RollL'
         end
-
       end
 
     when 'Yard'
       roll_width = self.property('roll_width_inches')
-      roll_length = self.property('roll_length_yards')
 
       case roll_width
       when '36'
-        case roll_length
-        when '55'
-          if self.minimum_quantity == 4
-            'sold-by__YardAMin4'
-          else
-            'sold-by__YardA'
-          end
+        if self.minimum_quantity == 4
+          'sold-by__YardAMin4'
         end
       when '48'
-        case roll_length
-        when '55'
-          if self.minimum_quantity == 4
-            'sold-by__YardBMin4'
-          else
-            'sold-by__YardB'
-          end
+        if self.minimum_quantity == 4
+          'sold-by__YardBMin4'
         end
       when '54'
-        case roll_length
-        when '10','55'
-          case self.minimum_quantity
-          when 4
-            'sold-by__YardCMin4'
-          when 6
-            'sold-by__YardCMin6'
-          when 10
-            'sold-by__YardCMin10'
-          else
-            'sold-by__YardC'
-          end
+        case self.minimum_quantity
+        when 4
+          'sold-by__YardCMin4'
+        when 10
+          'sold-by__YardDMin10'
         end
       end
 
@@ -261,10 +238,8 @@ class Design < ActiveRecord::Base
       end
 
     when 'Square Foot'
-      if self.minimum_quantity > 1
-        'sold-by__CustomAMin'+self.minimum_quantity.to_s
-      else
-        'sold-by__CustomA'
+      if self.minimum_quantity == 30
+        'sold-by__CustomAMin30'
       end
     end
   end
