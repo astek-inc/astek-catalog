@@ -173,7 +173,7 @@ class Design < ActiveRecord::Base
           'sold-by__RollM'
         when '8'
           if self.minimum_quantity == 3
-            'sold-by__RollGMin3'
+            'sold-by__RollTMin3'
           else
             'sold-by__RollG'
           end
