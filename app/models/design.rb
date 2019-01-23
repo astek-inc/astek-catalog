@@ -115,6 +115,61 @@ class Design < ActiveRecord::Base
       roll_length = self.property('roll_length_yards')
 
       case roll_width
+
+      when '1.25'
+        case roll_length
+        when '11'
+          'sold-by__RollAG'
+        end
+
+      when '1.625'
+        case roll_length
+        when '11'
+          'sold-by__RollX'
+        end
+
+      when '2.75'
+        case roll_length
+        when '11'
+          'sold-by__RollW'
+        end
+
+      when '10.5'
+        case roll_length
+        when '11'
+          'sold-by__RollAD'
+        end
+
+      when '10.625'
+        case roll_length
+        when '11'
+          'sold-by__RollAF'
+        end
+
+      when '10.8125'
+        case roll_length
+        when '11'
+          'sold-by__RollAJ'
+        end
+
+      when '11'
+        case roll_length
+        when '11'
+          'sold-by__RollAE'
+        end
+
+      when '11.0625'
+        case roll_length
+        when '11'
+          'sold-by__RollAC'
+        end
+
+      when '11.125'
+        case roll_length
+        when '11'
+          'sold-by__RollAK'
+        end
+
       when '17.72'
         case roll_length
         when '5.47'
@@ -131,10 +186,78 @@ class Design < ActiveRecord::Base
           'sold-by__RollB'
         end
 
+      when '20.5625'
+        case roll_length
+        when '11'
+          'sold-by__RollAL'
+        end
+
+      when '20.8125'
+        case roll_length
+        when '11'
+          'sold-by__RollAH'
+        end
+
+      when '20.875'
+        case roll_length
+        when '11'
+          'sold-by__RollZ'
+        end
+
+      when '20.9375'
+        case roll_length
+        when '11'
+          'sold-by__RollY'
+        end
+
+      when '21'
+        case roll_length
+        when '11'
+          'sold-by__RollU'
+        end
+
+      when '21.0625'
+        case roll_length
+        when '11'
+          'sold-by__RollAA'
+        end
+
+      when '21.125'
+        case roll_length
+        when '11'
+          'sold-by__RollV'
+        end
+
+      when '21.1875'
+        case roll_length
+        when '11'
+          'sold-by__RollAI'
+        end
+
+      when '21.25'
+        case roll_length
+        when '11'
+          'sold-by__RollAB'
+        end
+
+      when '21.3'
+        case roll_length
+        when '10'
+          'sold-by__RollAN'
+        end
+
+      when '22'
+        case roll_length
+        when '10'
+          'sold-by__RollAO'
+        end
+
       when '24'
         case roll_length
         when '8'
           'sold-by__RollS'
+        when '11'
+          'sold-by__RollAM'
         end
 
       when '26.57'
