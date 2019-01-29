@@ -10,28 +10,35 @@ namespace :db do
 
     end
 
-    if !sku = ENV['SKU']
-      raise 'Design SKU not specified'
+    if !skus = ENV['SKUS']
+      raise 'No design SKU specified'
     end
 
-    puts 'Getting product information for SKU '+ sku +' to export for '+domain
-
+    skus = skus.split(',').map { |i| i.strip }
     website = Website.find_by!(domain: domain)
-    design = Design.find_by(sku: sku)
-
-    unless design.collection.websites.map { |w| w.domain }.include? domain
-      raise design.name +' design is not flagged as available for the '+domain+' domain'
-    end
-
-    unless design.available?
-      raise design.name +' design is not flagged as available'
-    end
 
     csv_data = ''
-    puts 'Getting data for '+design.name
-    csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
+    skus.each do |sku|
 
-    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{design.name.parameterize}.csv"
+      puts 'Getting product information for SKU '+ sku +' to export for '+domain
+      
+      design = Design.find_by(sku: sku)
+
+      unless design.collection.websites.map { |w| w.domain }.include? domain
+        raise design.name +' design is not flagged as available for the '+domain+' domain'
+      end
+
+      unless design.available?
+        raise design.name +' design is not flagged as available'
+      end
+
+      puts 'Getting data for '+design.name
+      csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
+
+    end
+
+
+    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-assorted-skus.csv"
 
     storage = Fog::Storage.new(
         provider: 'AWS',
