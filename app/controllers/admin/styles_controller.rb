@@ -45,7 +45,7 @@ module Admin
 
     def destroy
       Style.find(params[:id]).destroy
-      flash[:notice] = "Style destroyed."
+      flash[:notice] = "Style removed."
       redirect_to(action: 'index')
     end
 

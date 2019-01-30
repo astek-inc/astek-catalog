@@ -1,5 +1,5 @@
 <%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label :product_category_id, 'Product Type Group' %> <span class="required">*</span>
+  <%= f.label :product_category_id, 'Product Category' %> <span class="required">*</span>
   <%= f.collection_select :product_category_id, @product_categories, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
 <% end %>
 
@@ -9,6 +9,19 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :description, 'Description' %> <span class="required">*</span>
-    <%= f.text_area :description, rows: 6, required: true, class: 'form-control' %>
+    <%= f.label :description, 'Description' %>
+    <%= f.text_area :description, rows: 3, required: false, class: 'form-control' %>
+<% end %>
+
+<%= field_set_tag nil, 'data-hook': 'product-type-websites' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Websites', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:product_type, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>

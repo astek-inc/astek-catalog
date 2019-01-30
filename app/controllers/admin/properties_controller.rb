@@ -1,6 +1,8 @@
 module Admin
   class PropertiesController < Admin::BaseController
 
+    before_action :set_property, only: [:edit, :update, :destroy]
+
     def index
       @properties = Property.all
     end
@@ -26,11 +28,9 @@ module Admin
     end
 
     def edit
-      @property = Property.find(params[:id])
     end
 
     def update
-      @property = Property.find(params[:id])
       if @property.update_attributes(property_params)
         flash[:notice] = 'Property updated.'
         redirect_to(action: 'index')
@@ -39,17 +39,17 @@ module Admin
       end
     end
 
-    def delete
-      @property = Property.find(params[:id])
-    end
-
     def destroy
-      Property.find(params[:id]).destroy
-      flash[:notice] = "Property destroyed."
+      @property.destroy
+      flash[:notice] = 'Property removed.'
       redirect_to(action: 'index')
     end
 
     private
+
+    def set_property
+      @property = Property.find(params[:id])
+    end
 
     def property_params
       params.require(:property).permit(:name, :presentation)

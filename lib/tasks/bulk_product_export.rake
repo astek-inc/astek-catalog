@@ -1,5 +1,5 @@
-require "#{Rails.root}/app/helpers/admin/csv_export_helper.rb"
-include Admin::CsvExportHelper
+require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+include Admin::ProductDataCsvGenerator
 
 namespace :db do
   desc 'Export all products that are flagged to show on a given domain'
@@ -18,17 +18,12 @@ namespace :db do
     collections.each_with_index do |collection, i|
       puts 'Getting data for '+collection.name
 
-      collection.designs.each do |design|
-        csv_data += variants_to_csv design, domain, csv_data.empty?
+      collection.designs.available.each do |design|
+        csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
       end
     end
 
-    filename = "#{website.name.parameterize}-bulk-export-#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.csv"
-    # filepath = "#{Rails.root}/tmp/#{filename}"
-
-    # File.open(filepath, 'w+') do |f|
-    #   f.write(csv_data)
-    # end
+    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-bulk-product-export.csv"
 
     storage = Fog::Storage.new(
         provider: 'AWS',

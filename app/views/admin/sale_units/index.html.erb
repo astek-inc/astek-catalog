@@ -26,7 +26,7 @@
 
           <tbody>
           <% @sale_units.each do |sale_unit| %>
-            <tr class="product_property fields" data-item-id=<%= "#{sale_unit.id}" %> data-hook="sale_unit">
+            <tr class="product_property fields" data-hook="sale_unit">
               <td><%= sale_unit.name %></td>
               <td><%= truncate(sanitize(sale_unit.description), length: 140) %></td>
               <td class="actions">
@@ -40,6 +40,8 @@
           </tbody>
         </table>
       <% end %>
+
+      <%= paginate @sale_units %>
 
     <% else %>
       <p>No sale units found. <%= link_to 'Create one.', new_admin_sale_unit_path %></p>

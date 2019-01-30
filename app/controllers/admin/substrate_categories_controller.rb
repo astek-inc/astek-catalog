@@ -2,7 +2,7 @@ module Admin
   class SubstrateCategoriesController < Admin::BaseController
 
     def index
-      @substrate_categories = SubstrateCategory.all
+      @substrate_categories = SubstrateCategory.page params[:page]
     end
 
     def new
@@ -41,7 +41,7 @@ module Admin
 
     def destroy
       SubstrateCategory.find(params[:id]).destroy
-      flash[:notice] = 'Substrate category destroyed.'
+      flash[:notice] = 'Substrate category removed.'
       redirect_to(action: 'index')
     end
 

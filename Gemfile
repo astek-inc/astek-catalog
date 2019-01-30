@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.8'
+gem 'rails', '4.2.11'
 gem 'rails-api'
 gem 'active_model_serializers', '~> 0.10.0'
 
@@ -23,8 +23,7 @@ gem 'coffee-rails', '~> 4.0.0'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
-gem 'acts_as_paranoid', '~> 0.5.0'
-gem 'friendly_id', '~> 5.1.0'
+gem 'paranoia', '~> 2.2'
 
 gem 'ranked-model'
 gem 'jquery-ui-rails'

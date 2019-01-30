@@ -1,5 +1,8 @@
 <div class="list-group">
   <%= subnav_link 'Details', 'pencil', edit_admin_design_variant_path(@design, @variant), 'details', current %>
-  <%= subnav_link 'Images', 'picture', admin_variant_variant_images_path(@variant), 'images', current %>
-  <%= subnav_link 'Tearsheet', 'save-file', admin_variant_tearsheet_path(@variant), 'tearsheet', current %>
+  <%= subnav_link 'Swatch Images', 'picture', admin_variant_variant_swatch_images_path(@variant), 'swatch_images', current %>
+  <%= subnav_link 'Install Images', 'picture', admin_variant_variant_install_images_path(@variant), 'swatch_images', current %>
+  <% if @variant.design.digital? %>
+    <%= subnav_link 'Tearsheet', 'save-file', admin_variant_tearsheet_path(@variant), 'tearsheet', current %>
+  <% end %>
 </div>

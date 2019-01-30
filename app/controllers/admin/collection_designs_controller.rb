@@ -2,7 +2,7 @@ module Admin
   class CollectionDesignsController < Admin::BaseController
 
     before_action :set_collection, except: [:edit]
-    before_action :set_product_types, :set_sale_units, :set_styles, only: [:new, :edit]
+    before_action :set_sale_units, :set_styles, only: [:new, :edit]
 
     def index
       @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
@@ -30,12 +30,12 @@ module Admin
     end
 
     def edit
-      @design = Design.friendly.find(params[:id])
+      @design = Design.find(params[:id])
       @collection = @design.collection
     end
 
     def update
-      @design = Design.friendly.find(params[:id])
+      @design = Design.find(params[:id])
       if @design.update_attributes(design_params)
         flash[:notice] = 'Design updated.'
         redirect_to(action: 'index')
@@ -45,7 +45,7 @@ module Admin
     end
 
     def delete
-      @design = Design.friendly.find(params[:id])
+      @design = Design.find(params[:id])
     end
 
     def update_row_order
@@ -57,19 +57,15 @@ module Admin
     end
 
     def destroy
-      Design.friendly.find(params[:id]).destroy
-      flash[:notice] = "Design destroyed."
+      Design.find(params[:id]).destroy
+      flash[:notice] = "Design removed."
       redirect_to(action: 'index')
     end
 
     private
 
     def set_collection
-      @collection = Collection.friendly.find(params[:collection_id])
-    end
-
-    def set_product_types
-      @product_types = ProductType.rank(:row_order)
+      @collection = Collection.find(params[:collection_id])
     end
 
     def set_sale_units
@@ -81,7 +77,10 @@ module Admin
     end
 
     def design_params
-      params.require(:design).permit(:sku, :name, :description, :keywords, :slug, :collection_id, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity, :available_on, :expires_on, :suppress_from_searches, product_type_ids: [], style_ids: [])
+      params.require(:design).permit(
+          :sku, :master_sku, :name, :description, :keywords, :collection_id, :price_code, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity,
+          :available_on, :expires_on, :suppress_from_searches, style_ids: []
+      )
     end
 
   end

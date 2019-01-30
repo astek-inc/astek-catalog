@@ -44,23 +44,29 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     vendor = Vendor.find_by!({ name: item.vendor.strip })
     product_category = ProductCategory.find_by!( { name: item.product_category.strip })
     sale_unit = SaleUnit.find_by!({ name: item.sale_unit.strip })
-    product_types = ProductType.where(name: item.product_type.split(',').map { |t| t.strip }) unless item.product_type.nil?
-    styles = Style.where(name: item.style.split(',').map { |s| s.strip }) unless item.style.nil?
+    product_types = ProductType.where(name: item.product_type.split(',').map { |t| t.strip }.reject { |c| c.empty? }) unless item.product_type.nil?
+    styles = Style.where(name: item.style.split(',').map { |s| s.strip }.reject { |c| c.empty? }) unless item.style.nil?
     variant_type = VariantType.find_by!({ name: item.variant_type.strip })
+    colors = Color.where(name: item.color.split(',').map { |c| c.strip }.reject { |c| c.empty? }) unless item.color.nil?
 
     if item.substrate
       substrate = Substrate.find_by(name: item.substrate.strip)
-      backing = nil
+      backing_type = nil
+      if substrate.nil?
+        raise "Cannot find substrate: #{item.substrate}"
+      end
     elsif item.backing
       backing_type = BackingType.find_by(name: item.backing.strip)
       substrate = nil
-    else
-      raise 'Invalid or missing substrate/backing information'
+      if backing_type.nil?
+        raise "Cannot find backing type: #{item.backing_type}"
+      end
     end
 
     puts 'Finding or creating collection information for '+item.collection
     collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category, vendor: vendor }) do |c|
       # If we got here, this is a new record
+
       domains = []
       unless item.websites.nil?
         item.websites.split(',').map { |s| s.strip }.each do |key|
@@ -74,14 +80,18 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
           end
         end
         c.websites = Website.where(domain: domains)
+      end
 
-        if ['Digital Library', 'Vintage'].include? c.name
-          c.user_can_select_material = true
-        end
+      if ['Digital Library', 'Vintage'].include? c.name
+        c.user_can_select_material = true
+      end
 
-        if ['Digital Library'].include? c.name
-          c.suppress_from_display = true
-        end
+      if ['Digital Library'].include? c.name
+        c.suppress_from_display = true
+      end
+
+      if item.respond_to? 'lead_time'
+        c.lead_time_id = LeadTime.find_by!(name: item.lead_time).id
       end
     end
 
@@ -89,25 +99,26 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     design = Design.find_or_create_by!({ sku: item.design_sku.strip, name: item.design_name.strip, collection: collection }) do |d|
       # If we got here, this is a new record
       d.description = item.description.strip unless item.description.nil?
-      d.keywords = item.keywords.strip
+      d.keywords = item.keywords.strip.chomp(',').strip
       d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
       d.sale_unit = sale_unit
       d.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
       d.sale_quantity = item.sale_quantity.strip
       d.minimum_quantity = item.minimum_quantity.strip
       d.available_on = Time.now
-      d.product_types = product_types
       d.styles = styles
-    end
 
-    puts 'Processing design images'
-    if item.design_images
-      item.design_images.split(',').map { |i| i.strip }.each do |url|
-        DesignImage.create!({
-          remote_file_url: url,
-          type: 'DesignImage',
-          owner_id: design.id
-        })
+      # This is a duplicate of a design in another collection,
+      # suppress it from display except with its collection
+      if item.respond_to? 'master_sku'
+        unless item.master_sku.nil?
+          d.suppress_from_searches = true
+          d.master_sku = item.master_sku
+        end
+      end
+
+      if item.respond_to? 'price_code'
+        d.price_code = item.price_code.strip
       end
     end
 
@@ -121,29 +132,46 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       end
     end
 
-    puts 'Creating variants: '+item.variant_name
+    puts 'Creating variant: '+item.variant_name
     variant = Variant.create!({
       design: design,
       variant_type: variant_type,
       name: item.variant_name.strip,
       sku: item.sku.strip,
       substrate: substrate,
-      backing_type: backing_type
+      backing_type: backing_type,
+      product_types: product_types,
+      colors: colors
     })
 
-
     item.images.split(',').map { |i| i.strip }.each do |url|
-      puts 'Processing variant images: '+url
-      VariantImage.create!({
+      puts 'Processing swatch image: '+url
+      VariantSwatchImage.create!({
         remote_file_url: url,
-        type: 'VariantImage',
+        type: 'VariantSwatchImage',
         owner_id: variant.id
       })
     end
 
-    variant.colors << Color.where(name: item.color.split(',').map { |c| c.strip }) unless item.color.nil?
+    if item.install_images
+      install_images = item.install_images
+    elsif item.design_images
+      install_images = item.design_images
+    end
+
+    if install_images
+      install_images.split(',').map { |i| i.strip }.each do |url|
+        puts 'Processing install image: '+url
+        VariantInstallImage.create!({
+            remote_file_url: url,
+            type: 'VariantInstallImage',
+            owner_id: variant.id
+        })
+      end
+    end
 
     if collection.product_category.name == 'Digital'
+      puts 'Generating tearsheet'
       variant.generate_tearsheet
     end
 

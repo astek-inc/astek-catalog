@@ -6,6 +6,8 @@ class VariantType < ActiveRecord::Base
 
   has_many :variants
 
+  default_scope { order(name: :asc) }
+
   validates :name, uniqueness: true
 
 end

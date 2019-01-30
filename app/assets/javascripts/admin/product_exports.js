@@ -23,6 +23,7 @@ Astek.product_exports = Astek.product_exports || {
             select: function( event, ui ) {
                 value = ui.item ? ui.item.id : null;
                 $('#collection_id').val(value);
+                $(this).attr('name', 'collection_name_'+Astek.product_exports.randhex(32));
             },
             change: function(event, ui) {
                 if (ui.item === null) {
@@ -31,16 +32,23 @@ Astek.product_exports = Astek.product_exports || {
                 }
             }
         });
+    },
+    randhex: function(len) {
+        var maxlen = 8,
+            min = Math.pow(16,Math.min(len,maxlen)-1)
+        max = Math.pow(16,Math.min(len,maxlen)) - 1,
+            n   = Math.floor( Math.random() * (max-min+1) ) + min,
+            r   = n.toString(16);
+        while ( r.length < len ) {
+            r = r + Astek.product_exports.randhex( len - maxlen );
+        }
+        return r;
     }
 };
 
 $(function() {
-    Astek.product_exports.collection_name_autocomplete();
-
-    if (navigator.userAgent.toLowerCase().indexOf('chrome') >= 0) {
-        setTimeout(function () {
-            document.getElementById('collection_name').autocomplete = 'off';
-        }, 1);
+    if ($('#collection_name').length) {
+        Astek.product_exports.collection_name_autocomplete();
     }
 });
 

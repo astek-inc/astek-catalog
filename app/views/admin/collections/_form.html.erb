@@ -1,18 +1,29 @@
-<%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :product_category_id, 'Product Category' %> <span class="required">*</span>
-    <%#= f.grouped_collection_select :product_type_id, @product_categories, :product_types, :name, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
-    <%= f.collection_select :product_category_id, @product_categories, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
-<% end %>
-
 <%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: ['col-md-6'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :product_category_id, 'Product Category' %> <span class="required">*</span>
+      <%#= f.grouped_collection_select :product_type_id, @product_categories, :product_types, :name, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+      <%= f.collection_select :product_category_id, @product_categories, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <% end %>
+  <% end %>
+
   <%= content_tag :div, class: ['col-md-6'] do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= f.label :vendor_id, 'Vendor' %> <span class="required">*</span>
       <%= f.collection_select :vendor_id, Vendor.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
     <% end %>
   <% end %>
+<% end %>
 
-  <%= content_tag :div, class: ['col-md-3'] do %>
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: ['col-md-4'] do %>
+    <%= content_tag :div, class: ['form-group'], id: 'lead-time-group' do %>
+      <%= f.label :lead_time_id, 'Lead Time' %> <span class="required">*</span>
+      <%= f.collection_select :lead_time_id, @lead_times, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: ['col-md-4'] do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= content_tag :div, class: ['checkbox'], id: 'suppress-from-display' do %>
         <%= f.label :suppress_from_display do %>
@@ -22,7 +33,7 @@
     <% end %>
   <% end %>
 
-  <%= content_tag :div, class: ['col-md-3'] do %>
+  <%= content_tag :div, class: ['col-md-4'] do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= content_tag :div, class: ['checkbox'], id: 'user-can-select-material' do %>
         <%= f.label :user_can_select_material do %>
@@ -46,13 +57,6 @@
 <%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :keywords, 'Keywords' %>
     <%= f.text_area :keywords, rows: 3, required: false, class: 'form-control' %>
-<% end %>
-
-<% if @collection.persisted? %>
-    <%= content_tag :div, class: ['form-group'] do %>
-        <%= f.label :slug, 'Slug' %> <span class="required">*</span>
-        <%= f.text_field :slug, required: true, class: 'form-control' %>
-    <% end %>
 <% end %>
 
 <%= field_set_tag nil, 'data-hook': 'collection-websites' do %>

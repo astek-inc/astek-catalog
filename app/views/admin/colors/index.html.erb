@@ -15,10 +15,9 @@
 
     <% if @colors.any? %>
       <%= content_tag :div, class: 'table-responsive' do %>
-        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_colors_path %>" data-position-start="<%= @position_start %>">
+        <table class="table table-striped" data-hook>
           <thead>
           <tr>
-            <th class="move-handle"></th>
             <th>Name</th>
             <th class="actions"></th>
           </tr>
@@ -26,10 +25,7 @@
 
           <tbody>
           <% @colors.each do |color| %>
-            <tr class="product_property fields" data-item-id=<%= "#{color.id}" %> data-hook="color">
-              <td class="move-handle text-center">
-                <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
-              </td>
+            <tr class="product_property fields" data-hook="color">
               <td><%= color.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
@@ -42,6 +38,8 @@
           </tbody>
         </table>
       <% end %>
+
+      <%= paginate @colors %>
 
     <% else %>
       <p>No colors found. <%= link_to 'Create one.', new_admin_color_path %></p>

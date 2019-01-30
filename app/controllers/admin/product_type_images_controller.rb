@@ -46,7 +46,7 @@ module Admin
     private
 
     def get_product_type
-      @product_type = ProductType.friendly.find(params[:product_type_id])
+      @product_type = ProductType.find(params[:product_type_id])
     end
 
     def product_type_image_params

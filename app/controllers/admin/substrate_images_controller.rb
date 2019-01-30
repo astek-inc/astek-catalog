@@ -46,7 +46,7 @@ module Admin
     private
 
     def get_substrate
-      @substrate = Substrate.friendly.find(params[:substrate_id])
+      @substrate = Substrate.find(params[:substrate_id])
     end
 
     def substrate_image_params

@@ -5,7 +5,7 @@
 <% end %>
 
 <% content_for :header_right do %>
-  <%= link_to 'New Substrate ProductType', new_admin_substrate_category_path, class: 'btn btn-success' %>
+  <%= link_to 'New Substrate Category', new_admin_substrate_category_path, class: 'btn btn-success' %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
@@ -16,7 +16,7 @@
     <% if @substrate_categories.any? %>
 
       <%= content_tag :div, class: 'table-responsive' do %>
-        <table class="table table-striped sortable" data-hook>
+        <table class="table table-striped" data-hook>
           <thead>
           <tr>
             <th>Name</th>
@@ -26,7 +26,7 @@
 
           <tbody>
           <% @substrate_categories.each do |substrate_category| %>
-            <tr class="substrate_category fields" data-item-id=<%= "#{substrate_category.id}" %> data-hook="variant">
+            <tr class="substrate_category fields" data-hook="substrate_category">
               <td><%= substrate_category.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
@@ -39,6 +39,8 @@
           </tbody>
         </table>
       <% end %>
+
+      <%= paginate @substrate_categories %>
 
     <% else %>
       <p>No substrate categories found. <%= link_to 'Create one.', new_admin_substrate_category_path %></p>

@@ -46,6 +46,34 @@ module Admin
       link_to text.html_safe, path, { class: current == state ? 'list-group-item active' : 'list-group-item' }
     end
 
+    def default_label content
+      bootstrap_label content, 'default'
+    end
+
+    def primary_label content
+      bootstrap_label content, 'primary'
+    end
+
+    def success_label content
+      bootstrap_label content, 'success'
+    end
+
+    def info_label content
+      bootstrap_label content, 'info'
+    end
+
+    def warning_label content
+      bootstrap_label content, 'warning'
+    end
+
+    def danger_label content
+      bootstrap_label content, 'danger'
+    end
+
+    def bootstrap_label content, class_attr
+      content_tag :span, content, class: "label label-#{class_attr}"
+    end
+
     # https://coderwall.com/p/jzofog/ruby-on-rails-flash-messages-with-bootstrap
     def flash_class level
       case level

@@ -1,0 +1,20 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Lead Times', admin_lead_times_path),
+      'New Lead Time'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+    <%= form_for [:admin, @lead_time] do |f| %>
+      <%= field_set_tag nil, 'data-hook': 'lead_time_new' do %>
+        <%= render partial: 'form', locals: { f: f } %>
+      <% end %>
+
+      <%= form_buttons admin_lead_times_path %>
+    <% end %>
+  <% end %>
+<% end %>

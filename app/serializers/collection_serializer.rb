@@ -1,6 +1,6 @@
 class CollectionSerializer < ActiveModel::Serializer
 
-  attributes :id, :product_type_id, :name, :description, :keywords, :slug
+  attributes :id, :product_type_id, :name, :description, :keywords
 
   belongs_to :product_type
   # has_many :designs

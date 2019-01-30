@@ -1,0 +1,10 @@
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label(:name, 'Name <span class="required">*</span>'.html_safe) %>
+  <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label(:description, 'Description') %>
+  <%= f.text_area :description, rows: 6, class: 'form-control' %>
+<% end %>

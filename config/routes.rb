@@ -19,22 +19,22 @@ Rails.application.routes.draw do
     get 'product_exports/generate_csv', to: 'product_exports#generate_csv', as: 'product_export_generate_csv', defaults: { format: 'csv' }
     resources :product_exports, only: :index
 
-    resources :colors, except: :show do
-      post :update_row_order, on: :collection
-    end
+    get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
+    resources :order_limits_exports, only: :index
 
-    resources :substrates, except: :show, concerns: :paginatable do
-      post :update_row_order, on: :collection
+    resources :colors, except: [:show, :delete]
+
+    resources :lead_times, except: [:show, :delete]
+
+    resources :substrates, except: [:show, :delete], concerns: :paginatable do
       resources :substrate_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
     end
 
-    resources :substrate_categories, except: :show
+    resources :substrate_categories, except: [:show, :delete], concerns: :paginatable
 
-    resources :backing_types, concerns: :paginatable do
-      post :update_row_order, on: :collection
-    end
+    resources :backing_types, except: [:show, :delete], concerns: :paginatable
 
     resources :users
 
@@ -46,28 +46,15 @@ Rails.application.routes.draw do
 
     resources :sale_units, except: [:show, :delete]
 
-    resources :properties
+    resources :properties, except: [:show, :delete]
 
-    resources :product_types, concerns: :paginatable do
-      post :update_row_order, on: :collection
-      # resources :product_type_images, only: [:index, :new, :create, :show, :destroy] do
-      #   post :update_row_order, on: :collection
-      # end
-    end
+    resources :product_types, except: [:show, :delete], concerns: :paginatable
 
-    resources :product_categories, concerns: :paginatable do
-      post :update_row_order, on: :collection
-    end
+    resources :product_categories, except: [:show, :delete], concerns: :paginatable
 
     get 'collections/search', to: 'collections#search'
 
-    resources :collections, concerns: :paginatable do
-      post :update_row_order, on: :collection
-
-      # resources :collection_images, only: [:index, :new, :create, :show, :destroy] do
-      #   post :update_row_order, on: :collection
-      # end
-
+    resources :collections, concerns: :paginatable, except: [:show, :delete] do
       resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
       end
@@ -95,12 +82,17 @@ Rails.application.routes.draw do
       resource :tearsheet, only: [:show], controller: :variant_tearsheets do
         post :generate, defaults: { format: 'pdf' }
       end
-      resources :variant_images, only: [:index, :new, :create, :show, :destroy] do
+
+      resources :variant_swatch_images, only: [:index, :new, :create, :show, :destroy] do
+        post :update_row_order, on: :collection
+      end
+
+      resources :variant_install_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
     end
 
-    resources :variant_types, except: :show
+    resources :variant_types, except: [:show, :delete]
 
   end
 

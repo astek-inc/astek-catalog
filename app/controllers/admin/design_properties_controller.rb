@@ -21,8 +21,10 @@ module Admin
       @design.design_properties.clear
 
       params[:design][:design_properties_attributes].each do |index, data|
-        property_id = Property.find_by(name: data[:property_name]).id
-        @design.design_properties << DesignProperty.create!({ design_id: @design.id, property_id: property_id, value: data[:value] })
+        unless data[:property_name].blank?
+          property_id = Property.find_by(name: data[:property_name]).id
+          @design.design_properties << DesignProperty.create!({ design_id: @design.id, property_id: property_id, value: data[:value] })
+        end
       end
 
       flash[:notice] = 'Properties updated.'
@@ -40,7 +42,7 @@ module Admin
     private
 
     def get_design
-      @design = Design.friendly.find(params[:design_id])
+      @design = Design.find(params[:design_id])
     end
 
     def get_collection

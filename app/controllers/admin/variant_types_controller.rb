@@ -1,6 +1,8 @@
 module Admin
   class VariantTypesController < Admin::BaseController
 
+    before_action :set_variant_type, only: [:edit, :update, :destroy]
+
     def index
       @variant_types = VariantType.all
     end
@@ -26,11 +28,9 @@ module Admin
     end
 
     def edit
-      @variant_type = VariantType.find(params[:id])
     end
 
     def update
-      @variant_type = VariantType.find(params[:id])
       if @variant_type.update_attributes(variant_type_params)
         flash[:notice] = 'Variant type updated.'
         redirect_to(action: 'index')
@@ -40,12 +40,16 @@ module Admin
     end
 
     def destroy
-      VariantType.find(params[:id]).destroy
-      flash[:notice] = 'Variant type destroyed.'
+      @variant_type.destroy
+      flash[:notice] = 'Variant type removed.'
       redirect_to(action: 'index')
     end
 
     private
+
+    def set_variant_type
+      @variant_type = VariantType.find(params[:id])
+    end
 
     def variant_type_params
       params.require(:variant_type).permit(:name)

@@ -19,7 +19,7 @@
     <%= content_tag :div, class: 'col-md-6' do %>
       <%= content_tag :div, class: 'form-group' do %>
         <%= label_tag 'collection_id', 'Collection' %> <span class="required">*</span>
-        <%= text_field_tag 'collection_name', nil, { id: 'collection_name', class: 'form-control', required: true, autocomplete: 'false' } %>
+        <%= text_field_tag "collection_name_#{SecureRandom.hex}", nil, { id: 'collection_name', class: 'form-control', required: true, autocomplete: 'off' } %>
         <%= hidden_field_tag 'collection_id' %>
       <% end %>
     <% end %>

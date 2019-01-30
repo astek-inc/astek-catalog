@@ -11,6 +11,7 @@ class PopulateVendors < ActiveRecord::Migration
       { name: 'Marburg', description: '' },
       { name: 'Nina Hancock', description: '' },
       { name: 'Omni', description: '' },
+      { name: 'P&W', description: '' },
       { name: 'Rotex', description: '' },
       { name: 'Tokiwa', description: '' },
       { name: 'Tokyo', description: '' },

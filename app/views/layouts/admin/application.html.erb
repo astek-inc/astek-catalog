@@ -7,6 +7,8 @@
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>Astek Catalog :: Admin</title>
 
+  <%= favicon_link_tag 'favicon.ico' %>
+
   <%= javascript_include_tag 'admin/application', 'data-turbolinks-track' => false %>
   <%= stylesheet_link_tag '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' %>
   <%= stylesheet_link_tag 'admin/application', media: 'all', 'data-turbolinks-track' => false %>
@@ -65,6 +67,7 @@
               <%= nav_sublink 'Colors', admin_colors_path %>
               <%= nav_sublink 'Styles', admin_styles_path %>
               <%= nav_sublink 'Sale Units', admin_sale_units_path %>
+              <%= nav_sublink 'Lead Times', admin_lead_times_path %>
             </div>
 
             <%#= subnav_group_header 'Tasks', 'tag', '#sl' %>
@@ -87,9 +90,12 @@
             <% end %>
 
             <%= nav_link 'Collections', 'book', admin_collections_path %>
-            <%= nav_link 'Designs', 'blackboard', admin_designs_path %>
 
-            <%= nav_link 'Product Exports', 'export', admin_product_exports_path %>
+            <%= subnav_group_header 'Data Export', 'export', '#data-exports' %>
+            <%= content_tag :div, id: 'data-exports', class: 'sublinks collapse' do %>
+              <%= nav_sublink 'Product Exports', admin_product_exports_path %>
+              <%= nav_sublink 'Order Limits', admin_order_limits_exports_path %>
+            <% end %>
 
           <% end %>
         <%end %>

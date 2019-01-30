@@ -1,11 +1,11 @@
 module Admin
   class CollectionsController < Admin::BaseController
 
-    before_action :set_product_categories, :set_websites, only: [:new, :edit]
+    before_action :set_collection, only: [:edit, :update, :destroy]
+    before_action :set_product_categories, :set_websites, :set_lead_times, only: [:new, :edit]
 
     def index
-      @collections = Collection.rank(:row_order).page params[:page]
-      @position_start = (@collections.current_page.present? ? @collections.current_page - 1 : 0) * @collections.limit_value
+      @collections = Collection.page params[:page]
     end
 
     def new
@@ -29,11 +29,9 @@ module Admin
     end
 
     def edit
-      @collection = Collection.friendly.find(params[:id])
     end
 
     def update
-      @collection = Collection.friendly.find(params[:id])
       if @collection.update_attributes(collection_params)
         flash[:notice] = 'Collection updated.'
         redirect_to(action: 'index')
@@ -42,21 +40,9 @@ module Admin
       end
     end
 
-    def delete
-      @collection = Collection.friendly.find(params[:id])
-    end
-
-    def update_row_order
-      @collection = Collection.find(params[:item_id])
-      @collection.row_order_position = params[:row_order_position]
-      @collection.save
-
-      render nothing: true
-    end
-
     def destroy
-      Collection.friendly.find(params[:id]).destroy
-      flash[:notice] = 'Collection destroyed.'
+      @collection.destroy
+      flash[:notice] = 'Collection removed.'
       redirect_to(action: 'index')
     end
 
@@ -68,16 +54,24 @@ module Admin
 
     private
 
+    def set_collection
+      @collection = Collection.find(params[:id])
+    end
+
     def set_product_categories
-      @product_categories = ProductCategory.rank(:row_order)
+      @product_categories = ProductCategory.all
     end
 
     def set_websites
       @websites = Website.all
     end
 
+    def set_lead_times
+      @lead_times = LeadTime.all
+    end
+
     def collection_params
-      params.require(:collection).permit(:name, :description, :keywords, :slug, :product_category_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
+      params.require(:collection).permit(:name, :description, :keywords, :product_category_id, :lead_time_id, :vendor_id, :user_can_select_material, :suppress_from_display, website_ids: [])
     end
 
   end
