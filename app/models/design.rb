@@ -330,13 +330,29 @@ class Design < ActiveRecord::Base
       roll_width = self.property('roll_width_inches')
 
       case roll_width
+      when '35'
+        if self.minimum_quantity == 4
+          'sold-by__YardEMin4'
+        end
       when '36'
         if self.minimum_quantity == 4
           'sold-by__YardAMin4'
         end
+      when '37'
+        if self.minimum_quantity == 4
+          'sold-by__YardFMin4'
+          end
+      when '38'
+        if self.minimum_quantity == 4
+          'sold-by__YardGMin4'
+        end
       when '48'
         if self.minimum_quantity == 4
           'sold-by__YardBMin4'
+        end
+      when '49'
+        if self.minimum_quantity == 4
+          'sold-by__YardHMin4'
         end
       when '54'
         case self.minimum_quantity
