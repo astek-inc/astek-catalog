@@ -189,8 +189,9 @@ module Admin
               end
               first_variant_row = false
 
-              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
-
+              unless design.collection.suppress_sample_option_from_display
+                csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
+              end
             end
           else
             if @first_row
@@ -201,7 +202,9 @@ module Admin
             end
 
             if website == 'astekhome.com'
-              csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+              unless design.collection.suppress_sample_option_from_display
+                csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+              end
             end
           end
         end

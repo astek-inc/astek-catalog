@@ -1,5 +1,5 @@
 <%= content_tag :div, class: 'row' do %>
-  <%= content_tag :div, class: ['col-md-6'] do %>
+  <%= content_tag :div, class: ['col-md-4'] do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= f.label :product_category_id, 'Product Category' %> <span class="required">*</span>
       <%#= f.grouped_collection_select :product_type_id, @product_categories, :product_types, :name, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
@@ -7,39 +7,17 @@
     <% end %>
   <% end %>
 
-  <%= content_tag :div, class: ['col-md-6'] do %>
+  <%= content_tag :div, class: ['col-md-4'] do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= f.label :vendor_id, 'Vendor' %> <span class="required">*</span>
       <%= f.collection_select :vendor_id, Vendor.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
     <% end %>
   <% end %>
-<% end %>
 
-<%= content_tag :div, class: 'row' do %>
   <%= content_tag :div, class: ['col-md-4'] do %>
     <%= content_tag :div, class: ['form-group'], id: 'lead-time-group' do %>
       <%= f.label :lead_time_id, 'Lead Time' %> <span class="required">*</span>
       <%= f.collection_select :lead_time_id, @lead_times, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
-    <% end %>
-  <% end %>
-
-  <%= content_tag :div, class: ['col-md-4'] do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= content_tag :div, class: ['checkbox'], id: 'suppress-from-display' do %>
-        <%= f.label :suppress_from_display do %>
-          <%= f.check_box :suppress_from_display %> Do not show this collection on websites (but show its designs)
-        <% end %>
-      <% end %>
-    <% end %>
-  <% end %>
-
-  <%= content_tag :div, class: ['col-md-4'] do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= content_tag :div, class: ['checkbox'], id: 'user-can-select-material' do %>
-        <%= f.label :user_can_select_material do %>
-          <%= f.check_box :user_can_select_material %> Allow user to select material on websites
-        <% end %>
-      <% end %>
     <% end %>
   <% end %>
 <% end %>
@@ -69,5 +47,30 @@
         <% end %>
       <% end %>
     <% end %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'panel panel-default' do %>
+  <%= content_tag :div, 'Website Settings', class: 'panel-heading' %>
+
+  <%= content_tag :div, class: 'panel-body' do %>
+    <%= content_tag :div, class: ['checkbox-inline'], id: 'suppress-from-display' do %>
+      <%= f.label :suppress_from_display do %>
+        <%= f.check_box :suppress_from_display %> Do not show this collection on websites (but show its designs)
+      <% end %>
+    <% end %>
+
+    <%= content_tag :div, class: ['checkbox-inline'], id: 'user-can-select-material' do %>
+      <%= f.label :user_can_select_material do %>
+        <%= f.check_box :user_can_select_material %> Allow user to select material on websites
+      <% end %>
+    <% end %>
+
+    <%= content_tag :div, class: ['checkbox-inline'], id: 'suppress_sample_option_from_display' do %>
+      <%= f.label :suppress_sample_option_from_display do %>
+        <%= f.check_box :suppress_sample_option_from_display %> Do not show sample option on websites
+      <% end %>
+    <% end %>
+
   <% end %>
 <% end %>

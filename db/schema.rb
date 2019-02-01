@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181108184527) do
+ActiveRecord::Schema.define(version: 20190201191547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,11 +34,12 @@ ActiveRecord::Schema.define(version: 20181108184527) do
     t.integer  "vendor_id"
     t.integer  "lead_time_id"
     t.text     "keywords"
-    t.boolean  "suppress_from_display",    default: false, null: false
-    t.boolean  "user_can_select_material", default: false, null: false
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.boolean  "suppress_from_display",               default: false, null: false
+    t.boolean  "user_can_select_material",            default: false, null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.datetime "deleted_at"
+    t.boolean  "suppress_sample_option_from_display", default: false, null: false
   end
 
   add_index "collections", ["deleted_at"], name: "index_collections_on_deleted_at", using: :btree
