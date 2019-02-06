@@ -70,7 +70,7 @@ class Design < ActiveRecord::Base
       tags = []
 
       tags << to_tags('style', self.styles.map { |s| s.name })
-      tags << to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name } }.flatten.uniq)
+      tags << to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.downcase } }.flatten.uniq)
 
       if domain == 'astek.com'
         if self.digital?
