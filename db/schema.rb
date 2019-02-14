@@ -35,7 +35,6 @@ ActiveRecord::Schema.define(version: 20190201191547) do
     t.integer  "lead_time_id"
     t.text     "keywords"
     t.boolean  "suppress_from_display",               default: false, null: false
-    t.boolean  "user_can_select_material",            default: false, null: false
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
     t.datetime "deleted_at"
@@ -67,6 +66,15 @@ ActiveRecord::Schema.define(version: 20190201191547) do
   add_index "colors_variants", ["color_id", "variant_id"], name: "index_colors_variants_on_color_id_and_variant_id", using: :btree
   add_index "colors_variants", ["variant_id", "color_id"], name: "index_colors_variants_on_variant_id_and_color_id", using: :btree
 
+  create_table "custom_materials", force: :cascade do |t|
+    t.integer "design_id"
+    t.integer "substrate_id"
+    t.boolean "default_material"
+  end
+
+  add_index "custom_materials", ["design_id", "substrate_id"], name: "index_custom_materials_on_design_id_and_substrate_id", using: :btree
+  add_index "custom_materials", ["substrate_id", "design_id"], name: "index_custom_materials_on_substrate_id_and_design_id", using: :btree
+
   create_table "data_migrations", id: false, force: :cascade do |t|
     t.string "version", null: false
   end
@@ -92,20 +100,21 @@ ActiveRecord::Schema.define(version: 20190201191547) do
     t.string   "sku"
     t.text     "description"
     t.text     "keywords"
-    t.decimal  "price",                  precision: 8, scale: 2
+    t.decimal  "price",                    precision: 8, scale: 2
     t.integer  "sale_unit_id"
-    t.decimal  "weight",                 precision: 5, scale: 2
-    t.integer  "sale_quantity",                                  default: 1
-    t.integer  "minimum_quantity",                               default: 1
-    t.boolean  "suppress_from_searches",                         default: false
+    t.decimal  "weight",                   precision: 5, scale: 2
+    t.integer  "sale_quantity",                                    default: 1
+    t.integer  "minimum_quantity",                                 default: 1
+    t.boolean  "suppress_from_searches",                           default: false
     t.datetime "available_on"
     t.datetime "expires_on"
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
     t.datetime "deleted_at"
     t.integer  "row_order"
     t.string   "master_sku"
     t.string   "price_code"
+    t.boolean  "user_can_select_material"
   end
 
   add_index "designs", ["deleted_at"], name: "index_designs_on_deleted_at", using: :btree
@@ -248,9 +257,12 @@ ActiveRecord::Schema.define(version: 20190201191547) do
     t.text     "description"
     t.text     "keywords"
     t.integer  "backing_type_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.datetime "deleted_at"
+    t.boolean  "default_custom_material_group"
+    t.decimal  "custom_material_surcharge",     precision: 8, scale: 2
+    t.string   "display_name"
   end
 
   add_index "substrates", ["deleted_at"], name: "index_substrates_on_deleted_at", using: :btree

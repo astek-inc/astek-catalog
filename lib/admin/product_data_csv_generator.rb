@@ -3,14 +3,6 @@ module Admin
 
     require 'csv'
 
-    MATERIALS = [
-        { name: 'Paper', surcharge: '0' },
-        { name: 'Type II Commercial Vinyl', surcharge: '0.50' },
-        { name: 'Peel & Stick Wall Tiles', surcharge: '1.50' },
-        { name: 'Gold Mylar', surcharge: '1.00' },
-        { name: 'Silver Mylar', surcharge: '1.00' },
-    ]
-
     TEXT_VALUES = {
         variant_barcode: '',
         variant_inventory_tracker: '',
@@ -179,8 +171,10 @@ module Admin
           @image_index = i
           first_variant_row = true
 
-          if website == 'astekhome.com' && design.collection.user_can_select_material
-            MATERIALS.each do |material|
+          if website == 'astekhome.com' && design.user_can_select_material
+
+            design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
+
               if @first_row
                 csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
                 @first_row = false
@@ -192,7 +186,9 @@ module Admin
               unless design.collection.suppress_sample_option_from_display
                 csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
               end
+
             end
+
           else
             if @first_row
               csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
@@ -208,20 +204,6 @@ module Admin
             end
           end
         end
-
-        # if website == 'astekhome.com'
-        #   if design.collection.user_can_select_material
-        #     first_custom_row = true
-        #     MATERIALS.each do |material|
-        #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website, material, first_custom_row)) }
-        #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website, material, first_custom_row)) }
-        #       first_custom_row = false
-        #     end
-        #   elsif design.digital?
-        #     csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom', @custom_image_index, website)) }
-        #     csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design.variants.first, 'custom_sample', 0, website)) }
-        #   end
-        # end
 
         # On astekhome.com, if a design has colorways, we don't show the install images separately, we mix a random install image in with the swatch images
         if website == 'astek.com' || (website == 'astekhome.com' && !design.has_colorways?)
@@ -348,7 +330,7 @@ module Admin
           if variant.variant_type.name == 'Color Way' || variant.design.digital?
             'Size'
           else
-            if variant.design.collection.user_can_select_material
+            if variant.design.user_can_select_material
               'Material'
             end
           end
@@ -371,7 +353,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.collection.user_can_select_material
+          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
             'Material'
           end
         end
@@ -381,7 +363,7 @@ module Admin
         when 'astek.com'
           nil
         when 'astekhome.com'
-          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.collection.user_can_select_material
+          if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
             astek_home_material_value material
           end
         end
@@ -432,7 +414,7 @@ module Admin
             end
           else
             if material
-              (BigDecimal(variant.price) + BigDecimal(material[:surcharge])).to_s
+              (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
             else
               variant.price
             end
@@ -530,7 +512,7 @@ module Admin
 
     def astek_home_material_value material
       if material
-        material[:name]
+        material.name
       end
     end
 

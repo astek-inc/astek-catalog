@@ -1,8 +1,11 @@
 module Admin
   class CollectionDesignsController < Admin::BaseController
 
+    before_action :set_design, only: [:update, :edit, :destroy, :custom_materials]
     before_action :set_collection, except: [:edit]
     before_action :set_sale_units, :set_styles, only: [:new, :edit]
+    before_action :set_substrates, only: [:custom_materials]
+    before_action :set_default_custom_material, only: [:custom_materials]
 
     def index
       @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
@@ -30,13 +33,17 @@ module Admin
     end
 
     def edit
-      @design = Design.find(params[:id])
       @collection = @design.collection
     end
 
     def update
-      @design = Design.find(params[:id])
       if @design.update_attributes(design_params)
+
+        if params[:default_material_id]
+          clear_default_custom_material
+          update_default_custom_material
+        end
+
         flash[:notice] = 'Design updated.'
         redirect_to(action: 'index')
       else
@@ -44,9 +51,9 @@ module Admin
       end
     end
 
-    def delete
-      @design = Design.find(params[:id])
-    end
+    # def delete
+    #   @design = Design.find(params[:id])
+    # end
 
     def update_row_order
       @design = Design.find(params[:item_id])
@@ -57,12 +64,20 @@ module Admin
     end
 
     def destroy
-      Design.find(params[:id]).destroy
-      flash[:notice] = "Design removed."
+      @design.destroy
+      flash[:notice] = 'Design removed.'
       redirect_to(action: 'index')
     end
 
+    def custom_materials
+
+    end
+
     private
+
+    def set_design
+      @design = Design.find(params[:id])
+    end
 
     def set_collection
       @collection = Collection.find(params[:collection_id])
@@ -76,10 +91,33 @@ module Admin
       @styles = Style.all
     end
 
+    def set_substrates
+      @substrates = Substrate.all
+    end
+
+    def set_default_custom_material
+      @default_custom_material = CustomMaterial.find_by(design_id: @design.id, default_material: true)
+    end
+
+    def clear_default_custom_material
+      CustomMaterial.where(design_id: @design.id).each do |cm|
+        cm.default_material = false
+        cm.save!
+      end
+    end
+
+    def update_default_custom_material
+      cm = CustomMaterial.find_by(design_id: @design.id, substrate_id: params[:default_material_id])
+      cm.default_material = true
+      cm.save!
+    end
+
     def design_params
       params.require(:design).permit(
-          :sku, :master_sku, :name, :description, :keywords, :collection_id, :price_code, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity,
-          :available_on, :expires_on, :suppress_from_searches, style_ids: []
+          :sku, :master_sku, :name, :description, :keywords, :collection_id,
+          :price_code, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity,
+          :available_on, :expires_on, :suppress_from_searches, :user_can_select_material,
+          style_ids: [], substrate_ids: []
       )
     end
 

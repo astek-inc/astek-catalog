@@ -67,3 +67,12 @@ div.form-actions > button {
 div#suppress-from-searches {
     padding-top: 20px;
 }
+
+div#default_custom_material_group,
+div#user-can-select-material {
+    padding-top: 5px;
+}
+
+div.panel-body.checkbox-wrapper {
+    padding: 0 15px 0;
+}

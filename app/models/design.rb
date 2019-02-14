@@ -21,6 +21,11 @@ class Design < ActiveRecord::Base
 
   has_and_belongs_to_many :styles
 
+  # Custom materials should really be associated with Colorways (variants),
+  # but the website only displays material options by design
+  has_many :custom_materials, dependent: :destroy, inverse_of: :design
+  has_many :substrates, through: :custom_materials
+
   validates :name, presence: true
   validates :sku, presence: true
 

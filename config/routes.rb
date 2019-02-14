@@ -57,16 +57,17 @@ Rails.application.routes.draw do
     resources :collections, concerns: :paginatable, except: [:show, :delete] do
       resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
+        get :custom_materials, on: :member
       end
     end
 
     resources :designs, only: [] do
 
-      resources :design_styles #, only: :index
+      # resources :design_styles #, only: :index
 
-      resources :design_images, only: [:index, :new, :create, :show, :destroy] do
-        post :update_row_order, on: :collection
-      end
+      # resources :design_images, only: [:index, :new, :create, :show, :destroy] do
+      #   post :update_row_order, on: :collection
+      # end
 
       resources :design_properties  do
         put :assign, on: :collection
