@@ -18,7 +18,7 @@ class CustomMaterial < ActiveRecord::Base
   #
 
   def name
-    self.substrate.display_name ? self.substrate.display_name : self.substrate.name
+    self.substrate.display_name.present? ? self.substrate.display_name : self.substrate.name
   end
 
   def surcharge
