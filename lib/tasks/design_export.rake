@@ -37,8 +37,13 @@ namespace :db do
 
     end
 
+    if skus.length < 10
+      skus_for_filename = skus.map { |s| s.downcase.gsub(/[^a-z0-9]/, '') }.join('-')
+    else
+      skus_for_filename = 'assorted-skus'
+    end
 
-    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-assorted-skus.csv"
+    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{skus_for_filename}.csv"
 
     storage = Fog::Storage.new(
         provider: 'AWS',
