@@ -19,7 +19,7 @@ class Substrate < ActiveRecord::Base
   validates :name, presence: true
 
   def formatted_name
-    if self.display_name
+    if self.display_name.present?
       "#{self.name} (#{self.display_name})"
     else
       self.name
