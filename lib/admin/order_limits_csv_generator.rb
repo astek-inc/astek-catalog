@@ -12,7 +12,7 @@ module Admin
           end
         end
 
-        if design.collection.user_can_select_material
+        if design.user_can_select_material
           if design.minimum_quantity > 1
             csv << [design.sku + '-c', design.minimum_quantity]
           end
