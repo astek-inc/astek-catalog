@@ -6,14 +6,12 @@ namespace :db do
   task :fedex_crossborder_export => :environment do
 
     csv_data = ''
-    Collection.joins(:websites).where('websites.domain = ?', 'astekhome.com').each_with_index do |collection, i|
+    Collection.joins(:websites).where('websites.domain = ?', 'astekhome.com').each do |collection|
       puts 'Getting data for '+collection.name
+
       collection.designs.available.each do |design|
         csv_data += Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
       end
-
-      break if i == 9
-
     end
 
     filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-fedex-crossborder-product-data.csv"
@@ -35,7 +33,6 @@ namespace :db do
 
     puts 'Uploaded file '+filename+' to S3'
 
-    # puts uploaded
     puts 'Done'
 
   end
