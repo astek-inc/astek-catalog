@@ -87,7 +87,10 @@ module Admin
     end
 
     def variant_params
-      params.require(:variant).permit(:variant_type_id, :name, :sku, :keywords, :design_id, :substrate_id, :backing_type_id, product_type_ids: [], color_ids: [])
+      params.require(:variant).permit(
+          :variant_type_id, :name, :sku, :keywords, :design_id, :substrate_id, :backing_type_id,
+          :weight, :width, :height, :depth, product_type_ids: [], color_ids: []
+      )
     end
 
   end

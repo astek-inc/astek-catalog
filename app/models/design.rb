@@ -10,7 +10,9 @@ class Design < ActiveRecord::Base
   scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
 
   belongs_to :collection
+  belongs_to :vendor, inverse_of: :designs
   belongs_to :sale_unit
+  belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id'
 
   has_many :variants, dependent: :destroy
 

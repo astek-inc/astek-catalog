@@ -369,16 +369,23 @@ module Admin
         end
 
       elsif attr == 'sku'
-
         case variant_type
         when 'sample'
-          variant.sku+'-s'
+          if material
+            variant.sample_sku_with_material material
+          else
+            variant.sample_sku
+          end
         when 'custom'
           variant.design.sku+'-c'
         when 'custom_sample'
           variant.design.sku+'-c-s'
         when 'full'
-          variant.sku_with_colors
+          if material
+            variant.sku_with_material_and_colors material
+          else
+            variant.sku_with_colors
+          end
         end
 
       elsif attr == 'variant_grams'

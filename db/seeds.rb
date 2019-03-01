@@ -98,7 +98,6 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.keywords = item.keywords.strip.chomp(',').strip
       d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
       d.sale_unit = sale_unit
-      d.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
       d.sale_quantity = item.sale_quantity.strip
       d.minimum_quantity = item.minimum_quantity.strip
       d.available_on = Time.now
@@ -151,7 +150,8 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       substrate: substrate,
       backing_type: backing_type,
       product_types: product_types,
-      colors: colors
+      colors: colors,
+      weight: BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
     })
 
     item.images.split(',').map { |i| i.strip }.each do |url|
