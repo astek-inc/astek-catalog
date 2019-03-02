@@ -45,6 +45,14 @@ module Admin
       redirect_to(action: 'index')
     end
 
+    def update_row_order
+      @backing_type = BackingType.find(params[:item_id])
+      @backing_type.row_order_position = params[:row_order_position]
+      @backing_type.save
+
+      render nothing: true
+    end
+
     private
 
     def set_backing_type
