@@ -83,7 +83,7 @@ module Admin
     end
 
     def set_backing_types
-      @backing_types = BackingType.all
+      @backing_types = BackingType.rank(:row_order)
     end
 
     def variant_params
