@@ -4,7 +4,8 @@ module Admin
     before_action :set_backing_type, only: [:edit, :update, :destroy]
 
     def index
-      @backing_types = BackingType.page params[:page]
+      @backing_types = BackingType.rank(:row_order).page params[:page]
+      @position_start = (@backing_types.current_page.present? ? @backing_types.current_page - 1 : 0) * @backing_types.limit_value
     end
 
     def new
