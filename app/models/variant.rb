@@ -64,7 +64,7 @@ class Variant < ActiveRecord::Base
   end
 
   def vendor
-    self.design.collection.vendor.name
+    self.design.vendor.name
   end
 
   def type
