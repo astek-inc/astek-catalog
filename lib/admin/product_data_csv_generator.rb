@@ -295,14 +295,30 @@ module Admin
         if show_image
           case variant_type
           when 'full'
-            if variant.design.digital?
-              'Digital wallcovering image'
+
+            if variant.variant_type.name == 'Color Way'
+              alt_text = "#{variant.design.name} - #{variant.name}"
             else
-              'In-stock wallcovering image'
+              alt_text = "#{variant.name}"
             end
+
+            product_type_names = variant.product_types.map { |t| t.name }
+            if product_type_names.include? 'Murals'
+              alt_text += ' Mural'
+            elsif product_type_names.include? 'Contact Paper'
+              alt_text += ' Contact Paper'
+            elsif product_type_names.include? 'Window Film'
+              alt_text += ' Window Film'
+            else
+              alt_text += ' Wallpaper'
+            end
+
+            alt_text
+            
           else
             nil
           end
+
         else
           nil
         end
