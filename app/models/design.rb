@@ -279,6 +279,10 @@ class Design < ActiveRecord::Base
           'sold-by__RollC'
         when '15'
           'sold-by__RollD'
+        end
+
+      when '27.55'
+        case roll_length
         when '11'
           'sold-by__RollE'
         end
