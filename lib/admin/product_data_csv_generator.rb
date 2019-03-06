@@ -314,7 +314,7 @@ module Admin
             end
 
             alt_text
-            
+
           else
             nil
           end
