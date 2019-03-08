@@ -14,7 +14,7 @@ class Design < ActiveRecord::Base
   belongs_to :sale_unit
   belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id'
 
-  has_many :variants, dependent: :destroy
+  has_many :variants, -> { order(row_order: :asc) }, dependent: :destroy
 
   has_many :design_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
