@@ -3,7 +3,7 @@ require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
 module Admin
   class ProductExportsController < Admin::BaseController
 
-    include ProductDataCsvGenerator
+    include ::Admin::ProductDataCsvGenerator
 
     def index
       @websites = Website.all
