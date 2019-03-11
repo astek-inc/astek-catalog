@@ -24,7 +24,7 @@ Astek.product_exports.collection_name_autocomplete = function(){
         select: function( event, ui ) {
             value = ui.item ? ui.item.id : null;
             $('#collection_id').val(value);
-            // $(this).attr('name', 'collection_name_'+Astek.product_exports.randhex(32));
+            $(this).attr('name', 'collection_name_'+Astek.product_exports.randhex(32));
         },
         change: function(event, ui) {
             if (ui.item === null) {
@@ -33,6 +33,10 @@ Astek.product_exports.collection_name_autocomplete = function(){
             }
             $(this).attr('name', 'collection_name_'+Astek.product_exports.randhex(32));
         }
+    }).click(function(){
+        $(this).attr('name', 'collection_name_'+Astek.product_exports.randhex(32));
+    }).blur(function(){
+        $(this).attr('name', 'collection_name_'+Astek.product_exports.randhex(32));
     });
 };
 
