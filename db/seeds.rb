@@ -103,6 +103,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.available_on = Time.now
       d.styles = styles
       d.vendor = vendor
+      d.country_of_origin = Country.find_by(iso: item.country_of_origin)
 
       # This is a duplicate of a design in another collection,
       # suppress it from display except with its collection
