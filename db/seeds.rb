@@ -64,7 +64,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     end
 
     puts 'Finding or creating collection information for '+item.collection
-    collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category, vendor: vendor }) do |c|
+    collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category }) do |c|
       # If we got here, this is a new record
 
       domains = []
@@ -102,6 +102,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.minimum_quantity = item.minimum_quantity.strip
       d.available_on = Time.now
       d.styles = styles
+      d.vendor = vendor
 
       # This is a duplicate of a design in another collection,
       # suppress it from display except with its collection
@@ -151,7 +152,10 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       backing_type: backing_type,
       product_types: product_types,
       colors: colors,
-      weight: BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
+      weight: BigDecimal(item.weight.strip.gsub(/,/, ''), 2),
+      width: BigDecimal(item.package_width.strip.gsub(/,/, ''), 2),
+      height: BigDecimal(item.package_height.strip.gsub(/,/, ''), 2),
+      depth: BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
     })
 
     item.images.split(',').map { |i| i.strip }.each do |url|
