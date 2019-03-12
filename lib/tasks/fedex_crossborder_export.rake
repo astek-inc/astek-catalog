@@ -1,5 +1,4 @@
 require "#{Rails.root}/lib/admin/fedex_crossborder_csv_generator.rb"
-include Admin::FedexCrossborderCsvGenerator
 
 namespace :db do
   desc 'Export product data for FedEx Crossborder service'
@@ -10,7 +9,7 @@ namespace :db do
       puts 'Getting data for '+collection.name
 
       collection.designs.available.each do |design|
-        csv_data += Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
+        csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
       end
     end
 
