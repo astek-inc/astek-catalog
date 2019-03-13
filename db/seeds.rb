@@ -51,16 +51,20 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
 
     if item.substrate
       substrate = Substrate.find_by(name: item.substrate.strip)
-      backing = nil
+      backing_type = nil
+      if substrate.nil?
+        raise "Cannot find substrate: #{item.substrate}"
+      end
     elsif item.backing
       backing_type = BackingType.find_by(name: item.backing.strip)
       substrate = nil
-    else
-      raise 'Invalid or missing substrate/backing information'
+      if backing_type.nil?
+        raise "Cannot find backing type: #{item.backing_type}"
+      end
     end
 
     puts 'Finding or creating collection information for '+item.collection
-    collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category, vendor: vendor }) do |c|
+    collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category }) do |c|
       # If we got here, this is a new record
 
       domains = []
@@ -76,10 +80,6 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
           end
         end
         c.websites = Website.where(domain: domains)
-      end
-
-      if ['Digital Library', 'Vintage'].include? c.name
-        c.user_can_select_material = true
       end
 
       if ['Digital Library'].include? c.name
@@ -98,11 +98,12 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       d.keywords = item.keywords.strip.chomp(',').strip
       d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
       d.sale_unit = sale_unit
-      d.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
       d.sale_quantity = item.sale_quantity.strip
       d.minimum_quantity = item.minimum_quantity.strip
       d.available_on = Time.now
       d.styles = styles
+      d.vendor = vendor
+      d.country_of_origin = Country.find_by(iso: item.country_of_origin)
 
       # This is a duplicate of a design in another collection,
       # suppress it from display except with its collection
@@ -111,6 +112,25 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
           d.suppress_from_searches = true
           d.master_sku = item.master_sku
         end
+      end
+
+      if item.respond_to? 'price_code'
+        d.price_code = item.price_code.strip
+      end
+
+      # Custom materials should really be associated with Colorways (variants),
+      # but the website only displays material options by design
+      if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? collection.name
+        d.user_can_select_material = true
+      end
+    end
+
+    # Custom materials should really be associated with Colorways (variants),
+    # but the website only displays material options by design
+    if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? collection.name
+      puts 'Adding custom materials'
+      Substrate.where('default_custom_material_group = ?', true).each do |s|
+        design.set_custom_material s
       end
     end
 
@@ -133,7 +153,11 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
       substrate: substrate,
       backing_type: backing_type,
       product_types: product_types,
-      colors: colors
+      colors: colors,
+      weight: BigDecimal(item.weight.strip.gsub(/,/, ''), 2),
+      width: BigDecimal(item.package_width.strip.gsub(/,/, ''), 2),
+      height: BigDecimal(item.package_height.strip.gsub(/,/, ''), 2),
+      depth: BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
     })
 
     item.images.split(',').map { |i| i.strip }.each do |url|

@@ -68,7 +68,11 @@ div#suppress-from-searches {
     padding-top: 20px;
 }
 
-div#suppress-from-display,
+div#default_custom_material_group,
 div#user-can-select-material {
-    padding-top: 10px;
+    padding-top: 5px;
+}
+
+div.panel-body.checkbox-wrapper {
+    padding: 0 15px 0;
 }

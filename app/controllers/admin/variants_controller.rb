@@ -83,11 +83,14 @@ module Admin
     end
 
     def set_backing_types
-      @backing_types = BackingType.all
+      @backing_types = BackingType.rank(:row_order)
     end
 
     def variant_params
-      params.require(:variant).permit(:variant_type_id, :name, :sku, :keywords, :design_id, :substrate_id, :backing_type_id, product_type_ids: [], color_ids: [])
+      params.require(:variant).permit(
+          :variant_type_id, :name, :sku, :keywords, :design_id, :substrate_id, :backing_type_id,
+          :weight, :width, :height, :depth, product_type_ids: [], color_ids: []
+      )
     end
 
   end

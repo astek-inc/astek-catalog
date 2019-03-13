@@ -1,7 +1,18 @@
 
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label(:name, 'Name <span class="required">*</span>'.html_safe) %>
-  <%= f.text_field :name, required: true, class: 'form-control' %>
+<%= content_tag :div, class: ['row'] do %>
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label(:name, 'Name <span class="required">*</span>'.html_safe) %>
+      <%= f.text_field :name, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :display_name, 'Display Name' %>
+      <%= f.text_field :display_name, class: 'form-control' %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
@@ -30,4 +41,23 @@
 <%= content_tag :div, class: ['form-group'] do %>
   <%= f.label :backing_type, 'Backing Type' %>
   <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { prompt: 'Select' }, { class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: ['row'] do %>
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= content_tag :div, class: ['checkbox'], id: 'default_custom_material_group' do %>
+        <%= f.label :default_custom_material_group do %>
+          <%= f.check_box :default_custom_material_group %> Default custom material group
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :price, 'Custom Material Surcharge' %> <span class="required">*</span>
+      <%= f.text_field :custom_material_surcharge, value: number_to_currency(f.object.custom_material_surcharge.to_f, delimiter: '', unit: ''), required: false, class: 'form-control' %>
+    <% end %>
+  <% end %>
 <% end %>
