@@ -1,5 +1,4 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
-include Admin::ProductDataCsvGenerator
 
 namespace :db do
   desc 'Export product information for a single design that is flagged to show on a given domain'
@@ -33,7 +32,7 @@ namespace :db do
       end
 
       puts 'Getting data for '+design.name
-      csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
+      csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
 
     end
 

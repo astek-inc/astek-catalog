@@ -1,5 +1,5 @@
 require "#{Rails.root}/lib/admin/order_limits_csv_generator.rb"
-include Admin::OrderLimitsCsvGenerator
+# include Admin::OrderLimitsCsvGenerator
 
 namespace :db do
   desc 'Export all order limits'
@@ -17,7 +17,7 @@ namespace :db do
       puts 'Getting data for '+collection.name
 
       collection.designs.each do |design|
-        csv_data += Admin::OrderLimitsCsvGenerator.order_limits_csv design
+        csv_data += ::Admin::OrderLimitsCsvGenerator.order_limits_csv design
       end
     end
 
