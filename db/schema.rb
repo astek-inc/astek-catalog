@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181108184527) do
+ActiveRecord::Schema.define(version: 20190302000754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,22 +23,23 @@ ActiveRecord::Schema.define(version: 20181108184527) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.datetime "deleted_at"
+    t.integer  "row_order"
   end
 
   add_index "backing_types", ["deleted_at"], name: "index_backing_types_on_deleted_at", using: :btree
+  add_index "backing_types", ["row_order"], name: "index_backing_types_on_row_order", using: :btree
 
   create_table "collections", force: :cascade do |t|
     t.integer  "product_category_id"
     t.string   "name"
     t.text     "description"
-    t.integer  "vendor_id"
     t.integer  "lead_time_id"
     t.text     "keywords"
-    t.boolean  "suppress_from_display",    default: false, null: false
-    t.boolean  "user_can_select_material", default: false, null: false
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.boolean  "suppress_from_display",               default: false, null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.datetime "deleted_at"
+    t.boolean  "suppress_sample_option_from_display", default: false, null: false
   end
 
   add_index "collections", ["deleted_at"], name: "index_collections_on_deleted_at", using: :btree
@@ -66,6 +67,41 @@ ActiveRecord::Schema.define(version: 20181108184527) do
   add_index "colors_variants", ["color_id", "variant_id"], name: "index_colors_variants_on_color_id_and_variant_id", using: :btree
   add_index "colors_variants", ["variant_id", "color_id"], name: "index_colors_variants_on_variant_id_and_color_id", using: :btree
 
+  create_table "countries", force: :cascade do |t|
+    t.string   "name"
+    t.string   "iso_name"
+    t.string   "iso",         limit: 2
+    t.string   "iso3",        limit: 3
+    t.string   "numcode",     limit: 3
+    t.integer  "currency_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "countries", ["deleted_at"], name: "index_countries_on_deleted_at", using: :btree
+
+  create_table "currencies", force: :cascade do |t|
+    t.string   "name"
+    t.string   "code",            limit: 3
+    t.string   "symbol"
+    t.string   "symbol_position"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "currencies", ["deleted_at"], name: "index_currencies_on_deleted_at", using: :btree
+
+  create_table "custom_materials", force: :cascade do |t|
+    t.integer "design_id"
+    t.integer "substrate_id"
+    t.boolean "default_material"
+  end
+
+  add_index "custom_materials", ["design_id", "substrate_id"], name: "index_custom_materials_on_design_id_and_substrate_id", using: :btree
+  add_index "custom_materials", ["substrate_id", "design_id"], name: "index_custom_materials_on_substrate_id_and_design_id", using: :btree
+
   create_table "data_migrations", id: false, force: :cascade do |t|
     t.string "version", null: false
   end
@@ -91,20 +127,22 @@ ActiveRecord::Schema.define(version: 20181108184527) do
     t.string   "sku"
     t.text     "description"
     t.text     "keywords"
-    t.decimal  "price",                  precision: 8, scale: 2
+    t.decimal  "price",                    precision: 8, scale: 2
     t.integer  "sale_unit_id"
-    t.decimal  "weight",                 precision: 5, scale: 2
-    t.integer  "sale_quantity",                                  default: 1
-    t.integer  "minimum_quantity",                               default: 1
-    t.boolean  "suppress_from_searches",                         default: false
+    t.integer  "sale_quantity",                                    default: 1
+    t.integer  "minimum_quantity",                                 default: 1
+    t.boolean  "suppress_from_searches",                           default: false
     t.datetime "available_on"
     t.datetime "expires_on"
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
     t.datetime "deleted_at"
     t.integer  "row_order"
     t.string   "master_sku"
     t.string   "price_code"
+    t.boolean  "user_can_select_material"
+    t.integer  "country_id"
+    t.integer  "vendor_id"
   end
 
   add_index "designs", ["deleted_at"], name: "index_designs_on_deleted_at", using: :btree
@@ -219,6 +257,17 @@ ActiveRecord::Schema.define(version: 20181108184527) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "states", force: :cascade do |t|
+    t.string   "name"
+    t.string   "abbr"
+    t.integer  "country_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "states", ["deleted_at"], name: "index_states_on_deleted_at", using: :btree
+
   create_table "styles", force: :cascade do |t|
     t.string   "name",       null: false
     t.datetime "created_at", null: false
@@ -247,9 +296,12 @@ ActiveRecord::Schema.define(version: 20181108184527) do
     t.text     "description"
     t.text     "keywords"
     t.integer  "backing_type_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.datetime "deleted_at"
+    t.boolean  "default_custom_material_group"
+    t.decimal  "custom_material_surcharge",     precision: 8, scale: 2
+    t.string   "display_name"
   end
 
   add_index "substrates", ["deleted_at"], name: "index_substrates_on_deleted_at", using: :btree
@@ -298,9 +350,13 @@ ActiveRecord::Schema.define(version: 20181108184527) do
     t.integer  "backing_type_id"
     t.integer  "row_order"
     t.string   "tearsheet"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.datetime "deleted_at"
+    t.decimal  "weight",          precision: 5, scale: 2
+    t.decimal  "width",           precision: 5, scale: 2
+    t.decimal  "height",          precision: 5, scale: 2
+    t.decimal  "depth",           precision: 5, scale: 2
   end
 
   add_index "variants", ["deleted_at"], name: "index_variants_on_deleted_at", using: :btree
@@ -329,10 +385,12 @@ ActiveRecord::Schema.define(version: 20181108184527) do
 
   add_foreign_key "collections", "lead_times"
   add_foreign_key "collections", "product_categories"
-  add_foreign_key "collections", "vendors"
   add_foreign_key "designs", "collections"
+  add_foreign_key "designs", "countries"
   add_foreign_key "designs", "sale_units"
+  add_foreign_key "designs", "vendors"
   add_foreign_key "product_types", "product_categories"
+  add_foreign_key "states", "countries"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "variants", "backing_types"
   add_foreign_key "variants", "designs"

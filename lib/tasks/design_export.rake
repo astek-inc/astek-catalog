@@ -1,5 +1,4 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
-include Admin::ProductDataCsvGenerator
 
 namespace :db do
   desc 'Export product information for a single design that is flagged to show on a given domain'
@@ -33,12 +32,17 @@ namespace :db do
       end
 
       puts 'Getting data for '+design.name
-      csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
+      csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
 
     end
 
+    if skus.length < 10
+      skus_for_filename = skus.map { |s| s.downcase.gsub(/[^a-z0-9]/, '') }.join('-')
+    else
+      skus_for_filename = 'assorted-skus'
+    end
 
-    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-assorted-skus.csv"
+    filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{skus_for_filename}.csv"
 
     storage = Fog::Storage.new(
         provider: 'AWS',

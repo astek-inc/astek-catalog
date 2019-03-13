@@ -10,9 +10,11 @@ class Design < ActiveRecord::Base
   scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
 
   belongs_to :collection
+  belongs_to :vendor, inverse_of: :designs
   belongs_to :sale_unit
+  belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id'
 
-  has_many :variants, dependent: :destroy
+  has_many :variants, -> { order(row_order: :asc) }, dependent: :destroy
 
   has_many :design_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
@@ -20,6 +22,11 @@ class Design < ActiveRecord::Base
   has_many :properties, through: :design_properties
 
   has_and_belongs_to_many :styles
+
+  # Custom materials should really be associated with Colorways (variants),
+  # but the website only displays material options by design
+  has_many :custom_materials, dependent: :destroy, inverse_of: :design
+  has_many :substrates, through: :custom_materials
 
   validates :name, presence: true
   validates :sku, presence: true
@@ -47,6 +54,10 @@ class Design < ActiveRecord::Base
     end
   end
 
+  def set_custom_material substrate
+    CustomMaterial.find_or_create_by!(design: self, substrate: substrate, default_material: substrate.name == 'Paper')
+  end
+
   def available?
     self.expires_on.nil? || self.expires_on > Time.now
   end
@@ -70,7 +81,7 @@ class Design < ActiveRecord::Base
       tags = []
 
       tags << to_tags('style', self.styles.map { |s| s.name })
-      tags << to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name } }.flatten.uniq)
+      tags << to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.downcase } }.flatten.uniq)
 
       if domain == 'astek.com'
         if self.digital?
@@ -272,6 +283,10 @@ class Design < ActiveRecord::Base
           'sold-by__RollC'
         when '15'
           'sold-by__RollD'
+        end
+
+      when '27.55'
+        case roll_length
         when '11'
           'sold-by__RollE'
         end
@@ -330,13 +345,29 @@ class Design < ActiveRecord::Base
       roll_width = self.property('roll_width_inches')
 
       case roll_width
+      when '35'
+        if self.minimum_quantity == 4
+          'sold-by__YardEMin4'
+        end
       when '36'
         if self.minimum_quantity == 4
           'sold-by__YardAMin4'
         end
+      when '37'
+        if self.minimum_quantity == 4
+          'sold-by__YardFMin4'
+          end
+      when '38'
+        if self.minimum_quantity == 4
+          'sold-by__YardGMin4'
+        end
       when '48'
         if self.minimum_quantity == 4
           'sold-by__YardBMin4'
+        end
+      when '49'
+        if self.minimum_quantity == 4
+          'sold-by__YardHMin4'
         end
       when '54'
         case self.minimum_quantity

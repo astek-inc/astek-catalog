@@ -3,8 +3,6 @@ require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
 module Admin
   class ProductExportsController < Admin::BaseController
 
-    include ProductDataCsvGenerator
-
     def index
       @websites = Website.all
     end
@@ -16,7 +14,7 @@ module Admin
 
       csv_data = ''
       collection.designs.available.each do |design|
-        csv_data += product_data_csv design, website.domain, csv_data.empty?
+        csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
       end
 
       respond_to do |format|

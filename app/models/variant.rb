@@ -46,7 +46,7 @@ class Variant < ActiveRecord::Base
 
   # Sites require weight in grams, in whole numbers (no decimals)
   def variant_grams
-    (self.design.weight * BigDecimal('453.592')).round.to_s
+    (self.weight * BigDecimal('453.592')).round.to_s
   end
 
   def published?
@@ -66,7 +66,7 @@ class Variant < ActiveRecord::Base
   end
 
   def vendor
-    self.design.collection.vendor.name
+    self.design.vendor.name
   end
 
   def type
@@ -83,10 +83,23 @@ class Variant < ActiveRecord::Base
     self.design.price.to_s
   end
 
-  # For export to Shopify websites
+  # For export to Shopify websites. Color is appended to ensure the product appears in search results.
+  def sample_sku
+    self.sku + '-s'
+  end
+
+  def sample_sku_with_material material
+    self.sku + '-' + material.name.parameterize + '-s'
+  end
+
   def sku_with_colors
     self.sku + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
   end
+
+  def sku_with_material_and_colors material
+    self.sku + '-' + material.name.parameterize + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
+  end
+  #
 
   def generate_tearsheet
     filename = Rails.root.join('tmp', self.sku+'.pdf')
