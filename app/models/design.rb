@@ -54,6 +54,10 @@ class Design < ActiveRecord::Base
     end
   end
 
+  def set_custom_material substrate
+    CustomMaterial.find_or_create_by!(design: self, substrate: substrate, default_material: substrate.name == 'Paper')
+  end
+
   def available?
     self.expires_on.nil? || self.expires_on > Time.now
   end

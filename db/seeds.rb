@@ -128,8 +128,9 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
     # Custom materials should really be associated with Colorways (variants),
     # but the website only displays material options by design
     if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? collection.name
+      puts 'Adding custom materials'
       Substrate.where('default_custom_material_group = ?', true).each do |s|
-        design.custom_materials << CustomMaterial.create!(design: design, substrate: s, default_material: s.name == 'Paper')
+        design.set_custom_material s
       end
     end
 
