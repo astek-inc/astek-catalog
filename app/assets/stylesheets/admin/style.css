@@ -68,7 +68,10 @@ div#suppress-from-searches {
     padding-top: 20px;
 }
 
-div#default_custom_material_group,
+div#default_custom_material_group {
+   padding: 20px 0 0 20px;
+}
+
 div#user-can-select-material {
     padding-top: 5px;
 }
