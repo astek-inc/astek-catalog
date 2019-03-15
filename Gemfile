@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.5.3'
+
 gem 'rails', '4.2.11'
 gem 'rails-api'
 gem 'active_model_serializers', '~> 0.10.0'
