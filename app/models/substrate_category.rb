@@ -1,4 +1,4 @@
-class SubstrateCategory < ActiveRecord::Base
+class SubstrateCategory < ApplicationRecord
 
   resourcify
 

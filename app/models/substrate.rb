@@ -1,4 +1,4 @@
-class Substrate < ActiveRecord::Base
+class Substrate < ApplicationRecord
 
   resourcify
 

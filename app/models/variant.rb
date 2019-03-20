@@ -1,4 +1,4 @@
-class Variant < ActiveRecord::Base
+class Variant < ApplicationRecord
 
   resourcify
 
@@ -11,8 +11,8 @@ class Variant < ActiveRecord::Base
 
   belongs_to :design
   belongs_to :variant_type
-  belongs_to :substrate
-  belongs_to :backing_type
+  belongs_to :substrate, optional: true
+  belongs_to :backing_type, optional: true
 
   has_many :variant_swatch_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   has_many :variant_install_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy

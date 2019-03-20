@@ -1,4 +1,4 @@
-class CustomMaterial < ActiveRecord::Base
+class CustomMaterial < ApplicationRecord
 
   resourcify
 

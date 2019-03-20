@@ -1,4 +1,4 @@
-class Website < ActiveRecord::Base
+class Website < ApplicationRecord
 
   resourcify
 

@@ -3,7 +3,7 @@ module Admin
 
     before_action :set_variant, only: [:edit, :update, :destroy]
     before_action :set_design, :set_collection
-    before_action :set_product_types, :set_colors, :set_substrates, :set_backing_types, only: [:new, :edit]
+    before_action :set_product_types, :set_colors, :set_substrates, :set_backing_types, only: [:new, :create, :edit, :update]
 
     def index
       @variants = Variant.where(design_id: @design.id).rank(:row_order).page params[:page]
@@ -38,6 +38,12 @@ module Admin
         flash[:notice] = 'Variant updated.'
         redirect_to(action: 'index')
       else
+        if @variant.errors.any?
+          msg = @variant.errors.full_messages.join(', ')
+        else
+          msg = 'Error updating variant.'
+        end
+        flash[:error] = msg
         render('edit')
       end
     end
