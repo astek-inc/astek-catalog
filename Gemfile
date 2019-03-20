@@ -49,6 +49,8 @@ gem 'data_migrate'
 # PDF tearsheet generation
 gem 'prawn-rails'
 
+gem 'verbs'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
