@@ -15,15 +15,10 @@ module Admin
     def create
       @backing_type = BackingType.new(backing_type_params)
       if @backing_type.save
-        flash[:notice] = 'Product type created.'
+        flash[:notice] = 'Backing type created.'
         redirect_to(action: 'index')
       else
-        if @backing_type.errors.any?
-          msg = @backing_type.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating backing type.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @backing_type
         render('new')
       end
     end
@@ -32,17 +27,18 @@ module Admin
     end
 
     def update
-      if @backing_type.update_attributes(backing_type_params)
-        flash[:notice] = 'Product type updated.'
+      if @backing_type.update(backing_type_params)
+        flash[:notice] = 'Backing type updated.'
         redirect_to(action: 'index')
       else
+        flash[:error] = error_message @backing_type
         render('edit')
       end
     end
 
     def destroy
       @backing_type.destroy
-      flash[:notice] = 'Product type removed.'
+      flash[:notice] = 'Backing type removed.'
       redirect_to(action: 'index')
     end
 

@@ -18,12 +18,7 @@ module Admin
         flash[:notice] = 'Substrate created.'
         redirect_to(action: 'index')
       else
-        if @substrate.errors.any?
-          msg = @substrate.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating substrate.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @substrate
         render('new')
       end
     end
@@ -36,12 +31,7 @@ module Admin
         flash[:notice] = 'Substrate updated.'
         redirect_to(action: 'index')
       else
-        if @substrate.errors.any?
-          msg = @substrate.errors.full_messages.join(', ')
-        else
-          msg = 'Error updating substrate.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @substrate
         render('edit')
       end
     end
