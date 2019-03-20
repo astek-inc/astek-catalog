@@ -2,7 +2,7 @@ module Admin
   class SubstratesController < Admin::BaseController
 
     before_action :set_substrate, only: [:edit, :update, :destroy]
-    before_action :set_substrate_categories, only: [:new, :edit]
+    before_action :set_substrate_categories, only: [:new, :create, :edit, :update]
 
     def index
       @substrates = Substrate.page params[:page]
@@ -36,7 +36,12 @@ module Admin
         flash[:notice] = 'Substrate updated.'
         redirect_to(action: 'index')
       else
-        flash[:error] = 'Error updating substrate.'
+        if @substrate.errors.any?
+          msg = @substrate.errors.full_messages.join(', ')
+        else
+          msg = 'Error updating substrate.'
+        end
+        flash[:error] = msg
         render('edit')
       end
     end
