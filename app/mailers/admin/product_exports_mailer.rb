@@ -9,6 +9,3 @@ module Admin
     end
   end
 end
-
-
-# Admin::ProductExportsMailer.with(user: User.first, collection: Collection.first, csv_url: 'https://www.example.com/test').notification_email.deliver_now

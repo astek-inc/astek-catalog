@@ -16,6 +16,8 @@ module AstekCatalog
     # config.time_zone = 'Central Time (US & Canada)'
 
     ActiveModelSerializers.config.adapter = :json_api
+    
+    config.active_job.queue_adapter = :sucker_punch
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

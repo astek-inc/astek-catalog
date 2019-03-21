@@ -49,6 +49,10 @@ gem 'data_migrate'
 # PDF tearsheet generation
 gem 'prawn-rails'
 
+# Background jobs
+gem 'sucker_punch'
+
+# Conjugate verbs in controlller error messages
 gem 'verbs'
 
 # To use ActiveModel has_secure_password
