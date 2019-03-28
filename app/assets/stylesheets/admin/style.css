@@ -79,3 +79,8 @@ div#user-can-select-material {
 div.panel-body.checkbox-wrapper {
     padding: 0 15px 0;
 }
+
+div.export_form {
+    margin-left: 20px;
+    margin-bottom: 2rem;
+}
