@@ -90,15 +90,3 @@ Astek.product_exports.randhex = function(len) {
     }
     return r;
 };
-
-$(function() {
-    if ($('#collection_name').length) {
-        Astek.product_exports.collection_name_autocomplete();
-    }
-
-    if ($('#design_name').length) {
-        Astek.product_exports.design_name_autocomplete();
-    }
-});
-
-

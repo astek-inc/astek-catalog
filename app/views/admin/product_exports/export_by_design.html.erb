@@ -1,3 +1,9 @@
+<script>
+    $(function() {
+        Astek.product_exports.design_name_autocomplete();
+    });
+</script>
+
 <% content_for :header_left do %>
   <%= content_tag :h1, [link_to('Product Data Export', export_by_collection_admin_product_exports_path), 'Export by Design'].join(' / ').html_safe %>
 <% end %>
