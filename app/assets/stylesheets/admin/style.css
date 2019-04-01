@@ -68,11 +68,19 @@ div#suppress-from-searches {
     padding-top: 20px;
 }
 
-div#default_custom_material_group,
+div#default_custom_material_group {
+   padding: 20px 0 0 20px;
+}
+
 div#user-can-select-material {
     padding-top: 5px;
 }
 
 div.panel-body.checkbox-wrapper {
     padding: 0 15px 0;
+}
+
+div.export_form {
+    margin-left: 20px;
+    margin-bottom: 2rem;
 }

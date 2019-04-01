@@ -1,4 +1,4 @@
-class DesignProperty < ActiveRecord::Base
+class DesignProperty < ApplicationRecord
 
   belongs_to :design, inverse_of: :design_properties
   belongs_to :property, inverse_of: :design_properties

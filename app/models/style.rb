@@ -1,4 +1,4 @@
-class Style < ActiveRecord::Base
+class Style < ApplicationRecord
 
   resourcify
 

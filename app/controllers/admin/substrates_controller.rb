@@ -2,7 +2,7 @@ module Admin
   class SubstratesController < Admin::BaseController
 
     before_action :set_substrate, only: [:edit, :update, :destroy]
-    before_action :set_substrate_categories, only: [:new, :edit]
+    before_action :set_substrate_categories, only: [:new, :create, :edit, :update]
 
     def index
       @substrates = Substrate.page params[:page]
@@ -18,12 +18,7 @@ module Admin
         flash[:notice] = 'Substrate created.'
         redirect_to(action: 'index')
       else
-        if @substrate.errors.any?
-          msg = @substrate.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating substrate.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @substrate
         render('new')
       end
     end
@@ -36,7 +31,7 @@ module Admin
         flash[:notice] = 'Substrate updated.'
         redirect_to(action: 'index')
       else
-        flash[:error] = 'Error updating substrate.'
+        flash[:error] = error_message @substrate
         render('edit')
       end
     end

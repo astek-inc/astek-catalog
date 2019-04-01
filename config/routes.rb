@@ -18,8 +18,19 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
-    get 'product_exports/generate_csv', to: 'product_exports#generate_csv', as: 'product_export_generate_csv', defaults: { format: 'csv' }
-    resources :product_exports, only: :index
+    resources :product_exports, only: [] do
+      collection do
+        get 'export_by_collection'
+        get 'export_by_design'
+        get 'export_by_sku'
+        get 'export_all'
+        get 'generate_collection_csv', defaults: { format: 'csv' }
+        get 'generate_design_csv', defaults: { format: 'csv' }
+        get 'generate_skus_csv', defaults: { format: 'csv' }
+        get 'generate_skus_csv', defaults: { format: 'csv' }
+        get 'generate_all_csv', defaults: { format: 'csv' }
+      end
+    end
 
     get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
     resources :order_limits_exports, only: :index
@@ -66,6 +77,8 @@ Rails.application.routes.draw do
     end
 
     resources :designs, only: [] do
+
+      get :search, on: :collection
 
       # resources :design_styles #, only: :index
 

@@ -1,4 +1,4 @@
-class ProductCategory < ActiveRecord::Base
+class ProductCategory < ApplicationRecord
 
   resourcify
 

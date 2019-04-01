@@ -1,0 +1,44 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [link_to('Product Data Export', export_by_sku_admin_product_exports_path), 'Export by SKU'].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'export_form' do %>
+  <%= content_tag :div, class: 'row' do %>
+
+    <%= content_tag :div, class: 'col-md-9' do %>
+
+      <p class="help-block">
+        Select a website, enter a comma-separated list of design SKUs, and submit to download a CSV file of the selected
+        designs' data formatted for the selected website.
+      </p>
+
+      <%= form_tag generate_skus_csv_admin_product_exports_path, method: :get do %>
+        <%= content_tag :div, { class: 'col-md-4' } do %>
+          <%= content_tag :div, class: 'form-group' do %>
+            <%= label_tag 'website_id', 'Website' %> <span class="required">*</span>
+            <%= select_tag 'website_id', options_from_collection_for_select(@websites, :id, :name), { prompt: 'Select', id: 'website_id', class: 'form-control', required: true } %>
+          <%end %>
+        <%end %>
+
+        <%= content_tag :div, class: 'col-md-6' do %>
+          <%= content_tag :div, class: 'form-group' do %>
+            <%= label_tag 'design_skus', 'Design SKUs' %> <span class="required">*</span>
+            <%= text_field_tag 'design_skus', nil, { id: 'design_skus', class: 'form-control', required: true, autocomplete: 'off' } %>
+          <% end %>
+        <% end %>
+
+        <%= content_tag :div, { class: 'col-md-2', id: 'product-export-submit-container' } do %>
+          <%= submit_button %>
+        <% end %>
+      <% end %>
+
+    <% end %>
+
+    <%= content_tag :div, class: 'col-md-3' do %>
+      <%= render partial: 'subnav', locals: { current: 'by_sku' } %>
+    <% end %>
+
+  <% end %>
+<% end %>

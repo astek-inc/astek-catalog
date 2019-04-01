@@ -1,4 +1,4 @@
-class Design < ActiveRecord::Base
+class Design < ApplicationRecord
 
   resourcify
 

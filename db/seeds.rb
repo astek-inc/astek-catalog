@@ -6,6 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+require "#{Rails.root}/lib/admin/tearsheet_generator.rb"
 
 require 'csv'
 # require 'pp'
@@ -188,7 +189,7 @@ Dir.glob(dirpath+'/*.csv') do |filepath|
 
     if collection.product_category.name == 'Digital'
       puts 'Generating tearsheet'
-      variant.generate_tearsheet
+      ::Admin::TearsheetGenerator.generate variant
     end
 
     puts $\

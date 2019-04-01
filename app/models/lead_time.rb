@@ -1,4 +1,4 @@
-class LeadTime < ActiveRecord::Base
+class LeadTime < ApplicationRecord
 
   resourcify
 

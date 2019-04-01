@@ -1,6 +1,6 @@
 $(function(){
     setTimeout(function() {
-        $('div.alert-info, div.alert-success').hide('slow')
+        $('div.alert-info, div.alert-success, div.alert-warning').hide('slow')
     }, 5000);
 });
 
