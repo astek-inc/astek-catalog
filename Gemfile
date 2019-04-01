@@ -1,8 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.11'
-gem 'rails-api'
-gem 'active_model_serializers', '~> 0.10.0'
+ruby '2.5.3'
+
+gem 'rails', '5.2.2.1'
+gem 'active_model_serializers'
+
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use postgresql as the database for Active Record
 # gem 'pg'
@@ -11,14 +15,12 @@ gem 'pg', '~> 0.20.0'
 
 gem 'puma'
 
-gem 'rails_12factor', group: :production
-
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.3'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -50,6 +52,12 @@ gem 'prawn-rails'
 # Search
 gem 'ransack', github: 'activerecord-hackery/ransack'
 
+# Background jobs
+gem 'sucker_punch'
+
+# Conjugate verbs in controlller error messages
+gem 'verbs'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -68,5 +76,6 @@ gem 'ransack', github: 'activerecord-hackery/ransack'
 gem 'spring', group: :development
 
 group :development, :test do
+  gem 'listen'
   gem 'figaro'
 end

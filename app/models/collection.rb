@@ -1,4 +1,4 @@
-class Collection < ActiveRecord::Base
+class Collection < ApplicationRecord
 
   resourcify
 
@@ -9,7 +9,7 @@ class Collection < ActiveRecord::Base
   has_many :designs, -> { order(row_order: :asc) }, dependent: :destroy
   has_many :collection_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
-  belongs_to :lead_time
+  belongs_to :lead_time, optional: true
 
   has_and_belongs_to_many :websites
 

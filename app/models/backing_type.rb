@@ -1,4 +1,4 @@
-class BackingType < ActiveRecord::Base
+class BackingType < ApplicationRecord
 
   resourcify
 

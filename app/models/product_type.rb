@@ -1,4 +1,4 @@
-class ProductType < ActiveRecord::Base
+class ProductType < ApplicationRecord
 
   resourcify
 

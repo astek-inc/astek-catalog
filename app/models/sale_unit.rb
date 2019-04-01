@@ -1,4 +1,4 @@
-class SaleUnit < ActiveRecord::Base
+class SaleUnit < ApplicationRecord
 
   resourcify
 

@@ -1,3 +1,5 @@
+require "#{Rails.root}/lib/admin/tearsheet_generator.rb"
+
 module Admin
   class VariantTearsheetsController < ApplicationController
 
@@ -11,7 +13,7 @@ module Admin
     def generate
       respond_to do |format|
         format.pdf do
-          @variant.generate_tearsheet
+          ::Admin::TearsheetGenerator.generate @variant
           flash[:notice] = 'Tearsheet generated.'
           redirect_to(action: 'show')
         end

@@ -1,4 +1,4 @@
-class Vendor < ActiveRecord::Base
+class Vendor < ApplicationRecord
   resourcify
   acts_as_paranoid
   has_many :designs, inverse_of: :vendor

@@ -1,25 +1,48 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
-
 module Admin
   class ProductExportsController < Admin::BaseController
 
-    def index
-      @websites = Website.all
+    before_action :set_websites, only: [:export_by_collection, :export_by_design, :export_by_sku, :export_all]
+
+    def export_by_collection
     end
 
-    def generate_csv
-      collection = Collection.find(params[:collection_id])
-      website = Website.find(params[:website_id])
+    def export_by_design
+    end
 
+    def export_by_sku
+    end
 
-      csv_data = ''
-      collection.designs.available.each do |design|
-        csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
-      end
+    def export_all
+    end
 
-      respond_to do |format|
-        format.csv { send_data csv_data, type: 'text/csv; charset=utf-8; header=present', filename: "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{collection.name.parameterize}.csv" }
-      end
+    def generate_collection_csv
+      CollectionExportJob.perform_later(params[:collection_id], params[:website_id], current_user)
+      flash[:notice] = 'The collection has been queued for export. You will receive a notification by email when your CSV file is ready.'
+      redirect_to(action: 'export_by_collection')
+    end
+
+    def generate_design_csv
+      DesignExportJob.perform_later(params[:design_id], params[:website_id], current_user)
+      flash[:notice] = 'The design has been queued for export. You will receive a notification by email when your CSV file is ready.'
+      redirect_to(action: 'export_by_design')
+    end
+
+    def generate_skus_csv
+      SkusExportJob.perform_later(params[:design_skus], params[:website_id], current_user)
+      flash[:notice] = 'The designs have been queued for export. You will receive a notification by email when your CSV file is ready.'
+      redirect_to(action: 'export_by_sku')
+    end
+
+    def generate_all_csv
+      AllExportJob.perform_later(params[:website_id], current_user)
+      flash[:notice] = 'The data has been queued for export. You will receive a notification by email when your CSV file is ready.'
+      redirect_to(action: 'export_all')
+    end
+
+    private
+
+    def set_websites
+      @websites = Website.all
     end
 
   end

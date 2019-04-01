@@ -1,4 +1,4 @@
-class VariantType < ActiveRecord::Base
+class VariantType < ApplicationRecord
 
   resourcify
 

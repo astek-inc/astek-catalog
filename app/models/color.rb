@@ -1,4 +1,4 @@
-class Color < ActiveRecord::Base
+class Color < ApplicationRecord
 
   resourcify
 

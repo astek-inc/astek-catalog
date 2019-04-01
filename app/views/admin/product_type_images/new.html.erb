@@ -14,7 +14,7 @@
             <%= content_tag :div, class: ['form-group'] do %>
                 <%= f.label :file, 'Image' %> <span class="required">*</span>
                 <%= f.file_field :file, required: true, class: 'form-control' %>
-                <%= f.hidden_field :type, value: @product_type_image.class.name %>
+                <%#= f.hidden_field :type, value: @product_type_image.class.name %>
                 <%= f.hidden_field :owner_id, value: @product_type.id %>
                 <%#= f.hidden_field :image_cache %>
             <% end %>
