@@ -92,8 +92,8 @@ class Design < ApplicationRecord
         end
       end
 
-      if self.keywords
-        tags << to_tags('keyword', self.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? })
+      if all_keywords = self.merged_keywords
+        tags << to_tags('keyword', all_keywords)
       end
 
       tags << to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
@@ -117,6 +117,21 @@ class Design < ApplicationRecord
 
   def to_tag name, value
     "#{name}__#{value.strip}"
+  end
+
+  def merged_keywords
+    collection_keywords = []
+    design_keywords = []
+
+    if self.collection.keywords
+      collection_keywords = self.collection.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
+    end
+
+    if self.keywords
+      design_keywords = self.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
+    end
+
+    (collection_keywords + design_keywords).uniq
   end
 
   def calculator_tag
