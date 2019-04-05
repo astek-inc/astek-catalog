@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    resources :product_imports, except: [:show, :delete], concerns: :paginatable
+
     resources :product_exports, only: [] do
       collection do
         get 'export_by_collection'

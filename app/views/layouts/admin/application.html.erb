@@ -91,7 +91,9 @@
 
             <%= nav_link 'Collections', 'book', admin_collections_path %>
 
-            <%= subnav_group_header 'Data Export', 'export', '#data-exports' %>
+            <%= nav_link 'Product Data Import', 'import', admin_product_imports_path %>
+
+            <%= subnav_group_header 'Product Data Export', 'export', '#data-exports' %>
             <%= content_tag :div, id: 'data-exports', class: 'sublinks collapse' do %>
               <%= nav_sublink 'Products', export_by_collection_admin_product_exports_path %>
               <%= nav_sublink 'Order Limits', admin_order_limits_exports_path %>
