@@ -198,6 +198,10 @@ class Design < ApplicationRecord
 
       when '17.72'
         case roll_length
+        when '1.64'
+          'sold-by__RollAP'
+        when '2.19'
+          'sold-by__RollAQ'
         when '5.47'
           'sold-by__RollO'
         when '10.94'
@@ -288,6 +292,8 @@ class Design < ApplicationRecord
 
       when '26.57'
         case roll_length
+        when '1.64'
+          'sold-by__RollAR'
         when '10.94'
           'sold-by__RollQ'
         end
