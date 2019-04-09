@@ -151,7 +151,10 @@ module Admin
 
         if collection.product_category.name == 'Digital'
           puts 'Generating tearsheet'
-          ::Admin::TearsheetGenerator.generate variant
+          # This is a workaround. Accented characters seem to throw a rawn error if read directly from the CSV file,
+          # but they are OK when pulled from the database.
+          v = Variant.find(variant.id)
+          ::Admin::TearsheetGenerator.generate v
         end
       end
 
