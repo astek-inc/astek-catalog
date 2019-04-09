@@ -95,8 +95,9 @@
 
             <%= subnav_group_header 'Product Data Export', 'export', '#data-exports' %>
             <%= content_tag :div, id: 'data-exports', class: 'sublinks collapse' do %>
-              <%= nav_sublink 'Products', export_by_collection_admin_product_exports_path %>
-              <%= nav_sublink 'Order Limits', admin_order_limits_exports_path %>
+              <%= nav_sublink 'Products for Shopify', shopify_export_by_collection_admin_product_exports_path %>
+              <%= nav_sublink 'Order Limits for Shopify', admin_order_limits_exports_path %>
+              <%= nav_sublink 'Products for FedEx', fedex_export_by_collection_admin_product_exports_path %>
             <% end %>
 
           <% end %>

@@ -1,5 +1,5 @@
 <% content_for :header_left do %>
-  <%= content_tag :h1, [link_to('Product Data Export', export_all_admin_product_exports_path), 'Export All'].join(' / ').html_safe %>
+  <%= content_tag :h1, [link_to('Product Data Export', shopify_export_all_admin_product_exports_path), 'Export All for Shopify'].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
@@ -13,7 +13,7 @@
         Select a website, and submit to download a CSV file of data for all collections available for that site.
       </p>
 
-      <%= form_tag generate_all_csv_admin_product_exports_path, method: :get do %>
+      <%= form_tag generate_shopify_all_csv_admin_product_exports_path, method: :get do %>
         <%= content_tag :div, { class: 'col-md-4' } do %>
           <%= content_tag :div, class: 'form-group' do %>
             <%= label_tag 'website_id', 'Website' %> <span class="required">*</span>
@@ -29,7 +29,7 @@
     <% end %>
 
     <%= content_tag :div, class: 'col-md-3' do %>
-      <%= render partial: 'subnav', locals: { current: 'all' } %>
+      <%= render partial: 'shopify_subnav', locals: { current: 'all' } %>
     <% end %>
 
   <% end %>

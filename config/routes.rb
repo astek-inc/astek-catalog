@@ -20,15 +20,24 @@ Rails.application.routes.draw do
 
     resources :product_exports, only: [] do
       collection do
-        get 'export_by_collection'
-        get 'export_by_design'
-        get 'export_by_sku'
-        get 'export_all'
-        get 'generate_collection_csv', defaults: { format: 'csv' }
-        get 'generate_design_csv', defaults: { format: 'csv' }
-        get 'generate_skus_csv', defaults: { format: 'csv' }
-        get 'generate_skus_csv', defaults: { format: 'csv' }
-        get 'generate_all_csv', defaults: { format: 'csv' }
+        get 'shopify_export_by_collection'
+        get 'shopify_export_by_design'
+        get 'shopify_export_by_sku'
+        get 'shopify_export_all'
+        get 'generate_shopify_collection_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_design_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_all_csv', defaults: { format: 'csv' }
+        get 'fedex_export_by_collection'
+        get 'fedex_export_by_design'
+        get 'fedex_export_by_sku'
+        get 'fedex_export_all'
+        get 'generate_fedex_collection_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_design_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_all_csv', defaults: { format: 'csv' }
       end
     end
 

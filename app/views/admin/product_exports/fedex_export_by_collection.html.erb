@@ -5,7 +5,7 @@
 </script>
 
 <% content_for :header_left do %>
-  <%= content_tag :h1, [link_to('Product Data Export', export_by_collection_admin_product_exports_path), 'Export by Collection'].join(' / ').html_safe %>
+  <%= content_tag :h1, [link_to('Product Data Export', fedex_export_by_collection_admin_product_exports_path), 'Export for FedEx CrossBorder by Collection'].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
@@ -16,17 +16,11 @@
     <%= content_tag :div, class: 'col-md-9' do %>
 
       <p class="help-block">
-        Select a website, enter a collection name, and submit to download a CSV file of that colection's designs
-        formatted for the selected website.
+        Enter a collection name, and submit to download a CSV file of that colection's designs for export to FedEx CrossBorder.
       </p>
 
-      <%= form_tag generate_collection_csv_admin_product_exports_path, method: :get do %>
-        <%= content_tag :div, { class: 'col-md-4' } do %>
-          <%= content_tag :div, class: 'form-group' do %>
-            <%= label_tag 'website_id', 'Website' %> <span class="required">*</span>
-            <%= select_tag 'website_id', options_from_collection_for_select(@websites, :id, :name), { prompt: 'Select', id: 'website_id', class: 'form-control', required: true } %>
-          <%end %>
-        <%end %>
+      <%= form_tag generate_fedex_collection_csv_admin_product_exports_path, method: :get do %>
+        <%= hidden_field_tag 'website_id', @website_id %>
 
         <%= content_tag :div, class: 'col-md-6' do %>
           <%= content_tag :div, class: 'form-group' do %>
@@ -44,7 +38,7 @@
     <% end %>
 
     <%= content_tag :div, class: 'col-md-3' do %>
-      <%= render partial: 'subnav', locals: { current: 'by_collection' } %>
+      <%= render partial: 'fedex_subnav', locals: { current: 'by_collection' } %>
     <% end %>
 
   <% end %>

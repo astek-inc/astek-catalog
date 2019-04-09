@@ -1,21 +1,17 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
 
 module Admin
-  class CollectionExportJob < ActiveJob::Base
+  class FedexDesignExportJob < ActiveJob::Base
 
     queue_as :default
 
-    def perform(collection_id, website_id, current_user)
+    def perform(design_id, current_user)
 
-      collection = Collection.find(collection_id)
-      website = Website.find(website_id)
+      design = Design.find(design_id)
+      website = Website.find_by(domain: 'astekhome.com')
 
-      csv_data = ''
-      collection.designs.available.each do |design|
-        csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
-      end
-
-      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{collection.name.parameterize}.csv"
+      csv_data = ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, true
+      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{design.name.parameterize}.csv"
 
       storage = Fog::Storage.new(
           provider: 'AWS',
@@ -35,7 +31,7 @@ module Admin
       puts 'Uploaded file '+filename+' to S3'
 
       csv_url = "https://s3-us-west-2.amazonaws.com/product-data-export/#{filename}"
-      ProductExportsMailer.with(user: current_user, collection: collection, csv_url: csv_url).collection_notification_email.deliver_now
+      ProductExportsMailer.with(user: current_user, design: design, csv_url: csv_url).design_notification_email.deliver_now
 
     end
 

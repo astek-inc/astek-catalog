@@ -1,7 +1,7 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
 
 module Admin
-  class AllExportJob < ActiveJob::Base
+  class ShopifyAllExportJob < ActiveJob::Base
 
     queue_as :default
 
@@ -16,7 +16,7 @@ module Admin
         end
       end
 
-      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-all.csv"
+      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-shopify-product-export-all.csv"
 
       storage = Fog::Storage.new(
           provider: 'AWS',
