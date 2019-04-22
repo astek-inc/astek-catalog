@@ -13,4 +13,20 @@ class VariantSwatchImageUploader < ImageUploader
     process resize_to_fit: [50, 30]
   end
 
+  # Override the filename of the uploaded files:
+  # Avoid using model.id or version_name here, see uploader/store.rb for details.
+  def filename
+    if original_filename
+
+      name = [
+          model.variant.sku,
+          model.variant.design.name.gsub(/[^A-Za-z0-9]/, '_'),
+          model.variant.name.gsub(/[^A-Za-z0-9]/, '').upcase
+      ].join('_')
+
+      "#{name}.#{file.extension}"
+
+    end
+  end
+
 end
