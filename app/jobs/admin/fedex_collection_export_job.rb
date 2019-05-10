@@ -1,4 +1,4 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/fedex_crossborder_csv_generator.rb"
 
 module Admin
   class FedexCollectionExportJob < ActiveJob::Base
@@ -12,7 +12,7 @@ module Admin
 
       csv_data = ''
       collection.designs.available.each do |design|
-        csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
+        csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
       end
 
       filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{collection.name.parameterize}.csv"
