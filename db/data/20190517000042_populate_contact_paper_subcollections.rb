@@ -54,7 +54,8 @@ class PopulateContactPaperSubcollections < ActiveRecord::Migration[5.2]
       { name: 'Glossy - White', skus: ['200-1273', '200-5145'] },
       { name: 'Glossy - Black', skus: ['200-1272', '200-5259'] },
       { name: 'Matte - White', skus: ['200-0100', '200-5001'] },
-      { name: 'Matte - Black', skus: ['200-0111', '200-5010'] }
+      { name: 'Matte - Black', skus: ['200-0111', '200-5010'] },
+      { name: 'Metallic Brushed Silver', skus: ['210-0045', '210-8045'] }
   ]
 
   def up
