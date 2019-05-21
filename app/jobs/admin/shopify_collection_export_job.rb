@@ -1,4 +1,5 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/product_subcollection_data_csv_generator.rb"
 
 module Admin
   class ShopifyCollectionExportJob < ActiveJob::Base
@@ -11,8 +12,12 @@ module Admin
       website = Website.find(website_id)
 
       csv_data = ''
-      collection.designs.available.each do |design|
+      collection.designs.available.unsubcollected.each do |design|
         csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
+      end
+
+      collection.subcollections.each do |subcollection|
+        csv_data += ::Admin::ProductSubcollectionDataCsvGenerator.product_data_csv subcollection, website.domain, csv_data.empty?
       end
 
       filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-shopify-product-export-#{collection.name.parameterize}.csv"

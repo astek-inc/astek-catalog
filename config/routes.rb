@@ -83,7 +83,11 @@ Rails.application.routes.draw do
         post :update_row_order, on: :collection
         get :custom_materials, on: :member
       end
+
+      resources :subcollections, except: [:show, :delete]
     end
+
+    resources :subcollection_types, except: [:show, :delete]
 
     resources :designs, only: [] do
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_03_183806) do
+ActiveRecord::Schema.define(version: 2019_05_06_212314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -99,21 +99,6 @@ ActiveRecord::Schema.define(version: 2019_04_03_183806) do
     t.index ["version"], name: "unique_data_migrations", unique: true
   end
 
-  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
-    t.integer "priority", default: 0, null: false
-    t.integer "attempts", default: 0, null: false
-    t.text "handler", null: false
-    t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string "locked_by"
-    t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
-  end
-
   create_table "design_properties", id: :serial, force: :cascade do |t|
     t.integer "design_id"
     t.integer "property_id"
@@ -148,6 +133,7 @@ ActiveRecord::Schema.define(version: 2019_04_03_183806) do
     t.boolean "user_can_select_material"
     t.integer "country_id"
     t.integer "vendor_id"
+    t.integer "subcollection_id"
     t.index ["deleted_at"], name: "index_designs_on_deleted_at"
     t.index ["master_sku"], name: "index_designs_on_master_sku"
     t.index ["row_order"], name: "index_designs_on_row_order"
@@ -275,6 +261,22 @@ ActiveRecord::Schema.define(version: 2019_04_03_183806) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "subcollection_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_subcollection_types_on_deleted_at"
+  end
+
+  create_table "subcollections", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "subcollection_type_id", null: false
+    t.integer "collection_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "substrate_categories", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -380,6 +382,7 @@ ActiveRecord::Schema.define(version: 2019_04_03_183806) do
   add_foreign_key "designs", "collections"
   add_foreign_key "designs", "countries"
   add_foreign_key "designs", "sale_units"
+  add_foreign_key "designs", "subcollections"
   add_foreign_key "designs", "vendors"
   add_foreign_key "product_types", "product_categories"
   add_foreign_key "states", "countries"

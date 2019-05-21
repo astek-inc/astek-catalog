@@ -1,0 +1,58 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      'Subcollections'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Subcollection', new_admin_collection_subcollection_path(@collection), class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+
+  <% if @subcollections.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @subcollections.each do |subcollection| %>
+            <tr class="product_property fields" data-hook="subcollection">
+              <td><%= subcollection.name %></td>
+              <td><%= subcollection.subcollection_type.name %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_collection_subcollection_path @collection, subcollection %>
+                  <%= delete_button admin_collection_subcollection_path @collection, subcollection %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+  <% else %>
+    <p>No subcollections found. <%= link_to 'Create one.', new_admin_collection_subcollection_path(@collection) %></p>
+  <% end %>
+
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+  <%= render partial: 'admin/collections/subnav', locals: { current: 'subcollections' } %>
+<% end %>
+
+
+<% end %>

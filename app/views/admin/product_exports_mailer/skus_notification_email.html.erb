@@ -1,4 +1,7 @@
 
 <h1>Your Product Data Export is Complete</h1>
-<p>Product data for the skus <%= @skus %> has been exported to a CSV file.</p>
+<p>Product data for the SKUs <%= @skus %> has been exported to a CSV file.</p>
+<% unless @error_message.nil? %>
+  <p><%= @error_message %></p>
+<% end %>
 <p>The file can be downloaded from <a href="<%= @csv_url %>"><%= @csv_url %></a>.</p>
