@@ -602,7 +602,13 @@ module Admin
             <h5>Backing</h5>
             <p>'+variant.backing_type.name+'</p>
           </div>'
+        elsif variant.substrate.backing_type
+          formatted += '<div>
+            <h5>Backing</h5>
+            <p>'+variant.substrate.backing_type.name+'</p>
+          </div>'
         end
+
 
         formatted += '<div>
             <h5>Sold By</h5>
