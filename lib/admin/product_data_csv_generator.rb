@@ -3,6 +3,10 @@ module Admin
 
     require 'csv'
 
+    SAMPLE_WEIGHT = '.5'
+    SAMPLE_PRICE_DIGITAL = '10.99'
+    SAMPLE_PRICE_DISTRIBUTED = '5.99'
+
     TEXT_VALUES = {
         variant_barcode: '',
         variant_inventory_tracker: '',
@@ -412,9 +416,15 @@ module Admin
             nil
           when 'astekhome.com'
             if variant_type == 'sample' || variant_type == 'custom_sample'
-              (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
+              (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
             else
-              variant.variant_grams
+              if material
+                (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+              elsif variant.design.digital?
+                (BigDecimal(variant.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+              else
+                variant.variant_grams
+              end
             end
           end
 
@@ -433,9 +443,9 @@ module Admin
           when 'astekhome.com'
             if variant_type == 'sample' || variant_type == 'custom_sample'
               if variant.design.digital?
-                10.99.to_s
+                SAMPLE_PRICE_DIGITAL
               else
-                5.99.to_s
+                SAMPLE_PRICE_DISTRIBUTED
               end
             else
               if material

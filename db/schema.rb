@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_06_212314) do
+ActiveRecord::Schema.define(version: 2019_06_05_173205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -303,6 +303,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_212314) do
     t.boolean "default_custom_material_group"
     t.decimal "custom_material_surcharge", precision: 8, scale: 2
     t.string "display_name"
+    t.decimal "weight_per_square_foot", precision: 5, scale: 2
     t.index ["deleted_at"], name: "index_substrates_on_deleted_at"
   end
 

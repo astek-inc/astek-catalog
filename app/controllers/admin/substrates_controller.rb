@@ -53,7 +53,7 @@ module Admin
     def substrate_params
       params.require(:substrate).permit(
           :name, :display_name, :description, :keywords, :backing_type_id,
-          :default_custom_material_group, :custom_material_surcharge, substrate_category_ids: []
+          :default_custom_material_group, :custom_material_surcharge, :weight_per_square_foot, substrate_category_ids: []
       )
     end
 

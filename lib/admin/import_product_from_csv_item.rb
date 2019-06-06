@@ -18,7 +18,7 @@ module Admin
 
         if item.substrate
           substrate = Substrate.find_by(name: item.substrate.strip)
-          backing_type = nil
+          backing_type = Substrate.backing_type
           if substrate.nil?
             raise "Cannot find substrate: #{item.substrate}"
           end
@@ -112,6 +112,11 @@ module Admin
         end
 
         puts 'Creating variant: '+item.variant_name
+        if substrate.nil?
+          variant_weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
+        else
+          variant_weight = substrate.weight_per_square_foot
+        end
         variant = Variant.create!(
             {
                 design: design,
@@ -122,7 +127,7 @@ module Admin
                 backing_type: backing_type,
                 product_types: product_types,
                 colors: colors,
-                weight: BigDecimal(item.weight.strip.gsub(/,/, ''), 2),
+                weight: variant_weight,
                 width: BigDecimal(item.package_width.strip.gsub(/,/, ''), 2),
                 height: BigDecimal(item.package_height.strip.gsub(/,/, ''), 2),
                 depth: BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)

@@ -38,9 +38,20 @@
   <% end %>
 <% end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label :backing_type, 'Backing Type' %>
-  <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { prompt: 'Select' }, { class: 'form-control' } %>
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :backing_type, 'Backing Type' %>
+      <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { prompt: 'Select' }, { class: 'form-control' } %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :weight_per_square_foot, 'Weight Per Square Foot in Pounds' %> <span class="required">*</span>
+      <%= f.number_field :weight_per_square_foot, required: true, class: 'form-control', min: '.1', step: '.05' %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= content_tag :div, class: ['row'] do %>
