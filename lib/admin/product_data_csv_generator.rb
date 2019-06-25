@@ -419,9 +419,7 @@ module Admin
               (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
             else
               if material
-                (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
-              elsif variant.design.digital?
-                (BigDecimal(variant.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+                material_variant_weight material, variant
               else
                 variant.variant_grams
               end
@@ -693,6 +691,17 @@ module Admin
           'Untrimmed'
         else
           dp.value
+        end
+      end
+
+      # If the printed width of a given design is less than standard, more physical material
+      # may be required to complete a given order, so the weight may be more than standard
+      def material_variant_weight material, variant
+        if BigDecimal(variant.weight) == BigDecimal(variant.substrate.weight_per_square_foot)
+          (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+        else
+          ratio = BigDecimal(variant.weight) / BigDecimal(variant.substrate.weight_per_square_foot)
+          (BigDecimal(material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
         end
       end
 
