@@ -10,7 +10,7 @@ module Admin
       website = Website.find_by(domain: 'astekhome.com')
 
       csv_data = ''
-      Collection.includes(:websites).where(websites: { id: website_id }).each do |collection|
+      Collection.includes(:websites).where(websites: { id: website.id }).each do |collection|
         collection.designs.available.each do |design|
           csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
         end
