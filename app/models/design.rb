@@ -104,6 +104,10 @@ class Design < ApplicationRecord
 
     if domain == 'astekhome.com'
       tags << self.calculator_tag
+
+      if self.custom_materials.map { |m| m.name }.include? 'Peel & Stick Wall Tiles'
+        tags << to_tag('material', 'Peel & Stick Wall Tiles'.parameterize)
+      end
     end
 
     tags.flatten.join(', ')
