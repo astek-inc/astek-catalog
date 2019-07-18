@@ -41,6 +41,7 @@ gem 'mini_magick', '>= 4.9.4'
 gem 'devise-bootstrap-views'
 gem 'devise'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection' # mitigation against CVE-2015-9284
 gem 'cancancan'
 gem 'rolify'
 

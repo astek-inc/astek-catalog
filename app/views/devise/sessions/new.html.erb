@@ -30,7 +30,8 @@
             <% resource_class.omniauth_providers.each do |provider| %>
                 <%# t('.sign_in_with_provider', provider: provider.to_s.titleize, default: "Sign in with #{provider.to_s.titleize}") %>
                 <%= content_tag :div, id: "#{provider}_sign_in_button" do %>
-                    <%= link_to image_tag("btn_#{provider}_signin_dark_normal_web.png", alt: "Sign in with #{provider.to_s.titleize}"), omniauth_authorize_path(resource_name, provider) %><br />
+                    <% # Use POST as mitigation against CVE-2015-9284 %>
+                    <%= link_to image_tag("btn_#{provider}_signin_dark_normal_web.png", alt: "Sign in with #{provider.to_s.titleize}"), omniauth_authorize_path(resource_name, provider), method: :post %><br />
                 <% end %>
             <% end %>
         <% end %>
