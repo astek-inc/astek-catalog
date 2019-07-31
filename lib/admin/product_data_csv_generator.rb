@@ -177,9 +177,7 @@ module Admin
           end
 
           design.variants.each_with_index do |variant, i|
-
-            next if website == 'onairdesign.com' && i > 0 # Only use the first colorway variant
-
+            
             @image_index = i
             first_variant_row = true
 
@@ -280,7 +278,11 @@ module Admin
               'Size'
             end
           when 'onairdesign.com'
-            'Title'
+            if variant.variant_type.name == 'Color Way'
+              'Colorway'
+            else
+              'Title'
+            end
           end
 
         elsif attr == 'option_1_value'
@@ -299,7 +301,11 @@ module Admin
               astek_home_size_value variant_type
             end
           when 'onairdesign.com'
-            'Default Title'
+            if variant.variant_type.name == 'Color Way'
+              variant.name
+            else
+              'Default Title'
+            end
           end
 
         elsif attr == 'image_src'
@@ -437,7 +443,7 @@ module Admin
 
             case domain
             when 'onairdesign.com'
-              variant.design.sku
+              variant.sku
             else
               if material
                 variant.sku_with_material_and_colors material
