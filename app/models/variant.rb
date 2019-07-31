@@ -32,14 +32,6 @@ class Variant < ApplicationRecord
     self.design.name
   end
 
-  # def option_3_value
-  #   if self.substrate
-  #     self.substrate.name
-  #   elsif self.backing_type
-  #     self.backing_type.name
-  #   end
-  # end
-
   # Sites require weight in grams, in whole numbers (no decimals)
   def variant_grams
     (self.weight * BigDecimal('453.592')).round.to_s
