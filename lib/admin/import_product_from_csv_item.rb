@@ -18,7 +18,7 @@ module Admin
 
         if item.substrate
           substrate = Substrate.find_by(name: item.substrate.strip)
-          backing_type = Substrate.backing_type
+          backing_type = substrate.backing_type
           if substrate.nil?
             raise "Cannot find substrate: #{item.substrate}"
           end
