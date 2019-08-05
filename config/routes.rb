@@ -44,6 +44,8 @@ Rails.application.routes.draw do
     get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
     resources :order_limits_exports, only: :index
 
+    resources :substrate_exports, only: :index #, defaults: { format: 'json' }
+
     resources :colors, except: [:show, :delete]
 
     resources :lead_times, except: [:show, :delete]

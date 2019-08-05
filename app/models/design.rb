@@ -105,8 +105,8 @@ class Design < ApplicationRecord
     if domain == 'astekhome.com'
       tags << self.calculator_tag
 
-      if self.custom_materials.map { |m| m.name }.include? 'Peel & Stick Wall Tiles'
-        tags << to_tag('material', 'Peel & Stick Wall Tiles'.parameterize)
+      if self.digital?
+        tags << self.material_tags
       end
     end
 
@@ -434,6 +434,16 @@ class Design < ApplicationRecord
 
     end
 
+  end
+
+  def material_tags
+    if self.custom_materials.any?
+      material_tags = []
+      self.custom_materials.each do |m|
+        material_tags << to_tag('material', m.name.parameterize)
+      end
+      material_tags
+    end
   end
 
 end
