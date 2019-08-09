@@ -747,25 +747,6 @@ module Admin
             </div>'
         end
 
-        if variant.substrate
-          formatted += '<div>
-            <h5>Substrate</h5>
-            <p>'+variant.substrate.name+'</p>
-          </div>'
-        end
-
-        if variant.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant.backing_type.name+'</p>
-          </div>'
-        elsif variant.substrate.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant.substrate.backing_type.name+'</p>
-          </div>'
-        end
-
         formatted += '<div>
             <h5>Sold By</h5>
             <p>'+variant.design.sale_unit.name+'</p>
