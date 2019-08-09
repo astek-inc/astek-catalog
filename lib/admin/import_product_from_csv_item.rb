@@ -16,6 +16,8 @@ module Admin
         variant_type = VariantType.find_by!({ name: item.variant_type.strip })
         colors = Color.where(name: item.color.split(',').map { |c| c.strip }.reject { |c| c.empty? }) unless item.color.nil?
 
+        substrate = nil
+        backing_type = nil
         if item.substrate
           substrate = Substrate.find_by(name: item.substrate.strip)
           backing_type = substrate.backing_type
@@ -26,7 +28,7 @@ module Admin
           backing_type = BackingType.find_by(name: item.backing.strip)
           substrate = nil
           if backing_type.nil?
-            raise "Cannot find backing type: #{item.backing_type}"
+            raise "Cannot find backing type: #{item.backing}"
           end
         end
 
@@ -63,7 +65,7 @@ module Admin
           # If we got here, this is a new record
           d.description = item.description.strip unless item.description.nil?
           d.keywords = item.keywords.strip.chomp(',').strip
-          d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
+          # d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           d.sale_unit = sale_unit
           d.sale_quantity = item.sale_quantity.strip
           d.minimum_quantity = item.minimum_quantity.strip
@@ -71,6 +73,11 @@ module Admin
           d.styles = styles
           d.vendor = vendor
           d.country_of_origin = Country.find_by(iso: item.country_of_origin)
+
+          # Don't require a price if the product is only to appear on On Air Design
+          unless item.price.nil? && (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty?
+            d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
+          end
 
           # This is a duplicate of a design in another collection,
           # suppress it from display except with its collection
@@ -112,11 +119,6 @@ module Admin
         end
 
         puts 'Creating variant: '+item.variant_name
-        if substrate.nil?
-          variant_weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
-        else
-          variant_weight = substrate.weight_per_square_foot
-        end
         variant = Variant.create!(
             {
                 design: design,
@@ -126,21 +128,60 @@ module Admin
                 substrate: substrate,
                 backing_type: backing_type,
                 product_types: product_types,
-                colors: colors,
-                weight: variant_weight,
-                width: BigDecimal(item.package_width.strip.gsub(/,/, ''), 2),
-                height: BigDecimal(item.package_height.strip.gsub(/,/, ''), 2),
-                depth: BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
-            }
-        )
+                colors: colors
+                }
+        ) do |v|
+
+          # Don't require shipping information if the product is only to appear on On Air Design
+          if (item.websites.split(',').map { |w| w.strip } & %w[A H]).empty?
+
+            if design.digital?
+              unless substrate.nil?
+                v.weight = substrate.weight_per_square_foot
+              end
+            else
+              unless item.weight.nil?
+                v.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
+              end
+            end
+
+            unless item.package_width.nil?
+              v.width = BigDecimal(item.package_width.strip.gsub(/,/, ''), 2)
+            end
+
+            unless item.package_height.nil?
+              v.height = BigDecimal(item.package_height.strip.gsub(/,/, ''), 2)
+            end
+
+            unless item.package_depth.nil?
+              v.depth = BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
+            end
+
+          else
+
+            if design.digital?
+              v.weight = substrate.weight_per_square_foot
+            else
+              v.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
+            end
+
+            v.width = BigDecimal(item.package_width.strip.gsub(/,/, ''), 2)
+            v.height = BigDecimal(item.package_height.strip.gsub(/,/, ''), 2)
+            v.depth = BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
+
+          end
+
+        end
 
         item.images.split(',').map { |i| i.strip }.each do |url|
           puts 'Processing swatch image: '+url
-          VariantSwatchImage.create!({
-                                         remote_file_url: url,
-                                         type: 'VariantSwatchImage',
-                                         owner_id: variant.id
-                                     })
+          VariantSwatchImage.create!(
+              {
+                  remote_file_url: url,
+                  type: 'VariantSwatchImage',
+                  owner_id: variant.id
+              }
+          )
         end
 
         if item.install_images
@@ -156,7 +197,7 @@ module Admin
 
         if collection.product_category.name == 'Digital'
           puts 'Generating tearsheet'
-          # This is a workaround. Accented characters seem to throw a rawn error if read directly from the CSV file,
+          # This is a workaround. Accented characters seem to throw a Prawn error if read directly from the CSV file,
           # but they are OK when pulled from the database.
           v = Variant.find(variant.id)
           ::Admin::TearsheetGenerator.generate v
