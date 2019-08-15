@@ -22,7 +22,8 @@ module Admin
         google_shopping_custom_label_2: '',
         google_shopping_custom_label_3: '',
         google_shopping_custom_label_4: '',
-        variant_tax_code: ''
+        variant_tax_code: '',
+        cost_per_item: ''
     }
 
     class << self
@@ -75,6 +76,7 @@ module Admin
             'Variant Image',
             'Variant Weight Unit',
             'Variant Tax Code',
+            'Cost Per Item',
             'Collection'
         ]
 
@@ -125,6 +127,7 @@ module Admin
             variant_image
             variant_weight_unit
             variant_tax_code
+            cost_per_item
             collection
         ]
 
@@ -145,7 +148,7 @@ module Admin
             image_src
             image_position
             image_alt_text
-          ] + 16.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 2.times.map { nil }
+          ] + 16.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 3.times.map { nil }
 
         CSV.generate(headers: true) do |csv|
 
