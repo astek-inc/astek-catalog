@@ -605,14 +605,12 @@ module Admin
       def format_home_properties design
         formatted = '<div class="description__meta">'
 
-        # # Don't display the SKU if the design is part of a subcollection,
-        # # because it will be different for each item
-        # if design.subcollection.nil?
-        #   formatted += '<div>
-        #         <h6>SKU</h6>
-        #         <p>'+design.sku+'</p>
-        #       </div>'
-        # end
+        design.subcollection.designs.each do |d|
+            formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
+                  <h6>SKU</h6>
+                  <p>'+d.sku+'</p>
+                </div>'
+        end
 
         unless design.collection.suppress_from_display
           formatted += '<div>
