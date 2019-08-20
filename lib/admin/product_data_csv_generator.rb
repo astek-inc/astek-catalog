@@ -252,15 +252,7 @@ module Admin
           end
 
         elsif attr == 'type'
-          case domain
-          when 'astek.com'
-            variant.type
-          when 'astekhome.com'
-            variant.type
-          when 'onairdesign.com'
-            'Wallpaper'
-            #variant.type # Wallpaper, Surfaces, Packages
-          end
+          variant.type
 
         elsif attr == 'tags'
           if variant_type == 'full'
