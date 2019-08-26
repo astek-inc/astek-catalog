@@ -70,7 +70,7 @@ module Admin
           d.sale_quantity = item.sale_quantity.strip
           d.minimum_quantity = item.minimum_quantity.strip
           d.available_on = Time.now
-          d.styles = styles
+          d.styles = styles unless styles.nil?
           d.vendor = vendor
           d.country_of_origin = Country.find_by(iso: item.country_of_origin)
 
@@ -127,9 +127,8 @@ module Admin
                 sku: item.sku.strip,
                 substrate: substrate,
                 backing_type: backing_type,
-                product_types: product_types,
-                colors: colors
-                }
+                product_types: product_types
+            }
         ) do |v|
 
           # Don't require shipping information if the product is only to appear on On Air Design
@@ -170,6 +169,8 @@ module Admin
             v.depth = BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
 
           end
+          
+          v.colors = colors unless colors.nil?
 
         end
 
