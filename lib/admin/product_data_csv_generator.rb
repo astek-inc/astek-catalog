@@ -669,6 +669,13 @@ module Admin
             <p>'+variant.design.sale_unit.name+'</p>
           </div>'
 
+        if variant.design.price_code
+          formatted += '<div>
+            <h5>Price Code</h5>
+            <p>'+variant.design.price_code+'</p>
+          </div>'
+        end
+
         variant.design.design_properties.each do |dp|
           next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
           formatted += '<div>
