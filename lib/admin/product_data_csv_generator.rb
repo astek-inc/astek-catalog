@@ -623,7 +623,13 @@ module Admin
       end
 
       def onair_design_description variant
-        body = format_onair_properties(variant).gsub(/\n+/, ' ')
+        body = ''
+
+        if variant.design.description
+          body += format_description variant
+        end
+
+        body += format_onair_properties(variant).gsub(/\n+/, ' ')
         body
       end
 
