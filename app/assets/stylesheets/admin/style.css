@@ -28,6 +28,10 @@ td.move-handle {
     width: 60px;
 }
 
+td.sku {
+    min-width: 90px;
+}
+
 td.actions {
     text-align: right;
     min-width: 120px;
