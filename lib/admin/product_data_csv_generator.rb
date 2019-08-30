@@ -745,6 +745,11 @@ module Admin
       def format_onair_properties variant
         formatted = '<div class="description__meta">'
 
+        formatted += '<div>
+              <h5>SKU</h5>
+              <p>'+variant.design.sku+'</p>
+            </div>'
+
         unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
