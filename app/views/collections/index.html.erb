@@ -1,0 +1,16 @@
+<h1>Collections</h1>
+
+<%= paginate @collections %>
+
+<%= content_tag :div, class: 'row' do %>
+<% @collections.each do |collection| %>
+
+    <%= content_tag :div, class: 'col-md-2' do %>
+      <%= image_tag(collection.designs.first.variants.first.variant_swatch_images.first.file.url(:small), width: 150, height: 150) %>
+      <p><%= link_to(collection.name, collection_path(collection)) %></p>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= paginate @collections %>
+
