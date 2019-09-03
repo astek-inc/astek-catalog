@@ -6,7 +6,7 @@ class Substrate < ApplicationRecord
 
   has_many :substrate_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   has_many :variants
-  belongs_to :backing_type
+  belongs_to :backing_type, inverse_of: :substrates
   has_and_belongs_to_many :substrate_categories
 
   # Custom materials should really be associated with Colorways (variants),

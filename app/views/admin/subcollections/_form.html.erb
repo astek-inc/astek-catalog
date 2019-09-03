@@ -1,0 +1,44 @@
+<p class="lead">Create an arbitrary grouping of designs that can be exported to Shopify as a mock "product"
+  and its set of "variants", as in the case of the same contact paper design sold in varying roll dimensions.</p>
+
+<%= f.hidden_field :collection_id, value: @collection.id %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :name, 'Name <span class="required">*</span>'.html_safe %>
+  <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :subcollection_type, 'Type' %> <span class="required">*</span>
+  <%= f.select :subcollection_type_id, options_from_collection_for_select(@subcollection_types, 'id', 'name', @subcollection.subcollection_type_id), { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+<% end %>
+
+<%= content_tag :div, class: 'panel panel-default' do %>
+  <%= content_tag :div, 'Designs', class: 'panel-heading' %>
+  <%= content_tag :div, class: 'panel-body' do %>
+
+    <% column_count = 3.0 %>
+    <% item_count = @collection.designs.count %>
+    <% divisor = (item_count / column_count).ceil %>
+    <% column_class = 'col-md-' + (12 / column_count).round.to_s %>
+    <% index = 0 %>
+
+    <%= collection_check_boxes(:subcollection, :design_ids, @collection.designs, :id, lambda { |d| d.name + ' (' + d.sku + ')' } ) do |b| %>
+
+      <% if index % divisor == 0 %>
+        <div class="<%= column_class %>">
+      <% end %>
+
+      <%= content_tag :div, class: 'checkbox' do %>
+        <%= b.label { b.check_box + b.text } %>
+      <% end %>
+
+      <% if (index % divisor == divisor - 1) || (index == item_count - 1) %>
+        </div>
+      <% end %>
+
+      <% index += 1 %>
+
+    <% end %>
+  <% end %>
+<% end %>

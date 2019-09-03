@@ -1,5 +1,5 @@
 <% content_for :header_left do %>
-  <%= content_tag :h1, [link_to('Product Data Export', export_by_sku_admin_product_exports_path), 'Export by SKU'].join(' / ').html_safe %>
+  <%= content_tag :h1, [link_to('Product Data Export', shopify_export_by_sku_admin_product_exports_path), 'Export for Shopify by SKU'].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
@@ -14,7 +14,7 @@
         designs' data formatted for the selected website.
       </p>
 
-      <%= form_tag generate_skus_csv_admin_product_exports_path, method: :get do %>
+      <%= form_tag generate_shopify_skus_csv_admin_product_exports_path, method: :get do %>
         <%= content_tag :div, { class: 'col-md-4' } do %>
           <%= content_tag :div, class: 'form-group' do %>
             <%= label_tag 'website_id', 'Website' %> <span class="required">*</span>
@@ -37,7 +37,7 @@
     <% end %>
 
     <%= content_tag :div, class: 'col-md-3' do %>
-      <%= render partial: 'subnav', locals: { current: 'by_sku' } %>
+      <%= render partial: 'shopify_subnav', locals: { current: 'by_sku' } %>
     <% end %>
 
   <% end %>

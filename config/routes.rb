@@ -18,22 +18,35 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    resources :product_imports, except: [:show, :delete], concerns: :paginatable
+
     resources :product_exports, only: [] do
       collection do
-        get 'export_by_collection'
-        get 'export_by_design'
-        get 'export_by_sku'
-        get 'export_all'
-        get 'generate_collection_csv', defaults: { format: 'csv' }
-        get 'generate_design_csv', defaults: { format: 'csv' }
-        get 'generate_skus_csv', defaults: { format: 'csv' }
-        get 'generate_skus_csv', defaults: { format: 'csv' }
-        get 'generate_all_csv', defaults: { format: 'csv' }
+        get 'shopify_export_by_collection'
+        get 'shopify_export_by_design'
+        get 'shopify_export_by_sku'
+        get 'shopify_export_all'
+        get 'generate_shopify_collection_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_design_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
+        get 'generate_shopify_all_csv', defaults: { format: 'csv' }
+        get 'fedex_export_by_collection'
+        get 'fedex_export_by_design'
+        get 'fedex_export_by_sku'
+        get 'fedex_export_all'
+        get 'generate_fedex_collection_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_design_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
+        get 'generate_fedex_all_csv', defaults: { format: 'csv' }
       end
     end
 
     get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
     resources :order_limits_exports, only: :index
+
+    resources :substrate_exports, only: :index #, defaults: { format: 'json' }
 
     resources :colors, except: [:show, :delete]
 
@@ -74,7 +87,11 @@ Rails.application.routes.draw do
         post :update_row_order, on: :collection
         get :custom_materials, on: :member
       end
+
+      resources :subcollections, except: [:show, :delete]
     end
+
+    resources :subcollection_types, except: [:show, :delete]
 
     resources :designs, only: [] do
 

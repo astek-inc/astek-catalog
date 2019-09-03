@@ -63,6 +63,7 @@
               <%= nav_sublink 'Websites', admin_websites_path %>
               <%= nav_sublink 'Vendors', admin_vendors_path %>
               <%= nav_sublink 'Variant Types', admin_variant_types_path %>
+              <%= nav_sublink 'Subcollection Types', admin_subcollection_types_path %>
               <%= nav_sublink 'Properties', admin_properties_path %>
               <%= nav_sublink 'Colors', admin_colors_path %>
               <%= nav_sublink 'Styles', admin_styles_path %>
@@ -87,14 +88,18 @@
               <%= nav_sublink 'Substrates', admin_substrates_path %>
               <%= nav_sublink 'Substrate Categories', admin_substrate_categories_path %>
               <%= nav_sublink 'Backing Types', admin_backing_types_path %>
+              <%= nav_sublink 'Substrate Data Export for Shopify', admin_substrate_exports_path %>
             <% end %>
 
             <%= nav_link 'Collections', 'book', admin_collections_path %>
 
-            <%= subnav_group_header 'Data Export', 'export', '#data-exports' %>
+            <%= nav_link 'Product Data Import', 'import', admin_product_imports_path %>
+
+            <%= subnav_group_header 'Product Data Export', 'export', '#data-exports' %>
             <%= content_tag :div, id: 'data-exports', class: 'sublinks collapse' do %>
-              <%= nav_sublink 'Products', export_by_collection_admin_product_exports_path %>
-              <%= nav_sublink 'Order Limits', admin_order_limits_exports_path %>
+              <%= nav_sublink 'Products for Shopify', shopify_export_by_collection_admin_product_exports_path %>
+              <%= nav_sublink 'Order Limits for Shopify', admin_order_limits_exports_path %>
+              <%= nav_sublink 'Products for FedEx', fedex_export_by_collection_admin_product_exports_path %>
             <% end %>
 
           <% end %>

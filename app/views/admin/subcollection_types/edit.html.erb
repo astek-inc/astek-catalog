@@ -1,0 +1,20 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Subcollection Types', admin_subcollection_types_path),
+      @subcollection_type.name
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, @subcollection_type] do |f| %>
+      <%= field_set_tag nil, 'data-hook': 'subcollection_type_new' do %>
+        <%= render partial: 'form', locals: { f: f } %>
+      <% end %>
+
+      <%= form_buttons admin_subcollection_types_path %>
+    <% end %>
+  <% end %>
+<% end %>

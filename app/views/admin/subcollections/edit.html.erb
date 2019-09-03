@@ -1,0 +1,26 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      link_to('Subcollections', admin_collection_subcollections_path(@collection)),
+      @subcollection.name
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, @collection, @subcollection], html: { multipart: true } do |f| %>
+      <%= field_set_tag nil, 'data-hook': 'subcollection_edit' do %>
+        <%= render partial: 'form', locals: { f: f } %>
+      <% end %>
+
+      <%= form_buttons admin_collection_subcollections_path(@collection) %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/collections/subnav', locals: { current: 'subcollections' } %>
+  <% end %>
+<% end %>

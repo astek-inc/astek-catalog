@@ -98,6 +98,9 @@ module Admin
         info = []
         if @variant.substrate
           info << 'MATERIAL: '+ format_substrate_name
+          if @variant.substrate.backing_type && @variant.substrate.backing_type.name != 'None'
+            info << 'BACKING: ' + @variant.substrate.backing_type.name
+          end
         end
 
         @variant.design.design_properties.each do |dp|

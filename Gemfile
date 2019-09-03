@@ -35,12 +35,13 @@ gem 'kaminari'
 # File uploads, image transformation, and Amazon S3 storage
 gem 'fog-aws'
 gem 'carrierwave', '~> 1.0'
-gem 'mini_magick'
+gem 'mini_magick', '>= 4.9.4'
 
 # Authentication and permissions
 gem 'devise-bootstrap-views'
 gem 'devise'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection' # mitigation against CVE-2015-9284
 gem 'cancancan'
 gem 'rolify'
 
@@ -59,7 +60,7 @@ gem 'verbs'
 # gem 'bcrypt', '~> 3.1.7'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+gem 'jbuilder'
 
 # Use unicorn as the app server
 # gem 'unicorn'

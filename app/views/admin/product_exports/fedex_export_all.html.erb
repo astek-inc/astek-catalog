@@ -1,0 +1,31 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [link_to('Product Data Export', fedex_export_all_admin_product_exports_path), 'Export All for FedEx CrossBorder'].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'export_form' do %>
+  <%= content_tag :div, class: 'row' do %>
+
+    <%= content_tag :div, class: 'col-md-9' do %>
+
+      <p class="help-block">
+        Submit to download a CSV file of data for all collections available for export to FedEx CrossBorder.
+      </p>
+
+      <%= form_tag generate_fedex_all_csv_admin_product_exports_path, method: :get do %>
+        <%= hidden_field_tag 'website_id', @website_id %>
+
+        <%= content_tag :div, { class: 'col-md-8', id: 'product-export-submit-container' } do %>
+          <%= submit_button %>
+        <% end %>
+      <% end %>
+
+    <% end %>
+
+    <%= content_tag :div, class: 'col-md-3' do %>
+      <%= render partial: 'fedex_subnav', locals: { current: 'all' } %>
+    <% end %>
+
+  <% end %>
+<% end %>
