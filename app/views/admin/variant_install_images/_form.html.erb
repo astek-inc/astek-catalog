@@ -1,0 +1,21 @@
+<%= field_set_tag nil, 'data-hook': 'variant-install-image-info' do %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :file, 'Image' %><% unless @variant_install_image.file? %><span class="required">*</span><% end %>
+    <% if @variant_install_image.file? %><p><%= @variant_install_image.file_url %></p><% end %>
+    <%= f.file_field :file, required: @variant_install_image.file.nil?, class: 'form-control' %>
+    <%= f.hidden_field :owner_id, value: @variant.id %>
+  <% end %>
+<% end %>
+
+<%= field_set_tag nil, 'data-hook': 'variant-install-image-websites' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Websites', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:variant_install_image, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

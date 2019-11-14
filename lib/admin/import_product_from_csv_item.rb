@@ -73,6 +73,7 @@ module Admin
           d.styles = styles unless styles.nil?
           d.vendor = vendor
           d.country_of_origin = Country.find_by(iso: item.country_of_origin)
+          d.websites = collection.websites
 
           # Don't require a price if the product is only to appear on On Air Design
           unless item.price.nil? && (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty?
@@ -127,7 +128,8 @@ module Admin
                 sku: item.sku.strip,
                 substrate: substrate,
                 backing_type: backing_type,
-                product_types: product_types
+                product_types: product_types,
+                websites: design.websites
             }
         ) do |v|
 
@@ -187,11 +189,33 @@ module Admin
 
         if item.install_images
           item.install_images.split(',').map { |i| i.strip }.each do |url|
+
+            /\A\((?<sites>.+)\)(?<image_url>.+)\z/ =~ url
+
+            if sites
+              domains = []
+              sites.split('|').map { |t| t.strip }.each do |key|
+                case key
+                when 'A'
+                  domains << 'astek.com'
+                when 'H'
+                  domains << 'astekhome.com'
+                when 'O'
+                  domains << 'onairdesign.com'
+                end
+              end
+              url = image_url.strip
+              websites = Website.where(domain: domains)
+            else
+              websites = variant.websites
+            end
+
             puts 'Processing install image: '+url
             VariantInstallImage.create!({
                                             remote_file_url: url,
                                             type: 'VariantInstallImage',
-                                            owner_id: variant.id
+                                            owner_id: variant.id,
+                                            websites: websites
                                         })
           end
         end

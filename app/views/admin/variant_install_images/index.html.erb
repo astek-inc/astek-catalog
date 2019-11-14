@@ -26,6 +26,7 @@
           <tr>
             <th class="move-handle"></th>
             <th>Image</th>
+            <th>Websites</th>
             <th class="actions"></th>
           </tr>
           </thead>
@@ -37,10 +38,11 @@
                   <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                 </td>
                 <td><%= link_to(image_tag(image.file.url(:thumb)), admin_variant_variant_install_image_path(@variant, image)) %></td>
-
+                <td><%= image.websites.map { |w| w.name }.join(', ') %></td>
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                     <%= view_button admin_variant_variant_install_image_path @variant, image %>
+                    <%= edit_button edit_admin_variant_variant_install_image_path @variant, image %>
                     <%= delete_button admin_variant_variant_install_image_path @variant, image %>
                   </div>
                 </td>

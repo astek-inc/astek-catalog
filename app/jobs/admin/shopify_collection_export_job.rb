@@ -12,7 +12,7 @@ module Admin
       website = Website.find(website_id)
 
       csv_data = ''
-      collection.designs.available.unsubcollected.each do |design|
+      collection.designs.available.unsubcollected.for_domain(website.domain).each do |design|
         csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
       end
 

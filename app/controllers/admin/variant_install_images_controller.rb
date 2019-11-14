@@ -1,14 +1,15 @@
 module Admin
   class VariantInstallImagesController < Admin::BaseController
 
-    before_action :set_image, only: [:show, :destroy]
-    before_action :set_variant, :set_design, :set_collection
+    before_action :set_image, only: [:show, :edit, :update, :destroy]
+    before_action :set_variant, :set_design, :set_collection, :set_websites
 
     def index
     end
 
     def new
       @variant_install_image = VariantInstallImage.new
+      @variant_install_image.websites = @variant.websites
     end
 
     def create
@@ -23,6 +24,21 @@ module Admin
     end
 
     def show
+
+    end
+
+    def edit
+
+    end
+
+    def update
+      if @variant_install_image.update(variant_install_image_params)
+        flash[:notice] = 'Image updated.'
+        redirect_to(action: 'index')
+      else
+        flash[:error] = error_message @variant_install_image
+        render('edit')
+      end
     end
 
     def destroy
@@ -60,8 +76,12 @@ module Admin
       @collection = @design.collection
     end
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def variant_install_image_params
-      params.require(:variant_install_image).permit(:file, :type, :owner_id)
+      params.require(:variant_install_image).permit(:file, :type, :owner_id, website_ids: [])
     end
 
   end

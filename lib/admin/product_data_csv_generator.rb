@@ -160,7 +160,7 @@ module Admin
             csv << header
           end
 
-          total_image_count = design.variants.count + design.variants.select { |v| v.variant_install_images.any? }.count
+          total_image_count = design.variants_for_domain(website).count + design.variants_for_domain(website).select { |v| v.install_images_for_domain(website).any? }.count
 
           @custom_image_index = total_image_count
           # puts 'custom image index: '+@custom_image_index.to_s
@@ -171,12 +171,12 @@ module Admin
           # Instead, we mix a random install image in with the swatch images
           @random_install_image = nil
           if website == 'astekhome.com' && design.has_colorways?
-            if install_images = design.install_images
+            if install_images = design.install_images_for_domain(website)
               @random_install_image = install_images.sample
             end
           end
 
-          design.variants.each_with_index do |variant, i|
+          design.variants_for_domain(website).each_with_index do |variant, i|
             
             @image_index = i
             first_variant_row = true
@@ -215,11 +215,13 @@ module Admin
             end
           end
 
-          # On astekhome.com, if a design has colorways, we don't show the install images separately, we mix a random install image in with the swatch images
+          # This is for astek.com, and astekhome.com designs which don't have colorways.
+          # On astekhome.com, if a design has colorways, we don't show the install images separately,
+          # we mix a random install image in with the swatch images (handled above @line 170).
           if website == 'astek.com' || (website == 'astekhome.com' && !design.has_colorways?)
-            design.variants.each do |variant|
-              if variant.variant_install_images
-                variant.variant_install_images.each do |image|
+            design.variants_for_domain(website).each do |variant|
+              if variant.install_images_for_domain(website)
+                variant.install_images_for_domain(website).each do |image|
                   @image_index += 1
                   csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
 

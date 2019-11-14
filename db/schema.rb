@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_24_223905) do
+ActiveRecord::Schema.define(version: 2019_11_07_234322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -369,6 +369,16 @@ ActiveRecord::Schema.define(version: 2019_07_24_223905) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.index ["deleted_at"], name: "index_vendors_on_deleted_at"
+  end
+
+  create_table "website_display", force: :cascade do |t|
+    t.integer "websiteable_id"
+    t.string "websiteable_type"
+    t.integer "website_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["website_id"], name: "index_website_display_on_website_id"
+    t.index ["websiteable_id"], name: "index_website_display_on_websiteable_id"
   end
 
   create_table "websites", id: :serial, force: :cascade do |t|

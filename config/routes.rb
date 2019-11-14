@@ -120,7 +120,7 @@ Rails.application.routes.draw do
         post :update_row_order, on: :collection
       end
 
-      resources :variant_install_images, only: [:index, :new, :create, :show, :destroy] do
+      resources :variant_install_images do
         post :update_row_order, on: :collection
       end
     end
