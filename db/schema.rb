@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_07_234322) do
+ActiveRecord::Schema.define(version: 2019_11_15_184730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -97,6 +97,16 @@ ActiveRecord::Schema.define(version: 2019_11_07_234322) do
   create_table "data_migrations", id: false, force: :cascade do |t|
     t.string "version", null: false
     t.index ["version"], name: "unique_data_migrations", unique: true
+  end
+
+  create_table "descriptions", force: :cascade do |t|
+    t.string "descriptionable_type"
+    t.integer "descriptionable_id"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["descriptionable_id"], name: "index_descriptions_on_descriptionable_id"
+    t.index ["descriptionable_type"], name: "index_descriptions_on_descriptionable_type"
   end
 
   create_table "design_properties", id: :serial, force: :cascade do |t|

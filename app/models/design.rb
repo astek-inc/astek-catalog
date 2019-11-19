@@ -9,6 +9,8 @@ class Design < ApplicationRecord
 
   include Websiteable
 
+  include Descriptionable
+
   scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
   scope :unsubcollected, -> { where('subcollection_id IS NULL') }
 
@@ -43,6 +45,10 @@ class Design < ApplicationRecord
 
   def install_images_for_domain domain
     self.variants_for_domain(domain).map { |v| v.install_images_for_domain(domain).first.nil? ? nil : { variant_id: v.id, install_image: v.install_images_for_domain(domain).first } }.compact
+  end
+
+  def description_for_domain domain
+    self.descriptions.for_domain(domain).first.description
   end
 
   def property name

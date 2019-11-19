@@ -118,7 +118,7 @@ module Admin
             google_shopping_gender
             google_shopping_google_product_category
             seo_title
-            description
+            seo_description
             google_shopping_adwords_grouping
             google_shopping_adwords_labels
             google_shopping_condition
@@ -244,14 +244,7 @@ module Admin
           'D-'+variant.design.sku
 
         elsif attr == 'body'
-          case domain
-          when 'astek.com'
-            astek_business_description variant
-          when 'astekhome.com'
-            astek_home_description variant
-          when 'onairdesign.com'
-            onair_design_description variant
-          end
+          body_for_domain variant, domain
 
         elsif attr == 'type'
           variant.type
@@ -548,6 +541,9 @@ module Admin
         elsif attr == 'seo_title'
           variant.design.name
 
+        elsif attr == 'seo_description'
+          variant.design.description_for_domain domain
+
         elsif attr == 'collection'
           case domain
           when 'astek.com'
@@ -602,11 +598,22 @@ module Admin
         end
       end
 
-      def astek_business_description variant
+      def body_for_domain variant, domain
+        case domain
+        when 'astek.com'
+          astek_business_description variant, domain
+        when 'astekhome.com'
+          astek_home_description variant
+        when 'onairdesign.com'
+          onair_design_description variant, domain
+        end
+      end
+
+      def astek_business_description variant, domain
         body = ''
 
-        if variant.design.description
-          body += format_description variant
+        if description = variant.design.description_for_domain(domain)
+          body += format_description description
         end
 
         body += format_business_properties variant
@@ -624,20 +631,20 @@ module Admin
         body
       end
 
-      def onair_design_description variant
+      def onair_design_description variant, domain
         body = ''
 
-        if variant.design.description
-          body += format_description variant
+        if description = variant.design.description_for_domain(domain)
+          body += format_description description
         end
 
         body += format_onair_properties(variant).gsub(/\n+/, ' ')
         body
       end
 
-      def format_description variant
+      def format_description description
         '<div>
-            <p>'+variant.design.description+'</p>
+            <p>'+description+'</p>
         </div>'
       end
 
