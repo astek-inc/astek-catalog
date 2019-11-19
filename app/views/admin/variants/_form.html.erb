@@ -106,7 +106,7 @@
     <%= content_tag :div, class: 'panel-body' do %>
       <%= collection_check_boxes(:variant, :website_ids, @websites, :id, :name) do |b| %>
         <%= content_tag :div, class: 'checkbox-inline' do %>
-          <%= b.label() { b.check_box + b.text } %>
+          <%= b.label() { b.check_box({ disabled: @design.websites.map { |w| w.id }.exclude?(b.value) }) + b.text } %>
         <% end %>
       <% end %>
     <% end %>
