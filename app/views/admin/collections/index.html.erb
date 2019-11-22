@@ -31,7 +31,7 @@
             <tr class="product_property fields" data-hook="collection">
               <td><%= collection.name %></td>
               <td><%= collection.product_category.name %></td>
-              <td><%= truncate(sanitize(collection.description), length: 140) %></td>
+              <td><%= truncate(sanitize(collection.description), length: 90) %></td>
               <td><%= collection.websites.map { |w| w.name }.join(', ') %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
