@@ -26,7 +26,8 @@
             <th class="move-handle"></th>
             <th>Name</th>
             <th>SKU</th>
-            <th>Description</th>
+<!--            <th>Description</th>-->
+            <th>Websites</th>
             <th>Status</th>
             <th class="actions"></th>
           </tr>
@@ -39,8 +40,9 @@
                   <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                 </td>
                 <td><%= design.name %></td>
-                <td><%= design.sku %></td>
-                <td><%= truncate(sanitize(design.description), length: 140) %></td>
+                <td class="sku"><%= design.sku %></td>
+<!--                <td><%#= truncate(sanitize(design.description), length: 140) %></td>-->
+                <td><%= design.websites.map { |w| w.name }.join(', ') %></td>
                 <td><%= design.available? ? success_label('available') : danger_label('discontinued') %></td>
                 <td class="actions">
                   <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

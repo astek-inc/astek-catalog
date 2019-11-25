@@ -7,12 +7,18 @@ class Design < ApplicationRecord
 
   acts_as_paranoid
 
+  include Websiteable
+
+  include Descriptionable
+
   scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
+  scope :unsubcollected, -> { where('subcollection_id IS NULL') }
 
   belongs_to :collection
   belongs_to :vendor, inverse_of: :designs
   belongs_to :sale_unit
   belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id'
+  belongs_to :subcollection, inverse_of: :designs, optional: true
 
   has_many :variants, -> { order(row_order: :asc) }, dependent: :destroy
 
@@ -33,8 +39,16 @@ class Design < ApplicationRecord
 
   accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
 
-  def install_images
-    self.variants.map { |v| v.variant_install_images.first.nil? ? nil : { variant_id: v.id, install_image: v.variant_install_images.first } }.compact
+  def variants_for_domain domain
+    self.variants.for_domain domain
+  end
+
+  def install_images_for_domain domain
+    self.variants_for_domain(domain).map { |v| v.install_images_for_domain(domain).first.nil? ? nil : { variant_id: v.id, install_image: v.install_images_for_domain(domain).first } }.compact
+  end
+
+  def description_for_domain domain
+    self.descriptions.for_domain(domain).first.description
   end
 
   def property name
@@ -92,8 +106,8 @@ class Design < ApplicationRecord
         end
       end
 
-      if self.keywords
-        tags << to_tags('keyword', self.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? })
+      if all_keywords = self.merged_keywords
+        tags << to_tags('keyword', all_keywords)
       end
 
       tags << to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
@@ -101,6 +115,10 @@ class Design < ApplicationRecord
 
     if domain == 'astekhome.com'
       tags << self.calculator_tag
+
+      if self.digital?
+        tags << self.material_tags
+      end
     end
 
     tags.flatten.join(', ')
@@ -119,282 +137,323 @@ class Design < ApplicationRecord
     "#{name}__#{value.strip}"
   end
 
+  def merged_keywords
+    collection_keywords = []
+    design_keywords = []
+
+    if self.collection.keywords
+      collection_keywords = self.collection.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
+    end
+
+    if self.keywords
+      design_keywords = self.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
+    end
+
+    (collection_keywords + design_keywords).uniq
+  end
+
   def calculator_tag
-    case sale_unit.name
-    when 'Roll'
-      roll_width = self.property('roll_width_inches')
-      roll_length = self.property('roll_length_yards')
 
-      case roll_width
+    if self.subcollection # We need something more specific
 
-      when '1.25'
-        case roll_length
+      'sold-by__roll_multiple_widths'
+
+    else
+
+      case sale_unit.name
+      when 'Roll'
+        roll_width = self.property('roll_width_inches')
+        roll_length = self.property('roll_length_yards')
+
+        case roll_width
+
+        when '1.25'
+          case roll_length
+          when '11'
+            'sold-by__RollAG'
+          end
+
+        when '1.625'
+          case roll_length
+          when '11'
+            'sold-by__RollX'
+          end
+
+        when '2.75'
+          case roll_length
+          when '11'
+            'sold-by__RollW'
+          end
+
+        when '10.5'
+          case roll_length
+          when '11'
+            'sold-by__RollAD'
+          end
+
+        when '10.625'
+          case roll_length
+          when '11'
+            'sold-by__RollAF'
+          end
+
+        when '10.8125'
+          case roll_length
+          when '11'
+            'sold-by__RollAJ'
+          end
+
         when '11'
-          'sold-by__RollAG'
+          case roll_length
+          when '11'
+            'sold-by__RollAE'
+          end
+
+        when '11.0625'
+          case roll_length
+          when '11'
+            'sold-by__RollAC'
+          end
+
+        when '11.125'
+          case roll_length
+          when '11'
+            'sold-by__RollAK'
+          end
+
+        when '17.72'
+          case roll_length
+          when '1.64'
+            'sold-by__RollAP'
+          when '2.19'
+            'sold-by__RollAQ'
+          when '5.47'
+            'sold-by__RollO'
+          when '10.94'
+            'sold-by__RollP'
+          when '16.4'
+            'sold-by__RollA'
+          end
+
+        when '20.5'
+          case roll_length
+          when '11'
+            'sold-by__RollB'
+          end
+
+        when '20.5625'
+          case roll_length
+          when '11'
+            'sold-by__RollAL'
+          end
+
+        when '20.8125'
+          case roll_length
+          when '11'
+            'sold-by__RollAH'
+          end
+
+        when '20.875'
+          case roll_length
+          when '11'
+            'sold-by__RollZ'
+          end
+
+        when '20.9375'
+          case roll_length
+          when '11'
+            'sold-by__RollY'
+          end
+
+        when '21'
+          case roll_length
+          when '11'
+            'sold-by__RollU'
+          end
+
+        when '21.0625'
+          case roll_length
+          when '11'
+            'sold-by__RollAA'
+          end
+
+        when '21.125'
+          case roll_length
+          when '11'
+            'sold-by__RollV'
+          end
+
+        when '21.1875'
+          case roll_length
+          when '11'
+            'sold-by__RollAI'
+          end
+
+        when '21.25'
+          case roll_length
+          when '11'
+            'sold-by__RollAB'
+          end
+
+        when '21.3'
+          case roll_length
+          when '10'
+            'sold-by__RollAN'
+          end
+
+        when '22'
+          case roll_length
+          when '10'
+            'sold-by__RollAO'
+          end
+
+        when '24'
+          case roll_length
+          when '8'
+            'sold-by__RollS'
+          when '11'
+            'sold-by__RollAM'
+          end
+
+        when '26.57'
+          case roll_length
+          when '1.64'
+            'sold-by__RollAR'
+          when '10.94'
+            'sold-by__RollQ'
+          end
+
+        when '27'
+          case roll_length
+          when '9'
+            'sold-by__RollC'
+          when '15'
+            'sold-by__RollD'
+          end
+
+        when '27.55'
+          case roll_length
+          when '11'
+            'sold-by__RollE'
+          end
+
+        when '30'
+          case roll_length
+          when '15'
+            'sold-by__RollN'
+          end
+
+        when '35.43'
+          case roll_length
+          when '10.94'
+            'sold-by__RollR'
+          when '16.4'
+            'sold-by__RollF'
+          end
+
+        when '36'
+          case roll_length
+          when '6'
+            'sold-by__RollM'
+          when '8'
+            if self.minimum_quantity == 3
+              'sold-by__RollTMin3'
+            else
+              'sold-by__RollG'
+            end
+          when '11'
+            'sold-by__RollH'
+          when '12'
+            if self.minimum_quantity == 3
+              'sold-by__RollIMin3'
+            end
+          end
+
+        when '39'
+          case roll_length
+          when '11'
+            if self.minimum_quantity == 3
+              'sold-by__RollJMin3'
+            end
+          when '22.9659'
+            # This is by meter, it needs a separate sale unit
+            'sold-by__RollK'
+          end
+
+        when '40.5'
+          case roll_length
+          when '7.5'
+            'sold-by__RollL'
+          end
         end
 
-      when '1.625'
-        case roll_length
-        when '11'
-          'sold-by__RollX'
+      when 'Yard'
+        roll_width = self.property('roll_width_inches')
+
+        case roll_width
+        when '35'
+          if self.minimum_quantity == 4
+            'sold-by__YardEMin4'
+          end
+        when '36'
+          if self.minimum_quantity == 4
+            'sold-by__YardAMin4'
+          end
+        when '37'
+          if self.minimum_quantity == 4
+            'sold-by__YardFMin4'
+          end
+        when '38'
+          if self.minimum_quantity == 4
+            'sold-by__YardGMin4'
+          end
+        when '48'
+          if self.minimum_quantity == 4
+            'sold-by__YardBMin4'
+          end
+        when '49'
+          if self.minimum_quantity == 4
+            'sold-by__YardHMin4'
+          end
+        when '54'
+          case self.minimum_quantity
+          when 4
+            'sold-by__YardCMin4'
+          when 10
+            'sold-by__YardDMin10'
+          end
         end
 
-      when '2.75'
-        case roll_length
-        when '11'
-          'sold-by__RollW'
-        end
+      when 'Meter'
+        roll_width = self.property('roll_width_inches')
+        # roll_length = self.property 'roll_length_meters'
 
-      when '10.5'
-        case roll_length
-        when '11'
-          'sold-by__RollAD'
-        end
-
-      when '10.625'
-        case roll_length
-        when '11'
-          'sold-by__RollAF'
-        end
-
-      when '10.8125'
-        case roll_length
-        when '11'
-          'sold-by__RollAJ'
-        end
-
-      when '11'
-        case roll_length
-        when '11'
-          'sold-by__RollAE'
-        end
-
-      when '11.0625'
-        case roll_length
-        when '11'
-          'sold-by__RollAC'
-        end
-
-      when '11.125'
-        case roll_length
-        when '11'
-          'sold-by__RollAK'
-        end
-
-      when '17.72'
-        case roll_length
-        when '5.47'
-          'sold-by__RollO'
-        when '10.94'
-          'sold-by__RollP'
-        when '16.4'
-          'sold-by__RollA'
-        end
-
-      when '20.5'
-        case roll_length
-        when '11'
-          'sold-by__RollB'
-        end
-
-      when '20.5625'
-        case roll_length
-        when '11'
-          'sold-by__RollAL'
-        end
-
-      when '20.8125'
-        case roll_length
-        when '11'
-          'sold-by__RollAH'
-        end
-
-      when '20.875'
-        case roll_length
-        when '11'
-          'sold-by__RollZ'
-        end
-
-      when '20.9375'
-        case roll_length
-        when '11'
-          'sold-by__RollY'
-        end
-
-      when '21'
-        case roll_length
-        when '11'
-          'sold-by__RollU'
-        end
-
-      when '21.0625'
-        case roll_length
-        when '11'
-          'sold-by__RollAA'
-        end
-
-      when '21.125'
-        case roll_length
-        when '11'
-          'sold-by__RollV'
-        end
-
-      when '21.1875'
-        case roll_length
-        when '11'
-          'sold-by__RollAI'
-        end
-
-      when '21.25'
-        case roll_length
-        when '11'
-          'sold-by__RollAB'
-        end
-
-      when '21.3'
-        case roll_length
-        when '10'
-          'sold-by__RollAN'
-        end
-
-      when '22'
-        case roll_length
-        when '10'
-          'sold-by__RollAO'
-        end
-
-      when '24'
-        case roll_length
-        when '8'
-          'sold-by__RollS'
-        when '11'
-          'sold-by__RollAM'
-        end
-
-      when '26.57'
-        case roll_length
-        when '10.94'
-          'sold-by__RollQ'
-        end
-
-      when '27'
-        case roll_length
-        when '9'
-          'sold-by__RollC'
-        when '15'
-          'sold-by__RollD'
-        end
-
-      when '27.55'
-        case roll_length
-        when '11'
-          'sold-by__RollE'
-        end
-
-      when '30'
-        case roll_length
-        when '15'
-          'sold-by__RollN'
-        end
-
-      when '35.43'
-        case roll_length
-        when '10.94'
-          'sold-by__RollR'
-        when '16.4'
-          'sold-by__RollF'
-        end
-
-      when '36'
-        case roll_length
-        when '6'
-          'sold-by__RollM'
-        when '8'
-          if self.minimum_quantity == 3
-            'sold-by__RollTMin3'
+        case roll_width
+        when '39'
+          if self.minimum_quantity == 10
+            'sold-by__MeterAMin10'
           else
-            'sold-by__RollG'
-          end
-        when '11'
-          'sold-by__RollH'
-        when '12'
-          if self.minimum_quantity == 3
-            'sold-by__RollIMin3'
+            'sold-by__MeterA'
           end
         end
 
-      when '39'
-        case roll_length
-        when '11'
-          if self.minimum_quantity == 3
-            'sold-by__RollJMin3'
-          end
-        when '22.9659'
-          # This is by meter, it needs a separate sale unit
-          'sold-by__RollK'
-        end
-
-      when '40.5'
-        case roll_length
-        when '7.5'
-          'sold-by__RollL'
+      when 'Square Foot'
+        if self.minimum_quantity == 30
+          'sold-by__CustomAMin30'
         end
       end
 
-    when 'Yard'
-      roll_width = self.property('roll_width_inches')
+    end
 
-      case roll_width
-      when '35'
-        if self.minimum_quantity == 4
-          'sold-by__YardEMin4'
-        end
-      when '36'
-        if self.minimum_quantity == 4
-          'sold-by__YardAMin4'
-        end
-      when '37'
-        if self.minimum_quantity == 4
-          'sold-by__YardFMin4'
-          end
-      when '38'
-        if self.minimum_quantity == 4
-          'sold-by__YardGMin4'
-        end
-      when '48'
-        if self.minimum_quantity == 4
-          'sold-by__YardBMin4'
-        end
-      when '49'
-        if self.minimum_quantity == 4
-          'sold-by__YardHMin4'
-        end
-      when '54'
-        case self.minimum_quantity
-        when 4
-          'sold-by__YardCMin4'
-        when 10
-          'sold-by__YardDMin10'
-        end
+  end
+
+  def material_tags
+    if self.custom_materials.any?
+      material_tags = []
+      self.custom_materials.each do |m|
+        material_tags << to_tag('material', m.name.parameterize)
       end
-
-    when 'Meter'
-      roll_width = self.property('roll_width_inches')
-      # roll_length = self.property 'roll_length_meters'
-
-      case roll_width
-      when '39'
-        if self.minimum_quantity == 10
-          'sold-by__MeterAMin10'
-        else
-          'sold-by__MeterA'
-        end
-      end
-
-    when 'Square Foot'
-      if self.minimum_quantity == 30
-        'sold-by__CustomAMin30'
-      end
+      material_tags
     end
   end
 

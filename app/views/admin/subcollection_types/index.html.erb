@@ -1,0 +1,48 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Subcollection Types'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Subcollection Type', new_admin_subcollection_type_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <% if @subcollection_types.any? %>
+
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped" data-hook>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @subcollection_types.each do |subcollection_type| %>
+            <tr class="subcollection_type fields" data-hook="subcollection">
+              <td><%= subcollection_type.name %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_subcollection_type_path subcollection_type %>
+                  <%= delete_button admin_subcollection_type_path subcollection_type %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+    <% else %>
+      <p>No subcollection types found. <%= link_to 'Create one.', new_admin_subcollection_type_path %></p>
+    <% end %>
+
+  <% end %>
+<% end %>

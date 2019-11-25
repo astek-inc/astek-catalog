@@ -1,11 +1,11 @@
 <script>
     $(function() {
-        Astek.product_exports.design_name_autocomplete();
+        Astek.product_exports.collection_name_autocomplete();
     });
 </script>
 
 <% content_for :header_left do %>
-  <%= content_tag :h1, [link_to('Product Data Export', export_by_collection_admin_product_exports_path), 'Export by Design'].join(' / ').html_safe %>
+  <%= content_tag :h1, [link_to('Product Data Export', shopify_export_by_collection_admin_product_exports_path), 'Export for Shopify by Collection'].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
@@ -16,11 +16,11 @@
     <%= content_tag :div, class: 'col-md-9' do %>
 
       <p class="help-block">
-        Select a website, enter a design name, and submit to download a CSV file of that design's data
+        Select a website, enter a collection name, and submit to download a CSV file of that colection's designs
         formatted for the selected website.
       </p>
 
-      <%= form_tag generate_design_csv_admin_product_exports_path, method: :get do %>
+      <%= form_tag generate_shopify_collection_csv_admin_product_exports_path, method: :get do %>
         <%= content_tag :div, { class: 'col-md-4' } do %>
           <%= content_tag :div, class: 'form-group' do %>
             <%= label_tag 'website_id', 'Website' %> <span class="required">*</span>
@@ -30,9 +30,9 @@
 
         <%= content_tag :div, class: 'col-md-6' do %>
           <%= content_tag :div, class: 'form-group' do %>
-            <%= label_tag 'design_id', 'Design' %> <span class="required">*</span>
-            <%= text_field_tag "design_name_#{SecureRandom.hex}", nil, { id: 'design_name', class: 'form-control', required: true, autocomplete: 'off' } %>
-            <%= hidden_field_tag 'design_id' %>
+            <%= label_tag 'collection_id', 'Collection' %> <span class="required">*</span>
+            <%= text_field_tag "collection_name_#{SecureRandom.hex}", nil, { id: 'collection_name', class: 'form-control', required: true, autocomplete: 'off' } %>
+            <%= hidden_field_tag 'collection_id' %>
           <% end %>
         <% end %>
 
@@ -44,7 +44,7 @@
     <% end %>
 
     <%= content_tag :div, class: 'col-md-3' do %>
-      <%= render partial: 'subnav', locals: { current: 'by_design' } %>
+      <%= render partial: 'shopify_subnav', locals: { current: 'by_collection' } %>
     <% end %>
 
   <% end %>

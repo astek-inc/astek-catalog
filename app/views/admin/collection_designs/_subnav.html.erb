@@ -1,7 +1,9 @@
 <div class="list-group">
   <%= subnav_link 'Details', 'pencil', edit_admin_collection_design_path(@collection, @design), 'details', current %>
-  <%# = subnav_link 'Images', 'picture', admin_design_design_images_path(@design), 'images', current %>
+  <%= subnav_link 'Descriptions', 'comment', admin_design_descriptions_path(@design), 'descriptions', current %>
   <%= subnav_link 'Properties', 'list-alt', admin_design_design_properties_path(@design), 'properties', current %>
   <%= subnav_link 'Variants', 'th-large', admin_design_variants_path(@design), 'variants', current %>
-  <%= subnav_link 'Custom Materials' , 'wrench', custom_materials_admin_collection_design_path(@collection, @design), 'custom_materials', current %>
+  <% if @design.digital? %>
+    <%= subnav_link 'Custom Materials' , 'wrench', custom_materials_admin_collection_design_path(@collection, @design), 'custom_materials', current %>
+  <% end %>
 </div>

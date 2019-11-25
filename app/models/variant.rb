@@ -7,6 +7,8 @@ class Variant < ApplicationRecord
 
   acts_as_paranoid
 
+  include Websiteable
+
   mount_uploader :tearsheet, TearsheetUploader
 
   belongs_to :design
@@ -32,14 +34,6 @@ class Variant < ApplicationRecord
 
   def title
     self.design.name
-  end
-
-  def option_3_value
-    if self.substrate
-      self.substrate.name
-    elsif self.backing_type
-      self.backing_type.name
-    end
   end
 
   # Sites require weight in grams, in whole numbers (no decimals)
@@ -96,6 +90,10 @@ class Variant < ApplicationRecord
 
   def sku_with_material_and_colors material
     self.sku + '-' + material.name.parameterize + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
+  end
+
+  def install_images_for_domain domain
+    self.variant_install_images.for_domain domain
   end
 
 end

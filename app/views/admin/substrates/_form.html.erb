@@ -1,19 +1,12 @@
 
-<%= content_tag :div, class: ['row'] do %>
-  <%= content_tag :div, class: 'col-md-6' do %>
+<%#= content_tag :div, class: ['row'] do %>
+  <%#= content_tag :div, class: 'col-md-6' do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= f.label(:name, 'Name <span class="required">*</span>'.html_safe) %>
       <%= f.text_field :name, required: true, class: 'form-control' %>
     <% end %>
-  <% end %>
-
-  <%= content_tag :div, class: 'col-md-6' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :display_name, 'Display Name' %>
-      <%= f.text_field :display_name, class: 'form-control' %>
-    <% end %>
-  <% end %>
-<% end %>
+  <%# end %>
+<%# end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
   <%= f.label(:name, 'Description') %>
@@ -23,6 +16,33 @@
 <%= content_tag :div, class: ['form-group'] do %>
   <%= f.label(:name, 'Keywords') %>
   <%= f.text_area :keywords, rows: 3, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: 'panel panel-default' do %>
+  <%= content_tag :div, 'Public Websites', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+
+      <%= content_tag :div, class: ['form-group'] do %>
+        <%= content_tag :div, class: ['checkbox'], id: 'display_on_public_sites' do %>
+          <%= f.label :display_on_public_sites do %>
+            <%= f.check_box :display_on_public_sites %> Display on Public Sites
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%#= content_tag :div, class: 'col-md-6' do %>
+        <%= content_tag :div, class: ['form-group'] do %>
+          <%= f.label :display_name, 'Display Name' %>
+          <%= f.text_field :display_name, class: 'form-control' %>
+        <% end %>
+      <%# end %>
+
+      <%= content_tag :div, class: ['form-group'] do %>
+        <%= f.label(:name, 'Display Description') %>
+        <%= f.text_area :display_description, rows: 6, class: 'form-control' %>
+      <% end %>
+
+  <% end %>
 <% end %>
 
 <%= field_set_tag nil, 'data-hook': 'substrate_edit' do %>
@@ -38,9 +58,20 @@
   <% end %>
 <% end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label :backing_type, 'Backing Type' %>
-  <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { prompt: 'Select' }, { class: 'form-control' } %>
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :backing_type, 'Backing Type' %>
+      <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { prompt: 'Select' }, { class: 'form-control' } %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-6' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :weight_per_square_foot, 'Weight Per Square Foot in Pounds' %> <span class="required">*</span>
+      <%= f.number_field :weight_per_square_foot, required: true, class: 'form-control', min: '.1', step: '.05' %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= content_tag :div, class: ['row'] do %>

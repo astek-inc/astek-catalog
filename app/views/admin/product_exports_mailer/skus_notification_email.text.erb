@@ -2,8 +2,12 @@
 Your Product Data Export is Complete
 ===============================================
 
-Product data for the skus <%= @skus %>
+Product data for the SKUs <%= @skus %>
 has been exported to a CSV file.
+<% unless @error_message.nil? %>
+
+<%= @error_message %>
+<% end %>
 
 The file can be downloaded from
 <%= @csv_url %>.

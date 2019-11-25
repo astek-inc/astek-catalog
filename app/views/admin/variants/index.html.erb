@@ -26,6 +26,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>SKU</th>
+                    <th>Websites</th>
                     <th class="actions"></th>
                   </tr>
                   </thead>
@@ -39,6 +40,7 @@
                         <td><%= variant.name %></td>
                         <td><%= variant.variant_type.name %></td>
                         <td><%= variant.sku %></td>
+                        <td><%= variant.websites.map { |w| w.name }.join(', ') %></td>
                         <td class="actions">
                           <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                             <%= edit_button edit_admin_design_variant_path @design, variant %>

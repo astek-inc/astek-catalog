@@ -99,7 +99,7 @@ module Admin
           if @sample
             @variant.sample_sku
           else
-            @variant.sku
+            @variant.sku_with_colors
           end
 
         end

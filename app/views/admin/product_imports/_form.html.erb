@@ -1,0 +1,13 @@
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :name, 'Name <span class="required">*</span>'.html_safe %>
+  <%= f.text_field :name, required: true, class: 'form-control' %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :file, 'File <span class="required">*</span>'.html_safe %>
+  <%= content_tag(:p, @product_import.file_url) if @product_import.file? %>
+  <%= f.file_field :file, required: @product_import.file.blank?, class: 'form-control' %>
+  <%= f.hidden_field :file_cache %>
+<% end %>
+

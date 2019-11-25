@@ -1,17 +1,17 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
 
 module Admin
-  class DesignExportJob < ActiveJob::Base
+  class FedexDesignExportJob < ActiveJob::Base
 
     queue_as :default
 
-    def perform(design_id, website_id, current_user)
+    def perform(design_id, current_user)
 
       design = Design.find(design_id)
-      website = Website.find(website_id)
+      website = Website.find_by(domain: 'astekhome.com')
 
       csv_data = ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, true
-      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{design.name.parameterize}.csv"
+      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{design.name.parameterize}.csv"
 
       storage = Fog::Storage.new(
           provider: 'AWS',

@@ -1,14 +1,14 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
 
 module Admin
-  class SkusExportJob < ActiveJob::Base
+  class FedexSkusExportJob < ActiveJob::Base
 
     queue_as :default
 
-    def perform(skus, website_id, current_user)
+    def perform(skus, current_user)
 
       sku_array = skus.split(',').map { |s| s.strip }
-      website = Website.find(website_id)
+      website = Website.find_by(domain: 'astekhome.com')
       designs = Design.where(sku: sku_array).select { |d| d.collection.websites.include? website }
 
       csv_data = ''
@@ -22,7 +22,7 @@ module Admin
         skus_for_filename = 'assorted-skus'
       end
 
-      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{skus_for_filename}.csv"
+      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{skus_for_filename}.csv"
 
       storage = Fog::Storage.new(
           provider: 'AWS',

@@ -22,7 +22,10 @@
           <thead>
           <tr>
             <th>Name</th>
+            <th>Display Name</th>
             <th>Description</th>
+            <th>Backing Type</th>
+            <th>Weight Per Square Foot</th>
             <th class="actions"></th>
           </tr>
           </thead>
@@ -31,7 +34,10 @@
           <% @substrates.each do |substrate| %>
             <tr class="product_property fields" data-hook="substrate">
               <td><%= substrate.name %></td>
-              <td><%= truncate(sanitize(substrate.description), length: 140) %></td>
+              <td><%= substrate.display_name %></td>
+              <td><%= truncate(sanitize(substrate.description), length: 90) %></td>
+              <td><%= substrate.backing_type.name unless substrate.backing_type.nil? %></td>
+              <td><%= substrate.weight_per_square_foot %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                   <%= edit_button edit_admin_substrate_path substrate %>

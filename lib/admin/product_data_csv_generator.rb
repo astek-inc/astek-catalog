@@ -3,6 +3,10 @@ module Admin
 
     require 'csv'
 
+    SAMPLE_WEIGHT = '.5'
+    SAMPLE_PRICE_DIGITAL = '10.99'
+    SAMPLE_PRICE_DISTRIBUTED = '5.99'
+
     TEXT_VALUES = {
         variant_barcode: '',
         variant_inventory_tracker: '',
@@ -22,7 +26,8 @@ module Admin
         google_shopping_custom_label_2: '',
         google_shopping_custom_label_3: '',
         google_shopping_custom_label_4: '',
-        variant_tax_code: ''
+        variant_tax_code: '',
+        cost_per_item: ''
     }
 
     class << self
@@ -75,6 +80,7 @@ module Admin
             'Variant Image',
             'Variant Weight Unit',
             'Variant Tax Code',
+            'Cost Per Item',
             'Collection'
         ]
 
@@ -112,7 +118,7 @@ module Admin
             google_shopping_gender
             google_shopping_google_product_category
             seo_title
-            description
+            seo_description
             google_shopping_adwords_grouping
             google_shopping_adwords_labels
             google_shopping_condition
@@ -125,6 +131,7 @@ module Admin
             variant_image
             variant_weight_unit
             variant_tax_code
+            cost_per_item
             collection
         ]
 
@@ -145,7 +152,7 @@ module Admin
             image_src
             image_position
             image_alt_text
-          ] + 16.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 2.times.map { nil }
+          ] + 16.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 3.times.map { nil }
 
         CSV.generate(headers: true) do |csv|
 
@@ -153,7 +160,7 @@ module Admin
             csv << header
           end
 
-          total_image_count = design.variants.count + design.variants.select { |v| v.variant_install_images.any? }.count
+          total_image_count = design.variants_for_domain(website).count + design.variants_for_domain(website).select { |v| v.install_images_for_domain(website).any? }.count
 
           @custom_image_index = total_image_count
           # puts 'custom image index: '+@custom_image_index.to_s
@@ -164,12 +171,13 @@ module Admin
           # Instead, we mix a random install image in with the swatch images
           @random_install_image = nil
           if website == 'astekhome.com' && design.has_colorways?
-            if install_images = design.install_images
+            if install_images = design.install_images_for_domain(website)
               @random_install_image = install_images.sample
             end
           end
 
-          design.variants.each_with_index do |variant, i|
+          design.variants_for_domain(website).each_with_index do |variant, i|
+            
             @image_index = i
             first_variant_row = true
 
@@ -207,13 +215,15 @@ module Admin
             end
           end
 
-          # On astekhome.com, if a design has colorways, we don't show the install images separately, we mix a random install image in with the swatch images
+          # This is for astek.com, and astekhome.com designs which don't have colorways.
+          # On astekhome.com, if a design has colorways, we don't show the install images separately,
+          # we mix a random install image in with the swatch images (handled above @line 170).
           if website == 'astek.com' || (website == 'astekhome.com' && !design.has_colorways?)
-            design.variants.each do |variant|
-              if variant.variant_install_images
-                variant.variant_install_images.each do |image|
+            design.variants_for_domain(website).each do |variant|
+              if variant.install_images_for_domain(website)
+                variant.install_images_for_domain(website).each do |image|
                   @image_index += 1
-                  csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 21.times.map { nil }
+                  csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
 
                 end
               end
@@ -234,12 +244,10 @@ module Admin
           'D-'+variant.design.sku
 
         elsif attr == 'body'
-          case domain
-          when 'astek.com'
-            astek_business_description variant
-          when 'astekhome.com'
-            astek_home_description variant
-          end
+          body_for_domain variant, domain
+
+        elsif attr == 'type'
+          variant.type
 
         elsif attr == 'tags'
           if variant_type == 'full'
@@ -255,6 +263,12 @@ module Admin
              'Colorway'
             else
               'Size'
+            end
+          when 'onairdesign.com'
+            if variant.variant_type.name == 'Color Way'
+              'Colorway'
+            else
+              'Title'
             end
           end
 
@@ -272,6 +286,12 @@ module Admin
               astek_home_colorway_value variant_type, variant.name
             else
               astek_home_size_value variant_type
+            end
+          when 'onairdesign.com'
+            if variant.variant_type.name == 'Color Way'
+              variant.name
+            else
+              'Default Title'
             end
           end
 
@@ -352,6 +372,8 @@ module Admin
                 'Material'
               end
             end
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'option_2_value'
@@ -364,6 +386,8 @@ module Admin
             else
               astek_home_material_value material
             end
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'option_3_name'
@@ -374,6 +398,8 @@ module Admin
             if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               'Material'
             end
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'option_3_value'
@@ -384,6 +410,8 @@ module Admin
             if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               astek_home_material_value material
             end
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'sku'
@@ -399,10 +427,16 @@ module Admin
           when 'custom_sample'
             variant.design.sku+'-c-s'
           when 'full'
-            if material
-              variant.sku_with_material_and_colors material
+
+            case domain
+            when 'onairdesign.com'
+              variant.sku
             else
-              variant.sku_with_colors
+              if material
+                variant.sku_with_material_and_colors material
+              else
+                variant.sku_with_colors
+              end
             end
           end
 
@@ -412,10 +446,16 @@ module Admin
             nil
           when 'astekhome.com'
             if variant_type == 'sample' || variant_type == 'custom_sample'
-              (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
+              (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
             else
-              variant.variant_grams
+              if material
+                material_variant_weight material, variant
+              else
+                variant.variant_grams
+              end
             end
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'variant_inventory_qty'
@@ -424,6 +464,8 @@ module Admin
             nil
           when 'astekhome.com'
             1
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'price'
@@ -433,9 +475,9 @@ module Admin
           when 'astekhome.com'
             if variant_type == 'sample' || variant_type == 'custom_sample'
               if variant.design.digital?
-                10.99.to_s
+                SAMPLE_PRICE_DIGITAL
               else
-                5.99.to_s
+                SAMPLE_PRICE_DISTRIBUTED
               end
             else
               if material
@@ -444,6 +486,8 @@ module Admin
                 variant.price
               end
             end
+          when 'onairdesign.com'
+            0
           end
 
         elsif attr == 'variant_requires_shipping'
@@ -452,6 +496,8 @@ module Admin
             nil
           when 'astekhome.com'
             'TRUE'
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'variant_taxable'
@@ -460,6 +506,8 @@ module Admin
             nil
           when 'astekhome.com'
             'TRUE'
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'variant_weight_unit'
@@ -468,6 +516,8 @@ module Admin
             nil
           when 'astekhome.com'
             'g'
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'variant_image'
@@ -491,6 +541,9 @@ module Admin
         elsif attr == 'seo_title'
           variant.design.name
 
+        elsif attr == 'seo_description'
+          variant.design.description_for_domain domain
+
         elsif attr == 'collection'
           case domain
           when 'astek.com'
@@ -498,6 +551,10 @@ module Admin
               variant.design.collection.name
             end
           when 'astekhome.com'
+            unless variant.design.collection.suppress_from_display
+              variant.design.collection.name
+            end
+          when 'onairdesign.com'
             unless variant.design.collection.suppress_from_display
               variant.design.collection.name
             end
@@ -541,11 +598,22 @@ module Admin
         end
       end
 
-      def astek_business_description variant
+      def body_for_domain variant, domain
+        case domain
+        when 'astek.com'
+          astek_business_description variant, domain
+        when 'astekhome.com'
+          astek_home_description variant
+        when 'onairdesign.com'
+          onair_design_description variant, domain
+        end
+      end
+
+      def astek_business_description variant, domain
         body = ''
 
-        if variant.design.description
-          body += format_description variant
+        if description = variant.design.description_for_domain(domain)
+          body += format_description description
         end
 
         body += format_business_properties variant
@@ -563,9 +631,20 @@ module Admin
         body
       end
 
-      def format_description variant
+      def onair_design_description variant, domain
+        body = ''
+
+        if description = variant.design.description_for_domain(domain)
+          body += format_description description
+        end
+
+        body += format_onair_properties(variant).gsub(/\n+/, ' ')
+        body
+      end
+
+      def format_description description
         '<div>
-            <p>'+variant.design.description+'</p>
+            <p>'+description+'</p>
         </div>'
       end
 
@@ -592,12 +671,25 @@ module Admin
             <h5>Backing</h5>
             <p>'+variant.backing_type.name+'</p>
           </div>'
+        elsif variant.substrate.backing_type
+          formatted += '<div>
+            <h5>Backing</h5>
+            <p>'+variant.substrate.backing_type.name+'</p>
+          </div>'
         end
+
 
         formatted += '<div>
             <h5>Sold By</h5>
             <p>'+variant.design.sale_unit.name+'</p>
           </div>'
+
+        if variant.design.price_code
+          formatted += '<div>
+            <h5>Price Code</h5>
+            <p>'+variant.design.price_code+'</p>
+          </div>'
+        end
 
         variant.design.design_properties.each do |dp|
           next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
@@ -659,6 +751,54 @@ module Admin
         formatted
       end
 
+      def format_onair_properties variant
+        formatted = '<div class="description__meta">'
+
+        formatted += '<div>
+              <h5>SKU</h5>
+              <p>'+variant.design.sku+'</p>
+            </div>'
+
+        unless variant.design.collection.suppress_from_display
+          formatted += '<div>
+              <h5>Collection</h5>
+              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+            </div>'
+        end
+
+        formatted += '<div>
+            <h5>Sold By</h5>
+            <p>'+variant.design.sale_unit.name+'</p>
+          </div>'
+
+        variant.design.design_properties.each do |dp|
+          next unless %w[
+            margin_trim
+            motif_width_inches
+            mural_height_inches
+            mural_width_inches
+            printed_width_inches
+            repeat_match_type
+            roll_length_meters
+            roll_length_yards
+            roll_width_inches
+            tile_height_inches
+            tile_width_inches
+            vertical_repeat_inches
+          ].include? dp.property.name
+
+          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+
+          formatted += '<div>
+            <h5>'+dp.property.presentation+'</h5>
+            <p>'+format_property_value(dp)+'</p>
+          </div>'
+        end
+
+        formatted += '</div>'
+        formatted
+      end
+
       def format_tearsheet_links variant
         out = '<!-- pdf -->'
         variant.design.variants.each do |v|
@@ -677,6 +817,17 @@ module Admin
           'Untrimmed'
         else
           dp.value
+        end
+      end
+
+      # If the printed width of a given design is less than standard, more physical material
+      # may be required to complete a given order, so the weight may be more than standard
+      def material_variant_weight material, variant
+        if BigDecimal(variant.weight) == BigDecimal(variant.substrate.weight_per_square_foot)
+          (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+        else
+          ratio = BigDecimal(variant.weight) / BigDecimal(variant.substrate.weight_per_square_foot)
+          (BigDecimal(material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
         end
       end
 

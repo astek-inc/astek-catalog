@@ -1,7 +1,8 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/product_subcollection_data_csv_generator.rb"
 
 module Admin
-  class CollectionExportJob < ActiveJob::Base
+  class ShopifyCollectionExportJob < ActiveJob::Base
 
     queue_as :default
 
@@ -11,11 +12,15 @@ module Admin
       website = Website.find(website_id)
 
       csv_data = ''
-      collection.designs.available.each do |design|
+      collection.designs.available.unsubcollected.for_domain(website.domain).each do |design|
         csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
       end
 
-      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-product-export-#{collection.name.parameterize}.csv"
+      collection.subcollections.each do |subcollection|
+        csv_data += ::Admin::ProductSubcollectionDataCsvGenerator.product_data_csv subcollection, website.domain, csv_data.empty?
+      end
+
+      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-shopify-product-export-#{collection.name.parameterize}.csv"
 
       storage = Fog::Storage.new(
           provider: 'AWS',

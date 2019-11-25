@@ -29,14 +29,27 @@
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :description, 'Description' %>
-    <%= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
-<% end %>
+<%#= content_tag :div, class: ['form-group'] do %>
+    <%#= f.label :description, 'Description' %>
+    <%#= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
+<%# end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
     <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+<% end %>
+
+<%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Websites', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:design, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box({ disabled: @collection.websites.map { |w| w.id }.exclude?(b.value) }) + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= content_tag :div, class: 'row' do %>
