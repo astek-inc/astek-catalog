@@ -48,7 +48,9 @@ class Design < ApplicationRecord
   end
 
   def description_for_domain domain
-    self.descriptions.for_domain(domain).first.description
+    if self.descriptions.for_domain(domain).any?
+      self.descriptions.for_domain(domain).first.description
+    end
   end
 
   def property name
