@@ -78,7 +78,7 @@ Rails.application.routes.draw do
 
     resources :product_categories, except: [:show, :delete], concerns: :paginatable
 
-    get 'collections/search', to: 'collections#search'
+    # get 'collections/search', to: 'collections#search'
 
     resources :collections, concerns: :paginatable, except: [:show, :delete] do
       resources :designs, concerns: :paginatable, controller: :collection_designs do
@@ -91,8 +91,8 @@ Rails.application.routes.draw do
 
     resources :subcollection_types, except: [:show, :delete]
 
-    resources :designs, only: [:index], concerns: :paginatable do
-    # resources :designs, only: [] do
+    # resources :designs, only: [:index], concerns: :paginatable do
+    resources :designs, only: [], concerns: :paginatable do
 
       get :search, on: :collection
 
