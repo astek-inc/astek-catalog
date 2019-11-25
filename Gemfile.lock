@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/activerecord-hackery/ransack.git
+  remote: https://github.com/activerecord-hackery/ransack.git
   revision: cdef85b51d67c0be705f85ded0cc439f0e927131
   specs:
     polyamorous (2.3.0)
@@ -318,4 +318,4 @@ RUBY VERSION
    ruby 2.5.3p105
 
 BUNDLED WITH
-   2.0.1
+   2.0.2
