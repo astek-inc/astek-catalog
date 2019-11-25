@@ -36,16 +36,16 @@
         <% end %>
 
         <%= content_tag :div, id: 'navbar', class: 'collapse navbar-collapse' do %>
+
             <% if user_signed_in? %>
                 <%= content_tag :ul, class: 'nav navbar-nav navbar-right' do %>
                     <%= content_tag :li, link_to('Sign Out', destroy_user_session_path, method: :delete) %>
                 <% end %>
             <% end %>
 
-            <%= form_tag  %>
-      <form class="navbar-form navbar-right">
-        <input type="text" class="form-control" placeholder="Search...">
-      </form>
+            <%= search_form_for @q, url: search_admin_designs_path, html: { class: 'navbar-form navbar-right', method: :get } do |f| %>
+                <%= f.search_field :sku_or_name_cont, { class: 'form-control', placeholder: 'Design search...' } %>
+            <% end %>
 
         <% end %>
     <% end %>
