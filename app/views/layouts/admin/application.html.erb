@@ -35,12 +35,18 @@
             <%= link_to 'Astek Inc Product Catalog', root_path, class: 'navbar-brand' %>
         <% end %>
 
-        <% if user_signed_in? %>
-            <%= content_tag :div, id: 'navbar', class: 'collapse navbar-collapse' do %>
+        <%= content_tag :div, id: 'navbar', class: 'collapse navbar-collapse' do %>
+            <% if user_signed_in? %>
                 <%= content_tag :ul, class: 'nav navbar-nav navbar-right' do %>
                     <%= content_tag :li, link_to('Sign Out', destroy_user_session_path, method: :delete) %>
                 <% end %>
             <% end %>
+
+            <%= form_tag  %>
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+
         <% end %>
     <% end %>
 <% end %>
