@@ -1,7 +1,13 @@
 module Admin
   class BaseController < ApplicationController
 
+    before_action :set_q
+
     private
+
+    def set_q
+      @q = Design.search(params[:q])
+    end
 
     def error_message model
       if model.errors.any?
