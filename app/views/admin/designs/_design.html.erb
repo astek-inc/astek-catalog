@@ -1,0 +1,22 @@
+<% if design_counter % 4 == 0 %>
+  <div class="row">
+      <div class="col-md-10">
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+  <%= content_tag :div, class: 'thumbnail' do %>
+
+      <%= image_tag(design.variants.first.variant_swatch_images.first.file.url(:small), {width: 150, height: 150}) %>
+
+      <%= content_tag :div, class: 'caption' do %>
+          <h3><%= link_to design.name, edit_admin_collection_design_path(design.collection, design) %></h3>
+          <p><%= design.sku %></p>
+      <% end %>
+
+  <% end %>
+<% end %>
+
+<% if design_counter % 4 == 3 %>
+      </div>
+  </div>
+<% end %>

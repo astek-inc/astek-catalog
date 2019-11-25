@@ -1,0 +1,24 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Designs',
+      'Search'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+    <p class="lead">Displaying search results for <strong><%= params[:q][:sku_or_name_cont] %></strong>.</p>
+  <% end %>
+
+  <% if @designs.any? %>
+    <%= render partial: '/admin/designs/design', collection: @designs %>
+  <% else %>
+
+    <%= content_tag :div, class: 'col-md-12' do %>
+      <p>No designs found.</p>
+    <% end %>
+
+  <% end %>
+<% end %>
