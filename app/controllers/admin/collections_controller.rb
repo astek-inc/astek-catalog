@@ -46,12 +46,6 @@ module Admin
       redirect_to(action: 'index')
     end
 
-    def search
-      @collections = Collection.joins(:websites).where('collections.name LIKE ?', params[:term] + '%').where('websites.id = ?', params[:website_id])
-      render json: @collections, each_serializer: CollectionSearchResultSerializer, root: nil, adapter: :attributes
-      # render json: @collections.map { |c| { id: c.id, value: c.name } }.to_json
-    end
-
     private
 
     def set_collection

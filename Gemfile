@@ -50,6 +50,9 @@ gem 'data_migrate'
 # PDF tearsheet generation
 gem 'prawn-rails'
 
+# Search
+gem 'ransack', github: 'activerecord-hackery/ransack'
+
 # Background jobs
 gem 'sucker_punch'
 

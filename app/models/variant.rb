@@ -26,9 +26,11 @@ class Variant < ApplicationRecord
   validates :name, presence: true
   validates :sku, presence: true
 
-  def has_color? color
-    # self.colors.contains? color
-  end
+  # def has_color? find_color
+  #   self.colors.include? find_color
+  # end
+
+  scope :with_color, ->(color_name) { joins(:colors).where('colors.name = ?', color_name) }
 
   def title
     self.design.name
