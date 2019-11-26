@@ -1,9 +1,5 @@
 GIT
-<<<<<<< HEAD
   remote: https://github.com/activerecord-hackery/ransack.git
-=======
-  remote: git://github.com/activerecord-hackery/ransack.git
->>>>>>> feature/design-search
   revision: cdef85b51d67c0be705f85ded0cc439f0e927131
   specs:
     polyamorous (2.3.0)
