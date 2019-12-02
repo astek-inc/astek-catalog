@@ -46,6 +46,13 @@ module Admin
       redirect_to(action: 'index')
     end
 
+    def csv_export_search
+      domain = Website.find(params[:website_id]).domain
+      @collections = Collection.where('collections.name LIKE ?', params[:term] + '%').for_domain(domain)
+      render json: @collections, each_serializer: CollectionSearchResultSerializer, root: nil, adapter: :attributes
+      # render json: @collections.map { |c| { id: c.id, value: c.name } }.to_json
+    end
+
     private
 
     def set_collection
