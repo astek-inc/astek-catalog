@@ -301,7 +301,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   paranoia (~> 2.2)
-  pg (~> 0.20.0)
+  pg
   prawn-rails
   puma
   rails (= 5.2.2.1)
