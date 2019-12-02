@@ -6,7 +6,7 @@ module Admin
     private
 
     def set_q
-      @q = Design.search(params[:q])
+      @q = Design.ransack(params[:q])
     end
 
     def error_message model
