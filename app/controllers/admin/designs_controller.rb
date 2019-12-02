@@ -18,7 +18,6 @@ module Admin
       domain = Website.find(params[:website_id]).domain
       @designs = Design.available.where('designs.name LIKE ?', params[:term] + '%').order('designs.name').joins(:collection).for_domain(domain)
       render json: @designs, each_serializer: DesignSearchResultSerializer, root: nil, adapter: :attributes
-      # render json: @collections.map { |c| { id: c.id, value: c.name } }.to_json
     end
 
   end
