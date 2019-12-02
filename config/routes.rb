@@ -78,14 +78,12 @@ Rails.application.routes.draw do
 
     resources :product_categories, except: [:show, :delete], concerns: :paginatable
 
-    # get 'collections/search', to: 'collections#search'
-
     resources :collections, concerns: :paginatable, except: [:show, :delete] do
+      get :csv_export_search, on: :collection
       resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
         get :custom_materials, on: :member
       end
-
       resources :subcollections, except: [:show, :delete]
     end
 
@@ -93,8 +91,8 @@ Rails.application.routes.draw do
 
     # resources :designs, only: [:index], concerns: :paginatable do
     resources :designs, only: [], concerns: :paginatable do
-
       get :search, on: :collection
+      get :csv_export_search, on: :collection
 
       # resources :design_styles #, only: :index
 
