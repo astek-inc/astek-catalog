@@ -1,5 +1,5 @@
 module Admin
-  class VendorsController < ApplicationController
+  class VendorsController < Admin::BaseController
 
     def index
       @vendors = Vendor.all
