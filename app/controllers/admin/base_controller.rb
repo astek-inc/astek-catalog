@@ -3,7 +3,13 @@ module Admin
     
     layout 'admin/application'
 
+    before_action :set_q
+
     private
+
+    def set_q
+      @q = Design.ransack(params[:q])
+    end
 
     def error_message model
       if model.errors.any?

@@ -7,8 +7,11 @@ class Design < ApplicationRecord
 
   acts_as_paranoid
 
-  scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
+  include Websiteable
 
+  include Descriptionable
+
+  scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
   scope :unsubcollected, -> { where('subcollection_id IS NULL') }
 
   belongs_to :collection
@@ -36,8 +39,18 @@ class Design < ApplicationRecord
 
   accepts_nested_attributes_for :design_properties, allow_destroy: true, reject_if: lambda { |pp| pp[:property_name].blank? }
 
-  def install_images
-    self.variants.map { |v| v.variant_install_images.first.nil? ? nil : { variant_id: v.id, install_image: v.variant_install_images.first } }.compact
+  def variants_for_domain domain
+    self.variants.for_domain domain
+  end
+
+  def install_images_for_domain domain
+    self.variants_for_domain(domain).map { |v| v.install_images_for_domain(domain).first.nil? ? nil : { variant_id: v.id, install_image: v.install_images_for_domain(domain).first } }.compact
+  end
+
+  def description_for_domain domain
+    if self.descriptions.for_domain(domain).any?
+      self.descriptions.for_domain(domain).first.description
+    end
   end
 
   def property name

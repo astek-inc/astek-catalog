@@ -6,7 +6,7 @@ Astek.product_exports.collection_name_autocomplete = function(){
     $('#collection_name').autocomplete({
         source: function (request, response){
             $.ajax({
-                url: '/admin/collections/search',
+                url: '/admin/collections/csv_export_search',
                 dataType: "json",
                 data: {
                     term: request.term,
@@ -44,7 +44,7 @@ Astek.product_exports.design_name_autocomplete = function(){
     $('#design_name').autocomplete({
         source: function (request, response){
             $.ajax({
-                url: '/admin/designs/search',
+                url: '/admin/designs/csv_export_search',
                 dataType: "json",
                 data: {
                     term: request.term,

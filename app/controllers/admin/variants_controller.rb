@@ -4,6 +4,7 @@ module Admin
     before_action :set_variant, only: [:edit, :update, :destroy]
     before_action :set_design, :set_collection
     before_action :set_product_types, :set_colors, :set_substrates, :set_backing_types, only: [:new, :create, :edit, :update]
+    before_action :set_websites, only: [:new, :edit]
 
     def index
       @variants = Variant.where(design_id: @design.id).rank(:row_order).page params[:page]
@@ -12,6 +13,7 @@ module Admin
 
     def new
       @variant = Variant.new
+      @variant.websites = @design.websites
     end
 
     def create
@@ -92,10 +94,14 @@ module Admin
       @backing_types = BackingType.rank(:row_order)
     end
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def variant_params
       params.require(:variant).permit(
           :variant_type_id, :name, :sku, :keywords, :design_id, :substrate_id, :backing_type_id,
-          :weight, :width, :height, :depth, product_type_ids: [], color_ids: []
+          :weight, :width, :height, :depth, product_type_ids: [], color_ids: [], website_ids: []
       )
     end
 

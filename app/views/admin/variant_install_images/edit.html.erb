@@ -7,14 +7,14 @@
       link_to('Variants', admin_design_variants_path(@design)),
       link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
       link_to('Install Images', admin_variant_variant_install_images_path(@variant)),
-      'New Image'
+      @variant_install_image.file_identifier
   ].join(' / ').html_safe %>
 <% end %>
 
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'col-md-9' do %>
-  <%= form_for [:admin, :variant, @variant_install_image], html: { multipart: true } do |f| %>
+  <%= form_for [:admin, @variant, @variant_install_image], html: { multipart: true } do |f| %>
 
     <%= render partial: 'form', locals: { f: f } %>
 

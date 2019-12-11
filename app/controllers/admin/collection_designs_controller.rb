@@ -3,7 +3,7 @@ module Admin
 
     before_action :set_design, only: [:update, :edit, :destroy, :custom_materials]
     before_action :set_collection, except: [:edit]
-    before_action :set_sale_units, :set_styles, :set_countries, only: [:new, :edit]
+    before_action :set_sale_units, :set_styles, :set_countries, :set_websites, only: [:new, :edit]
     before_action :set_substrates, only: [:custom_materials]
     before_action :set_default_custom_material, only: [:custom_materials]
 
@@ -14,6 +14,7 @@ module Admin
 
     def new
       @design = Design.new
+      @design.websites = @collection.websites
     end
 
     def create
@@ -99,6 +100,10 @@ module Admin
       @substrates = Substrate.all
     end
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def set_default_custom_material
       @default_custom_material = CustomMaterial.find_by(design_id: @design.id, default_material: true)
     end
@@ -121,7 +126,7 @@ module Admin
           :sku, :master_sku, :name, :description, :keywords, :collection_id, :vendor_id,
           :price_code, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity,
           :available_on, :expires_on, :country_id, :suppress_from_searches, :user_can_select_material,
-          style_ids: [], substrate_ids: []
+          style_ids: [], substrate_ids: [], website_ids: []
       )
     end
 

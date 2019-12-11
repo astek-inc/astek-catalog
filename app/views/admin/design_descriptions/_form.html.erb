@@ -1,0 +1,20 @@
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :description, 'Description' %>
+  <%= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
+<% end %>
+
+<%= f.hidden_field :descriptionable_type, value: 'Design' %>
+<%= f.hidden_field :descriptionable_id, value: @design.id %>
+
+<%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Websites', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:description, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box({ disabled: @design.collection.websites.map { |w| w.id }.exclude?(b.value) }) + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

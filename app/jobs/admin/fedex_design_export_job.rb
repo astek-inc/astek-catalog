@@ -1,4 +1,4 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/fedex_crossborder_csv_generator.rb"
 
 module Admin
   class FedexDesignExportJob < ActiveJob::Base
@@ -10,7 +10,7 @@ module Admin
       design = Design.find(design_id)
       website = Website.find_by(domain: 'astekhome.com')
 
-      csv_data = ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, true
+      csv_data = ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, true
       filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{design.name.parameterize}.csv"
 
       storage = Fog::Storage.new(

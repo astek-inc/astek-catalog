@@ -9,9 +9,9 @@ gem 'active_model_serializers'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use postgresql as the database for Active Record
-# gem 'pg'
+ gem 'pg'
 # Lock PG gem to 0.20 to suppress PGconn, PGresult, and PGError constant deprecation warning
-gem 'pg', '~> 0.20.0'
+#gem 'pg', '~> 0.20.0'
 
 gem 'puma'
 
@@ -49,6 +49,9 @@ gem 'data_migrate'
 
 # PDF tearsheet generation
 gem 'prawn-rails'
+
+# Search
+gem 'ransack', github: 'activerecord-hackery/ransack'
 
 # Background jobs
 gem 'sucker_punch'

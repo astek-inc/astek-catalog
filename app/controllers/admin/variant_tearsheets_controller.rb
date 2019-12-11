@@ -1,7 +1,7 @@
 require "#{Rails.root}/lib/admin/tearsheet_generator.rb"
 
 module Admin
-  class VariantTearsheetsController < ApplicationController
+  class VariantTearsheetsController < Admin::BaseController
 
     before_action :get_variant
     before_action :get_design, :get_collection, only: :show
