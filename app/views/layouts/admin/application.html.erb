@@ -45,7 +45,7 @@
 
             <%= search_form_for @q, url: search_admin_designs_path, html: { class: 'navbar-form navbar-right', method: :get } do |f| %>
                 <%= f.search_field :sku_or_name_cont, { class: 'form-control', placeholder: 'Design search...' } %>
-            <% end %>
+            <% end unless controller_name == 'sessions' %>
 
         <% end %>
     <% end %>
