@@ -56,7 +56,7 @@ module Admin
           end
 
           if item.respond_to? 'lead_time'
-            c.lead_time_id = LeadTime.find_by!(name: item.lead_time).id
+            c.lead_time_id = LeadTime.find_by!(name: item.lead_time.strip).id
           end
         end
 
@@ -72,7 +72,7 @@ module Admin
           d.available_on = Time.now
           d.styles = styles unless styles.nil?
           d.vendor = vendor
-          d.country_of_origin = Country.find_by(iso: item.country_of_origin)
+          d.country_of_origin = Country.find_by(iso: item.country_of_origin.strip)
           d.websites = collection.websites
 
           # Don't require a price if the product is only to appear on On Air Design
@@ -90,7 +90,7 @@ module Admin
           end
 
           if item.respond_to? 'price_code'
-            d.price_code = item.price_code.strip
+            d.price_code = item.price_code.strip unless item.price_code.nil?
           end
 
           # Custom materials should really be associated with Colorways (variants),
