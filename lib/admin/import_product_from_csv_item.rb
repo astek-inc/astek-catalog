@@ -221,12 +221,14 @@ module Admin
             end
 
             puts 'Processing install image: '+url
-            VariantInstallImage.create!({
-                                            remote_file_url: url,
-                                            type: 'VariantInstallImage',
-                                            owner_id: variant.id,
-                                            websites: websites
-                                        })
+            VariantInstallImage.create!(
+                {
+                    remote_file_url: url,
+                    type: 'VariantInstallImage',
+                    owner_id: variant.id,
+                    websites: websites
+                }
+            )
           end
         end
 
