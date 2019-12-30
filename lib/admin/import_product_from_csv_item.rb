@@ -61,9 +61,12 @@ module Admin
         end
 
         puts 'Finding or creating design information for '+item.design_name
+        new_record = false
         design = Design.find_or_create_by!({ sku: item.design_sku.strip, name: item.design_name.strip, collection: collection }) do |d|
           # If we got here, this is a new record
-          d.description = item.description.strip unless item.description.nil?
+          new_record = true
+
+          #d.description = item.description.strip unless item.description.nil?
           d.keywords = item.keywords.strip.chomp(',').strip
           # d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           d.sale_unit = sale_unit
@@ -97,6 +100,35 @@ module Admin
           # but the website only displays material options by design
           if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? collection.name
             d.user_can_select_material = true
+          end
+
+        end
+
+        # We can display different design descriptions on different websites
+        if new_record && item.description
+          item.description.split('|').map { |i| i.strip }.each do |text|
+
+            /\A\((?<sites>.+)\)(?<site_text>.+)\z/ =~ text
+
+            if sites
+              websites = sites_from_string sites, ','
+              text = site_text.strip
+            else
+              websites = design.websites
+            end
+
+            if text
+              puts 'Processing design description: '+text
+              Description.create!(
+                  {
+                      descriptionable_type: 'Design',
+                      descriptionable_id: design.id,
+                      description: text,
+                      websites: websites
+                  }
+              )
+            end
+
           end
         end
 
@@ -227,6 +259,21 @@ module Admin
           v = Variant.find(variant.id)
           ::Admin::TearsheetGenerator.generate v
         end
+      end
+
+      def sites_from_string string, delimiter
+        domains = []
+        string.split(delimiter).map { |t| t.strip }.each do |key|
+          case key
+          when 'A'
+            domains << 'astek.com'
+          when 'H'
+            domains << 'astekhome.com'
+          when 'O'
+            domains << 'onairdesign.com'
+          end
+        end
+        Website.where(domain: domains)
       end
 
     end
