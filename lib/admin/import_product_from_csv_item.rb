@@ -35,20 +35,9 @@ module Admin
         puts 'Finding or creating collection information for '+item.collection
         collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category }) do |c|
           # If we got here, this is a new record
-
-          domains = []
+          
           unless item.websites.nil?
-            item.websites.split(',').map { |s| s.strip }.each do |key|
-              case key
-              when 'A'
-                domains << 'astek.com'
-              when 'H'
-                domains << 'astekhome.com'
-              when 'O'
-                domains << 'onairdesign.com'
-              end
-            end
-            c.websites = Website.where(domain: domains)
+            c.websites = sites_from_string item.websites, ','
           end
 
           if ['Digital Library'].include? c.name
@@ -225,19 +214,8 @@ module Admin
             /\A\((?<sites>.+)\)(?<image_url>.+)\z/ =~ url
 
             if sites
-              domains = []
-              sites.split('|').map { |t| t.strip }.each do |key|
-                case key
-                when 'A'
-                  domains << 'astek.com'
-                when 'H'
-                  domains << 'astekhome.com'
-                when 'O'
-                  domains << 'onairdesign.com'
-                end
-              end
               url = image_url.strip
-              websites = Website.where(domain: domains)
+              websites = sites_from_string sites, '|'
             else
               websites = variant.websites
             end
