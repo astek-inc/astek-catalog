@@ -684,7 +684,7 @@ module Admin
             <p>'+variant.design.sale_unit.name+'</p>
           </div>'
 
-        if variant.design.price_code
+        if variant.design.price_code.present?
           formatted += '<div>
             <h5>Price Code</h5>
             <p>'+variant.design.price_code+'</p>
