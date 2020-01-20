@@ -20,8 +20,8 @@ class VariantInstallImageUploader < ImageUploader
 
       name = [
           model.variant.sku,
-          model.variant.design.name.gsub(/[^A-Za-z0-9]/, '_').gsub(/_+/, '_'),
-          model.variant.name.gsub(/[^A-Za-z0-9]/, '').upcase,
+          model.variant.design.name.parameterize(separator: '_'),
+          model.variant.name.parameterize(separator: '_').upcase,
           'install'
       ].join('_')
 
