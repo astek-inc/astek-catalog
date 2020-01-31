@@ -223,7 +223,7 @@ module Admin
               if variant.install_images_for_domain(website)
                 variant.install_images_for_domain(website).each do |image|
                   @image_index += 1
-                  csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
+                  csv << [design.handle] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
 
                 end
               end
@@ -240,8 +240,7 @@ module Admin
           TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
-          # Add a prefix to ensure that this is distinct from any variant SKU
-          'D-'+variant.design.sku
+          variant.design.handle
 
         elsif attr == 'body'
           body_for_domain variant, domain

@@ -230,7 +230,7 @@ module Admin
           TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
-          'DG-'+design.subcollection.id.to_s
+          design.subcollection.handle
 
         elsif attr == 'body'
           case domain
