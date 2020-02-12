@@ -12,7 +12,7 @@ module Admin
       csv_data = ''
       Collection.includes(:websites).where(websites: { id: website.id }).each do |collection|
         collection.designs.available.each do |design|
-          csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
+          csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
         end
       end
 
