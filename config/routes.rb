@@ -27,7 +27,7 @@ Rails.application.routes.draw do
         get 'generate_shopify_collection_csv', defaults: { format: 'csv' }
         get 'generate_shopify_design_csv', defaults: { format: 'csv' }
         get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
-        get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
+        # get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
         get 'generate_shopify_all_csv', defaults: { format: 'csv' }
         get 'fedex_export_by_collection'
         get 'fedex_export_by_design'
@@ -36,13 +36,22 @@ Rails.application.routes.draw do
         get 'generate_fedex_collection_csv', defaults: { format: 'csv' }
         get 'generate_fedex_design_csv', defaults: { format: 'csv' }
         get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
-        get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
+        # get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
         get 'generate_fedex_all_csv', defaults: { format: 'csv' }
       end
     end
 
-    get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
-    resources :order_limits_exports, only: :index
+    # get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
+    resources :order_limits_exports, only: [] do
+      collection do
+        get 'export_by_collection'
+        get 'export_by_design'
+        # get 'export_by_sku'
+        get 'generate_collection_csv', defaults: { format: 'csv' }
+        get 'generate_design_csv', defaults: { format: 'csv' }
+        # get 'generate_skus_csv', defaults: { format: 'csv' }
+      end
+    end
 
     resources :substrate_exports, only: :index #, defaults: { format: 'json' }
 
