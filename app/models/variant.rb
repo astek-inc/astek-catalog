@@ -24,7 +24,7 @@ class Variant < ApplicationRecord
 
   validates :variant_type_id, presence: true
   validates :name, presence: true
-  validates :sku, presence: true
+  validates :sku, presence: true, uniqueness: true
 
   # def has_color? find_color
   #   self.colors.include? find_color
