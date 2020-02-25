@@ -1,4 +1,5 @@
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/product_design_alias_data_csv_generator.rb"
 require "#{Rails.root}/lib/admin/product_subcollection_data_csv_generator.rb"
 
 module Admin
@@ -14,6 +15,10 @@ module Admin
       csv_data = ''
       collection.designs.available.unsubcollected.for_domain(website.domain).each do |design|
         csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
+      end
+
+      collection.design_aliases.for_domain(website.domain).each do |design_alias|
+        csv_data += ::Admin::ProductDesignAliasDataCsvGenerator.product_data_csv design_alias, website.domain, csv_data.empty?
       end
 
       collection.subcollections.each do |subcollection|

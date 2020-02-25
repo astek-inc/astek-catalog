@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_15_184730) do
+ActiveRecord::Schema.define(version: 2020_02_20_191716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -107,6 +107,16 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.datetime "updated_at", null: false
     t.index ["descriptionable_id"], name: "index_descriptions_on_descriptionable_id"
     t.index ["descriptionable_type"], name: "index_descriptions_on_descriptionable_type"
+  end
+
+  create_table "design_aliases", force: :cascade do |t|
+    t.integer "collection_id"
+    t.integer "design_id"
+    t.text "description"
+    t.integer "row_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["row_order"], name: "index_design_aliases_on_row_order"
   end
 
   create_table "design_properties", id: :serial, force: :cascade do |t|
@@ -402,6 +412,8 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
 
   add_foreign_key "collections", "lead_times"
   add_foreign_key "collections", "product_categories"
+  add_foreign_key "design_aliases", "collections"
+  add_foreign_key "design_aliases", "designs"
   add_foreign_key "designs", "collections"
   add_foreign_key "designs", "countries"
   add_foreign_key "designs", "sale_units"

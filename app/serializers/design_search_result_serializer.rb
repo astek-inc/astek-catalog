@@ -1,7 +1,9 @@
 class DesignSearchResultSerializer < ActiveModel::Serializer
 
-  attribute :id
-  attribute :name
-  attribute :name, key: :value
+  attributes :id, :name, :value
+
+  def value
+    "#{object.name} (#{object.sku})"
+  end
 
 end

@@ -27,6 +27,8 @@ class Design < ApplicationRecord
   has_many :design_properties, dependent: :destroy, inverse_of: :design
   has_many :properties, through: :design_properties
 
+  has_many :design_aliases, dependent: :destroy
+
   has_and_belongs_to_many :styles
 
   # Custom materials should really be associated with Colorways (variants),

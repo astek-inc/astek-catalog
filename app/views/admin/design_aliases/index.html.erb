@@ -1,0 +1,63 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      'Design Aliases'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Design Alias', new_admin_collection_design_alias_path(@collection), class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+
+    <% if @design_aliases.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_collection_design_aliases_path @collection %>" data-position-start="<%= @position_start %>">
+          <thead>
+          <tr>
+            <th class="move-handle"></th>
+            <th>Design</th>
+            <th>SKU</th>
+            <th>Websites</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @design_aliases.each do |design_alias| %>
+            <tr class="design_alias fields" data-item-id="<%= design_alias.id %>" data-hook="design-alias">
+              <td class="move-handle text-center">
+                <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+              </td>
+              <td><%= design_alias.design.name %></td>
+              <td><%= design_alias.design.sku %></td>
+              <td><%= design_alias.websites.map { |w| w.name }.join(', ') %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_collection_design_alias_path(@collection, design_alias) %>
+                  <%= delete_button admin_collection_design_alias_path(@collection, design_alias) %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    <% else %>
+      <p>No design aliases found. <%= link_to 'Create one.', new_admin_collection_design_alias_path(@collection) %>
+    <% end %>
+
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/collections/subnav', locals: { current: 'design_aliases' } %>
+  <% end %>
+
+<% end %>
