@@ -21,7 +21,7 @@ class VariantSwatchImageUploader < ImageUploader
       name = [
           model.variant.sku,
           model.variant.design.name.parameterize(separator: '_'),
-          model.variant.name.parameterize(separator: '_').upcase
+          model.variant.name.parameterize(separator: '').upcase
       ].join('_')
 
       "#{name}.#{file.extension}"
