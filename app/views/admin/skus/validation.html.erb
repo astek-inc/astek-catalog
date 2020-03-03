@@ -1,0 +1,40 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'SKU Tools',
+      link_to('Validate SKUs', validate_admin_skus_path)
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+
+    <h4>SKU Validation Results</h4>
+
+    <%= content_tag :div, class: 'table-responsive' do %>
+      <%= content_tag :table, class: 'table' do %>
+        <thead>
+        <tr>
+          <th>SKU</th>
+          <th>Availability</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @result.each do |item| %>
+          <tr<% if item[:found] %> class="danger"<% end %>>
+            <td><%= item[:sku] %></td>
+            <td><%= item[:found] ? 'In use' : 'Available' %></td>
+          </tr>
+        <% end %>
+        </tbody>
+
+
+      <% end %>
+      <% end %>
+
+  <% end %>
+<% end %>
+
+

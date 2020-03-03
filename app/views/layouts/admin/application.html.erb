@@ -75,6 +75,7 @@
               <%= nav_sublink 'Styles', admin_styles_path %>
               <%= nav_sublink 'Sale Units', admin_sale_units_path %>
               <%= nav_sublink 'Lead Times', admin_lead_times_path %>
+              <%= nav_sublink 'SKU Prefixes', admin_sku_prefixes_path %>
             </div>
 
             <%#= subnav_group_header 'Tasks', 'tag', '#sl' %>
@@ -106,6 +107,12 @@
               <%= nav_sublink 'Products for Shopify', shopify_export_by_collection_admin_product_exports_path %>
               <%= nav_sublink 'Order Limits for Shopify', export_by_collection_admin_order_limits_exports_path %>
               <%= nav_sublink 'Products for FedEx', fedex_export_by_collection_admin_product_exports_path %>
+            <% end %>
+
+            <%= subnav_group_header 'SKU Tools', 'barcode', '#sku-tools' %>
+            <%= content_tag :div, id: 'sku-tools', class: 'sublinks collapse' do %>
+              <%= nav_sublink 'Validate', validate_admin_skus_path %>
+              <%= nav_sublink 'Next Available', next_available_admin_skus_path %>
             <% end %>
 
           <% end %>

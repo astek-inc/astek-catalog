@@ -1,0 +1,26 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'SKU Tools',
+      link_to('Next Available SKU in Series', next_available_admin_skus_path)
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-8' do %>
+
+    <%= form_tag find_next_available_admin_skus_path, method: :get do %>
+
+      <%= content_tag :div, class: ['form-group'] do %>
+        <%= label_tag :prefix, 'Prefix' %>
+        <%= collection_select :sku_prefix, :id, @sku_prefixes, :id, :option_value, { prompt: true }, { class: 'form-control' } %>
+      <% end %>
+
+
+      <%= submit_button %>
+    <% end %>
+
+
+  <% end %>
+<% end %>

@@ -473,4 +473,27 @@ class Design < ApplicationRecord
     end
   end
 
+  class << self
+    def next_available_sku prefix
+      last = last_sku prefix
+      last_number = /^#{prefix.prefix}#{prefix.separator}(\d+)$/.match(last)[1].to_i
+      next_number = last_number + 1
+      "#{prefix.prefix}#{prefix.separator}#{next_number}"
+    end
+
+    def last_sku prefix
+      prefix_string = prefix.prefix + prefix.separator
+      sql = "SELECT
+        MAX(D.sku) AS last_sku
+      FROM
+        designs D
+        INNER JOIN collections C ON D.collection_id = C.id
+      WHERE
+        C.product_category_id IN(1,4)
+        AND D.sku LIKE '#{prefix_string}%'"
+      res = ActiveRecord::Base.connection.exec_query(sql)
+      res[0]['last_sku']
+    end
+  end
+
 end

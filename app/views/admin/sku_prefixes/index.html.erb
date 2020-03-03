@@ -1,0 +1,51 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'SKU Prefixes'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New SKU Prefix', new_admin_sku_prefix_path, class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-12' do %>
+
+    <% if @sku_prefixes.any? %>
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped" data-hook>
+          <thead>
+          <tr>
+            <th>Prefix</th>
+            <th>Separator</th>
+            <th>Description</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @sku_prefixes.each do |sku_prefix| %>
+            <tr class="sku_prefix fields" data-hook="sku_prefix">
+              <td><%= sku_prefix.prefix %></td>
+              <td><%= sku_prefix.separator %></td>
+              <td><%= truncate(sanitize(sku_prefix.description), length: 140) %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_sku_prefix_path sku_prefix %>
+                  <%= delete_button admin_sku_prefix_path sku_prefix %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+    <% else %>
+      <p>No SKU prefixes found. <%= link_to 'Create one.', new_admin_sku_prefix_path %></p>
+    <% end %>
+
+  <% end %>
+<% end %>

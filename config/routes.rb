@@ -142,6 +142,15 @@ Rails.application.routes.draw do
 
     resources :variant_types, except: [:show, :delete]
 
+    resources :sku_prefixes, except: [:show, :delete]
+
+    resources :skus, only: [] do
+      get :next_available, on: :collection
+      get :find_next_available, on: :collection
+      get :validate, on: :collection
+      get :validation, on: :collection
+    end
+
   end
 
   namespace :api do
