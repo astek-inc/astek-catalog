@@ -56,14 +56,14 @@
     <%= content_tag :div, class: 'col-md-6' do %>
         <%= content_tag :div, class: ['form-group'] do %>
             <%= f.label :available_on, 'Available on' %>
-            <%= f.text_field :available_on, value: datepicker_field_value(@design.available_on), class: 'datepicker form-control' %>
+            <%= f.text_field :available_on, value: datepicker_field_value(@design.available_on), class: 'datepicker form-control', autocomplete: 'new-password' %>
         <% end %>
     <% end %>
 
     <%= content_tag :div, class: 'col-md-6' do %>
         <%= content_tag :div, class: ['form-group'] do %>
             <%= f.label :expires_on, 'Expires on' %>
-            <%= f.text_field :expires_on, value: datepicker_field_value(@design.expires_on), class: 'datepicker form-control' %>
+            <%= f.text_field :expires_on, value: datepicker_field_value(@design.expires_on), class: 'datepicker form-control', autocomplete: 'new-password' %>
         <% end %>
     <% end %>
 <% end %>
