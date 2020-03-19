@@ -1,7 +1,5 @@
 require "#{Rails.root}/lib/admin/fedex_crossborder_csv_generator.rb"
 
-require 'pp'
-
 namespace :db do
   desc 'Export collection data from a given category for FedEx Crossborder service'
   task fedex_crossborder_category_export: :environment do
@@ -19,7 +17,7 @@ namespace :db do
 
       next unless collection.websites.map { |w| w.domain }.include? 'astekhome.com'
       puts 'Getting data for '+collection.name
-      
+
       collection.designs.available.each do |design|
         csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
       end
