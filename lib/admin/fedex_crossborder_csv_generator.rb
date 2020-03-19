@@ -6,6 +6,8 @@ module Admin
     SAMPLE_PACKAGE_DIMENSIONS = { width: 3, height: 3, depth: 30 }
     SAMPLE_WEIGHT = 0.01
 
+    PAPER_PACKAGE_DEPTH = 61
+
     require 'csv'
 
     @design
@@ -193,7 +195,11 @@ module Admin
         if @sample
           SAMPLE_PACKAGE_DIMENSIONS[:depth]
         else
-          @variant.depth
+          if @material && @material.name == 'Paper'
+            PAPER_PACKAGE_DEPTH
+          else
+            @variant.depth
+          end
         end
       end
 
