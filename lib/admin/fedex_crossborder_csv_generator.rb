@@ -7,6 +7,7 @@ module Admin
     SAMPLE_WEIGHT = 0.01
 
     PAPER_PACKAGE_DEPTH = 61
+    NON_PAPER_PACKAGE_DEPTH = 54
 
     require 'csv'
 
@@ -195,8 +196,12 @@ module Admin
         if @sample
           SAMPLE_PACKAGE_DIMENSIONS[:depth]
         else
-          if @material && @material.name == 'Paper'
-            PAPER_PACKAGE_DEPTH
+          if @material
+            if @material.name == 'Paper'
+              PAPER_PACKAGE_DEPTH
+            else
+              NON_PAPER_PACKAGE_DEPTH
+            end
           else
             @variant.depth
           end
