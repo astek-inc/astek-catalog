@@ -820,7 +820,9 @@ module Admin
       end
 
       # If the printed width of a given design is less than standard, more physical material
-      # may be required to complete a given order, so the weight may be more than standard
+      # may be required to complete a given order, so the weight of a square foot of a variant
+      # is given as more than standard. We want to apply the same increase to the custom material
+      # options
       def material_variant_weight material, variant
         if BigDecimal(variant.weight) == BigDecimal(variant.substrate.weight_per_square_foot)
           (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
