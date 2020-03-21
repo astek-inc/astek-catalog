@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.5.3'
 
-gem 'rails', '5.2.2.1'
+gem 'rails', '5.2.4.2'
 gem 'active_model_serializers'
 
 # Reduces boot times through caching; required in config/boot.rb
