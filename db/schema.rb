@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_20_191716) do
+ActiveRecord::Schema.define(version: 2020_04_29_190524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2020_02_20_191716) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.boolean "suppress_sample_option_from_display", default: false, null: false
+    t.boolean "prepend_collection_name_to_design_names", default: false, null: false
     t.index ["deleted_at"], name: "index_collections_on_deleted_at"
     t.index ["suppress_from_display"], name: "index_collections_on_suppress_from_display"
   end
@@ -263,6 +264,17 @@ ActiveRecord::Schema.define(version: 2020_02_20_191716) do
     t.string "filename"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "sku_prefixes", force: :cascade do |t|
+    t.string "prefix"
+    t.string "separator"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_sku_prefixes_on_deleted_at"
+    t.index ["prefix"], name: "index_sku_prefixes_on_prefix"
   end
 
   create_table "states", id: :serial, force: :cascade do |t|

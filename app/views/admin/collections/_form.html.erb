@@ -47,15 +47,26 @@
   <%= content_tag :div, 'Website Settings', class: 'panel-heading' %>
 
   <%= content_tag :div, class: 'panel-body' do %>
-    <%= content_tag :div, class: ['checkbox-inline'], id: 'suppress-from-display' do %>
-      <%= f.label :suppress_from_display do %>
-        <%= f.check_box :suppress_from_display %> Do not show this collection on websites (but show its designs)
+
+    <%= content_tag :div, class: 'col-md-6' do %>
+      <%= content_tag :div, class: 'checkbox', id: 'suppress-from-display' do %>
+        <%= f.label :suppress_from_display do %>
+          <%= f.check_box :suppress_from_display %> Do not show this collection on websites (but show its designs)
+        <% end %>
+      <% end %>
+
+      <%= content_tag :div, class: 'checkbox', id: 'suppress_sample_option_from_display' do %>
+        <%= f.label :suppress_sample_option_from_display do %>
+          <%= f.check_box :suppress_sample_option_from_display %> Do not show sample option on websites
+        <% end %>
       <% end %>
     <% end %>
 
-    <%= content_tag :div, class: ['checkbox-inline'], id: 'suppress_sample_option_from_display' do %>
-      <%= f.label :suppress_sample_option_from_display do %>
-        <%= f.check_box :suppress_sample_option_from_display %> Do not show sample option on websites
+    <%= content_tag :div, class: 'col-md-6' do %>
+      <%= content_tag :div, class: 'checkbox', id: 'prepend_collection_name_to_design_names' do %>
+        <%= f.label :prepend_collection_name_to_design_names do %>
+          <%= f.check_box :prepend_collection_name_to_design_names %> Prepend collection name to design names
+        <% end %>
       <% end %>
     <% end %>
 
