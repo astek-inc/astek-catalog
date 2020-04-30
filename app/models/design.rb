@@ -96,7 +96,11 @@ class Design < ApplicationRecord
     if self.name == self.sku
       'd-' + self.sku.parameterize
     else
-      self.name.parameterize + '-d-' + self.sku.parameterize
+      if self.collection.prepend_collection_name_to_design_names
+        self.collection.name.parameterize + '-' + self.name.parameterize + '-d-' + self.sku.parameterize
+      else
+        self.name.parameterize + '-d-' + self.sku.parameterize
+      end
     end
   end
 
