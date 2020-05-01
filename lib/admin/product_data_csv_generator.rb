@@ -538,7 +538,11 @@ module Admin
           # end
 
         elsif attr == 'seo_title'
-          variant.design.name
+          if variant.design.collection.prepend_collection_name_to_design_names
+            variant.design.collection.name + ' | ' + variant.design.name
+          else
+            variant.design.name
+          end
 
         elsif attr == 'seo_description'
           variant.design.description_for_domain domain
