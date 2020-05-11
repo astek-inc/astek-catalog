@@ -64,7 +64,7 @@ module Admin
           d.available_on = Time.now
           d.styles = styles unless styles.nil?
           d.vendor = vendor
-          d.country_of_origin = Country.find_by(iso: item.country_of_origin.strip)
+          d.country_of_origin = Country.find_by(name: item.country_of_origin.strip) unless Country.find_by(iso: item.country_of_origin.strip)
           d.websites = collection.websites
 
           # Don't require a price if the product is only to appear on On Air Design
