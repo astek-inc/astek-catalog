@@ -72,7 +72,9 @@ module Admin
           d.websites = collection.websites
 
           # Don't require a price if the product is only to appear on On Air Design
-          unless item.price.nil? && (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty?
+          # or if we tell the user to call for pricing for products from this vendor
+          unless item.price.nil? && (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
+            ['Brewster'].include?(item.vendor.strip)
             d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           end
 
