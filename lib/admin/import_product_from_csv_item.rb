@@ -164,9 +164,11 @@ module Admin
                 websites: design.websites
             }
         ) do |v|
-
+          
           # Don't require shipping information if the product is only to appear on On Air Design
-          if (item.websites.split(',').map { |w| w.strip } & %w[A H]).empty?
+          # or if we tell the user to call for pricing for products from this vendor
+          if (item.websites.split(',').map { |w| w.strip } & %w[A H]).empty? ||
+              ['Brewster'].include?(item.vendor.strip)
 
             if design.digital?
               unless substrate.nil?
