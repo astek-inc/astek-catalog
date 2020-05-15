@@ -55,6 +55,10 @@ module Admin
           # If we got here, this is a new record
           new_record = true
 
+          unless country_of_origin = Country.find_by(iso: item.country_of_origin.strip)
+            country_of_origin = Country.find_by(name: item.country_of_origin.strip)
+          end
+
           #d.description = item.description.strip unless item.description.nil?
           d.keywords = item.keywords.strip.chomp(',').strip
           # d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
@@ -64,7 +68,7 @@ module Admin
           d.available_on = Time.now
           d.styles = styles unless styles.nil?
           d.vendor = vendor
-          d.country_of_origin = Country.find_by(name: item.country_of_origin.strip) unless Country.find_by(iso: item.country_of_origin.strip)
+          d.country_of_origin = country_of_origin
           d.websites = collection.websites
 
           # Don't require a price if the product is only to appear on On Air Design
