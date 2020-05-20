@@ -46,7 +46,7 @@ module Admin
             c.suppress_from_display = true
           end
 
-          if item.respond_to? 'lead_time'
+          if item.respond_to?('lead_time') && item.lead_time
             c.lead_time_id = LeadTime.find_by!(name: item.lead_time.strip).id
           end
         end
