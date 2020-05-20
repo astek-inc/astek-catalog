@@ -3,6 +3,8 @@ require "#{Rails.root}/lib/admin/tearsheet_generator.rb"
 module Admin
   module ImportProductFromCsvItem
 
+    MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO = ['Brewster', 'Wallquest']
+
     class << self
 
       def import item
@@ -77,7 +79,7 @@ module Admin
           # Don't require a price if the product is only to appear on On Air Design
           # or if we tell the user to call for pricing for products from this vendor
           unless item.price.nil? && (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
-            ['Brewster'].include?(item.vendor.strip)
+              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip)
             d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           end
 
@@ -173,7 +175,7 @@ module Admin
           # Don't require shipping information if the product is only to appear on On Air Design
           # or if we tell the user to call for pricing for products from this vendor
           if (item.websites.split(',').map { |w| w.strip } & %w[A H]).empty? ||
-              ['Brewster'].include?(item.vendor.strip)
+              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip)
 
             if design.digital?
               unless substrate.nil?
