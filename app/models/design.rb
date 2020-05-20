@@ -17,7 +17,7 @@ class Design < ApplicationRecord
   belongs_to :collection
   belongs_to :vendor, inverse_of: :designs
   belongs_to :sale_unit
-  belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id'
+  belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id', optional: true
   belongs_to :subcollection, inverse_of: :designs, optional: true
 
   has_many :variants, -> { order(row_order: :asc) }, dependent: :destroy
