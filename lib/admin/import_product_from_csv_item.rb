@@ -151,20 +151,15 @@ module Admin
           end
         end
 
-        puts 'Creating variant: '+item.variant_name
-
-        if item.respond_to? :sku
-          variant_sku = item.sku.strip
-        elsif item.respond_to? :variant_sku
-          variant_sku = item.variant_sku.strip
-        end
+        variant_name = item.variant_name ? item.variant_name.strip : item.design_name.strip
+        puts 'Creating variant: '+variant_name
 
         variant = Variant.create!(
             {
                 design: design,
                 variant_type: variant_type,
-                name: item.variant_name.strip,
-                sku: variant_sku,
+                name: variant_name,
+                sku: item.variant_sku ? item.variant_sku.strip : item.design_sku.strip,
                 substrate: substrate,
                 backing_type: backing_type,
                 product_types: product_types,
