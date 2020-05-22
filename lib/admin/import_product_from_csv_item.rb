@@ -57,8 +57,6 @@ module Admin
           # If we got here, this is a new record
           new_record = true
 
-          d.keywords = item.keywords.strip.chomp(',').strip unless item.keywords.nil?
-          # d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           d.sale_unit = sale_unit
           d.sale_quantity = item.sale_quantity.strip
           d.minimum_quantity = item.minimum_quantity.strip
@@ -66,6 +64,10 @@ module Admin
           d.styles = styles unless styles.nil?
           d.vendor = vendor
           d.websites = collection.websites
+
+          unless item.keywords.nil?
+            d.keywords = item.keywords.strip.chomp(',').strip
+          end
 
           # Don't require a country of origin. This is used only for shipping via FedEx CrossBorder
           # and for some products we tell the user to call for pricing and shipping costs.
