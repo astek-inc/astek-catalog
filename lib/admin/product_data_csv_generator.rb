@@ -482,7 +482,11 @@ module Admin
               if material
                 (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
               else
-                variant.price
+                if variant.price.blank?
+                  0
+                else
+                  variant.price
+                end
               end
             end
           when 'onairdesign.com'
