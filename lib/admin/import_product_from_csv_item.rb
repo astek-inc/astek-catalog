@@ -57,8 +57,7 @@ module Admin
           # If we got here, this is a new record
           new_record = true
 
-          #d.description = item.description.strip unless item.description.nil?
-          d.keywords = item.keywords.strip.chomp(',').strip
+          d.keywords = item.keywords.strip.chomp(',').strip unless item.keywords.nil?
           # d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           d.sale_unit = sale_unit
           d.sale_quantity = item.sale_quantity.strip
