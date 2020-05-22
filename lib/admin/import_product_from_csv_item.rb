@@ -67,7 +67,8 @@ module Admin
           d.vendor = vendor
           d.websites = collection.websites
 
-          # Don't require a country of origin if we tell the user to call for pricing
+          # Don't require a country of origin. This is used only for shipping via FedEx CrossBorder
+          # and for some products we tell the user to call for pricing and shipping costs.
           unless item.country_of_origin.nil?
             unless country_of_origin = Country.find_by(iso: item.country_of_origin.strip)
               country_of_origin = Country.find_by(name: item.country_of_origin.strip)
