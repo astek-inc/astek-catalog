@@ -812,7 +812,7 @@ module Admin
       end
 
       def format_property_value dp
-        if matches = dp.property.name.match(/_(?<unit>inches|yards|meters)\Z/)
+        if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
           "#{dp.value} #{matches[:unit]}"
         elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Untrimmed].include?(dp.value)
           # Value for margin trim can be numeric, but we display "Untrimmed"
