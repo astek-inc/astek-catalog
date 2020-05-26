@@ -16,7 +16,7 @@ class Design < ApplicationRecord
 
   belongs_to :collection
   belongs_to :vendor, inverse_of: :designs
-  belongs_to :sale_unit
+  belongs_to :sale_unit, optional: true
   belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id', optional: true
   belongs_to :subcollection, inverse_of: :designs, optional: true
 
@@ -122,7 +122,7 @@ class Design < ApplicationRecord
           tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
         else
           tags << %w[feature__instock feature__return-policy feature__pricing]
-          tags << "feature__lead-time-#{self.collection.lead_time.name.parameterize}"
+          tags << "feature__lead-time-#{self.collection.lead_time.name.parameterize}" if self.collection.lead_time
         end
       end
 

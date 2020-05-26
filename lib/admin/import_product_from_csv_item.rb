@@ -12,7 +12,7 @@ module Admin
         puts 'Finding relevant information'
         vendor = Vendor.find_by!({ name: item.vendor.strip })
         product_category = ProductCategory.find_by!( { name: item.product_category.strip })
-        sale_unit = SaleUnit.find_by!({ name: item.sale_unit.strip })
+        sale_unit = SaleUnit.find_by!({ name: item.sale_unit.strip }) unless item.sale_unit.blank?
         product_types = ProductType.where(name: item.product_type.split(',').map { |t| t.strip }.reject { |c| c.empty? }) unless item.product_type.nil?
         styles = Style.where(name: item.style.split(',').map { |s| s.strip }.reject { |c| c.empty? }) unless item.style.nil?
         variant_type = VariantType.find_by!({ name: item.variant_type.strip })
@@ -58,8 +58,8 @@ module Admin
           new_record = true
 
           d.sale_unit = sale_unit
-          d.sale_quantity = item.sale_quantity.strip
-          d.minimum_quantity = item.minimum_quantity.strip
+          d.sale_quantity = item.sale_quantity.strip unless item.sale_quantity.blank?
+          d.minimum_quantity = item.minimum_quantity.strip unless item.minimum_quantity.blank?
           d.available_on = Time.now
           d.styles = styles unless styles.nil?
           d.vendor = vendor
@@ -80,8 +80,10 @@ module Admin
 
           # Don't require a price if the product is only to appear on On Air Design
           # or if we tell the user to call for pricing for products from this vendor
+          # or if the item is from the Limited Stock showrom binders
           unless item.price.nil? && (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
-              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip)
+              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
+              collection.name = 'Limited Stock'
             d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           end
 
@@ -171,8 +173,10 @@ module Admin
           
           # Don't require shipping information if the product is only to appear on On Air Design
           # or if we tell the user to call for pricing for products from this vendor
+          # or if the item is from the Limited Stock showrrom binders
           if (item.websites.split(',').map { |w| w.strip } & %w[A H]).empty? ||
-              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip)
+              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
+              collection.name = 'Limited Stock'
 
             if design.digital?
               unless substrate.nil?

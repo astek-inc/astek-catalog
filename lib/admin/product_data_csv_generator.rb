@@ -685,10 +685,12 @@ module Admin
           </div>'
         end
 
-        formatted += '<div>
-            <h5>Sold By</h5>
-            <p>'+variant.design.sale_unit.name+'</p>
-          </div>'
+        if variant.design.sale_unit.present?
+          formatted += '<div>
+              <h5>Sold By</h5>
+              <p>'+variant.design.sale_unit.name+'</p>
+            </div>'
+        end
 
         if variant.design.price_code.present?
           formatted += '<div>
