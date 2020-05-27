@@ -661,7 +661,7 @@ module Admin
         unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.gsub("\'", "").parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
