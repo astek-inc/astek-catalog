@@ -66,7 +66,7 @@ module Admin
           d.websites = collection.websites
 
           unless item.keywords.nil?
-            d.keywords = item.keywords.strip.chomp(',').strip
+            d.keywords = item.keywords.split(',').map { |s| s.strip.downcase }.reject(&:empty?).join(',')
           end
 
           # Don't require a country of origin. This is used only for shipping via FedEx CrossBorder
