@@ -2,8 +2,8 @@ class Design < ApplicationRecord
 
   resourcify
 
-  include RankedModel
-  ranks :row_order, with_same: :collection_id
+  # include RankedModel
+  # ranks :row_order, with_same: :collection_id
 
   acts_as_paranoid
 
@@ -13,6 +13,7 @@ class Design < ApplicationRecord
 
   scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
   scope :unsubcollected, -> { where('subcollection_id IS NULL') }
+  default_scope { order(name: :asc) }
 
   belongs_to :collection
   belongs_to :vendor, inverse_of: :designs

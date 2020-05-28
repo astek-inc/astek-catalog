@@ -8,8 +8,9 @@ module Admin
     before_action :set_default_custom_material, only: [:custom_materials]
 
     def index
-      @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
-      @position_start = (@designs.current_page.present? ? @designs.current_page - 1 : 0) * @designs.limit_value
+      # @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
+      # @position_start = (@designs.current_page.present? ? @designs.current_page - 1 : 0) * @designs.limit_value
+      @designs = Design.where(collection_id: @collection.id).page params[:page]
     end
 
     def new
@@ -56,13 +57,13 @@ module Admin
     #   @design = Design.find(params[:id])
     # end
 
-    def update_row_order
-      @design = Design.find(params[:item_id])
-      @design.row_order_position = params[:row_order_position]
-      @design.save
-
-      render nothing: true
-    end
+    # def update_row_order
+    #   @design = Design.find(params[:item_id])
+    #   @design.row_order_position = params[:row_order_position]
+    #   @design.save
+    #
+    #   render nothing: true
+    # end
 
     def destroy
       @design.destroy

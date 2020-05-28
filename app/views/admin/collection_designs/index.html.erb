@@ -20,10 +20,11 @@
       <%= paginate @designs %>
 
       <%= content_tag :div, class: 'table-responsive' do %>
-        <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_collection_designs_path %>" data-position-start="<%= @position_start %>">
+<!--        <table class="table table-striped sortable" data-hook data-sortable-link="<%#= update_row_order_admin_collection_designs_path %>" data-position-start="<%#= @position_start %>">-->
+        <table class="table table-striped" data-hook>
           <thead>
           <tr>
-            <th class="move-handle"></th>
+<!--            <th class="move-handle"></th>-->
             <th>Name</th>
             <th>SKU</th>
 <!--            <th>Description</th>-->
@@ -36,9 +37,9 @@
           <tbody>
           <% @designs.each do |design| %>
               <tr class="product_property fields" data-item-id=<%= "#{design.id}" %> data-hook="design">
-                <td class="move-handle text-center">
-                  <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
-                </td>
+<!--                <td class="move-handle text-center">-->
+<!--                  <span class="glyphicon glyphicon-move" aria-hidden="true"></span>-->
+<!--                </td>-->
                 <td><%= design.name %></td>
                 <td class="sku"><%= design.sku %></td>
 <!--                <td><%#= truncate(sanitize(design.description), length: 140) %></td>-->
