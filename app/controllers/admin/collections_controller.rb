@@ -2,7 +2,7 @@ module Admin
   class CollectionsController < Admin::BaseController
 
     before_action :set_collection, only: [:edit, :update, :destroy]
-    before_action :set_product_categories, :set_websites, :set_lead_times, only: [:new, :edit]
+    before_action :set_product_categories, :set_websites, :set_lead_times, only: [:new, :create, :edit, :update]
 
     def index
       @collections = Collection.page params[:page]
@@ -18,12 +18,7 @@ module Admin
         flash[:notice] = 'Collection created.'
         redirect_to(action: 'index')
       else
-        if @collection.errors.any?
-          msg = @collection.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating collection.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @collection
         render('new')
       end
     end
@@ -36,6 +31,7 @@ module Admin
         flash[:notice] = 'Collection updated.'
         redirect_to(action: 'index')
       else
+        flash[:error] = error_message @collection
         render('edit')
       end
     end
@@ -74,6 +70,7 @@ module Admin
       params.require(:collection).permit(
           :name, :description, :keywords, :product_category_id, :lead_time_id,
           :suppress_from_display, :suppress_sample_option_from_display, :prepend_collection_name_to_design_names,
+          :keyword_list,
           website_ids: []
       )
     end

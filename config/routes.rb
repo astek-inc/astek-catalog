@@ -87,6 +87,10 @@ Rails.application.routes.draw do
 
     resources :product_categories, except: [:show, :delete], concerns: :paginatable
 
+    resources :keywords, concerns: :paginatable, except: [:show, :delete] do
+      get :list, on: :collection, defaults: { format: 'json' }
+    end
+
     resources :collections, concerns: :paginatable, except: [:show, :delete] do
 
       get :csv_export_search, on: :collection

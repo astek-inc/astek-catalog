@@ -59,6 +59,10 @@ gem 'sucker_punch'
 # Conjugate verbs in controlller error messages
 gem 'verbs'
 
+# Keyword tags
+gem 'acts-as-taggable-on', '~> 6.0'
+gem 'twitter-typeahead-rails'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

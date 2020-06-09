@@ -30,8 +30,9 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
-    <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+  <%= f.label :keyword_list, 'Keywords' %>
+  <%#= f.text_field :keyword_list, value: @design.keyword_list.join(', '), class: 'form-control', "data-role": 'tagsinput' %>
+  <%= f.text_field :keyword_list, value: @design.keyword_list.join(', '), class: 'form-control' %>
 <% end %>
 
 <%= field_set_tag nil, 'data-hook': 'collection-websites' do %>

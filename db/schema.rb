@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_190524) do
+ActiveRecord::Schema.define(version: 2020_05_29_155037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_190524) do
     t.string "name"
     t.text "description"
     t.integer "lead_time_id"
-    t.text "keywords"
+    t.text "old_keywords"
     t.boolean "suppress_from_display", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_190524) do
     t.string "name"
     t.string "sku"
     t.text "description"
-    t.text "keywords"
+    t.text "old_keywords"
     t.decimal "price", precision: 8, scale: 2
     t.integer "sale_unit_id"
     t.integer "sale_quantity", default: 1
@@ -181,6 +181,13 @@ ActiveRecord::Schema.define(version: 2020_04_29_190524) do
     t.index ["owner_id"], name: "index_images_on_owner_id"
     t.index ["row_order"], name: "index_images_on_row_order"
     t.index ["type"], name: "index_images_on_type"
+  end
+
+  create_table "keywords", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_keywords_on_name"
   end
 
   create_table "lead_times", id: :serial, force: :cascade do |t|
@@ -341,6 +348,33 @@ ActiveRecord::Schema.define(version: 2020_04_29_190524) do
     t.index ["deleted_at"], name: "index_substrates_on_deleted_at"
   end
 
+  create_table "taggings", id: :serial, force: :cascade do |t|
+    t.integer "tag_id"
+    t.string "taggable_type"
+    t.integer "taggable_id"
+    t.string "tagger_type"
+    t.integer "tagger_id"
+    t.string "context", limit: 128
+    t.datetime "created_at"
+    t.index ["context"], name: "index_taggings_on_context"
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_id", "taggable_type", "context"], name: "taggings_taggable_context_idx"
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
+    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
+    t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
+  end
+
+  create_table "tags", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer "taggings_count", default: 0
+    t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -434,6 +468,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_190524) do
   add_foreign_key "product_types", "product_categories"
   add_foreign_key "states", "countries"
   add_foreign_key "substrates", "backing_types"
+  add_foreign_key "taggings", "tags"
   add_foreign_key "variants", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "product_types"

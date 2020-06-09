@@ -6,6 +6,10 @@ class Collection < ApplicationRecord
 
   include Websiteable
 
+  include KeywordValidateable
+
+  acts_as_taggable_on :keywords
+
   belongs_to :product_category, inverse_of: :collections
 
   has_many :designs, -> { order(row_order: :asc) }, dependent: :destroy

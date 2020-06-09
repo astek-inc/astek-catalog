@@ -58,6 +58,7 @@ div.form-group div.image {
 
 .ui-autocomplete li {
     padding-left: 1em;
+    padding-right: 1em;
 }
 
 /*.ui-helper-hidden-accessible {*/

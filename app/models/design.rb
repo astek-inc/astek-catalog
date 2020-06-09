@@ -11,6 +11,10 @@ class Design < ApplicationRecord
 
   include Descriptionable
 
+  acts_as_taggable_on :keywords
+
+  include KeywordValidateable
+
   scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
   scope :unsubcollected, -> { where('subcollection_id IS NULL') }
   default_scope { order(name: :asc) }
@@ -115,34 +119,34 @@ class Design < ApplicationRecord
     else
       tags = []
 
-      tags << to_tags('style', self.styles.map { |s| s.name })
-      tags << to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.parameterize } }.flatten.uniq)
+      tags += to_tags('style', self.styles.map { |s| s.name })
+      tags += to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.parameterize } }.flatten.uniq)
 
       if domain == 'astek.com'
         if self.digital?
-          tags << %w[feature__digital feature__scale feature__design feature__material feature__color]
+          tags += %w[feature__digital feature__scale feature__design feature__material feature__color]
         else
-          tags << %w[feature__instock feature__return-policy feature__pricing]
+          tags += %w[feature__instock feature__return-policy feature__pricing]
           tags << "feature__lead-time-#{self.collection.lead_time.name.parameterize}" if self.collection.lead_time
         end
       end
 
       if all_keywords = self.merged_keywords
-        tags << to_tags('keyword', all_keywords)
+        tags += to_tags('keyword', all_keywords)
       end
 
-      tags << to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
+      tags += to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
     end
 
     if domain == 'astekhome.com'
-      tags << self.calculator_tag
+      tags += self.calculator_tag
 
       if self.digital?
-        tags << self.material_tags
+        tags += self.material_tags
       end
     end
 
-    tags.flatten.join(', ')
+    tags.join(', ')
 
   end
 
@@ -159,19 +163,23 @@ class Design < ApplicationRecord
   end
 
   def merged_keywords
-    collection_keywords = []
-    design_keywords = []
-
-    if self.collection.keywords
-      collection_keywords = self.collection.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
-    end
-
-    if self.keywords
-      design_keywords = self.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
-    end
-
-    (collection_keywords + design_keywords).uniq
+    (self.collection.keyword_list + self.keyword_list).uniq
   end
+
+  # def merged_keywords
+  #   collection_keywords = []
+  #   design_keywords = []
+  #
+  #   if self.collection.keywords
+  #     collection_keywords = self.collection.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
+  #   end
+  #
+  #   if self.keywords
+  #     design_keywords = self.keywords.split(',').map { |k| k.strip }.reject { |k| k.empty? }
+  #   end
+  #
+  #   (collection_keywords + design_keywords).uniq
+  # end
 
   def calculator_tag
 

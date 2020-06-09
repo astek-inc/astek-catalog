@@ -26,8 +26,8 @@
 <% end %>
 
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :keywords, 'Keywords' %>
-    <%= f.text_area :keywords, rows: 3, required: false, class: 'form-control' %>
+  <%= f.label :keyword_list, 'Keywords' %>
+  <%= f.text_field :keyword_list, value: @collection.keyword_list.join(', '), class: 'form-control' %>
 <% end %>
 
 <%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
