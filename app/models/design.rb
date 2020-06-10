@@ -139,7 +139,7 @@ class Design < ApplicationRecord
     end
 
     if domain == 'astekhome.com'
-      tags += self.calculator_tag
+      tags << self.calculator_tag
 
       if self.digital?
         tags += self.material_tags
