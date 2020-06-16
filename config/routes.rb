@@ -142,6 +142,8 @@ Rails.application.routes.draw do
       resources :variant_install_images do
         post :update_row_order, on: :collection
       end
+
+      resources :variant_substrates, except: [:show, :delete]
     end
 
     resources :variant_types, except: [:show, :delete]

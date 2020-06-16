@@ -145,10 +145,10 @@ module Admin
 
       # On astek.com, we don't print on paper
       def display_substrate
-        if @variant.substrate.name == 'Paper'
+        if @variant.substrate_for_domain('astek.com').name == 'Paper'
           Substrate.find_by(name: 'Matte Vinyl')
         else
-          @variant.substrate
+          @variant.substrate_for_domain('astek.com')
         end
       end
 

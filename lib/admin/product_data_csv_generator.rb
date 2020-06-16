@@ -448,7 +448,7 @@ module Admin
               (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
             else
               if material
-                material_variant_weight material, variant
+                material_variant_weight material, variant, domain
               else
                 variant.variant_grams
               end
@@ -623,7 +623,7 @@ module Admin
           body += format_description description
         end
 
-        body += format_business_properties variant
+        body += format_business_properties variant, domain
 
         if variant.tearsheet.file
           body += format_tearsheet_links variant
@@ -655,7 +655,7 @@ module Admin
         </div>'
       end
 
-      def format_business_properties variant
+      def format_business_properties variant, domain
         formatted = '<div class="description__meta">'
 
         unless variant.design.collection.suppress_from_display
@@ -665,23 +665,22 @@ module Admin
             </div>'
         end
 
-        if variant.substrate
+        if variant_substrate = variant.substrate_for_domain(domain)
           formatted += '<div>
             <h5>Substrate</h5>
             <p>Type II</p>
           </div>'
         end
-        # '+variant.format_substrate_name+'
 
         if variant.backing_type
           formatted += '<div>
             <h5>Backing</h5>
             <p>'+variant.backing_type.name+'</p>
           </div>'
-        elsif variant.substrate && variant.substrate.backing_type
+        elsif variant_substrate && variant_substrate.backing_type
           formatted += '<div>
             <h5>Backing</h5>
-            <p>'+variant.substrate.backing_type.name+'</p>
+            <p>'+variant_substrate.backing_type.name+'</p>
           </div>'
         end
 
@@ -832,11 +831,12 @@ module Admin
       # may be required to complete a given order, so the weight of a square foot of a variant
       # is given as more than standard. We want to apply the same increase to the custom material
       # options
-      def material_variant_weight material, variant
-        if BigDecimal(variant.weight) == BigDecimal(variant.substrate.weight_per_square_foot)
+      def material_variant_weight material, variant, domain
+        variant_substrate = variant.substrate_for_domain domain
+        if BigDecimal(variant.weight) == BigDecimal(variant_substrate.weight_per_square_foot)
           (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
         else
-          ratio = BigDecimal(variant.weight) / BigDecimal(variant.substrate.weight_per_square_foot)
+          ratio = BigDecimal(variant.weight) / BigDecimal(variant_substrate.weight_per_square_foot)
           (BigDecimal(material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
         end
       end

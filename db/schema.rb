@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_29_155037) do
+ActiveRecord::Schema.define(version: 2020_06_12_200057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -396,6 +396,15 @@ ActiveRecord::Schema.define(version: 2020_05_29_155037) do
     t.integer "user_id"
     t.integer "role_id"
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+  end
+
+  create_table "variant_substrates", force: :cascade do |t|
+    t.integer "variant_id"
+    t.integer "substrate_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["substrate_id", "variant_id"], name: "index_variant_substrates_on_substrate_id_and_variant_id"
+    t.index ["variant_id", "substrate_id"], name: "index_variant_substrates_on_variant_id_and_substrate_id"
   end
 
   create_table "variant_types", id: :serial, force: :cascade do |t|

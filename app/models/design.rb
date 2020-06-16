@@ -142,7 +142,7 @@ class Design < ApplicationRecord
       tags << self.calculator_tag
 
       if self.digital?
-        tags += self.material_tags
+        tags += self.material_tags unless self.material_tags.nil?
       end
     end
 

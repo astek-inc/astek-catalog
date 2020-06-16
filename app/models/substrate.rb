@@ -5,7 +5,10 @@ class Substrate < ApplicationRecord
   acts_as_paranoid
 
   has_many :substrate_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
-  has_many :variants
+  
+  has_many :variant_substrates
+  has_many :variants, through: :variant_substrates
+
   belongs_to :backing_type, inverse_of: :substrates
   has_and_belongs_to_many :substrate_categories
 

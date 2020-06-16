@@ -16,6 +16,9 @@ class Variant < ApplicationRecord
   belongs_to :substrate, optional: true
   belongs_to :backing_type, optional: true
 
+  has_many :variant_substrates
+  has_many :substrates, through: :variant_substrates
+
   has_many :variant_swatch_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   has_many :variant_install_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
@@ -99,6 +102,12 @@ class Variant < ApplicationRecord
 
   def install_images_for_domain domain
     self.variant_install_images.for_domain domain
+  end
+
+  def substrate_for_domain domain
+    if variant_substrates = self.variant_substrates.for_domain(domain)
+      variant_substrates.first.substrate
+    end
   end
 
 end

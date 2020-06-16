@@ -352,7 +352,6 @@ module Admin
                 variant_type: variant_type,
                 name: variant_name,
                 sku: item.variant_sku ? item.variant_sku.strip : item.design_sku.strip,
-                substrate: substrate,
                 backing_type: backing_type,
                 product_types: product_types,
                 websites: design.websites
@@ -404,6 +403,17 @@ module Admin
           
           v.colors = colors unless colors.nil?
 
+        end
+
+
+        if substrate.name == 'Paper' && item.websites.split(',').map { |w| w.strip }.include?('A')
+          VariantSubstrate.create! variant: variant, substrate: Substrate.find_by(name: 'Matte Vinyl'), websites: [Website.find_by(domain: 'astek.com')]
+          other_websites_string = (item.websites.split(',').map { |w| w.strip } - ['A']).join(',')
+          if other_websites = sites_from_string(other_websites_string, ',')
+            VariantSubstrate.create! variant: variant, substrate: substrate, websites: other_websites
+          end
+        else
+          VariantSubstrate.create! variant: variant, substrate: substrate, websites: variant.websites
         end
 
         item.images.split(',').map { |i| i.strip }.each do |url|

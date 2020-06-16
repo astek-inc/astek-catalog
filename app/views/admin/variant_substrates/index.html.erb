@@ -1,0 +1,59 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      link_to('Designs', admin_collection_designs_path(@collection)),
+      link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
+      link_to('Variants', admin_design_variants_path(@design)),
+      link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
+      'Substrates'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Variant Substrate', new_admin_variant_variant_substrate_path(@variant), class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+
+  <% if @variant.substrates.any? %>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Websites</th>
+          <th class="actions"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @variant.variant_substrates.each do |vs| %>
+          <tr class="substrate fields" data-item-id="<%= vs.id %>" data-hook="substrate">
+            <td><%= vs.substrate.name %></td>
+            <td><%= vs.websites.map { |w| w.name }.join(', ') %></td>
+
+            <td class="actions">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                <%= edit_button edit_admin_variant_variant_substrate_path @variant, vs %>
+                <%= delete_button admin_variant_variant_substrate_path @variant, vs %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  <% else %>
+    <p>No substrates found. <%= link_to 'Create one.', new_admin_variant_variant_substrate_path %></p>
+  <% end %>
+
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+  <%= render partial: 'admin/variants/subnav', locals: { current: 'substrates' } %>
+<% end %>
