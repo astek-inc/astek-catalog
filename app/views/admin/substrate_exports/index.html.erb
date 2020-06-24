@@ -4,8 +4,29 @@
 
 <%= render partial: 'admin/shared/header' %>
 
-<div>
-  <p>Copy and paste the information below into the Value field of the substrates Shop metafield in Shopify.</p>
-  <pre>
-  <%= render partial: 'admin/substrate_exports/substrates.json', locals: { substrates: @substrates } %></pre>
-</div>
+<%= content_tag :div, class: 'export_form' do %>
+  <%= content_tag :div, class: 'row' do %>
+
+    <%= content_tag :div, class: 'col-md-9' do %>
+
+      <p class="help-block">
+        Select a website and submit to generate a JSON file of substrate information for the selected website.
+      </p>
+
+      <%= form_tag export_by_domain_admin_substrate_exports_path, method: :get do %>
+        <%= content_tag :div, { class: 'col-md-7' } do %>
+          <%= content_tag :div, class: 'form-group' do %>
+            <%= label_tag 'website_id', 'Website' %> <span class="required">*</span>
+            <%= select_tag 'website_id', options_from_collection_for_select(@websites, :id, :name), { prompt: 'Select', id: 'website_id', class: 'form-control', required: true } %>
+          <%end %>
+        <%end %>
+
+        <%= content_tag :div, { class: 'col-md-5', id: 'substrate-export-submit-container' } do %>
+          <%= submit_button %>
+        <% end %>
+      <% end %>
+
+    <% end %>
+
+  <% end %>
+<% end %>

@@ -56,7 +56,7 @@ gem 'ransack', github: 'activerecord-hackery/ransack'
 # Background jobs
 gem 'sucker_punch'
 
-# Conjugate verbs in controlller error messages
+# Conjugate verbs in controller error messages
 gem 'verbs'
 
 # Keyword tags

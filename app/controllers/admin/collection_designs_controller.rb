@@ -24,12 +24,7 @@ module Admin
         flash[:notice] = 'Design created.'
         redirect_to(action: 'index')
       else
-        if @design.errors.any?
-          msg = @design.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating design.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @design
         render('new')
       end
     end
@@ -49,12 +44,7 @@ module Admin
         flash[:notice] = 'Design updated.'
         redirect_to(action: 'index')
       else
-        if @design.errors.any?
-          msg = @design.errors.full_messages.join(', ')
-        else
-          msg = 'Error updating design.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @design
         render('edit')
       end
     end

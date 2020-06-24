@@ -1,0 +1,15 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Substrate Exports', admin_substrate_exports_path),
+      @website.name
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<div>
+  <p>Copy and paste the information below into the Value field of the substrates Shop metafield in
+    the Shopify admin interface for <%= @website.name %>.</p>
+  <pre><%= render partial: 'admin/substrate_exports/substrates.json', locals: { substrates: @substrates, website: @website } %>
+  </pre>
+</div>

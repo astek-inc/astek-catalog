@@ -4,12 +4,14 @@ class Substrate < ApplicationRecord
 
   acts_as_paranoid
 
+  include Websiteable
+
   has_many :substrate_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   
   has_many :variant_substrates
   has_many :variants, through: :variant_substrates
 
-  belongs_to :backing_type, inverse_of: :substrates
+  belongs_to :backing_type, inverse_of: :substrates, optional: true
   has_and_belongs_to_many :substrate_categories
 
   # Custom materials should really be associated with Colorways (variants),

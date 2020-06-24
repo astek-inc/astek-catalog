@@ -2,7 +2,7 @@ module Admin
   class SubstratesController < Admin::BaseController
 
     before_action :set_substrate, only: [:edit, :update, :destroy]
-    before_action :set_substrate_categories, only: [:new, :create, :edit, :update]
+    before_action :set_substrate_categories, :set_websites, only: [:new, :create, :edit, :update]
 
     def index
       @substrates = Substrate.page params[:page]
@@ -38,6 +38,8 @@ module Admin
 
     def destroy
       @substrate.destroy
+      flash[:notice] = 'Substrate removed.'
+      redirect_to(action: 'index')
     end
 
     private
@@ -50,10 +52,14 @@ module Admin
       @substrate_categories = SubstrateCategory.all
     end
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def substrate_params
       params.require(:substrate).permit(
-          :name, :description, :display_on_public_sites, :display_name, :display_description, :keywords, :backing_type_id,
-          :default_custom_material_group, :custom_material_surcharge, :weight_per_square_foot, substrate_category_ids: []
+          :name, :description, :display_name, :display_description, :keywords, :backing_type_id,
+          :default_custom_material_group, :custom_material_surcharge, :weight_per_square_foot, substrate_category_ids: [], website_ids: []
       )
     end
 

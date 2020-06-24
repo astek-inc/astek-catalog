@@ -53,7 +53,9 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :substrate_exports, only: :index #, defaults: { format: 'json' }
+    resources :substrate_exports, only: :index do
+      get 'export_by_domain', on: :collection
+    end
 
     resources :colors, except: [:show, :delete]
 
