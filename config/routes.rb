@@ -65,6 +65,7 @@ Rails.application.routes.draw do
       resources :substrate_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
+      resources :descriptions, controller: :substrate_descriptions
     end
 
     resources :substrate_categories, except: [:show, :delete], concerns: :paginatable
