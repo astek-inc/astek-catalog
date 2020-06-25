@@ -1,7 +1,7 @@
 <% content_for :header_left do %>
   <%= content_tag :h1, [
       link_to('Substrates', admin_substrates_path),
-      @substrate.name,
+      link_to(@substrate.name, edit_admin_substrate_path(@substrate)),
       link_to('Descriptions', admin_substrate_descriptions_path(@substrate)),
       'New Description'
   ].join(' / ').html_safe %>
