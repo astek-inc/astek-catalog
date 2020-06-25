@@ -6,6 +6,8 @@ class Substrate < ApplicationRecord
 
   include Websiteable
 
+  include Descriptionable
+
   has_many :substrate_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   
   has_many :variant_substrates
