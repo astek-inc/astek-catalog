@@ -7,9 +7,9 @@
 
 <%= render partial: 'admin/shared/header' %>
 
-<div>
+<%= content_tag :div, class: 'col-md-9' do %>
   <p>Copy and paste the information below into the Value field of the substrates Shop metafield in
     the Shopify admin interface for <%= @website.name %>.</p>
-  <pre><%= render partial: 'admin/substrate_exports/substrates.json', locals: { substrates: @substrates, website: @website } %>
-  </pre>
-</div>
+  <textarea id="substrate-json-data"><%= render partial: 'admin/substrate_exports/substrates.json', locals: { substrates: @substrates, website: @website } %>
+  </textarea>
+<% end %>
