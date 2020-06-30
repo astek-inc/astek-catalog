@@ -62,9 +62,14 @@ Rails.application.routes.draw do
     resources :lead_times, except: [:show, :delete]
 
     resources :substrates, except: [:show, :delete], concerns: :paginatable do
-      resources :substrate_images, only: [:index, :new, :create, :show, :destroy] do
+      resources :substrate_print_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
+
+      resources :substrate_texture_images, only: [:index, :new, :create, :show, :destroy] do
+        post :update_row_order, on: :collection
+      end
+
       resources :descriptions, controller: :substrate_descriptions
     end
 

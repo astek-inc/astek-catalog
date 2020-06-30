@@ -1,0 +1,18 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+    link_to('Substrates', admin_substrates_path),
+    link_to(@substrate.name, edit_admin_substrate_path(@substrate)),
+    link_to('Print Images', admin_substrate_substrate_print_images_path(@substrate)),
+    @substrate_print_image.file_identifier
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+  <%= image_tag(@substrate_print_image.file.url(:large)) %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+  <%= render partial: 'admin/substrates/subnav', locals: { current: 'print_images' } %>
+<% end %>

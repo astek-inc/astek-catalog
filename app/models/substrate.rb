@@ -9,6 +9,8 @@ class Substrate < ApplicationRecord
   include Descriptionable
 
   has_many :substrate_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_many :substrate_print_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
+  has_many :substrate_texture_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   
   has_many :variant_substrates
   has_many :variants, through: :variant_substrates

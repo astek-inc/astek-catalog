@@ -1,0 +1,29 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+    link_to('Substrates', admin_substrates_path),
+    link_to(@substrate.name, edit_admin_substrate_path(@substrate)),
+    link_to('Texture Images', admin_substrate_substrate_texture_images_path(@substrate)),
+    'New Texture Image'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, :substrate, @substrate_texture_image], html: { multipart: true } do |f| %>
+        <%= field_set_tag nil, 'data-hook': 'substrate_texture_image_new' do %>
+            <%= content_tag :div, class: ['form-group'] do %>
+                <%= f.label :file, 'Image' %> <span class="required">*</span>
+                <%= f.file_field :file, required: true, class: 'form-control' %>
+                <%#= f.hidden_field :type, value: @substrate_texture_image.class.name %>
+                <%= f.hidden_field :owner_id, value: @substrate.id %>
+            <% end %>
+        <% end %>
+
+        <%= form_buttons admin_substrate_substrate_texture_images_path(@substrate) %>
+    <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/substrates/subnav', locals: { current: 'texture_images' } %>
+<% end %>
