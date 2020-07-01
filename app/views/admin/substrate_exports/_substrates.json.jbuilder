@@ -5,8 +5,8 @@
     json.description ( substrate.descriptions.for_domain(@website.domain).first.description )
     if @website.domain == 'astek.com'
       json.images do
-        json.print substrate.substrate_print_images.first.file.url
-        json.texture substrate.substrate_texture_images.first.file.url
+        json.print substrate.substrate_print_images.first.file.url if substrate.substrate_print_images.any?
+        json.texture substrate.substrate_texture_images.first.file.url if substrate.substrate_texture_images.any?
       end
     end
   end
