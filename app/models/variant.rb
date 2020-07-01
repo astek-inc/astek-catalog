@@ -105,9 +105,8 @@ class Variant < ApplicationRecord
   end
 
   def substrate_for_domain domain
-    if variant_substrates = self.variant_substrates.for_domain(domain)
-      variant_substrates.first.substrate
-    end
+    variant_substrates = self.variant_substrates.for_domain(domain)
+    variant_substrates.first.substrate unless variant_substrates.empty?
   end
 
 end
