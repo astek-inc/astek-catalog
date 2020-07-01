@@ -8,6 +8,8 @@
         json.print substrate.substrate_print_images.first.file.url if substrate.substrate_print_images.any?
         json.texture substrate.substrate_texture_images.first.file.url if substrate.substrate_texture_images.any?
       end
+
+      json.categories substrate.substrate_categories.map { |c| c.name }
     end
   end
   json.prettify!
