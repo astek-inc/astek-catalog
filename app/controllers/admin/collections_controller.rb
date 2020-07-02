@@ -16,7 +16,7 @@ module Admin
       @collection = Collection.new(collection_params)
       if @collection.save
         flash[:notice] = 'Collection created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @collection.id)
       else
         flash[:error] = error_message @collection
         render('new')
@@ -29,7 +29,7 @@ module Admin
     def update
       if @collection.update_attributes(collection_params)
         flash[:notice] = 'Collection updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @collection.id)
       else
         flash[:error] = error_message @collection
         render('edit')
