@@ -17,12 +17,7 @@ module Admin
         flash[:notice] = 'SKU prefix created.'
         redirect_to(action: 'index')
       else
-        if @sku_prefix.errors.any?
-          msg = @sku_prefix.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating SKU prefix.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @sku_prefix
         render('new')
       end
     end
@@ -35,12 +30,7 @@ module Admin
         flash[:notice] = 'SKU prefix updated.'
         redirect_to(action: 'index')
       else
-        if @sku_prefix.errors.any?
-          msg = @sku_prefix.errors.full_messages.join(', ')
-        else
-          msg = 'Error updating SKU prefix.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @sku_prefix
         render('edit')
       end
     end

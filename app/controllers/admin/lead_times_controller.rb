@@ -17,12 +17,7 @@ module Admin
         flash[:notice] = 'Lead time created.'
         redirect_to(action: 'index')
       else
-        if @lead_time.errors.any?
-          msg = @lead_time.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating lead time.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @lead_time
         render('new')
       end
     end
@@ -35,12 +30,7 @@ module Admin
         flash[:notice] = 'Lead time updated.'
         redirect_to(action: 'index')
       else
-        if @lead_time.errors.any?
-          msg = @lead_time.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating lead time.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @lead_time
         render('edit')
       end
     end

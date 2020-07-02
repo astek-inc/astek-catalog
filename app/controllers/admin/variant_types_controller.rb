@@ -17,12 +17,7 @@ module Admin
         flash[:notice] = 'Variant type created.'
         redirect_to(action: 'index')
       else
-        if @variant_type.errors.any?
-          msg = @variant_type.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating variant type.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @variant_type
         render('new')
       end
     end
@@ -35,6 +30,7 @@ module Admin
         flash[:notice] = 'Variant type updated.'
         redirect_to(action: 'index')
       else
+        flash[:error] = error_message @variant_type
         render('edit')
       end
     end

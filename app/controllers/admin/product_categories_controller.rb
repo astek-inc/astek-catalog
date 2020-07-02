@@ -17,12 +17,7 @@ module Admin
         flash[:notice] = 'Product type group created.'
         redirect_to(action: 'index')
       else
-        if @product_category.errors.any?
-          msg = @product_category.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating product type.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @product_category
         render('new')
       end
     end
@@ -35,6 +30,7 @@ module Admin
         flash[:notice] = 'Product type group updated.'
         redirect_to(action: 'index')
       else
+        flash[:error] = error_message @product_category
         render('edit')
       end
     end

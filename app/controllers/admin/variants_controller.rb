@@ -20,14 +20,9 @@ module Admin
       @variant = Variant.new(variant_params)
       if @variant.save
         flash[:notice] = 'Variant created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @variant.id)
       else
-        if @variant.errors.any?
-          msg = @variant.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating variant.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @variant
         render('new')
       end
     end
@@ -38,14 +33,9 @@ module Admin
     def update
       if @variant.update_attributes(variant_params)
         flash[:notice] = 'Variant updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @variant.id)
       else
-        if @variant.errors.any?
-          msg = @variant.errors.full_messages.join(', ')
-        else
-          msg = 'Error updating variant.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @variant
         render('edit')
       end
     end

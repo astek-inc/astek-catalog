@@ -17,12 +17,7 @@ module Admin
         flash[:notice] = 'Color created.'
         redirect_to(action: 'index')
       else
-        if @color.errors.any?
-          msg = @color.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating color.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @color
         render('new')
       end
     end
@@ -35,18 +30,15 @@ module Admin
         flash[:notice] = 'Color updated.'
         redirect_to(action: 'index')
       else
-        if @color.errors.any?
-          msg = @color.errors.full_messages.join(', ')
-        else
-          msg = 'Error updating color.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @color
         render('edit')
       end
     end
 
     def destroy
       @color.destroy
+      flash[:notice] = 'Color removed.'
+      redirect_to(action: 'index')
     end
 
     private

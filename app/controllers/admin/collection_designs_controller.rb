@@ -22,7 +22,7 @@ module Admin
       @design = Design.new(design_params)
       if @design.save
         flash[:notice] = 'Design created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @design.id)
       else
         flash[:error] = error_message @design
         render('new')
@@ -42,7 +42,7 @@ module Admin
         end
 
         flash[:notice] = 'Design updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @design.id)
       else
         flash[:error] = error_message @design
         render('edit')

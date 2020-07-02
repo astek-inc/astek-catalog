@@ -17,14 +17,9 @@ module Admin
       @product_type = ProductType.new(product_type_params)
       if @product_type.save
         flash[:notice] = 'Product type created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @product_type.id)
       else
-        if @product_type.errors.any?
-          msg = @product_type.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating product type.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @product_type
         render('new')
       end
     end
@@ -35,14 +30,15 @@ module Admin
     def update
       if @product_type.update_attributes(product_type_params)
         flash[:notice] = 'Product type updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @product_type.id)
       else
+        flash[:error] = error_message @product_type
         render('edit')
       end
     end
 
     def destroy
-      ProductType.find(params[:id]).destroy
+      @product_type.destroy
       flash[:notice] = 'Product type removed.'
       redirect_to(action: 'index')
     end

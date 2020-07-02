@@ -17,12 +17,7 @@ module Admin
         flash[:notice] = 'Website created.'
         redirect_to(action: 'index')
       else
-        if @website.errors.any?
-          msg = @website.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating website.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @website
         render('new')
       end
     end
@@ -35,6 +30,7 @@ module Admin
         flash[:notice] = 'Website updated.'
         redirect_to(action: 'index')
       else
+        flash[:error] = error_message @website
         render('edit')
       end
     end

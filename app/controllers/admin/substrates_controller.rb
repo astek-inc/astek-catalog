@@ -16,7 +16,7 @@ module Admin
       @substrate = Substrate.new(substrate_params)
       if @substrate.save
         flash[:notice] = 'Substrate created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @substrate.id)
       else
         flash[:error] = error_message @substrate
         render('new')
@@ -29,7 +29,7 @@ module Admin
     def update
       if @substrate.update(substrate_params)
         flash[:notice] = 'Substrate updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @substrate.id)
       else
         flash[:error] = error_message @substrate
         render('edit')
