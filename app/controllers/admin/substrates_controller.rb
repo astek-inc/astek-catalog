@@ -5,7 +5,7 @@ module Admin
     before_action :set_substrate_categories, :set_websites, only: [:new, :create, :edit, :update]
 
     def index
-      @substrates = Substrate.page params[:page]
+      @substrates = Substrate.page(params[:page]).includes(:backing_type, :websites)
     end
 
     def new

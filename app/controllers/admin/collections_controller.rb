@@ -5,7 +5,7 @@ module Admin
     before_action :set_product_categories, :set_websites, :set_lead_times, only: [:new, :create, :edit, :update]
 
     def index
-      @collections = Collection.page params[:page]
+      @collections = Collection.page(params[:page]).includes(:product_category, :websites)
     end
 
     def new

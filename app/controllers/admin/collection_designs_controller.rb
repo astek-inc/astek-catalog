@@ -10,7 +10,7 @@ module Admin
     def index
       # @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
       # @position_start = (@designs.current_page.present? ? @designs.current_page - 1 : 0) * @designs.limit_value
-      @designs = Design.where(collection_id: @collection.id).page params[:page]
+      @designs = Design.where(collection_id: @collection.id).page(params[:page]).includes(:websites)
     end
 
     def new

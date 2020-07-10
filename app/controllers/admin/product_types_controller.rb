@@ -6,7 +6,7 @@ module Admin
     before_action :set_websites, only: [:index, :new, :edit]
 
     def index
-      @product_types = ProductType.page params[:page]
+      @product_types = ProductType.page(params[:page]).includes(:product_category)
     end
 
     def new

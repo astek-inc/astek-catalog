@@ -7,7 +7,7 @@ module Admin
     before_action :set_websites, only: [:new, :edit]
 
     def index
-      @variants = Variant.where(design_id: @design.id).rank(:row_order).page params[:page]
+      @variants = Variant.where(design_id: @design.id).rank(:row_order).page(params[:page]).includes(:variant_type, :websites)
       @position_start = (@variants.current_page.present? ? @variants.current_page - 1 : 0) * @variants.limit_value
     end
 

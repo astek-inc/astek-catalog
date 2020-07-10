@@ -6,7 +6,7 @@ module Admin
     before_action :set_collection
 
     def index
-      @subcollections = Subcollection.where(collection_id: params[:collection_id])
+      @subcollections = Subcollection.where(collection_id: params[:collection_id]).includes(:subcollection_type)
     end
 
     def new
