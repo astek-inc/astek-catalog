@@ -405,15 +405,16 @@ module Admin
 
         end
 
-
-        if substrate.name == 'Paper' && item.websites.split(',').map { |w| w.strip }.include?('A')
-          VariantSubstrate.create! variant: variant, substrate: Substrate.find_by(name: 'Matte Vinyl'), websites: [Website.find_by(domain: 'astek.com')]
-          other_websites_string = (item.websites.split(',').map { |w| w.strip } - ['A']).join(',')
-          if other_websites = sites_from_string(other_websites_string, ',')
-            VariantSubstrate.create! variant: variant, substrate: substrate, websites: other_websites
+        if design.digital?
+          if substrate.name == 'Paper' && item.websites.split(',').map { |w| w.strip }.include?('A')
+            VariantSubstrate.create! variant: variant, substrate: Substrate.find_by(name: 'Matte Vinyl'), websites: [Website.find_by(domain: 'astek.com')]
+            other_websites_string = (item.websites.split(',').map { |w| w.strip } - ['A']).join(',')
+            if other_websites = sites_from_string(other_websites_string, ',')
+              VariantSubstrate.create! variant: variant, substrate: substrate, websites: other_websites
+            end
+          else
+            VariantSubstrate.create! variant: variant, substrate: substrate, websites: variant.websites
           end
-        else
-          VariantSubstrate.create! variant: variant, substrate: substrate, websites: variant.websites
         end
 
         item.images.split(',').map { |i| i.strip }.each do |url|
