@@ -18,10 +18,11 @@ class VariantInstallImageUploader < ImageUploader
   def filename
     if original_filename
 
+      # Parameterize won't remove hyphens if the separator is not a hyphen
       name = [
           model.variant.sku,
-          model.variant.design.name.parameterize(separator: '_'),
-          model.variant.name.parameterize(separator: '').upcase,
+          model.variant.design.name.gsub('-', ' ').parameterize(separator: '_'),
+          model.variant.name.gsub('-', ' ').parameterize(separator: '').upcase,
           'install'
       ].join('_')
 
