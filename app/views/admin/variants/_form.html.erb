@@ -68,29 +68,29 @@
 <%= content_tag :div, class: 'row' do %>
   <%= content_tag :div, class: 'col-md-3' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :weight, 'Weight in Pounds' %> <span class="required">*</span>
-      <%= f.text_field :weight, required: true, class: 'form-control' %>
+      <%= f.label :weight, 'Weight in Pounds' %>
+      <%= f.text_field :weight, required: false, class: 'form-control' %>
     <% end %>
   <% end %>
 
   <%= content_tag :div, class: 'col-md-3' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :width, 'Package Width in Inches' %> <span class="required">*</span>
-      <%= f.text_field :width, required: true, class: 'form-control' %>
+      <%= f.label :width, 'Package Width in Inches' %>
+      <%= f.text_field :width, required: false, class: 'form-control' %>
     <% end %>
   <% end %>
 
   <%= content_tag :div, class: 'col-md-3' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :height, 'Package Height in Inches' %> <span class="required">*</span>
-      <%= f.text_field :height, required: true, class: 'form-control' %>
+      <%= f.label :height, 'Package Height in Inches' %>
+      <%= f.text_field :height, required: false, class: 'form-control' %>
     <% end %>
   <% end %>
 
   <%= content_tag :div, class: 'col-md-3' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :depth, 'Package Depth in Inches' %> <span class="required">*</span>
-      <%= f.text_field :depth, required: true, class: 'form-control' %>
+      <%= f.label :depth, 'Package Depth in Inches' %>
+      <%= f.text_field :depth, required: false, class: 'form-control' %>
     <% end %>
   <% end %>
 <% end %>
