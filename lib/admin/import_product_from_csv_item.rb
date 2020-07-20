@@ -268,10 +268,12 @@ module Admin
 
           # Don't require a price if the product is only to appear on On Air Design
           # or if we tell the user to call for pricing for products from this vendor
-          # or if the item is from the Limited Stock showrom binders
-          unless item.price.nil? && (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
-              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
-              collection.name = 'Limited Stock'
+          # or if the item is from the Limited Stock showroom binders
+          unless item.price.nil? && (
+          (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
+            MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
+            collection.name = 'Limited Stock'
+          )
             d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
           end
 
