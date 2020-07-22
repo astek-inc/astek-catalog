@@ -6,6 +6,9 @@ module Admin
     SAMPLE_PACKAGE_DIMENSIONS = { width: 3, height: 3, depth: 30 }
     SAMPLE_WEIGHT = 0.01
 
+    PAPER_PACKAGE_DEPTH = 61
+    NON_PAPER_PACKAGE_DEPTH = 54
+
     require 'csv'
 
     @design
@@ -193,7 +196,15 @@ module Admin
         if @sample
           SAMPLE_PACKAGE_DIMENSIONS[:depth]
         else
-          @variant.depth
+          if @material
+            if @material.name == 'Paper'
+              PAPER_PACKAGE_DEPTH
+            else
+              NON_PAPER_PACKAGE_DEPTH
+            end
+          else
+            @variant.depth
+          end
         end
       end
 
@@ -217,7 +228,11 @@ module Admin
         if @sample
           SAMPLE_WEIGHT
         else
-          @variant.weight
+          if @material
+            material_variant_weight
+          else
+            @variant.weight
+          end
         end
       end
 
@@ -274,6 +289,19 @@ module Admin
           @variant.name
         else
           "#{@design.name} - #{@variant.name}"
+        end
+      end
+
+      # If the printed width of a given design is less than standard, more physical material
+      # may be required to complete a given order, so the weight of a square foot of a variant
+      # is given as more than standard. We want to apply the same increase to the custom material
+      # options
+      def material_variant_weight
+        if BigDecimal(@variant.weight) == BigDecimal(@variant.substrate.weight_per_square_foot)
+          BigDecimal(@material.substrate.weight_per_square_foot)
+        else
+          ratio = BigDecimal(@variant.weight) / BigDecimal(@variant.substrate.weight_per_square_foot)
+          (BigDecimal(@material.substrate.weight_per_square_foot) * ratio)
         end
       end
 

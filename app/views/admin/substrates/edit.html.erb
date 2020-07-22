@@ -8,6 +8,7 @@
 <%= render partial: 'admin/shared/header' %>
 
 <%= content_tag :div, class: 'row' do %>
+
   <%= content_tag :div, class: 'col-md-9' do %>
     <%= form_for [:admin, @substrate] do |f| %>
       <%= field_set_tag nil, 'data-hook': 'substrate_edit' do %>
@@ -21,4 +22,5 @@
   <%= content_tag :div, class: 'col-md-3' do %>
     <%= render partial: 'admin/substrates/subnav', locals: { current: 'details' } %>
   <% end %>
+
 <% end %>

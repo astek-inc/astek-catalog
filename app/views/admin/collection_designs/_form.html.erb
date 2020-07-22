@@ -29,14 +29,10 @@
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>
 
-<%#= content_tag :div, class: ['form-group'] do %>
-    <%#= f.label :description, 'Description' %>
-    <%#= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
-<%# end %>
-
 <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :keywords, 'Keywords' %> <span class="required">*</span>
-    <%= f.text_area :keywords, rows: 3, required: true, class: 'form-control' %>
+  <%= f.label :keyword_list, 'Keywords' %>
+  <%#= f.text_field :keyword_list, value: @design.keyword_list.join(', '), class: 'form-control', "data-role": 'tagsinput' %>
+  <%= f.text_field :keyword_list, value: @design.keyword_list.join(', '), class: 'form-control' %>
 <% end %>
 
 <%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
@@ -56,14 +52,14 @@
     <%= content_tag :div, class: 'col-md-6' do %>
         <%= content_tag :div, class: ['form-group'] do %>
             <%= f.label :available_on, 'Available on' %>
-            <%= f.text_field :available_on, value: datepicker_field_value(@design.available_on), class: 'datepicker form-control' %>
+            <%= f.text_field :available_on, value: datepicker_field_value(@design.available_on), class: 'datepicker form-control', autocomplete: 'new-password' %>
         <% end %>
     <% end %>
 
     <%= content_tag :div, class: 'col-md-6' do %>
         <%= content_tag :div, class: ['form-group'] do %>
             <%= f.label :expires_on, 'Expires on' %>
-            <%= f.text_field :expires_on, value: datepicker_field_value(@design.expires_on), class: 'datepicker form-control' %>
+            <%= f.text_field :expires_on, value: datepicker_field_value(@design.expires_on), class: 'datepicker form-control', autocomplete: 'new-password' %>
         <% end %>
     <% end %>
 <% end %>
@@ -78,8 +74,8 @@
 
   <%= content_tag :div, class: 'col-md-6' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :country_id, 'Country of Origin' %> <span class="required">*</span>
-      <%= f.collection_select :country_id, @countries, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+      <%= f.label :country_id, 'Country of Origin' %>
+      <%= f.collection_select :country_id, @countries, :id, :name, { prompt: 'Select' }, { required: false, class: 'form-control' } %>
     <% end %>
   <% end %>
 <% end %>
@@ -103,22 +99,22 @@
 <%= content_tag :div, class: 'row' do %>
   <%= content_tag :div, class: 'col-md-4' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :sale_unit, 'Sale Unit' %> <span class="required">*</span>
-      <%= f.collection_select :sale_unit_id, SaleUnit.all, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+      <%= f.label :sale_unit, 'Sale Unit' %>
+      <%= f.collection_select :sale_unit_id, SaleUnit.all, :id, :name, { prompt: 'Select' }, { required: false, class: 'form-control' } %>
     <% end %>
   <% end %>
 
   <%= content_tag :div, class: 'col-md-4' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :sale_quantity, 'Sale Quantity' %> <span class="required">*</span>
-      <%= f.number_field :sale_quantity, required: true, class: 'form-control' %>
+      <%= f.label :sale_quantity, 'Sale Quantity' %>
+      <%= f.number_field :sale_quantity, required: false, class: 'form-control' %>
     <% end %>
   <% end %>
 
   <%= content_tag :div, class: 'col-md-4' do %>
     <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :minimum_quantity, 'Minimum Order' %> <span class="required">*</span>
-      <%= f.number_field :minimum_quantity, required: true, class: 'form-control' %>
+      <%= f.label :minimum_quantity, 'Minimum Order' %>
+      <%= f.number_field :minimum_quantity, required: false, class: 'form-control' %>
     <% end %>
   <% end %>
 <% end %>

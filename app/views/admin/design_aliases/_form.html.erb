@@ -1,0 +1,36 @@
+<script>
+  $(function() {
+    Astek.design_aliases.design_name_autocomplete();
+  });
+</script>
+
+<%= f.hidden_field :collection_id, value: @collection.id %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <% if @design_alias.new_record? %>
+    <%= label_tag 'design_id', 'Design' %> <span class="required">*</span>
+    <%= text_field_tag "design_name_#{SecureRandom.hex}", nil, { id: 'design_name', class: 'form-control', required: true, autocomplete: 'off' } %>
+  <% else %>
+    <%= label_tag 'design_id', 'Design' %>
+    <p><%= @design_alias.design.name %></p>
+  <% end %>
+  <%= f.hidden_field :design_id %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :description, 'Description' %>
+  <%= f.text_area :description, rows: 6, required: false, class: 'form-control' %>
+<% end %>
+
+<%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Websites', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:design_alias, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box({ disabled: @design_alias.collection.websites.map { |w| w.id }.exclude?(b.value) }) + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

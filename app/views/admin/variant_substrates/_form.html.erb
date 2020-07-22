@@ -1,0 +1,23 @@
+<%= f.hidden_field :variant_id, value: @variant.id %>
+
+<%= field_set_tag nil, 'data-hook': 'variant-install-image-info' do %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :substrate_id, 'Substrate' %> <span class="required">*</span>
+      <%= f.collection_select :substrate_id, @substrates, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= field_set_tag nil, 'data-hook': 'variant-substrate-websites' do %>
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <%= content_tag :div, 'Websites', class: 'panel-heading' %>
+    <%= content_tag :div, class: 'panel-body' do %>
+      <%= collection_check_boxes(:variant_substrate, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box({ disabled: @variant.websites.map { |w| w.id }.exclude?(b.value) }) + b.text } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

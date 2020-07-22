@@ -16,6 +16,9 @@ class Variant < ApplicationRecord
   belongs_to :substrate, optional: true
   belongs_to :backing_type, optional: true
 
+  has_many :variant_substrates
+  has_many :substrates, through: :variant_substrates
+
   has_many :variant_swatch_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   has_many :variant_install_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
@@ -24,7 +27,7 @@ class Variant < ApplicationRecord
 
   validates :variant_type_id, presence: true
   validates :name, presence: true
-  validates :sku, presence: true
+  validates :sku, presence: true, uniqueness: true
 
   # def has_color? find_color
   #   self.colors.include? find_color
@@ -33,7 +36,12 @@ class Variant < ApplicationRecord
   scope :with_color, ->(color_name) { joins(:colors).where('colors.name = ?', color_name) }
 
   def title
-    self.design.name
+    out = ''
+    if self.design.collection.prepend_collection_name_to_design_names
+      out += self.design.collection.name + ' | '
+    end
+    out += self.design.name
+    out
   end
 
   # Sites require weight in grams, in whole numbers (no decimals)
@@ -94,6 +102,11 @@ class Variant < ApplicationRecord
 
   def install_images_for_domain domain
     self.variant_install_images.for_domain domain
+  end
+
+  def substrate_for_domain domain
+    variant_substrates = self.variant_substrates.for_domain(domain)
+    variant_substrates.first.substrate unless variant_substrates.empty?
   end
 
 end

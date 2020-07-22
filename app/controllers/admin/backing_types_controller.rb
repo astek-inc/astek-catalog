@@ -16,7 +16,7 @@ module Admin
       @backing_type = BackingType.new(backing_type_params)
       if @backing_type.save
         flash[:notice] = 'Backing type created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @backing_type.id)
       else
         flash[:error] = error_message @backing_type
         render('new')
@@ -29,7 +29,7 @@ module Admin
     def update
       if @backing_type.update(backing_type_params)
         flash[:notice] = 'Backing type updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @backing_type.id)
       else
         flash[:error] = error_message @backing_type
         render('edit')

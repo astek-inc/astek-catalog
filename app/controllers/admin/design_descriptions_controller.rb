@@ -16,9 +16,9 @@ module Admin
 
     def create
       @description = Description.new(description_params)
-      require 'pp'
-      pp @description
-      puts '- '*30
+      # require 'pp'
+      # pp @description
+      # puts '- '*30
       if @description.save
         flash[:notice] = 'Description created.'
         redirect_to(action: 'index')

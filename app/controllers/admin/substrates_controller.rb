@@ -2,10 +2,10 @@ module Admin
   class SubstratesController < Admin::BaseController
 
     before_action :set_substrate, only: [:edit, :update, :destroy]
-    before_action :set_substrate_categories, only: [:new, :create, :edit, :update]
+    before_action :set_substrate_categories, :set_websites, only: [:new, :create, :edit, :update]
 
     def index
-      @substrates = Substrate.page params[:page]
+      @substrates = Substrate.page(params[:page]).includes(:backing_type, :websites)
     end
 
     def new
@@ -16,7 +16,7 @@ module Admin
       @substrate = Substrate.new(substrate_params)
       if @substrate.save
         flash[:notice] = 'Substrate created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @substrate.id)
       else
         flash[:error] = error_message @substrate
         render('new')
@@ -29,7 +29,7 @@ module Admin
     def update
       if @substrate.update(substrate_params)
         flash[:notice] = 'Substrate updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @substrate.id)
       else
         flash[:error] = error_message @substrate
         render('edit')
@@ -38,6 +38,8 @@ module Admin
 
     def destroy
       @substrate.destroy
+      flash[:notice] = 'Substrate removed.'
+      redirect_to(action: 'index')
     end
 
     private
@@ -50,10 +52,14 @@ module Admin
       @substrate_categories = SubstrateCategory.all
     end
 
+    def set_websites
+      @websites = Website.all
+    end
+
     def substrate_params
       params.require(:substrate).permit(
-          :name, :description, :display_on_public_sites, :display_name, :display_description, :keywords, :backing_type_id,
-          :default_custom_material_group, :custom_material_surcharge, :weight_per_square_foot, substrate_category_ids: []
+          :name, :description, :display_name, :display_description, :keywords, :backing_type_id,
+          :default_custom_material_group, :custom_material_surcharge, :weight_per_square_foot, substrate_category_ids: [], website_ids: []
       )
     end
 

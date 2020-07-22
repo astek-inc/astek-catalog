@@ -1,0 +1,58 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Substrates', admin_substrates_path),
+      link_to(@substrate.name, edit_admin_substrate_path(@substrate)),
+      'Descriptions'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Description', new_admin_substrate_description_path(@substrate), class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+
+  <%= content_tag :div, class: 'col-md-9' do %>
+
+    <% if @descriptions.any? %>
+
+      <%= content_tag :div, class: 'table-responsive' do %>
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Description</th>
+            <th>Websites</th>
+            <th class="actions"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @descriptions.each do |description| %>
+            <tr class="product_property fields" data-hook="description">
+              <td><%= truncate(sanitize(description.description), length: 120) %></td>
+              <td><%= description.websites.map { |w| w.name }.join(', ') %></td>
+              <td class="actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                  <%= edit_button edit_admin_substrate_description_path @substrate, description %>
+                  <%= delete_button admin_substrate_description_path @substrate, description %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+    <% else %>
+      <p>No descriptions found. <%= link_to 'Create one.', new_admin_substrate_description_path(@substrate) %></p>
+    <% end %>
+
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/substrates/subnav', locals: { current: 'descriptions' } %>
+  <% end %>
+
+<% end %>

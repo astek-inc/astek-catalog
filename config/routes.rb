@@ -30,7 +30,7 @@ Rails.application.routes.draw do
         get 'generate_shopify_collection_csv', defaults: { format: 'csv' }
         get 'generate_shopify_design_csv', defaults: { format: 'csv' }
         get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
-        get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
+        # get 'generate_shopify_skus_csv', defaults: { format: 'csv' }
         get 'generate_shopify_all_csv', defaults: { format: 'csv' }
         get 'fedex_export_by_collection'
         get 'fedex_export_by_design'
@@ -39,24 +39,41 @@ Rails.application.routes.draw do
         get 'generate_fedex_collection_csv', defaults: { format: 'csv' }
         get 'generate_fedex_design_csv', defaults: { format: 'csv' }
         get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
-        get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
+        # get 'generate_fedex_skus_csv', defaults: { format: 'csv' }
         get 'generate_fedex_all_csv', defaults: { format: 'csv' }
       end
     end
 
-    get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
-    resources :order_limits_exports, only: :index
+    # get 'order_limits_exports/generate_csv', to: 'order_limits_exports#generate_csv', as: 'order_limits_export_generate_csv', defaults: { format: 'csv' }
+    resources :order_limits_exports, only: [] do
+      collection do
+        get 'export_by_collection'
+        get 'export_by_design'
+        # get 'export_by_sku'
+        get 'generate_collection_csv', defaults: { format: 'csv' }
+        get 'generate_design_csv', defaults: { format: 'csv' }
+        # get 'generate_skus_csv', defaults: { format: 'csv' }
+      end
+    end
 
-    resources :substrate_exports, only: :index #, defaults: { format: 'json' }
+    resources :substrate_exports, only: :index do
+      get 'export_by_domain', on: :collection
+    end
 
     resources :colors, except: [:show, :delete]
 
     resources :lead_times, except: [:show, :delete]
 
     resources :substrates, except: [:show, :delete], concerns: :paginatable do
-      resources :substrate_images, only: [:index, :new, :create, :show, :destroy] do
+      resources :substrate_print_images, only: [:index, :new, :create, :show, :destroy] do
         post :update_row_order, on: :collection
       end
+
+      resources :substrate_texture_images, only: [:index, :new, :create, :show, :destroy] do
+        post :update_row_order, on: :collection
+      end
+
+      resources :descriptions, controller: :substrate_descriptions
     end
 
     resources :substrate_categories, except: [:show, :delete], concerns: :paginatable
@@ -81,13 +98,25 @@ Rails.application.routes.draw do
 
     resources :product_categories, except: [:show, :delete], concerns: :paginatable
 
+    resources :keywords, concerns: :paginatable, except: [:show, :delete] do
+      get :list, on: :collection, defaults: { format: 'json' }
+    end
+
     resources :collections, concerns: :paginatable, except: [:show, :delete] do
+
       get :csv_export_search, on: :collection
+
       resources :designs, concerns: :paginatable, controller: :collection_designs do
         post :update_row_order, on: :collection
         get :custom_materials, on: :member
       end
+
       resources :subcollections, except: [:show, :delete]
+
+      resources :design_aliases, except: [:show, :delete] do
+        post :update_row_order, on: :collection
+      end
+
     end
 
     resources :subcollection_types, except: [:show, :delete]
@@ -96,6 +125,7 @@ Rails.application.routes.draw do
     resources :designs, only: [], concerns: :paginatable do
       get :search, on: :collection
       get :csv_export_search, on: :collection
+      get :design_alias_search, on: :collection
 
       # resources :design_styles #, only: :index
 
@@ -123,9 +153,20 @@ Rails.application.routes.draw do
       resources :variant_install_images do
         post :update_row_order, on: :collection
       end
+
+      resources :variant_substrates, except: [:show, :delete]
     end
 
     resources :variant_types, except: [:show, :delete]
+
+    resources :sku_prefixes, except: [:show, :delete]
+
+    resources :skus, only: [] do
+      get :next_available, on: :collection
+      get :find_next_available, on: :collection
+      get :validate, on: :collection
+      get :validation, on: :collection
+    end
 
   end
 

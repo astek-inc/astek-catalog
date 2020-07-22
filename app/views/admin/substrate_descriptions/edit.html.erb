@@ -1,0 +1,26 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Substrates', admin_substrates_path),
+      link_to(@substrate.name, edit_admin_substrate_path(@substrate)),
+      link_to('Descriptions', admin_substrate_descriptions_path(@substrate)),
+      'Edit Description'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+    <%= form_for [:admin, @substrate, @description] do |f| %>
+      <%= field_set_tag nil, 'data-hook': 'substrate_edit' do %>
+        <%= render partial: 'form', locals: { f: f } %>
+      <% end %>
+
+      <%= form_buttons admin_substrate_descriptions_path(@substrate) %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-3' do %>
+    <%= render partial: 'admin/substrates/subnav', locals: { current: 'descriptions' } %>
+  <% end %>
+<% end %>

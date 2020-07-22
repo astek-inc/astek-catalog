@@ -1,6 +1,8 @@
 module Admin
   class VendorsController < Admin::BaseController
 
+    before_action :set_vendor, only: [:edit, :update, :delete, :destroy]
+
     def index
       @vendors = Vendor.all
     end
@@ -15,41 +17,38 @@ module Admin
         flash[:notice] = 'Vendor created.'
         redirect_to(action: 'index')
       else
-        if @vendor.errors.any?
-          msg = @vendor.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating vendor.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @vendor
         render('new')
       end
     end
 
     def edit
-      @vendor = Vendor.find(params[:id])
     end
 
     def update
-      @vendor = Vendor.find(params[:id])
       if @vendor.update_attributes(vendor_params)
         flash[:notice] = 'Vendor updated.'
         redirect_to(action: 'index')
       else
+        flash[:error] = error_message @vendor
         render('edit')
       end
     end
 
     def delete
-      @vendor = Vendor.find(params[:id])
     end
 
     def destroy
-      Vendor.find(params[:id]).destroy
+      @vendor.destroy
       flash[:notice] = "Vendor removed."
       redirect_to(action: 'index')
     end
 
     private
+
+    def set_vendor
+      @vendor = Vendor.find(params[:id])
+    end
 
     def vendor_params
       params.require(:vendor).permit(:name, :description)

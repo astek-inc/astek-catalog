@@ -1,15 +1,15 @@
 source 'https://rubygems.org'
 
-ruby '2.5.3'
+ruby '2.5.7'
 
-gem 'rails', '5.2.2.1'
+gem 'rails', '5.2.4.3'
 gem 'active_model_serializers'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use postgresql as the database for Active Record
- gem 'pg'
+gem 'pg'
 # Lock PG gem to 0.20 to suppress PGconn, PGresult, and PGError constant deprecation warning
 #gem 'pg', '~> 0.20.0'
 
@@ -56,8 +56,12 @@ gem 'ransack', github: 'activerecord-hackery/ransack'
 # Background jobs
 gem 'sucker_punch'
 
-# Conjugate verbs in controlller error messages
+# Conjugate verbs in controller error messages
 gem 'verbs'
+
+# Keyword tags
+gem 'acts-as-taggable-on', '~> 6.0'
+gem 'twitter-typeahead-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

@@ -3,13 +3,14 @@ module Admin
 
     before_action :set_design, only: [:update, :edit, :destroy, :custom_materials]
     before_action :set_collection, except: [:edit]
-    before_action :set_sale_units, :set_styles, :set_countries, :set_websites, only: [:new, :edit]
+    before_action :set_sale_units, :set_styles, :set_countries, :set_websites, only: [:new, :create, :edit, :update]
     before_action :set_substrates, only: [:custom_materials]
     before_action :set_default_custom_material, only: [:custom_materials]
 
     def index
-      @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
-      @position_start = (@designs.current_page.present? ? @designs.current_page - 1 : 0) * @designs.limit_value
+      # @designs = Design.where(collection_id: @collection.id).rank(:row_order).page params[:page]
+      # @position_start = (@designs.current_page.present? ? @designs.current_page - 1 : 0) * @designs.limit_value
+      @designs = Design.where(collection_id: @collection.id).page(params[:page]).includes(:websites)
     end
 
     def new
@@ -21,14 +22,9 @@ module Admin
       @design = Design.new(design_params)
       if @design.save
         flash[:notice] = 'Design created.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @design.id)
       else
-        if @design.errors.any?
-          msg = @design.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating design.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @design
         render('new')
       end
     end
@@ -46,8 +42,9 @@ module Admin
         end
 
         flash[:notice] = 'Design updated.'
-        redirect_to(action: 'index')
+        redirect_to(action: 'edit', id: @design.id)
       else
+        flash[:error] = error_message @design
         render('edit')
       end
     end
@@ -56,13 +53,13 @@ module Admin
     #   @design = Design.find(params[:id])
     # end
 
-    def update_row_order
-      @design = Design.find(params[:item_id])
-      @design.row_order_position = params[:row_order_position]
-      @design.save
-
-      render nothing: true
-    end
+    # def update_row_order
+    #   @design = Design.find(params[:item_id])
+    #   @design.row_order_position = params[:row_order_position]
+    #   @design.save
+    #
+    #   render nothing: true
+    # end
 
     def destroy
       @design.destroy
@@ -123,10 +120,10 @@ module Admin
 
     def design_params
       params.require(:design).permit(
-          :sku, :master_sku, :name, :description, :keywords, :collection_id, :vendor_id,
+          :sku, :master_sku, :name, :description, :collection_id, :vendor_id,
           :price_code, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity,
           :available_on, :expires_on, :country_id, :suppress_from_searches, :user_can_select_material,
-          style_ids: [], substrate_ids: [], website_ids: []
+          :keyword_list, style_ids: [], substrate_ids: [], website_ids: []
       )
     end
 

@@ -1,0 +1,21 @@
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-8' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label(:prefix, 'Prefix <span class="required">*</span>'.html_safe) %>
+      <%= f.text_field :prefix, required: true, class: 'form-control' %>
+    <% end %>
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-4' do %>
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :separator %>
+      <%= f.text_field :separator, class: 'form-control' %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: ['form-group'] do %>
+  <%= f.label :description %>
+  <%= f.text_area :description, rows: 3, class: 'form-control' %>
+<% end %>

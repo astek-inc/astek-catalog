@@ -223,7 +223,7 @@ module Admin
               if variant.install_images_for_domain(website)
                 variant.install_images_for_domain(website).each do |image|
                   @image_index += 1
-                  csv << ['D-'+design.sku] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
+                  csv << [design.handle] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
 
                 end
               end
@@ -240,8 +240,7 @@ module Admin
           TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
-          # Add a prefix to ensure that this is distinct from any variant SKU
-          'D-'+variant.design.sku
+          variant.design.handle
 
         elsif attr == 'body'
           body_for_domain variant, domain
@@ -449,7 +448,7 @@ module Admin
               (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
             else
               if material
-                material_variant_weight material, variant
+                material_variant_weight material, variant, domain
               else
                 variant.variant_grams
               end
@@ -483,7 +482,11 @@ module Admin
               if material
                 (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
               else
-                variant.price
+                if variant.price.blank?
+                  0
+                else
+                  variant.price
+                end
               end
             end
           when 'onairdesign.com'
@@ -539,7 +542,11 @@ module Admin
           # end
 
         elsif attr == 'seo_title'
-          variant.design.name
+          if variant.design.collection.prepend_collection_name_to_design_names
+            variant.design.collection.name + ' | ' + variant.design.name
+          else
+            variant.design.name
+          end
 
         elsif attr == 'seo_description'
           variant.design.description_for_domain domain
@@ -616,7 +623,7 @@ module Admin
           body += format_description description
         end
 
-        body += format_business_properties variant
+        body += format_business_properties variant, domain
 
         if variant.tearsheet.file
           body += format_tearsheet_links variant
@@ -648,43 +655,43 @@ module Admin
         </div>'
       end
 
-      def format_business_properties variant
+      def format_business_properties variant, domain
         formatted = '<div class="description__meta">'
 
         unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.gsub("\'", "").parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
-        if variant.substrate
+        if variant_substrate = variant.substrate_for_domain(domain)
           formatted += '<div>
             <h5>Substrate</h5>
             <p>Type II</p>
           </div>'
         end
-        # '+variant.format_substrate_name+'
 
         if variant.backing_type
           formatted += '<div>
             <h5>Backing</h5>
             <p>'+variant.backing_type.name+'</p>
           </div>'
-        elsif variant.substrate.backing_type
+        elsif variant_substrate && variant_substrate.backing_type
           formatted += '<div>
             <h5>Backing</h5>
-            <p>'+variant.substrate.backing_type.name+'</p>
+            <p>'+variant_substrate.backing_type.name+'</p>
           </div>'
         end
 
+        if variant.design.sale_unit.present?
+          formatted += '<div>
+              <h5>Sold By</h5>
+              <p>'+variant.design.sale_unit.name+'</p>
+            </div>'
+        end
 
-        formatted += '<div>
-            <h5>Sold By</h5>
-            <p>'+variant.design.sale_unit.name+'</p>
-          </div>'
-
-        if variant.design.price_code
+        if variant.design.price_code.present?
           formatted += '<div>
             <h5>Price Code</h5>
             <p>'+variant.design.price_code+'</p>
@@ -810,7 +817,7 @@ module Admin
       end
 
       def format_property_value dp
-        if matches = dp.property.name.match(/_(?<unit>inches|yards|meters)\Z/)
+        if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
           "#{dp.value} #{matches[:unit]}"
         elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Untrimmed].include?(dp.value)
           # Value for margin trim can be numeric, but we display "Untrimmed"
@@ -821,12 +828,15 @@ module Admin
       end
 
       # If the printed width of a given design is less than standard, more physical material
-      # may be required to complete a given order, so the weight may be more than standard
-      def material_variant_weight material, variant
-        if BigDecimal(variant.weight) == BigDecimal(variant.substrate.weight_per_square_foot)
+      # may be required to complete a given order, so the weight of a square foot of a variant
+      # is given as more than standard. We want to apply the same increase to the custom material
+      # options
+      def material_variant_weight material, variant, domain
+        variant_substrate = variant.substrate_for_domain domain
+        if BigDecimal(variant.weight) == BigDecimal(variant_substrate.weight_per_square_foot)
           (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
         else
-          ratio = BigDecimal(variant.weight) / BigDecimal(variant.substrate.weight_per_square_foot)
+          ratio = BigDecimal(variant.weight) / BigDecimal(variant_substrate.weight_per_square_foot)
           (BigDecimal(material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
         end
       end

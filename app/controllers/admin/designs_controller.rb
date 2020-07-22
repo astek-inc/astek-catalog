@@ -20,5 +20,10 @@ module Admin
       render json: @designs, each_serializer: DesignSearchResultSerializer, root: nil, adapter: :attributes
     end
 
+    def design_alias_search
+      @designs = Design.available.where('designs.name LIKE ? OR designs.sku LIKE ?', params[:term] + '%', params[:term] + '%').order('designs.name')
+      render json: @designs, each_serializer: DesignSearchResultSerializer, root: nil, adapter: :attributes
+    end
+
   end
 end

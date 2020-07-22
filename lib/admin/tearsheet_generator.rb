@@ -96,10 +96,11 @@ module Admin
       def product_info_to_columns
 
         info = []
-        if @variant.substrate
+
+        if display_substrate
           info << 'MATERIAL: '+ format_substrate_name
-          if @variant.substrate.backing_type && @variant.substrate.backing_type.name != 'None'
-            info << 'BACKING: ' + @variant.substrate.backing_type.name
+          if display_substrate.backing_type && display_substrate.backing_type.name != 'None'
+            info << 'BACKING: ' + display_substrate.backing_type.name
           end
         end
 
@@ -121,9 +122,9 @@ module Admin
 
       def format_substrate_name
 
-        name = @variant.substrate.name
+        name = display_substrate.name
 
-        category_names = @variant.substrate.substrate_categories.map { |c| c.name }
+        category_names = display_substrate.substrate_categories.map { |c| c.name }
         paren_items = []
 
         if category_names.include? 'Type II'
@@ -140,6 +141,15 @@ module Admin
 
         name
 
+      end
+
+      # On astek.com, we don't print on paper
+      def display_substrate
+        if @variant.substrate_for_domain('astek.com').name == 'Paper'
+          Substrate.find_by(name: 'Matte Vinyl')
+        else
+          @variant.substrate_for_domain('astek.com')
+        end
       end
 
       def format_property_value dp

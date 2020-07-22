@@ -1,0 +1,28 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'SKU Tools',
+      link_to('Validate SKUs', validate_admin_skus_path)
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+
+    <%= form_tag validation_admin_skus_path, method: :get do %>
+
+        <%= content_tag :div, class: ['form-group'] do %>
+          <%= label_tag :skus, 'SKUs' %>
+          <%= text_area_tag :skus, nil, { rows: 6, class: 'form-control' } %>
+          <p class="help-block">Enter or paste a comma- and/or whitespace-separated
+            list of SKUs to see if they are available.</p>
+        <% end %>
+
+
+      <%= submit_button %>
+    <% end %>
+
+
+  <% end %>
+<% end %>

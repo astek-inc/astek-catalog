@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_15_184730) do
+ActiveRecord::Schema.define(version: 2020_06_12_200057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -32,12 +32,13 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.string "name"
     t.text "description"
     t.integer "lead_time_id"
-    t.text "keywords"
+    t.text "old_keywords"
     t.boolean "suppress_from_display", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.boolean "suppress_sample_option_from_display", default: false, null: false
+    t.boolean "prepend_collection_name_to_design_names", default: false, null: false
     t.index ["deleted_at"], name: "index_collections_on_deleted_at"
     t.index ["suppress_from_display"], name: "index_collections_on_suppress_from_display"
   end
@@ -109,6 +110,16 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.index ["descriptionable_type"], name: "index_descriptions_on_descriptionable_type"
   end
 
+  create_table "design_aliases", force: :cascade do |t|
+    t.integer "collection_id"
+    t.integer "design_id"
+    t.text "description"
+    t.integer "row_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["row_order"], name: "index_design_aliases_on_row_order"
+  end
+
   create_table "design_properties", id: :serial, force: :cascade do |t|
     t.integer "design_id"
     t.integer "property_id"
@@ -126,7 +137,7 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.string "name"
     t.string "sku"
     t.text "description"
-    t.text "keywords"
+    t.text "old_keywords"
     t.decimal "price", precision: 8, scale: 2
     t.integer "sale_unit_id"
     t.integer "sale_quantity", default: 1
@@ -170,6 +181,13 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.index ["owner_id"], name: "index_images_on_owner_id"
     t.index ["row_order"], name: "index_images_on_row_order"
     t.index ["type"], name: "index_images_on_type"
+  end
+
+  create_table "keywords", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_keywords_on_name"
   end
 
   create_table "lead_times", id: :serial, force: :cascade do |t|
@@ -255,6 +273,17 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sku_prefixes", force: :cascade do |t|
+    t.string "prefix"
+    t.string "separator"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_sku_prefixes_on_deleted_at"
+    t.index ["prefix"], name: "index_sku_prefixes_on_prefix"
+  end
+
   create_table "states", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "abbr"
@@ -319,6 +348,33 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.index ["deleted_at"], name: "index_substrates_on_deleted_at"
   end
 
+  create_table "taggings", id: :serial, force: :cascade do |t|
+    t.integer "tag_id"
+    t.string "taggable_type"
+    t.integer "taggable_id"
+    t.string "tagger_type"
+    t.integer "tagger_id"
+    t.string "context", limit: 128
+    t.datetime "created_at"
+    t.index ["context"], name: "index_taggings_on_context"
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_id", "taggable_type", "context"], name: "taggings_taggable_context_idx"
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
+    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
+    t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
+  end
+
+  create_table "tags", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer "taggings_count", default: 0
+    t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -340,6 +396,15 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
     t.integer "user_id"
     t.integer "role_id"
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+  end
+
+  create_table "variant_substrates", force: :cascade do |t|
+    t.integer "variant_id"
+    t.integer "substrate_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["substrate_id", "variant_id"], name: "index_variant_substrates_on_substrate_id_and_variant_id"
+    t.index ["variant_id", "substrate_id"], name: "index_variant_substrates_on_variant_id_and_substrate_id"
   end
 
   create_table "variant_types", id: :serial, force: :cascade do |t|
@@ -402,6 +467,8 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
 
   add_foreign_key "collections", "lead_times"
   add_foreign_key "collections", "product_categories"
+  add_foreign_key "design_aliases", "collections"
+  add_foreign_key "design_aliases", "designs"
   add_foreign_key "designs", "collections"
   add_foreign_key "designs", "countries"
   add_foreign_key "designs", "sale_units"
@@ -410,6 +477,7 @@ ActiveRecord::Schema.define(version: 2019_11_15_184730) do
   add_foreign_key "product_types", "product_categories"
   add_foreign_key "states", "countries"
   add_foreign_key "substrates", "backing_types"
+  add_foreign_key "taggings", "tags"
   add_foreign_key "variants", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "product_types"

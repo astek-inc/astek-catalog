@@ -17,12 +17,7 @@ module Admin
         flash[:notice] = 'Sale unit created.'
         redirect_to(action: 'index')
       else
-        if @sale_unit.errors.any?
-          msg = @sale_unit.errors.full_messages.join(', ')
-        else
-          msg = 'Error creating sale unit.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @sale_unit
         render('new')
       end
     end
@@ -35,12 +30,7 @@ module Admin
         flash[:notice] = 'Sale unit updated.'
         redirect_to(action: 'index')
       else
-        if @sale_unit.errors.any?
-          msg = @sale_unit.errors.full_messages.join(', ')
-        else
-          msg = 'Error updating sale unit.'
-        end
-        flash[:error] = msg
+        flash[:error] = error_message @sale_unit
         render('edit')
       end
     end

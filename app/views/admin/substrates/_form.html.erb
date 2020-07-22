@@ -8,42 +8,46 @@
   <%# end %>
 <%# end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label(:name, 'Description') %>
-  <%= f.text_area :description, rows: 6, class: 'form-control' %>
-<% end %>
+<%#= content_tag :div, class: ['form-group'] do %>
+  <%#= f.label(:name, 'Description') %>
+  <%#= f.text_area :description, rows: 6, class: 'form-control' %>
+<%# end %>
 
-<%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label(:name, 'Keywords') %>
-  <%= f.text_area :keywords, rows: 3, class: 'form-control' %>
-<% end %>
+<%#= content_tag :div, class: ['form-group'] do %>
+  <%#= f.label(:name, 'Keywords') %>
+  <%#= f.text_area :keywords, rows: 3, class: 'form-control' %>
+<%# end %>
 
 <%= content_tag :div, class: 'panel panel-default' do %>
-  <%= content_tag :div, 'Public Websites', class: 'panel-heading' %>
+  <%= content_tag :div, 'Websites', class: 'panel-heading' %>
     <%= content_tag :div, class: 'panel-body' do %>
 
-      <%= content_tag :div, class: ['form-group'] do %>
-        <%= content_tag :div, class: ['checkbox'], id: 'display_on_public_sites' do %>
-          <%= f.label :display_on_public_sites do %>
-            <%= f.check_box :display_on_public_sites %> Display on Public Sites
-          <% end %>
+      <%= collection_check_boxes(:substrate, :website_ids, @websites, :id, :name) do |b| %>
+        <%= content_tag :div, class: 'checkbox-inline' do %>
+          <%= b.label() { b.check_box + b.text } %>
         <% end %>
-      <% end %>
-
-      <%#= content_tag :div, class: 'col-md-6' do %>
-        <%= content_tag :div, class: ['form-group'] do %>
-          <%= f.label :display_name, 'Display Name' %>
-          <%= f.text_field :display_name, class: 'form-control' %>
-        <% end %>
-      <%# end %>
-
-      <%= content_tag :div, class: ['form-group'] do %>
-        <%= f.label(:name, 'Display Description') %>
-        <%= f.text_area :display_description, rows: 6, class: 'form-control' %>
       <% end %>
 
   <% end %>
 <% end %>
+
+<%#= content_tag :div, class: 'panel panel-default' do %>
+  <%#= content_tag :div, 'Website Display Values', class: 'panel-heading' %>
+
+  <%#= content_tag :div, class: 'panel-body' do %>
+
+    <%= content_tag :div, class: ['form-group'] do %>
+      <%= f.label :display_name, 'Display Name' %>
+      <%= f.text_field :display_name, class: 'form-control' %>
+    <% end %>
+
+    <%#= content_tag :div, class: ['form-group'] do %>
+      <%#= f.label(:name, 'Display Description') %>
+      <%#= f.text_area :display_description, rows: 6, class: 'form-control' %>
+    <%# end %>
+
+  <%# end %>
+<%# end %>
 
 <%= field_set_tag nil, 'data-hook': 'substrate_edit' do %>
   <%= content_tag :div, class: 'panel panel-default' do %>

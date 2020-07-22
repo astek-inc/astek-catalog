@@ -230,7 +230,7 @@ module Admin
           TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
-          'DG-'+design.subcollection.id.to_s
+          design.subcollection.handle
 
         elsif attr == 'body'
           case domain
@@ -246,24 +246,17 @@ module Admin
           end
 
         elsif attr == 'option_1_name'
-          case domain
-          when 'astek.com'
-            'Colorway'
-          when 'astekhome.com'
-            design.subcollection.subcollection_type.name
-          end
+          design.subcollection.subcollection_type.name
 
         elsif attr == 'option_1_value'
-          case domain
-          when 'astek.com'
-            case variant_type
-            when 'custom', 'custom_sample'
-              'Custom'
-            else
-              design.variants.first.name
+          case design.subcollection.subcollection_type.name
+          when 'Roll Width'
+            case domain
+            when 'astek.com'
+              design.property('roll_width_inches') + ' inches'
+            when 'astekhome.com'
+              design.property('roll_width_inches')
             end
-          when 'astekhome.com'
-            design.property 'roll_width_inches'
           end
 
         elsif attr == 'image_src'
@@ -595,6 +588,7 @@ module Admin
 
         design.design_properties.each do |dp|
           next if /\Aroll_length_/ =~ dp.property.name && design.sale_unit.name != 'Roll'
+          next if /\Aroll_width_/ =~ dp.property.name && design.subcollection.subcollection_type.name == 'Roll Width'
           formatted += '<div>
             <h5>'+dp.property.presentation+'</h5>
             <p>'+format_property_value(dp)+'</p>
