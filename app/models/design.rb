@@ -17,6 +17,13 @@ class Design < ApplicationRecord
 
   scope :available, -> { where('expires_on IS NULL OR expires_on >= NOW()') }
   scope :unsubcollected, -> { where('subcollection_id IS NULL') }
+  scope :digital, -> {
+    unscope(:order)
+        .joins(variants: :variant_type)
+        .joins(collection: :product_category)
+        .where('product_categories.name = ?', 'Digital')
+        .available.order('variants.sku ASC')
+  }
   default_scope { order(name: :asc) }
 
   belongs_to :collection

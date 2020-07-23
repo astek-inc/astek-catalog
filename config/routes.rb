@@ -16,6 +16,13 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    resources :reports, only: [] do
+      collection do
+        get 'digital_products_by_sku'
+        get 'generate_digital_products_by_sku_csv', defaults: { format: 'csv' }
+      end
+    end
+
     resources :product_imports, except: [:show, :delete], concerns: :paginatable
 
     resources :product_exports, only: [] do
