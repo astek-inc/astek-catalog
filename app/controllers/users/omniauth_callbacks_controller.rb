@@ -5,13 +5,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
 
-      unless @user.has_role? :admin
-        flash[:alert] = 'You are not authorized to use this application.'
-        redirect_to :new_user_session and return
-      end
+      # unless @user.has_role? :admin
+      #   flash[:alert] = 'You are not authorized to use this application.'
+      #   redirect_to :new_user_session and return
+      # end
 
       flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: 'Google'
       sign_in_and_redirect @user, event: :authentication
+
     end
 
     # else
