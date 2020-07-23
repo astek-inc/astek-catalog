@@ -1,0 +1,26 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      'Reports',
+      'Digital Products by SKU'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+
+<%= content_tag :div, class: 'row' do %>
+  <%= content_tag :div, class: 'col-md-9' do %>
+
+    <p class="help-block">
+      Click the button to generate a CSV file of all digital products sorted byy SKU.
+    </p>
+
+    <%= form_tag generate_digital_products_by_sku_csv_admin_reports_path, method: :get do %>
+      <%#= content_tag :div, { class: 'col-md-2' } do %>
+        <%= submit_button %>
+      <%# end %>
+    <% end %>
+
+  <% end %>
+<% end %>
+
