@@ -1,0 +1,15 @@
+
+
+  <% if index % 3 == 0 %>
+    <div class="row">
+  <% end %>
+
+  <%= content_tag :div, class: 'col-md-4' do %>
+
+    <%= image_tag(design.variants.first.variant_swatch_images.first.file.url(:small), width: 150, height: 150) %>
+    <p><%= link_to(design.name, design_path(design)) %></p>
+  <% end %>
+
+  <% if index % 3 == 2 || index + 1 == design_count %>
+    </div>
+  <% end %>
