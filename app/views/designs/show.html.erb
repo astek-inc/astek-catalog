@@ -1,1 +1,20 @@
-<%= debug @design %>
+<%= content_tag :div, class: 'row' do %>
+
+  <%= content_tag :h1, @design.name %>
+  <%= content_tag :h2, @design.sku %>
+
+  <h2>Descriptions</h2>
+  <% if @design.descriptions.any? %>
+    <% @design.descriptions.each do |desc| %>
+      <%= content_tag :p, desc.websites.map { |w| w.name }.join(', ') %>
+      <%= content_tag :p, desc.description, class: 'lead' %>
+    <% end %>
+  <% else %>
+    <%= content_tag :p, 'No descriptions for this design.', class: 'lead' %>
+  <% end %>
+
+  <h2>Variants</h2>
+  <%= render partial: 'variant', collection: @design.variants %>
+
+  <%= debug @design %>
+<% end %>
