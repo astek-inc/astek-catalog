@@ -3,15 +3,19 @@
 <% end %>
 
 <%= content_tag :div, class: 'collection col-md-4' do %>
-  <%= link_to(
-          image_tag(
-              collection.designs.first.variants.first.variant_swatch_images.first.file.url(:large),
-              width: 350,
-              height: 350
-          ),
-          collection_path(collection)
-      ) %>
-  <p><%= link_to(collection.name, collection_path(collection)) %></p>
+  <%= content_tag :div, class: 'thumbnail' do %>
+    <%= link_to(
+            image_tag(
+                collection.designs.first.variants.first.variant_swatch_images.first.file.url(:large),
+                width: 350,
+                height: 350
+            ),
+            collection_path(collection)
+        ) %>
+    <%= content_tag :div, class: 'caption' do %>
+      <h3><%= link_to(collection.name, collection_path(collection)) %></h3>
+    <% end %>
+  <% end %>
 <% end %>
 
 <% if collection_counter % 3 == 2 || collection_counter + 1 == @collections.count %>
