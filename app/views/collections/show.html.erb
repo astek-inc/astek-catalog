@@ -1,18 +1,8 @@
-
-<style>
-  /*div.collection-designs div.row {*/
-  /*  background: greenyellow;*/
-  /*  margin-bottom: 2rem;*/
-  /*  border: 1px solid black;*/
-  /*}*/
-</style>
-
+<% content_for :title, 'Collections | ' + @collection.name %>
 
 <%= content_tag :h1, @collection.name %>
 <%= content_tag :p, @collection.description, class: 'lead' %>
 
 <%= content_tag :div, class: 'collection-designs' do %>
-  <% @collection.designs.each_with_index do |design, i| %>
-    <%= render partial: 'design', locals: { design: design, index: i, design_count: @collection.designs.count } %>
-  <% end %>
+  <%= render partial: 'design', collection: @collection.designs %>
 <% end %>
