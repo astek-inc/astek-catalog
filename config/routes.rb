@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   resources :collections, only: [:index, :show], concerns: :paginatable
   resources :designs, only: [:index, :show], concerns: :paginatable
+  resources :variants, only: [:index, :show]
 
   namespace :admin do
 

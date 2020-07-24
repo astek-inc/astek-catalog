@@ -1,0 +1,20 @@
+<% if variant_counter % 3 == 0 %>
+  <div class="row">
+<% end %>
+
+<%= content_tag :div, class: 'col-md-4' do %>
+  <%= content_tag :div, class: 'thumbnail' do %>
+    <%= link_to(
+            image_tag(
+                variant.variant_swatch_images.first.file.url(:large)
+            ),
+            variant_path(variant)
+        )
+    %>
+    <p><%= link_to(variant.name, variant_path(variant)) %></p>
+  <% end %>
+<% end %>
+
+<% if variant_counter % 3 == 2 || variant_counter + 1 == @design.variants.count %>
+  </div>
+<% end %>
