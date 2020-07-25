@@ -1,16 +1,38 @@
 <%= content_tag :div, class: 'row' do %>
 
-  <%= content_tag :h1, @design.name %>
-  <%= content_tag :h2, @design.sku %>
+  <%= content_tag :h1, "#{@design.name} <small>#{@design.sku}</small>".html_safe %>
 
-  <h2>Descriptions</h2>
-  <% if @design.descriptions.any? %>
-    <% @design.descriptions.each do |desc| %>
-      <%= content_tag :p, desc.websites.map { |w| w.name }.join(', ') %>
-      <%= content_tag :p, desc.description, class: 'lead' %>
+  <%= content_tag :h2, 'Descriptions' %>
+
+  <%= content_tag :div, class: 'panel panel-default' do %>
+    <% if @design.descriptions.any? %>
+
+      <% @design.descriptions.each do |desc| %>
+        <%= content_tag :div, class: 'panel-heading' do %>
+          <%= content_tag :h3, desc.websites.map { |w| w.name }.join(', '), class: 'panel-title' %>
+        <% end %>
+        <%= content_tag :div, class: 'panel-body' do %>
+          <%= content_tag :p, desc.description %>
+        <% end %>
+      <% end %>
+
+    <% else %>
+
+      <%= content_tag :div, class: 'panel-body' do %>
+        <%= content_tag :p, 'No descriptions for this design.', class: 'lead' %>
+      <% end %>
+
     <% end %>
-  <% else %>
-    <%= content_tag :p, 'No descriptions for this design.', class: 'lead' %>
+  <% end %>
+
+  <%= content_tag :h2, 'Properties' %>
+  <% if @design.design_properties.any? %>
+    <% @design.design_properties.each do |dp| %>
+      <%= content_tag :div, class: 'design-property col-md-4' do %>
+        <%= content_tag :p, dp.property.presentation, class: 'text-capitalize' %>
+        <%= content_tag :p, dp.value %>
+      <% end %>
+    <% end %>
   <% end %>
 
   <h2>Variants</h2>

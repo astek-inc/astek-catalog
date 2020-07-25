@@ -11,7 +11,8 @@
             variant_path(variant)
         )
     %>
-    <p><%= link_to(variant.name, variant_path(variant)) %></p>
+    <%= content_tag :h3, link_to(variant.name, variant_path(variant)) %>
+    <%= content_tag :h4, variant.sku %>
   <% end %>
 <% end %>
 
