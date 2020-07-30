@@ -436,7 +436,10 @@ class Design < ApplicationRecord
         when '36'
           if self.minimum_quantity == 4
             'sold-by__YardAMin4'
+          elsif self.minimum_quantity == 6
+            'sold-by__YardIMin6'
           end
+
         when '37'
           if self.minimum_quantity == 4
             'sold-by__YardFMin4'
