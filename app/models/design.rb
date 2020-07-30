@@ -363,6 +363,8 @@ class Design < ApplicationRecord
           case roll_length
           when '9'
             'sold-by__RollC'
+          when '11'
+            'sold-by__RollAS'
           when '15'
             'sold-by__RollD'
           end
