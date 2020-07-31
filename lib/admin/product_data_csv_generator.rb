@@ -755,6 +755,12 @@ module Admin
         end
 
         formatted += '</div>'
+
+        formatted += '<script>
+          var Astek = Astek || {};
+          Astek.calculator_settings = ' + variant.design.calculator_settings + ';
+        </script>'
+
         formatted
       end
 

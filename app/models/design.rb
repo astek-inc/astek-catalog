@@ -146,7 +146,7 @@ class Design < ApplicationRecord
     end
 
     if domain == 'astekhome.com'
-      tags << self.calculator_tag
+      # tags << self.calculator_tag
 
       if self.digital?
         tags += self.material_tags unless self.material_tags.nil?
@@ -496,6 +496,62 @@ class Design < ApplicationRecord
       end
       material_tags
     end
+  end
+
+  def calculator_settings
+
+    case self.sale_unit.name
+    when 'Roll'
+      width = self.property('roll_width_inches')
+      length = self.property('roll_length_yards')
+      {
+          note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} yd.)</span>",
+          divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('36', 9))),
+          minimum: self.minimum_quantity,
+          sale_unit: %w[roll rolls]
+      }.to_json
+
+    when 'Yard'
+      width = self.property('roll_width_inches')
+      length = '36'
+
+      parenthetical_note = "#{width} in. wide roll, sold per yard."
+      if self.minimum_quantity > 1
+        parenthetical_note += " This product has a minimum order quantity of #{self.minimum_quantity} yards."
+      end
+
+      {
+          note: "Indicate no. of Yards <span>(#{parenthetical_note})</span>",
+          divisor: (BigDecimal(width, 9) * BigDecimal(length, 9)),
+          minimum: self.minimum_quantity,
+          sale_unit: %w[yard yards]
+      }.to_json
+
+    when 'Meter'
+      width = self.property('roll_width_inches')
+      length = '39.37'
+
+      parenthetical_note = "#{width} in. wide roll, sold per meter."
+      if self.minimum_quantity > 1
+        parenthetical_note += " This product has a minimum order quantity of #{self.minimum_quantity} meters."
+      end
+
+      {
+          note: "Indicate no. of Meters <span>(#{parenthetical_note})</span>",
+          divisor: (BigDecimal(width, 9) * BigDecimal(length, 9)),
+          minimum: self.minimum_quantity,
+          sale_unit: %w[meter meters]
+      }.to_json
+
+    when 'Square Foot'
+      {
+          note: "Indicate no. of Square Feet<br><span>This product is custom printed. Minimum order quantity of #{self.minimum_quantity} square feet. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
+          divisor: 144,
+          minimum: self.minimum_quantity,
+          sale_unit: ['square foot', 'square feet']
+      }.to_json
+    end
+
   end
 
   class << self
