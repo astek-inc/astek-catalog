@@ -3,7 +3,7 @@ require "#{Rails.root}/lib/admin/tearsheet_generator.rb"
 module Admin
   module ImportProductFromCsvItem
 
-    MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO = ['Brewster', 'Wallquest']
+    MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO = ['Brewster', 'Thibaut', 'Wallquest']
 
     KEYWORD_REPLACEMENTS = [
         ['20s', '1920s'],
