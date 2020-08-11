@@ -665,23 +665,26 @@ module Admin
             </div>'
         end
 
-        if variant_substrate = variant.substrate_for_domain(domain)
+        if variant.design.digital?
+        # if variant_substrate = variant.substrate_for_domain(domain)
           formatted += '<div>
             <h5>Substrate</h5>
             <p>Type II</p>
           </div>'
         end
 
-        if variant.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant.backing_type.name+'</p>
-          </div>'
-        elsif variant_substrate && variant_substrate.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant_substrate.backing_type.name+'</p>
-          </div>'
+        unless variant.design.digital?
+          if variant.backing_type
+            formatted += '<div>
+              <h5>Backing</h5>
+              <p>'+variant.backing_type.name+'</p>
+            </div>'
+          # elsif variant_substrate && variant_substrate.backing_type
+          #   formatted += '<div>
+          #     <h5>Backing</h5>
+          #     <p>'+variant_substrate.backing_type.name+'</p>
+          #   </div>'
+          end
         end
 
         if variant.design.sale_unit.present?
