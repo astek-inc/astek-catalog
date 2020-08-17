@@ -665,23 +665,26 @@ module Admin
             </div>'
         end
 
-        if variant_substrate = variant.substrate_for_domain(domain)
+        if variant.design.digital?
+        # if variant_substrate = variant.substrate_for_domain(domain)
           formatted += '<div>
             <h5>Substrate</h5>
             <p>Type II</p>
           </div>'
         end
 
-        if variant.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant.backing_type.name+'</p>
-          </div>'
-        elsif variant_substrate && variant_substrate.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant_substrate.backing_type.name+'</p>
-          </div>'
+        unless variant.design.digital?
+          if variant.backing_type
+            formatted += '<div>
+              <h5>Backing</h5>
+              <p>'+variant.backing_type.name+'</p>
+            </div>'
+          # elsif variant_substrate && variant_substrate.backing_type
+          #   formatted += '<div>
+          #     <h5>Backing</h5>
+          #     <p>'+variant_substrate.backing_type.name+'</p>
+          #   </div>'
+          end
         end
 
         if variant.design.sale_unit.present?
@@ -755,6 +758,12 @@ module Admin
         end
 
         formatted += '</div>'
+
+        formatted += '<script>
+          var Astek = Astek || {};
+          Astek.calculator_settings = ' + variant.design.calculator_settings + ';
+        </script>'
+
         formatted
       end
 
@@ -819,7 +828,7 @@ module Admin
       def format_property_value dp
         if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
           "#{dp.value} #{matches[:unit]}"
-        elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Untrimmed].include?(dp.value)
+        elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Pretrimmed Untrimmed].include?(dp.value)
           # Value for margin trim can be numeric, but we display "Untrimmed"
           'Untrimmed'
         else

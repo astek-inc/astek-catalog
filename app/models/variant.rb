@@ -46,7 +46,7 @@ class Variant < ApplicationRecord
 
   # Sites require weight in grams, in whole numbers (no decimals)
   def variant_grams
-    (self.weight * BigDecimal('453.592')).round.to_s
+    (self.weight * BigDecimal('453.592')).round.to_s unless self.weight.nil?
   end
 
   def published?

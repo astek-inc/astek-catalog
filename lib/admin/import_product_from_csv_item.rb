@@ -3,7 +3,7 @@ require "#{Rails.root}/lib/admin/tearsheet_generator.rb"
 module Admin
   module ImportProductFromCsvItem
 
-    MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO = ['Brewster', 'Wallquest']
+    MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO = ['Brewster', 'Thibaut', 'Wallquest']
 
     KEYWORD_REPLACEMENTS = [
         ['20s', '1920s'],
@@ -454,7 +454,7 @@ module Admin
           end
         end
 
-        if collection.product_category.name == 'Digital'
+        if collection.product_category.name == 'Digital' && variant.websites.map{ |w| w.domain }.include?('astek.com')
           puts 'Generating tearsheet'
           # This is a workaround. Accented characters seem to throw a Prawn error if read directly from the CSV file,
           # but they are OK when pulled from the database.
