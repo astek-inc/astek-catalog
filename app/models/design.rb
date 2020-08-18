@@ -88,6 +88,10 @@ class Design < ApplicationRecord
     CustomMaterial.find_or_create_by!(design: self, substrate: substrate, default_material: substrate.name == 'Paper')
   end
 
+  def delete_custom_material substrate
+    CustomMaterial.find_by(design: self, substrate: substrate).destroy
+  end
+
   def available?
     self.expires_on.nil? || self.expires_on > Time.now
   end
