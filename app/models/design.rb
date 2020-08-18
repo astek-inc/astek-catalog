@@ -110,6 +110,8 @@ class Design < ApplicationRecord
     else
       if self.collection.prepend_collection_name_to_design_names
         self.collection.name.parameterize + '-' + self.name.parameterize + '-d-' + self.sku.parameterize
+      elsif self.collection.append_collection_name_to_design_names
+        self.name.parameterize + '-' + self.collection.name.parameterize + '-d-' + self.sku.parameterize
       else
         self.name.parameterize + '-d-' + self.sku.parameterize
       end

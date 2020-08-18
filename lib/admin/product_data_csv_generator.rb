@@ -544,6 +544,8 @@ module Admin
         elsif attr == 'seo_title'
           if variant.design.collection.prepend_collection_name_to_design_names
             variant.design.collection.name + ' | ' + variant.design.name
+          elsif variant.design.collection.append_collection_name_to_design_names
+            variant.design.name + ' | ' + variant.design.collection.name
           else
             variant.design.name
           end

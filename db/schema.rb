@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_12_200057) do
+ActiveRecord::Schema.define(version: 2020_08_17_232136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_200057) do
     t.datetime "deleted_at"
     t.boolean "suppress_sample_option_from_display", default: false, null: false
     t.boolean "prepend_collection_name_to_design_names", default: false, null: false
+    t.boolean "append_collection_name_to_design_names", default: false, null: false
     t.index ["deleted_at"], name: "index_collections_on_deleted_at"
     t.index ["suppress_from_display"], name: "index_collections_on_suppress_from_display"
   end

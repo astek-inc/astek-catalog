@@ -68,7 +68,14 @@
           <%= f.check_box :prepend_collection_name_to_design_names %> Prepend collection name to design names
         <% end %>
       <% end %>
+
+      <%= content_tag :div, class: 'checkbox', id: 'append_collection_name_to_design_names' do %>
+        <%= f.label :append_collection_name_to_design_names do %>
+          <%= f.check_box :append_collection_name_to_design_names %> Append collection name to design names
+        <% end %>
+      <% end %>
     <% end %>
+
 
   <% end %>
 <% end %>
