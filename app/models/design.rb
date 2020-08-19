@@ -89,7 +89,9 @@ class Design < ApplicationRecord
   end
 
   def delete_custom_material substrate
-    CustomMaterial.find_by(design: self, substrate: substrate).destroy
+    if cm = CustomMaterial.find_by(design: self, substrate: substrate)
+      cm.destroy
+    end
   end
 
   def available?
