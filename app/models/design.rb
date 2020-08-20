@@ -106,10 +106,10 @@ class Design < ApplicationRecord
     self.variants.map { |v| v.variant_type.name }.include? 'Color Way'
   end
 
-  def exists_in_peel_and_stick_version?
+  def peel_and_stick_version
     if self.digital?
       sku = 'PS' + self.sku
-      Design.exists?(sku: sku)
+      Design.find_by(sku: sku)
     end
   end
 
