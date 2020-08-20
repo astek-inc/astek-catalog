@@ -106,6 +106,13 @@ class Design < ApplicationRecord
     self.variants.map { |v| v.variant_type.name }.include? 'Color Way'
   end
 
+  def exists_in_peel_and_stick_version?
+    if self.digital?
+      sku = 'PS' + self.sku
+      Design.exists?(sku: sku)
+    end
+  end
+
   # For Shopify
   # If product has an actual name (as opposed to just a SKU for its name),
   # include it for SEO purposes, and prepend "d" (for "design") to the SKU
@@ -159,6 +166,10 @@ class Design < ApplicationRecord
       if self.digital?
         tags += self.material_tags unless self.material_tags.nil?
       end
+
+      # if self.exists_in_peel_and_stick_version?
+      #   tags <<
+      # end
     end
 
     tags.join(', ')
@@ -511,13 +522,21 @@ class Design < ApplicationRecord
     case self.sale_unit.name
     when 'Roll'
       width = self.property('roll_width_inches')
-      length = self.property('roll_length_yards')
-      {
-          note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} yd.)</span>",
-          divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('36', 9))),
-          minimum: self.minimum_quantity,
-          sale_unit: %w[roll rolls]
-      }.to_json
+      if length = self.property('roll_length_yards')
+        {
+            note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} yd.)</span>",
+            divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('36', 9))),
+            minimum: self.minimum_quantity,
+            sale_unit: %w[roll rolls]
+        }.to_json
+      elsif length = self.property('roll_length_feet')
+        {
+            note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} ft.)</span>",
+            divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('12', 9))),
+            minimum: self.minimum_quantity,
+            sale_unit: %w[roll rolls]
+        }.to_json
+      end
 
     when 'Yard'
       width = self.property('roll_width_inches')
