@@ -766,6 +766,13 @@ module Admin
           Astek.calculator_settings = ' + variant.design.calculator_settings + ';
         </script>'
 
+        if design = variant.design.peel_and_stick_version
+          formatted += "<script>
+            var Astek = Astek || {};
+            Astek.peel_and_stick_version_handle = '#{design.handle}';
+          </script>"
+        end
+
         formatted
       end
 
