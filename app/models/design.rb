@@ -36,7 +36,7 @@ class Design < ApplicationRecord
 
   has_many :design_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
-  has_many :design_properties, dependent: :destroy, inverse_of: :design
+  has_many :design_properties, -> { order(row_order: :asc) }, dependent: :destroy, inverse_of: :design
   has_many :properties, through: :design_properties
 
   has_many :design_aliases, dependent: :destroy
