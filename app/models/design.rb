@@ -577,7 +577,30 @@ class Design < ApplicationRecord
           minimum: self.minimum_quantity,
           sale_unit: ['square foot', 'square feet']
       }.to_json
+
+    when 'Set'
+      width = self.property 'panel_width_inches'
+      height = self.property 'panel_height_inches'
+      quantity = self.property 'panels_per_set'
+
+      {
+          note: "Indicate no. of Sets of #{quantity} Panels<br><span>Minimum order quantity of #{self.minimum_quantity} set. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
+          divisor: (BigDecimal(width, 9) * BigDecimal(height, 9) * BigDecimal(quantity, 9)),
+          minimum: self.minimum_quantity,
+          sale_unit: ['set', 'sets']
+      }.to_json
+
+    when 'Panel'
+      width = self.property 'panel_width_inches'
+      height = self.property 'panel_height_inches'
+      {
+          note: "Indicate no. of Panels<br><span>We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
+          divisor: (BigDecimal(width, 9) * BigDecimal(height, 9)),
+          minimum: self.minimum_quantity,
+          sale_unit: ['set', 'sets']
+      }.to_json
     end
+
 
   end
 
