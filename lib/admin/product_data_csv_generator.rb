@@ -208,11 +208,13 @@ module Admin
               end
 
               if website == 'astekhome.com'
-                unless design.collection.suppress_sample_option_from_display
+                murals = ProductType.find_by(name: 'Murals')
+                unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
                   csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
                 end
               end
             end
+
           end
 
           # This is for astek.com, and astekhome.com designs which don't have colorways.
