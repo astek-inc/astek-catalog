@@ -99,7 +99,11 @@ class Design < ApplicationRecord
   end
 
   def digital?
-    self.collection.product_category.name == 'Digital'
+    %w[Digital Theme].include? self.collection.product_category.name
+  end
+
+  def distributed?
+    %w[Naturals Specialty].include? self.collection.product_category.name
   end
 
   def has_colorways?
