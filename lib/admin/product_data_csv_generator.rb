@@ -804,6 +804,9 @@ module Admin
             motif_width_inches
             mural_height_inches
             mural_width_inches
+            panel_height_inches
+            panel_width_inches
+            panels_per_set
             printed_width_inches
             repeat_match_type
             roll_length_meters
