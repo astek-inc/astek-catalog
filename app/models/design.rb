@@ -1,5 +1,11 @@
 class Design < ApplicationRecord
 
+  TAG_SEPARATORS = {
+      'astek.com': '__',
+      'astekhome.com': '__',
+      'onairdesign.com': ':'
+  }
+
   resourcify
 
   # include RankedModel
@@ -136,17 +142,19 @@ class Design < ApplicationRecord
   end
 
   def tags domain
+
+    separator = tag_separator domain
     
     # Designs which should not show up in search results should have only the
     # tag "legacy__SKU" assigned to them. This will tell the Shopify system not
     # to display them except within their collections.
     if self.suppress_from_searches
-      tags = ['legacy__SKU']
+      tags = ["legacy#{separator}SKU"]
     else
       tags = []
 
-      tags += to_tags('style', self.styles.map { |s| s.name })
-      tags += to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.parameterize } }.flatten.uniq)
+      tags += to_tags('style', self.styles.map { |s| s.name }, separator)
+      tags += to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.parameterize } }.flatten.uniq, separator)
 
       if domain == 'astek.com'
         if self.digital?
@@ -158,17 +166,19 @@ class Design < ApplicationRecord
       end
 
       if all_keywords = self.merged_keywords
-        tags += to_tags('keyword', all_keywords)
+        tags += to_tags('keyword', all_keywords, separator)
       end
 
-      tags += to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
+      tags += to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq, separator)
     end
 
     if domain == 'astekhome.com'
       # tags << self.calculator_tag
 
       if self.digital?
-        tags += self.material_tags unless self.material_tags.nil?
+        if self.material_tags separator
+          tags += self.material_tags separator
+        end
       end
 
       # if self.exists_in_peel_and_stick_version?
@@ -180,16 +190,20 @@ class Design < ApplicationRecord
 
   end
 
-  def to_tags name, values
+  def tag_separator domain
+    TAG_SEPARATORS[domain.to_sym]
+  end
+
+  def to_tags(name, values, separator)
     tags = []
     values.each do |value|
-      tags << to_tag(name, value)
+      tags << to_tag(name, value, separator)
     end
     tags
   end
 
-  def to_tag name, value
-    "#{name}__#{value.strip}"
+  def to_tag(name, value, separator = '__')
+    "#{name}#{separator}#{value.strip}"
   end
 
   def merged_keywords
@@ -511,11 +525,11 @@ class Design < ApplicationRecord
 
   end
 
-  def material_tags
+  def material_tags separator
     if self.custom_materials.any?
       material_tags = []
       self.custom_materials.each do |m|
-        material_tags << to_tag('material', m.name.parameterize)
+        material_tags << to_tag('material', m.name.parameterize, separator)
       end
       material_tags
     end
