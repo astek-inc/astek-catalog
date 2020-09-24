@@ -670,11 +670,14 @@ module Admin
         end
 
         if variant.design.digital?
-        # if variant_substrate = variant.substrate_for_domain(domain)
-          formatted += '<div>
-            <h5>Substrate</h5>
-            <p>Type II</p>
-          </div>'
+          # This property has to apply to all variants, so we are making sure that they are all TYpe II.
+          vs = variant.design.variants
+          if vs.select { |v| v.substrate_for_domain(domain).substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == vs.count
+            formatted += '<div>
+              <h5>Substrate</h5>
+              <p>Type II</p>
+            </div>'
+          end
         end
 
         unless variant.design.digital?
