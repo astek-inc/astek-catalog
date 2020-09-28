@@ -615,7 +615,7 @@ class Design < ApplicationRecord
           note: "Indicate no. of Panels<br><span>We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
           divisor: (BigDecimal(width, 9) * BigDecimal(height, 9)),
           minimum: self.minimum_quantity,
-          sale_unit: ['set', 'sets']
+          sale_unit: ['panel', 'panels']
       }.to_json
     end
 
