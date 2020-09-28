@@ -597,13 +597,21 @@ class Design < ApplicationRecord
       }.to_json
 
     when 'Set'
-      width = self.property 'panel_width_inches'
-      height = self.property 'panel_height_inches'
-      quantity = self.property 'panels_per_set'
+
+      # If we have dimensions for the whole mural, we'll use those. Otherwise,
+      # we'll use the dimensions of each panel and multiply by the number of panels.
+      if (width = self.property('mural_width_inches') && height = self.property('mural_height_inches'))
+        divisor = BigDecimal(width, 9) * BigDecimal(height, 9)
+      else
+        width = self.property 'panel_width_inches'
+        height = self.property 'panel_height_inches'
+        quantity = self.property 'panels_per_set'
+        divisor = (BigDecimal(width, 9) * BigDecimal(height, 9) * BigDecimal(quantity, 9))
+      end
 
       {
           note: "Indicate no. of Sets of #{quantity} Panels<br><span>Minimum order quantity of #{self.minimum_quantity} set. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
-          divisor: (BigDecimal(width, 9) * BigDecimal(height, 9) * BigDecimal(quantity, 9)),
+          divisor: divisor,
           minimum: self.minimum_quantity,
           sale_unit: ['set', 'sets']
       }.to_json
