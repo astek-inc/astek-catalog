@@ -27,7 +27,13 @@ class Design < ApplicationRecord
     unscope(:order)
         .joins(variants: :variant_type)
         .joins(collection: :product_category)
-        .where('product_categories.name = ?', 'Digital')
+        .where({ 'product_categories.name': %w[Digital] })
+        .available.order('variants.sku ASC')
+  }
+  scope :distributed, -> {
+    unscope(:order)
+        .joins({ variants: :variant_type }, { collection: :product_category })
+        .where({ 'product_categories.name': %w[Naturals Specialty] })
         .available.order('variants.sku ASC')
   }
   default_scope { order(name: :asc) }
@@ -105,7 +111,7 @@ class Design < ApplicationRecord
   end
 
   def digital?
-    %w[Digital Theme].include? self.collection.product_category.name
+    %w[Digital].include? self.collection.product_category.name
   end
 
   def distributed?
