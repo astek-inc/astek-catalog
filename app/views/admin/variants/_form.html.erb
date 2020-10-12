@@ -60,8 +60,8 @@
 
 <% unless @design.digital? %>
   <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :backing_type_id, 'Backing' %> <span class="required">*</span>
-    <%= f.collection_select :backing_type_id, @backing_types, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+    <%= f.label :backing_type_id, 'Backing' %>
+    <%= f.collection_select :backing_type_id, @backing_types, :id, :name, { prompt: 'Select' }, { required: false, class: 'form-control' } %>
   <% end %>
 <% end %>
 

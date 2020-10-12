@@ -208,11 +208,13 @@ module Admin
               end
 
               if website == 'astekhome.com'
-                unless design.collection.suppress_sample_option_from_display
+                murals = ProductType.find_by(name: 'Murals')
+                unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
                   csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
                 end
               end
             end
+
           end
 
           # This is for astek.com, and astekhome.com designs which don't have colorways.
@@ -544,6 +546,8 @@ module Admin
         elsif attr == 'seo_title'
           if variant.design.collection.prepend_collection_name_to_design_names
             variant.design.collection.name + ' | ' + variant.design.name
+          elsif variant.design.collection.append_collection_name_to_design_names
+            variant.design.name + ' | ' + variant.design.collection.name
           else
             variant.design.name
           end
@@ -666,11 +670,14 @@ module Admin
         end
 
         if variant.design.digital?
-        # if variant_substrate = variant.substrate_for_domain(domain)
-          formatted += '<div>
-            <h5>Substrate</h5>
-            <p>Type II</p>
-          </div>'
+          # This property has to apply to all variants, so we are making sure that they are all TYpe II.
+          vs = variant.design.variants
+          if vs.select { |v| v.substrate_for_domain(domain).substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == vs.count
+            formatted += '<div>
+              <h5>Substrate</h5>
+              <p>Type II</p>
+            </div>'
+          end
         end
 
         unless variant.design.digital?
@@ -764,6 +771,13 @@ module Admin
           Astek.calculator_settings = ' + variant.design.calculator_settings + ';
         </script>'
 
+        if design = variant.design.peel_and_stick_version
+          formatted += "<script>
+            var Astek = Astek || {};
+            Astek.peel_and_stick_version_handle = '#{design.handle}';
+          </script>"
+        end
+
         formatted
       end
 
@@ -793,6 +807,9 @@ module Admin
             motif_width_inches
             mural_height_inches
             mural_width_inches
+            panel_height_inches
+            panel_width_inches
+            panels_per_set
             printed_width_inches
             repeat_match_type
             roll_length_meters

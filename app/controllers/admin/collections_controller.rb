@@ -70,8 +70,7 @@ module Admin
       params.require(:collection).permit(
           :name, :description, :keywords, :product_category_id, :lead_time_id,
           :suppress_from_display, :suppress_sample_option_from_display, :prepend_collection_name_to_design_names,
-          :keyword_list,
-          website_ids: []
+          :append_collection_name_to_design_names, :keyword_list, website_ids: []
       )
     end
 

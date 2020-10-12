@@ -1,5 +1,11 @@
 class Design < ApplicationRecord
 
+  TAG_SEPARATORS = {
+      'astek.com': '__',
+      'astekhome.com': '__',
+      'onairdesign.com': ':'
+  }
+
   resourcify
 
   # include RankedModel
@@ -21,7 +27,13 @@ class Design < ApplicationRecord
     unscope(:order)
         .joins(variants: :variant_type)
         .joins(collection: :product_category)
-        .where('product_categories.name = ?', 'Digital')
+        .where({ 'product_categories.name': %w[Digital] })
+        .available.order('variants.sku ASC')
+  }
+  scope :distributed, -> {
+    unscope(:order)
+        .joins({ variants: :variant_type }, { collection: :product_category })
+        .where({ 'product_categories.name': %w[Naturals Specialty] })
         .available.order('variants.sku ASC')
   }
   default_scope { order(name: :asc) }
@@ -36,7 +48,7 @@ class Design < ApplicationRecord
 
   has_many :design_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
-  has_many :design_properties, dependent: :destroy, inverse_of: :design
+  has_many :design_properties, -> { order(row_order: :asc) }, dependent: :destroy, inverse_of: :design
   has_many :properties, through: :design_properties
 
   has_many :design_aliases, dependent: :destroy
@@ -88,16 +100,33 @@ class Design < ApplicationRecord
     CustomMaterial.find_or_create_by!(design: self, substrate: substrate, default_material: substrate.name == 'Paper')
   end
 
+  def delete_custom_material substrate
+    if cm = CustomMaterial.find_by(design: self, substrate: substrate)
+      cm.destroy
+    end
+  end
+
   def available?
     self.expires_on.nil? || self.expires_on > Time.now
   end
 
   def digital?
-    self.collection.product_category.name == 'Digital'
+    %w[Digital].include? self.collection.product_category.name
+  end
+
+  def distributed?
+    %w[Naturals Specialty].include? self.collection.product_category.name
   end
 
   def has_colorways?
     self.variants.map { |v| v.variant_type.name }.include? 'Color Way'
+  end
+
+  def peel_and_stick_version
+    if self.digital?
+      sku = 'PS' + self.sku
+      Design.find_by(sku: sku)
+    end
   end
 
   # For Shopify
@@ -110,6 +139,8 @@ class Design < ApplicationRecord
     else
       if self.collection.prepend_collection_name_to_design_names
         self.collection.name.parameterize + '-' + self.name.parameterize + '-d-' + self.sku.parameterize
+      elsif self.collection.append_collection_name_to_design_names
+        self.name.parameterize + '-' + self.collection.name.parameterize + '-d-' + self.sku.parameterize
       else
         self.name.parameterize + '-d-' + self.sku.parameterize
       end
@@ -117,17 +148,19 @@ class Design < ApplicationRecord
   end
 
   def tags domain
+
+    separator = tag_separator domain
     
     # Designs which should not show up in search results should have only the
     # tag "legacy__SKU" assigned to them. This will tell the Shopify system not
     # to display them except within their collections.
     if self.suppress_from_searches
-      tags = ['legacy__SKU']
+      tags = ["legacy#{separator}SKU"]
     else
       tags = []
 
-      tags += to_tags('style', self.styles.map { |s| s.name })
-      tags += to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.parameterize } }.flatten.uniq)
+      tags += to_tags('style', self.styles.map { |s| s.name }, separator)
+      tags += to_tags('type', self.variants.map { |v| v.product_types.select { |t| t.websites.map { |w| w.domain }.include?(domain) }.map { |t| t.name.parameterize } }.flatten.uniq, separator)
 
       if domain == 'astek.com'
         if self.digital?
@@ -139,34 +172,44 @@ class Design < ApplicationRecord
       end
 
       if all_keywords = self.merged_keywords
-        tags += to_tags('keyword', all_keywords)
+        tags += to_tags('keyword', all_keywords, separator)
       end
 
-      tags += to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq)
+      tags += to_tags('color', self.variants.map { |v| v.colors.map { |c| c.name } }.flatten.uniq, separator)
     end
 
     if domain == 'astekhome.com'
       # tags << self.calculator_tag
 
       if self.digital?
-        tags += self.material_tags unless self.material_tags.nil?
+        if self.material_tags separator
+          tags += self.material_tags separator
+        end
       end
+
+      # if self.exists_in_peel_and_stick_version?
+      #   tags <<
+      # end
     end
 
     tags.join(', ')
 
   end
 
-  def to_tags name, values
+  def tag_separator domain
+    TAG_SEPARATORS[domain.to_sym]
+  end
+
+  def to_tags(name, values, separator)
     tags = []
     values.each do |value|
-      tags << to_tag(name, value)
+      tags << to_tag(name, value, separator)
     end
     tags
   end
 
-  def to_tag name, value
-    "#{name}__#{value.strip}"
+  def to_tag(name, value, separator = '__')
+    "#{name}#{separator}#{value.strip}"
   end
 
   def merged_keywords
@@ -488,11 +531,11 @@ class Design < ApplicationRecord
 
   end
 
-  def material_tags
+  def material_tags separator
     if self.custom_materials.any?
       material_tags = []
       self.custom_materials.each do |m|
-        material_tags << to_tag('material', m.name.parameterize)
+        material_tags << to_tag('material', m.name.parameterize, separator)
       end
       material_tags
     end
@@ -503,13 +546,21 @@ class Design < ApplicationRecord
     case self.sale_unit.name
     when 'Roll'
       width = self.property('roll_width_inches')
-      length = self.property('roll_length_yards')
-      {
-          note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} yd.)</span>",
-          divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('36', 9))),
-          minimum: self.minimum_quantity,
-          sale_unit: %w[roll rolls]
-      }.to_json
+      if length = self.property('roll_length_yards')
+        {
+            note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} yd.)</span>",
+            divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('36', 9))),
+            minimum: self.minimum_quantity,
+            sale_unit: %w[roll rolls]
+        }.to_json
+      elsif length = self.property('roll_length_feet')
+        {
+            note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} ft.)</span>",
+            divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('12', 9))),
+            minimum: self.minimum_quantity,
+            sale_unit: %w[roll rolls]
+        }.to_json
+      end
 
     when 'Yard'
       width = self.property('roll_width_inches')
@@ -550,7 +601,40 @@ class Design < ApplicationRecord
           minimum: self.minimum_quantity,
           sale_unit: ['square foot', 'square feet']
       }.to_json
+
+    when 'Set'
+
+      # If we have dimensions for the whole mural, we'll use those. Otherwise,
+      # we'll use the dimensions of each panel and multiply by the number of panels.
+      if (self.property('mural_width_inches') && self.property('mural_height_inches'))
+        width = self.property('mural_width_inches')
+        height = self.property('mural_height_inches')
+        divisor = BigDecimal(width, 9) * BigDecimal(height, 9)
+      else
+        width = self.property 'panel_width_inches'
+        height = self.property 'panel_height_inches'
+        quantity = self.property 'panels_per_set'
+        divisor = (BigDecimal(width, 9) * BigDecimal(height, 9) * BigDecimal(quantity, 9))
+      end
+
+      {
+          note: "Indicate no. of Sets of #{quantity} Panels<br><span>Minimum order quantity of #{self.minimum_quantity} set. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
+          divisor: divisor,
+          minimum: self.minimum_quantity,
+          sale_unit: ['set', 'sets']
+      }.to_json
+
+    when 'Panel'
+      width = self.property 'panel_width_inches'
+      height = self.property 'panel_height_inches'
+      {
+          note: "Indicate no. of Panels<br><span>We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
+          divisor: (BigDecimal(width, 9) * BigDecimal(height, 9)),
+          minimum: self.minimum_quantity,
+          sale_unit: ['panel', 'panels']
+      }.to_json
     end
+
 
   end
 

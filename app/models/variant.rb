@@ -36,12 +36,21 @@ class Variant < ApplicationRecord
   scope :with_color, ->(color_name) { joins(:colors).where('colors.name = ?', color_name) }
 
   def title
+
     out = ''
+
     if self.design.collection.prepend_collection_name_to_design_names
-      out += self.design.collection.name + ' | '
+      out += self.design.collection.name + ' | ' + self.design.name
     end
+
     out += self.design.name
+
+    if self.design.collection.append_collection_name_to_design_names
+      out += ' | ' + self.design.collection.name
+    end
+
     out
+
   end
 
   # Sites require weight in grams, in whole numbers (no decimals)
