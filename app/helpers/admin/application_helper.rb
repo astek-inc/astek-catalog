@@ -6,7 +6,7 @@ module Admin
     end
 
     def subnav_group_header(label, icon, data_target)
-      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-' + icon + ' pull-right') + ' ' + label, '#', class: 'list-group-item', 'data-toggle': 'collapse', 'data-target': data_target, 'data-parent': '#sidebar-menu')
+      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-' + icon + ' pull-right') + ' ' + label, '#', class: 'list-group-item', data: { toggle: 'collapse', target: data_target, parent: '#sidebar-menu' })
     end
 
     def nav_sublink label, path, current_path=false
@@ -18,15 +18,15 @@ module Admin
     end
 
     def edit_button path
-      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-pencil', 'aria-hidden': 'true' }), path, { class: 'btn btn-default', 'aria-label': 'Edit', title: 'Edit' })
+      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-pencil', aria: { hidden: true } }), path, { class: 'btn btn-default', title: 'Edit', aria: { label: 'Edit' } })
     end
 
     def view_button path
-      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-eye-open', 'aria-hidden': 'true' }), path, { class: 'btn btn-default', 'aria-label': 'View', title: 'View' })
+      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-eye-open', aria: { hidden: true } }), path, { class: 'btn btn-default', title: 'View', aria: { label: 'View' } })
     end
 
     def delete_button path
-      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' }), path, { method: :delete, class: 'btn btn-danger', 'aria-label': 'Delete', title: 'Delete' })
+      link_to(content_tag(:span, nil, { class: 'glyphicon glyphicon-remove', aria: { hidden: true } }), path, { method: :delete, class: 'btn btn-danger', title: 'Delete', aria: { label: 'Delete' } })
     end
 
     def form_buttons path
@@ -42,7 +42,7 @@ module Admin
     end
 
     def subnav_link label, icon, path, state, current
-      text = content_tag(:span, nil, { class: 'glyphicon glyphicon-'+icon, 'aria-hidden': 'true' }) + ' ' + label
+      text = content_tag(:span, nil, { class: 'glyphicon glyphicon-'+icon, aria: { hidden: true } }) + ' ' + label
       link_to text.html_safe, path, { class: current == state ? 'list-group-item active' : 'list-group-item' }
     end
 
