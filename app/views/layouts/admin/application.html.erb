@@ -64,19 +64,31 @@
             <%#= nav_link 'Users', 'user', admin_users_path %>
 
             <%= subnav_group_header 'Configuration', 'wrench', '#configs' %>
-            <div id="configs" class="sublinks collapse">
-              <%= nav_sublink 'Users', admin_users_path %>
-              <%= nav_sublink 'Websites', admin_websites_path %>
-              <%= nav_sublink 'Vendors', admin_vendors_path %>
-              <%= nav_sublink 'Variant Types', admin_variant_types_path %>
-              <%= nav_sublink 'Subcollection Types', admin_subcollection_types_path %>
-              <%= nav_sublink 'Properties', admin_properties_path %>
-              <%= nav_sublink 'Colors', admin_colors_path %>
-              <%= nav_sublink 'Styles', admin_styles_path %>
-              <%= nav_sublink 'Keywords', admin_keywords_path %>
-              <%= nav_sublink 'Sale Units', admin_sale_units_path %>
-              <%= nav_sublink 'Lead Times', admin_lead_times_path %>
-              <%= nav_sublink 'SKU Prefixes', admin_sku_prefixes_path %>
+            <div id="configs" class="sublinks collapse<%= (%w[
+                admin_users
+                admin_websites
+                admin_vendors
+                admin_variant_types
+                admin_subcollection_types
+                admin_properties
+                admin_colors
+                admin_styles
+                admin_keywords
+                admin_sale_units
+                admin_lead_times
+                admin_sku_prefixes].select { |path| current_page?(path.to_sym) }.any? ? ' in' : '') %>">
+              <%= nav_sublink 'Users', admin_users_path, current_page?(admin_users_path) %>
+              <%= nav_sublink 'Websites', admin_websites_path, current_page?(admin_websites_path) %>
+              <%= nav_sublink 'Vendors', admin_vendors_path, current_page?(admin_vendors_path) %>
+              <%= nav_sublink 'Variant Types', admin_variant_types_path, current_page?(admin_variant_types_path) %>
+              <%= nav_sublink 'Subcollection Types', admin_subcollection_types_path, current_page?(admin_subcollection_types_path) %>
+              <%= nav_sublink 'Properties', admin_properties_path, current_page?(admin_properties_path) %>
+              <%= nav_sublink 'Colors', admin_colors_path, current_page?(admin_colors_path) %>
+              <%= nav_sublink 'Styles', admin_styles_path, current_page?(admin_styles_path) %>
+              <%= nav_sublink 'Keywords', admin_keywords_path, current_page?(admin_keywords_path) %>
+              <%= nav_sublink 'Sale Units', admin_sale_units_path, current_page?(admin_sale_units_path) %>
+              <%= nav_sublink 'Lead Times', admin_lead_times_path, current_page?(admin_lead_times_path) %>
+              <%= nav_sublink 'SKU Prefixes', admin_sku_prefixes_path, current_page?(admin_sku_prefixes_path) %>
             </div>
 
             <%#= subnav_group_header 'Tasks', 'tag', '#sl' %>
@@ -86,17 +98,25 @@
             <!--</div>-->
 
             <%= subnav_group_header 'Product Types', 'tag', '#product-types' %>
-            <%= content_tag :div, id: 'product-types', class: 'sublinks collapse' do %>
-              <%= nav_sublink 'Product Categories', admin_product_categories_path %>
-              <%= nav_sublink 'Product Types', admin_product_types_path %>
+            <%= content_tag :div, id: 'product-types', class: 'sublinks collapse' + (%w[
+                admin_product_categories
+                admin_product_types
+              ].select { |path| current_page?(path.to_sym) }.any? ? ' in' : '') do %>
+              <%= nav_sublink 'Product Categories', admin_product_categories_path, current_page?(admin_product_categories_path) %>
+              <%= nav_sublink 'Product Types', admin_product_types_path, current_page?(admin_product_types_path) %>
             <% end %>
 
             <%= subnav_group_header 'Materials', 'circle-arrow-down', '#materials' %>
-            <%= content_tag :div, id: 'materials', class: 'sublinks collapse' do %>
-              <%= nav_sublink 'Substrates', admin_substrates_path %>
-              <%= nav_sublink 'Substrate Categories', admin_substrate_categories_path %>
-              <%= nav_sublink 'Backing Types', admin_backing_types_path %>
-              <%= nav_sublink 'Substrate Data Export for Shopify', admin_substrate_exports_path %>
+            <%= content_tag :div, id: 'materials', class: 'sublinks collapse' + (%w[
+                admin_substrates
+                admin_substrate_categories
+                admin_backing_types
+                admin_substrate_exports
+              ].select { |path| current_page?(path.to_sym) }.any? ? ' in' : '') do %>
+              <%= nav_sublink 'Substrates', admin_substrates_path, current_page?(admin_substrates_path) %>
+              <%= nav_sublink 'Substrate Categories', admin_substrate_categories_path, current_page?(admin_substrate_categories_path) %>
+              <%= nav_sublink 'Backing Types', admin_backing_types_path, current_page?(admin_backing_types_path) %>
+              <%= nav_sublink 'Substrate Data Export for Shopify', admin_substrate_exports_path, current_page?(admin_substrate_exports_path) %>
             <% end %>
 
             <%= nav_link 'Collections', 'book', admin_collections_path %>
@@ -104,21 +124,30 @@
             <%= nav_link 'Product Data Import', 'import', admin_product_imports_path %>
 
             <%= subnav_group_header 'Product Data Export', 'export', '#data-exports' %>
-            <%= content_tag :div, id: 'data-exports', class: 'sublinks collapse' do %>
-              <%= nav_sublink 'Products for Shopify', shopify_export_by_collection_admin_product_exports_path %>
-              <%= nav_sublink 'Order Limits for Shopify', export_by_collection_admin_order_limits_exports_path %>
-              <%= nav_sublink 'Products for FedEx', fedex_export_by_collection_admin_product_exports_path %>
+            <%= content_tag :div, id: 'data-exports', class: 'sublinks collapse' + (%w[
+                shopify_export_by_collection_admin_product_exports
+                export_by_collection_admin_order_limits_exports
+                fedex_export_by_collection_admin_product_exports
+              ].select { |path| current_page?(path.to_sym) }.any? ? ' in' : '') do %>
+              <%= nav_sublink 'Products for Shopify', shopify_export_by_collection_admin_product_exports_path, current_page?(shopify_export_by_collection_admin_product_exports_path) %>
+              <%= nav_sublink 'Order Limits for Shopify', export_by_collection_admin_order_limits_exports_path, current_page?(export_by_collection_admin_order_limits_exports_path) %>
+              <%= nav_sublink 'Products for FedEx', fedex_export_by_collection_admin_product_exports_path, current_page?(fedex_export_by_collection_admin_product_exports_path) %>
             <% end %>
 
             <%= subnav_group_header 'SKU Tools', 'barcode', '#sku-tools' %>
-            <%= content_tag :div, id: 'sku-tools', class: 'sublinks collapse' do %>
-              <%= nav_sublink 'Validate', validate_admin_skus_path %>
-              <%= nav_sublink 'Next Available', next_available_admin_skus_path %>
+            <%= content_tag :div, id: 'sku-tools', class: 'sublinks collapse' + (%w[
+                validate_admin_skus
+                next_available_admin_skus
+              ].select { |path| current_page?(path.to_sym) }.any? ? ' in' : '') do %>
+              <%= nav_sublink 'Validate', validate_admin_skus_path, current_page?(validate_admin_skus_path) %>
+              <%= nav_sublink 'Next Available', next_available_admin_skus_path, current_page?(next_available_admin_skus_path) %>
             <% end %>
 
             <%= subnav_group_header 'Reports', 'list-alt', '#reports' %>
-            <%= content_tag :div, id: 'reports', class: 'sublinks collapse' do %>
-              <%= nav_sublink 'Digital Products by SKU',digital_products_by_sku_admin_reports_path %>
+            <%= content_tag :div, id: 'reports', class: 'sublinks collapse' + (%w[
+                digital_products_by_sku_admin_reports
+              ].select { |path| current_page?(path.to_sym) }.any? ? ' in' : '') do %>
+              <%= nav_sublink 'Digital Products by SKU', digital_products_by_sku_admin_reports_path, current_page?(digital_products_by_sku_admin_reports_path) %>
             <% end %>
 
           <% end %>
