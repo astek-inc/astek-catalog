@@ -5,12 +5,12 @@ module Admin
       link_to(content_tag(:span, '', class: 'glyphicon glyphicon-'+icon+' pull-right')+' '+label, path, class: 'list-group-item')
     end
 
-    def subnav_group_header label, icon, data_target
-      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-'+icon+' pull-right')+' '+label, '#', class: 'list-group-item', 'data-toggle': 'collapse', 'data-target': data_target, 'data-parent': '#sidebar-menu')
+    def subnav_group_header(label, icon, data_target)
+      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-' + icon + ' pull-right') + ' ' + label, '#', class: 'list-group-item', 'data-toggle': 'collapse', 'data-target': data_target, 'data-parent': '#sidebar-menu')
     end
 
-    def nav_sublink label, path
-      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-chevron-right')+' '+label, path, class: 'list-group-item')
+    def nav_sublink label, path, current_path=false
+      link_to(content_tag(:span, '', class: 'glyphicon glyphicon-chevron-right')+' '+label, path, class: 'list-group-item' + (current_path ? ' disabled' : ''))
     end
 
     def new_button object_name
