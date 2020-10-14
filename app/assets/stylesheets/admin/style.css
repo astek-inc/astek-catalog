@@ -89,3 +89,11 @@ div.export_form {
     margin-left: 20px;
     margin-bottom: 2rem;
 }
+
+button#copy-to-clipboard {
+    margin-top: 3rem;
+}
+
+div#clipboard-message {
+    display: none;
+}
