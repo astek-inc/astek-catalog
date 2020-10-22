@@ -33,7 +33,7 @@ class Design < ApplicationRecord
   scope :distributed, -> {
     unscope(:order)
         .joins({ variants: :variant_type }, { collection: :product_category })
-        .where({ 'product_categories.name': %w[Naturals Specialty] })
+        .where({ 'product_categories.name': ['Contract Vinyl', 'Naturals', 'Residential'] })
         .available.order('variants.sku ASC')
   }
   default_scope { order(name: :asc) }
@@ -115,7 +115,7 @@ class Design < ApplicationRecord
   end
 
   def distributed?
-    %w[Naturals Specialty].include? self.collection.product_category.name
+    ['Contract Vinyl', 'Naturals', 'Residential'].include? self.collection.product_category.name
   end
 
   def has_colorways?
