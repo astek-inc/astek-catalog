@@ -623,11 +623,11 @@ module Admin
       def astek_business_description variant, domain
         body = ''
 
-        if description = variant.design.description_for_domain(domain)
-          body += format_description description
+        if formatted_description = format_description(variant, domain)
+          body += formatted_description
         end
 
-        body += format_business_properties variant, domain
+        body += format_business_properties(variant, domain)
 
         if variant.tearsheet.file
           body += format_tearsheet_links variant
@@ -642,24 +642,33 @@ module Admin
         body
       end
 
-      def onair_design_description variant, domain
+      def onair_design_description(variant, domain)
         body = ''
-
-        if description = variant.design.description_for_domain(domain)
-          body += format_description description
+        if formatted_description = format_description(variant, domain)
+          body += formatted_description
         end
-
         body += format_onair_properties(variant).gsub(/\n+/, ' ')
         body
       end
 
-      def format_description description
-        '<div>
-            <p>'+description+'</p>
-        </div>'
+      def format_description(variant, domain)
+        if description = variant.design.description_for_domain(domain)
+
+          contract_vinyl_paragraph = ''
+          description_paragraph = '<p>' + description + '</p>'
+
+          if domain == 'astek.com' && variant.design.collection.product_category.name == 'Contract Vinyl'
+            contract_vinyl_paragraph = '<p>For digitally printed commercial grade vinyl wallcoverings, visit our <a href="/collections/studio">Studio</a> collections.</p>'
+          end
+
+          "<div>
+            #{description_paragraph}
+            #{contract_vinyl_paragraph}
+          </div>"
+        end
       end
 
-      def format_business_properties variant, domain
+      def format_business_properties(variant, domain)
         formatted = '<div class="description__meta">'
 
         unless variant.design.collection.suppress_from_display
