@@ -1,9 +1,4 @@
 <%= content_tag :div, class: ['form-group'] do %>
-  <%= f.label :product_category_id, 'Product Category' %> <span class="required">*</span>
-  <%= f.collection_select :product_category_id, @product_categories, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
-<% end %>
-
-<%= content_tag :div, class: ['form-group'] do %>
     <%= f.label :name, 'Name' %> <span class="required">*</span>
     <%= f.text_field :name, required: true, class: 'form-control' %>
 <% end %>

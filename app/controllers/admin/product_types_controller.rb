@@ -2,11 +2,10 @@ module Admin
   class ProductTypesController < BaseController
 
     before_action :set_product_type, only: [:edit, :update, :destroy]
-    before_action :set_product_categories, only: [:new, :edit]
     before_action :set_websites, only: [:index, :new, :edit]
 
     def index
-      @product_types = ProductType.page(params[:page]).includes(:product_category)
+      @product_types = ProductType.page(params[:page])
     end
 
     def new
@@ -49,16 +48,12 @@ module Admin
       @product_type = ProductType.find(params[:id])
     end
 
-    def set_product_categories
-      @product_categories = ProductCategory.all
-    end
-
     def set_websites
       @websites = Website.all
     end
 
     def product_type_params
-      params.require(:product_type).permit(:name, :description, :product_category_id, website_ids: [])
+      params.require(:product_type).permit(:name, :description, website_ids: [])
     end
 
   end

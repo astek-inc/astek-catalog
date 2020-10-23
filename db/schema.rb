@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_17_232136) do
+ActiveRecord::Schema.define(version: 2020_10_23_205815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -220,7 +220,6 @@ ActiveRecord::Schema.define(version: 2020_08_17_232136) do
   create_table "product_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.integer "product_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
@@ -475,7 +474,6 @@ ActiveRecord::Schema.define(version: 2020_08_17_232136) do
   add_foreign_key "designs", "sale_units"
   add_foreign_key "designs", "subcollections"
   add_foreign_key "designs", "vendors"
-  add_foreign_key "product_types", "product_categories"
   add_foreign_key "states", "countries"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "taggings", "tags"
