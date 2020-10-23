@@ -652,20 +652,23 @@ module Admin
       end
 
       def format_description(variant, domain)
+
+        formatted_description = ''
+
         if description = variant.design.description_for_domain(domain)
+          formatted_description += '<p>' + description + '</p>'
+        end
 
-          contract_vinyl_paragraph = ''
-          description_paragraph = '<p>' + description + '</p>'
+        if domain == 'astek.com' && variant.design.collection.product_category.name == 'Contract Vinyl'
+          formatted_description += '<p>For digitally printed commercial grade vinyl wallcoverings, visit our <a href="/collections/studio">Studio</a> collections.</p>'
+        end
 
-          if domain == 'astek.com' && variant.design.collection.product_category.name == 'Contract Vinyl'
-            contract_vinyl_paragraph = '<p>For digitally printed commercial grade vinyl wallcoverings, visit our <a href="/collections/studio">Studio</a> collections.</p>'
-          end
-
+        unless formatted_description.blank?
           "<div>
-            #{description_paragraph}
-            #{contract_vinyl_paragraph}
+            #{formatted_description}
           </div>"
         end
+
       end
 
       def format_business_properties(variant, domain)
