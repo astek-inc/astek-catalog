@@ -647,7 +647,8 @@ module Admin
         if formatted_description = format_description(variant, domain)
           body += formatted_description
         end
-        body += format_onair_properties(variant).gsub(/\n+/, ' ')
+        body += format_onair_properties(variant)
+        body = body.gsub(/\n+/, ' ')
         body
       end
 
@@ -677,12 +678,12 @@ module Admin
         unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+variant.design.collection.name.gsub("\'", "").parameterize+'">'+variant.design.collection.name+'</a></p>
+              <p><a href="/collections/' + variant.design.collection.name.gsub("\'", "").parameterize + '">' + variant.design.collection.name + '</a></p>
             </div>'
         end
 
         if variant.design.digital?
-          # This property has to apply to all variants, so we are making sure that they are all TYpe II.
+          # This property has to apply to all variants, so we are making sure that they are all Type II.
           vs = variant.design.variants
           if vs.select { |v| v.substrate_for_domain(domain).substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == vs.count
             formatted += '<div>
@@ -696,35 +697,35 @@ module Admin
           if variant.backing_type
             formatted += '<div>
               <h5>Backing</h5>
-              <p>'+variant.backing_type.name+'</p>
+              <p>' + variant.backing_type.name + '</p>
             </div>'
-          # elsif variant_substrate && variant_substrate.backing_type
-          #   formatted += '<div>
-          #     <h5>Backing</h5>
-          #     <p>'+variant_substrate.backing_type.name+'</p>
-          #   </div>'
+            # elsif variant_substrate && variant_substrate.backing_type
+            #   formatted += '<div>
+            #     <h5>Backing</h5>
+            #     <p>'+variant_substrate.backing_type.name+'</p>
+            #   </div>'
           end
         end
 
         if variant.design.sale_unit.present?
           formatted += '<div>
               <h5>Sold By</h5>
-              <p>'+variant.design.sale_unit.name+'</p>
+              <p>' + variant.design.sale_unit.name + '</p>
             </div>'
         end
 
         if variant.design.price_code.present?
           formatted += '<div>
             <h5>Price Code</h5>
-            <p>'+variant.design.price_code+'</p>
+            <p>' + variant.design.price_code + '</p>
           </div>'
         end
 
         variant.design.design_properties.each do |dp|
           next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
           formatted += '<div>
-            <h5>'+dp.property.presentation+'</h5>
-            <p>'+format_property_value(dp)+'</p>
+            <h5>' + dp.property.presentation + '</h5>
+            <p>' + format_property_value(dp) + '</p>
           </div>'
         end
 
