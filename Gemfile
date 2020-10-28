@@ -34,7 +34,7 @@ gem 'kaminari'
 
 # File uploads, image transformation, and Amazon S3 storage
 gem 'fog-aws'
-gem 'carrierwave', '~> 1.0'
+gem 'carrierwave', '~> 2.0'
 gem 'mini_magick', '>= 4.9.4'
 
 # Authentication and permissions
