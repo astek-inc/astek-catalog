@@ -297,10 +297,10 @@ module Admin
       # is given as more than standard. We want to apply the same increase to the custom material
       # options
       def material_variant_weight
-        if BigDecimal(@variant.weight) == BigDecimal(@variant.substrate.weight_per_square_foot)
+        if BigDecimal(@variant.weight) == BigDecimal(@variant.variant_substrates.for_domain('astekhome.com').first.substrate.weight_per_square_foot)
           BigDecimal(@material.substrate.weight_per_square_foot)
         else
-          ratio = BigDecimal(@variant.weight) / BigDecimal(@variant.substrate.weight_per_square_foot)
+          ratio = BigDecimal(@variant.weight) / BigDecimal(@variant.variant_substrates.for_domain('astekhome.com').first.substrate.weight_per_square_foot)
           (BigDecimal(@material.substrate.weight_per_square_foot) * ratio)
         end
       end
