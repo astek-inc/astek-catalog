@@ -40,7 +40,7 @@ class Variant < ApplicationRecord
     out = ''
 
     if self.design.collection.prepend_collection_name_to_design_names
-      out += self.design.collection.name + ' | ' + self.design.name
+      out += self.design.collection.name + ' | '
     end
 
     out += self.design.name
