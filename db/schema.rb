@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_23_205815) do
+ActiveRecord::Schema.define(version: 2020_11_04_170627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -421,7 +421,6 @@ ActiveRecord::Schema.define(version: 2020_10_23_205815) do
     t.string "name"
     t.text "sku"
     t.integer "product_type_id"
-    t.integer "substrate_id"
     t.integer "backing_type_id"
     t.integer "row_order"
     t.string "tearsheet"
@@ -480,6 +479,5 @@ ActiveRecord::Schema.define(version: 2020_10_23_205815) do
   add_foreign_key "variants", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "product_types"
-  add_foreign_key "variants", "substrates"
   add_foreign_key "variants", "variant_types"
 end

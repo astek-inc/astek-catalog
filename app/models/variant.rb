@@ -13,7 +13,6 @@ class Variant < ApplicationRecord
 
   belongs_to :design
   belongs_to :variant_type
-  belongs_to :substrate, optional: true
   belongs_to :backing_type, optional: true
 
   has_many :variant_substrates
@@ -35,6 +34,7 @@ class Variant < ApplicationRecord
 
   scope :with_color, ->(color_name) { joins(:colors).where('colors.name = ?', color_name) }
 
+  # For Shopify
   def title
 
     out = ''
@@ -53,7 +53,7 @@ class Variant < ApplicationRecord
 
   end
 
-  # Sites require weight in grams, in whole numbers (no decimals)
+  # Shopify sites require weight in grams, in whole numbers (no decimals)
   def variant_grams
     (self.weight * BigDecimal('453.592')).round.to_s unless self.weight.nil?
   end
