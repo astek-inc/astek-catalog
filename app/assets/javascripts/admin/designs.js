@@ -5,6 +5,13 @@ Astek.designs = Astek.designs || {
         $('#design_master_sku').prop('disabled', !$('#design_suppress_from_searches').is(':checked'));
     },
 
+    set_display_sale_price_disabled: function() {
+        $('#design_display_sale_price').prop('disabled', !($('#design_sale_price').val() > 0));
+        if (!($('#design_sale_price').val() > 0)) {
+            $('#design_display_sale_price').prop('checked', false);
+        }
+    },
+
     initialize_keyword_tags: function(){
 
         var keyword_tags = new Bloodhound({
@@ -35,10 +42,17 @@ Astek.designs = Astek.designs || {
 
 $(function(){
 
-    if ($('#design_suppress_from_searches').length){
+    if ($('#design_suppress_from_searches').length) {
         Astek.designs.set_master_sku_disabled();
-        $('#design_suppress_from_searches').click(function(){
+        $('#design_suppress_from_searches').click(function() {
             Astek.designs.set_master_sku_disabled();
+        });
+    }
+
+    if ($('#design_display_sale_price').length) {
+        Astek.designs.set_display_sale_price_disabled();
+        $('#design_sale_price').blur(function() {
+            Astek.designs.set_display_sale_price_disabled();
         });
     }
 
