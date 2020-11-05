@@ -36,7 +36,7 @@ class Design < ApplicationRecord
         .where({ 'product_categories.name': ['Contract Vinyl', 'Naturals', 'Residential'] })
         .available.order('variants.sku ASC')
   }
-  default_scope { order(name: :asc) }
+  default_scope { order(sku: :asc) }
 
   belongs_to :collection
   belongs_to :vendor, inverse_of: :designs
