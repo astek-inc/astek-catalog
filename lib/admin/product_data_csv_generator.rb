@@ -12,7 +12,7 @@ module Admin
         variant_inventory_tracker: '',
         variant_inventory_policy: 'Continue',
         variant_fulfillment_service: 'Manual',
-        variant_compare_at_price: '',
+        # variant_compare_at_price: '',
         google_shopping_mpn: '',
         google_shopping_age_group: '',
         google_shopping_gender: '',
@@ -481,18 +481,67 @@ module Admin
                 SAMPLE_PRICE_DISTRIBUTED
               end
             else
-              if material
-                (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
+
+              # If there is a sale price indicated, we need to put that here and put
+              # the regular retail price in the compare_at_price column
+              if variant.design.sale_price.present? && variant.design.display_sale_price
+                display_price = variant.design.sale_price
               else
-                if variant.price.blank?
+                display_price = variant.price
+              end
+
+              if material
+                (BigDecimal(display_price) + BigDecimal(material.surcharge)).to_s
+              else
+                if display_price.blank?
                   0
                 else
-                  variant.price
+                  display_price
                 end
               end
+
             end
+
           when 'onairdesign.com'
             0
+          end
+
+        elsif attr == 'variant_compare_at_price'
+          case domain
+          when 'astek.com'
+            nil
+          when 'astekhome.com'
+
+            if variant_type == 'sample' || variant_type == 'custom_sample'
+
+              nil
+
+            else
+
+              # If there is a sale price indicated, we need to put the regular retail price here
+              # and put the sale price in the price column
+              if variant.design.sale_price.present? && variant.design.display_sale_price
+
+                if material
+                  (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
+                else
+                  if variant.price.blank?
+                    0
+                  else
+                    variant.price
+                  end
+                end
+
+              else
+
+                nil
+
+              end
+
+            end
+
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'variant_requires_shipping'
