@@ -10,28 +10,32 @@ module Admin
       design = Design.find(design_id)
       website = Website.find_by(domain: 'astekhome.com')
 
-      csv_data = ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, true
-      filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{design.name.parameterize}.csv"
+      if design.websites.include? website
 
-      storage = Fog::Storage.new(
-          provider: 'AWS',
-          aws_access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-          aws_secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
-          region: 'us-west-2',
-          path_style: true
-      )
+        csv_data = ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, true
+        filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{design.name.parameterize}.csv"
 
-      directory = storage.directories.get('product-data-export')
-      uploaded = directory.files.create(
-          key: filename,
-          body: csv_data,
-          public: true
-      )
+        storage = Fog::Storage.new(
+            provider: 'AWS',
+            aws_access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+            aws_secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+            region: 'us-west-2',
+            path_style: true
+        )
 
-      puts 'Uploaded file '+filename+' to S3'
+        directory = storage.directories.get('product-data-export')
+        uploaded = directory.files.create(
+            key: filename,
+            body: csv_data,
+            public: true
+        )
 
-      csv_url = "https://s3-us-west-2.amazonaws.com/product-data-export/#{filename}"
-      ProductExportsMailer.with(user: current_user, design: design, csv_url: csv_url).design_notification_email.deliver_now
+        puts 'Uploaded file '+filename+' to S3'
+
+        csv_url = "https://s3-us-west-2.amazonaws.com/product-data-export/#{filename}"
+        ProductExportsMailer.with(user: current_user, design: design, csv_url: csv_url).design_notification_email.deliver_now
+
+      end
 
     end
 
