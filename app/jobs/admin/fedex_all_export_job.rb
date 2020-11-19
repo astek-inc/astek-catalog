@@ -12,7 +12,7 @@ module Admin
       csv_data = ''
       Collection.for_domain('astekhome.com').each do |collection|
         collection.designs.available.for_domain('astekhome.com').each do |design|
-          if design.price.present? && design.country_id.present?
+          if design.price.present? && design.price > 0 && design.country_id.present?
             csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
           end
         end
