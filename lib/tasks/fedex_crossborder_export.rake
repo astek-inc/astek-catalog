@@ -9,7 +9,7 @@ namespace :db do
       puts 'Getting data for '+collection.name
 
       collection.designs.available.for_domain('astekhome.com').each do |design|
-        if design.price.present?
+        if design.price.present? && design.country_id.present?
           csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
         end
       end
