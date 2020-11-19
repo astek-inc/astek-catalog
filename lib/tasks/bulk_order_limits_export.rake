@@ -10,13 +10,12 @@ namespace :db do
     puts 'Getting order limits information to export for '+domain
 
     website = Website.find_by!(domain: domain)
-    collections = Collection.includes(:websites).where(websites: { domain: domain })
 
     csv_data = ''
-    collections.each_with_index do |collection, i|
+    Collection.for_domain('astekhome.com').each do |collection|
       puts 'Getting data for '+collection.name
 
-      collection.designs.each do |design|
+      collection.designs.available.for_domain('astekhome.com').each do |design|
         csv_data += ::Admin::OrderLimitsCsvGenerator.order_limits_csv design
       end
     end
