@@ -408,6 +408,7 @@ module Admin
         end
 
         if design.digital?
+          # We only offer product printed on paper on Astek Home. Matte Vinyl is the equivalent default substrate on Astek Business.
           if substrate.name == 'Paper' && item.websites.split(',').map { |w| w.strip }.include?('A')
             VariantSubstrate.create! variant: variant, substrate: Substrate.find_by(name: 'Matte Vinyl'), websites: [Website.find_by(domain: 'astek.com')]
             other_websites_string = (item.websites.split(',').map { |w| w.strip } - ['A']).join(',')
