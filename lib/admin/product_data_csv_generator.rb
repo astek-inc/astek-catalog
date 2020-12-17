@@ -808,7 +808,7 @@ module Admin
           next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
           formatted += '<div>
             <h6>'+dp.property.presentation+'</h6>
-            <p>'+format_property_value(dp)+'</p>
+            <p>'+format_property_value(dp, 'astekhome.com')+'</p>
           </div>'
         end
 
@@ -904,14 +904,33 @@ module Admin
         out
       end
 
-      def format_property_value dp
+      def format_property_value(dp, domain = nil)
         if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
           "#{dp.value} #{matches[:unit]}"
-        elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Pretrimmed Untrimmed].include?(dp.value)
-          # Value for margin trim can be numeric, but we display "Untrimmed"
-          'Untrimmed'
+        elsif dp.property.name == 'margin_trim'
+          format_margin_trim_property_value(dp, domain)
         else
           dp.value
+        end
+      end
+
+      def format_margin_trim_property_value(dp, domain = nil)
+        if domain == 'astekhome.com'
+          if dp.design.digital? && (%w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value) || dp.value == 'Untrimmed')
+            'Pre-trimmed'
+          elsif %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
+        else
+          if %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
         end
       end
 
