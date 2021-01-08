@@ -583,7 +583,7 @@ module Admin
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+design.sale_unit.name+'</p>
+            <p>'+design.variants.first.sale_unit.name+'</p>
           </div>'
 
         design.design_properties.each do |dp|
@@ -632,17 +632,17 @@ module Admin
           </div>'
         end
 
-        if design.minimum_quantity > 1
+        if design.variants.first.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+design.minimum_quantity.to_s+' '+design.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+design.variants.first.minimum_quantity.to_s+' '+design.variants.first.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if design.sale_quantity > 1
+        if design.variants.first.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+design.sale_quantity.to_s+'</p>
+            <p>'+design.variants.first.sale_quantity.to_s+'</p>
           </div>'
         end
 
@@ -676,7 +676,7 @@ module Admin
             sku: d.variants.first.sku_with_colors,
             width: d.property('roll_width_inches'),
             length: (d.property('roll_length_yards').to_f * 36),
-            minimum_quantity: d.minimum_quantity
+            minimum_quantity: d.variants.first.minimum_quantity
         } }.to_json
 
         '<script>
