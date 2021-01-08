@@ -14,6 +14,7 @@ class Variant < ApplicationRecord
   belongs_to :design
   belongs_to :variant_type
   belongs_to :backing_type, optional: true
+  belongs_to :sale_unit, optional: true
 
   has_many :variant_substrates
   has_many :substrates, through: :variant_substrates
