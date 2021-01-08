@@ -3,7 +3,7 @@ module Admin
 
     before_action :set_design, only: [:update, :edit, :destroy, :custom_materials]
     before_action :set_collection, except: [:edit]
-    before_action :set_sale_units, :set_styles, :set_countries, :set_websites, only: [:new, :create, :edit, :update]
+    before_action :set_styles, :set_countries, :set_websites, only: [:new, :create, :edit, :update]
     before_action :set_substrates, only: [:custom_materials]
     before_action :set_default_custom_material, only: [:custom_materials]
 
@@ -79,10 +79,6 @@ module Admin
 
     def set_collection
       @collection = Collection.find(params[:collection_id])
-    end
-
-    def set_sale_units
-      @sale_units = SaleUnit.all
     end
 
     def set_countries
