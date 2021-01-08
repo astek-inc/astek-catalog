@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_04_185547) do
+ActiveRecord::Schema.define(version: 2021_01_08_180521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -139,10 +139,6 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
     t.string "sku"
     t.text "description"
     t.text "old_keywords"
-    t.decimal "price", precision: 8, scale: 2
-    t.integer "sale_unit_id"
-    t.integer "sale_quantity", default: 1
-    t.integer "minimum_quantity", default: 1
     t.boolean "suppress_from_searches", default: false
     t.datetime "available_on"
     t.datetime "expires_on"
@@ -151,13 +147,10 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
     t.datetime "deleted_at"
     t.integer "row_order"
     t.string "master_sku"
-    t.string "price_code"
     t.boolean "user_can_select_material"
     t.integer "country_id"
     t.integer "vendor_id"
     t.integer "subcollection_id"
-    t.decimal "sale_price", precision: 5, scale: 2
-    t.boolean "display_sale_price", default: false
     t.index ["deleted_at"], name: "index_designs_on_deleted_at"
     t.index ["master_sku"], name: "index_designs_on_master_sku"
     t.index ["row_order"], name: "index_designs_on_row_order"
@@ -433,6 +426,13 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
     t.decimal "width", precision: 5, scale: 2
     t.decimal "height", precision: 5, scale: 2
     t.decimal "depth", precision: 5, scale: 2
+    t.string "price_code"
+    t.decimal "price", precision: 8, scale: 2
+    t.decimal "sale_price", precision: 5, scale: 2
+    t.boolean "display_sale_price", default: false
+    t.integer "sale_unit_id"
+    t.integer "sale_quantity", default: 1
+    t.integer "minimum_quantity", default: 1
     t.index ["deleted_at"], name: "index_variants_on_deleted_at"
     t.index ["row_order"], name: "index_variants_on_row_order"
     t.index ["sku"], name: "index_variants_on_sku"
@@ -472,7 +472,6 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
   add_foreign_key "design_aliases", "designs"
   add_foreign_key "designs", "collections"
   add_foreign_key "designs", "countries"
-  add_foreign_key "designs", "sale_units"
   add_foreign_key "designs", "subcollections"
   add_foreign_key "designs", "vendors"
   add_foreign_key "states", "countries"
