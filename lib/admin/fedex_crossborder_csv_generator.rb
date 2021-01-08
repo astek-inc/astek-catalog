@@ -160,7 +160,7 @@ module Admin
             SAMPLE_PRICE_IN_STOCK
           end
         else
-          @design.price
+          @variant.price
         end
       end
 
