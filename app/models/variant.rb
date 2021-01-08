@@ -88,10 +88,6 @@ class Variant < ApplicationRecord
     end
   end
 
-  def price
-    self.design.price.to_s
-  end
-
   # For export to Shopify websites. Color is appended to ensure the product appears in search results.
   def sample_sku
     self.sku + '-s'
