@@ -80,59 +80,59 @@
   <% end %>
 <% end %>
 
-<%= content_tag :div, class: 'row' do %>
-  <%= content_tag :div, class: 'col-md-3' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :price_code, 'Price Code' %>
-      <%= f.text_field :price_code, class: 'form-control' %>
-    <% end %>
-  <% end %>
+<%#= content_tag :div, class: 'row' do %>
+  <%#= content_tag :div, class: 'col-md-3' do %>
+    <%#= content_tag :div, class: ['form-group'] do %>
+      <%#= f.label :price_code, 'Price Code' %>
+      <%#= f.text_field :price_code, class: 'form-control' %>
+    <%# end %>
+  <%# end %>
 
-  <%= content_tag :div, class: 'col-md-3' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :price, 'Retail Price' %>
-      <%= f.text_field :price, value: number_to_currency(f.object.price.to_f, delimiter: '', unit: ''), required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
+  <%#= content_tag :div, class: 'col-md-3' do %>
+    <%#= content_tag :div, class: ['form-group'] do %>
+      <%#= f.label :price, 'Retail Price' %>
+      <%#= f.text_field :price, value: number_to_currency(f.object.price.to_f, delimiter: '', unit: ''), required: false, class: 'form-control' %>
+    <%# end %>
+  <%# end %>
 
-  <%= content_tag :div, class: 'col-md-3' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :sale_price, 'Sale Price' %>
-      <%= f.text_field :sale_price, value: number_to_currency(f.object.sale_price.to_f, delimiter: '', unit: ''), required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
+  <%#= content_tag :div, class: 'col-md-3' do %>
+    <%#= content_tag :div, class: ['form-group'] do %>
+      <%#= f.label :sale_price, 'Sale Price' %>
+      <%#= f.text_field :sale_price, value: number_to_currency(f.object.sale_price.to_f, delimiter: '', unit: ''), required: false, class: 'form-control' %>
+    <%# end %>
+  <%# end %>
 
-  <%= content_tag :div, class: ['col-md-3'] do %>
-    <%= content_tag :div, class: ['checkbox'], id: 'display-sale-price' do %>
-      <%= f.label :display_sale_price do %>
-        <%= f.check_box :display_sale_price %> Show sale price on sites
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>
+  <%#= content_tag :div, class: ['col-md-3'] do %>
+    <%#= content_tag :div, class: ['checkbox'], id: 'display-sale-price' do %>
+      <%#= f.label :display_sale_price do %>
+<!--        <%#= f.check_box :display_sale_price %> Show sale price on sites-->
+      <%# end %>
+    <%# end %>
+  <%# end %>
+<%# end %>
 
-<%= content_tag :div, class: 'row' do %>
-  <%= content_tag :div, class: 'col-md-4' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :sale_unit, 'Sale Unit' %>
-      <%= f.collection_select :sale_unit_id, SaleUnit.all, :id, :name, { prompt: 'Select' }, { required: false, class: 'form-control' } %>
-    <% end %>
-  <% end %>
+<%#= content_tag :div, class: 'row' do %>
+  <%#= content_tag :div, class: 'col-md-4' do %>
+    <%#= content_tag :div, class: ['form-group'] do %>
+      <%#= f.label :sale_unit, 'Sale Unit' %>
+      <%#= f.collection_select :sale_unit_id, SaleUnit.all, :id, :name, { prompt: 'Select' }, { required: false, class: 'form-control' } %>
+    <%# end %>
+  <%# end %>
 
-  <%= content_tag :div, class: 'col-md-4' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :sale_quantity, 'Sale Quantity' %>
-      <%= f.number_field :sale_quantity, required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
+  <%#= content_tag :div, class: 'col-md-4' do %>
+    <%#= content_tag :div, class: ['form-group'] do %>
+      <%#= f.label :sale_quantity, 'Sale Quantity' %>
+      <%#= f.number_field :sale_quantity, required: false, class: 'form-control' %>
+    <%# end %>
+  <%# end %>
 
-  <%= content_tag :div, class: 'col-md-4' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :minimum_quantity, 'Minimum Order' %>
-      <%= f.number_field :minimum_quantity, required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
-<% end %>
+  <%#= content_tag :div, class: 'col-md-4' do %>
+    <%#= content_tag :div, class: ['form-group'] do %>
+      <%#= f.label :minimum_quantity, 'Minimum Order' %>
+      <%#= f.number_field :minimum_quantity, required: false, class: 'form-control' %>
+    <%# end %>
+  <%# end %>
+<%# end %>
 
 <%= content_tag :div, class: 'panel panel-default' do %>
   <%= content_tag :div, 'Styles', class: 'panel-heading' %>
