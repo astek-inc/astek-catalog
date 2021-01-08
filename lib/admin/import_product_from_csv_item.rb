@@ -245,9 +245,6 @@ module Admin
           # If we got here, this is a new record
           new_record = true
 
-          d.sale_unit = sale_unit
-          d.sale_quantity = item.sale_quantity.strip unless item.sale_quantity.blank?
-          d.minimum_quantity = item.minimum_quantity.strip unless item.minimum_quantity.blank?
           d.available_on = Time.now
           d.styles = styles unless styles.nil?
           d.vendor = vendor
@@ -266,17 +263,6 @@ module Admin
             d.country_of_origin = country_of_origin
           end
 
-          # Don't require a price if the product is only to appear on On Air Design
-          # or if we tell the user to call for pricing for products from this vendor
-          # or if the item is from the Limited Stock showroom binders
-          unless item.price.nil? && (
-          (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
-            MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
-            collection.name = 'Limited Stock'
-          )
-            d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
-          end
-
           # This is a duplicate of a design in another collection,
           # suppress it from display except with its collection
           if item.respond_to? 'master_sku'
@@ -284,10 +270,6 @@ module Admin
               d.suppress_from_searches = true
               d.master_sku = item.master_sku
             end
-          end
-
-          if item.respond_to? 'price_code'
-            d.price_code = item.price_code.strip unless item.price_code.nil?
           end
 
           # Custom materials should really be associated with Colorways (variants),
@@ -404,6 +386,25 @@ module Admin
           end
           
           v.colors = colors unless colors.nil?
+
+          if item.respond_to? 'price_code'
+            v.price_code = item.price_code.strip unless item.price_code.nil?
+          end
+
+          # Don't require a price if the product is only to appear on On Air Design
+          # or if we tell the user to call for pricing for products from this vendor
+          # or if the item is from the Limited Stock showroom binders
+          unless item.price.nil? && (
+            (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
+              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
+              collection.name = 'Limited Stock'
+          )
+            v.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
+          end
+
+          v.sale_unit = sale_unit
+          v.sale_quantity = item.sale_quantity.strip unless item.sale_quantity.blank?
+          v.minimum_quantity = item.minimum_quantity.strip unless item.minimum_quantity.blank?
 
         end
 
