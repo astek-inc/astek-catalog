@@ -170,41 +170,49 @@ module Admin
           # end
 
           subcollection.designs.each_with_index do |design, i|
-            @image_index = i
-            # first_variant_row = true
 
-            # if website == 'astekhome.com' && design.user_can_select_material
-            #
-            #   design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
-            #
-            #     if @first_row
-            #       csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
-            #       @first_row = false
-            #     else
-            #       csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
-            #     end
-            #     first_variant_row = false
-            #
-            #     unless design.collection.suppress_sample_option_from_display
-            #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
-            #     end
-            #
-            #   end
-            #
-            # else
+            design.variants_for_domain(website).each_with_index do |variant, i|
+
+              @image_index = i
+
+              # first_variant_row = true
+
+              # if website == 'astekhome.com' && design.user_can_select_material
+              #
+              #   design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
+              #
+              #     if @first_row
+              #       csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
+              #       @first_row = false
+              #     else
+              #       csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
+              #     end
+              #     first_variant_row = false
+              #
+              #     unless design.collection.suppress_sample_option_from_display
+              #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
+              #     end
+              #
+              #   end
+              #
+              # else
+
               if @first_row
-                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, design, 'full', @image_index, website)) }
+                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
                 @first_row = false
               else
-                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, design, 'full', @image_index, website)) }
+                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
               end
 
-              if website == 'astekhome.com'
-                unless design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design, 'sample', 0, website)) }
+                if website == 'astekhome.com'
+                  unless design.collection.suppress_sample_option_from_display
+                    csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+                  end
                 end
-              end
-            # end
+              # end
+
+            end
+
           end
 
           # # On astekhome.com, if a design has colorways, we don't show the install images separately, we mix a random install image in with the swatch images
@@ -223,14 +231,14 @@ module Admin
 
       end
 
-      def attribute_value attr, design, variant_type, image_index, domain, material=nil, show_image=true
+      def attribute_value attr, variant, variant_type, image_index, domain, material=nil, show_image=true
 
         if TEXT_VALUES[attr.to_sym]
 
           TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
-          design.subcollection.handle
+          variant.design.subcollection.handle
 
         elsif attr == 'body'
           case domain
@@ -242,21 +250,23 @@ module Admin
 
         elsif attr == 'tags'
           if variant_type == 'full'
-            design.tags domain
+            variant.design.tags domain
           end
 
         elsif attr == 'option_1_name'
-          design.subcollection.subcollection_type.name
+          variant.design.subcollection.subcollection_type.name
 
         elsif attr == 'option_1_value'
-          case design.subcollection.subcollection_type.name
+          case variant.design.subcollection.subcollection_type.name
           when 'Roll Width'
             case domain
             when 'astek.com'
-              design.property('roll_width_inches') + ' inches'
+              variant.design.property('roll_width_inches') + ' inches'
             when 'astekhome.com'
-              design.property('roll_width_inches')
+              variant.design.property('roll_width_inches')
             end
+          when 'Material'
+              variant.substrate.for_domain(domain)
           end
 
         elsif attr == 'image_src'
@@ -267,7 +277,7 @@ module Admin
               #   @random_install_image[:install_image].file.url
               # else
               if image_index == 0
-                design.variants.first.swatch_image_url 0
+                variant.swatch_image_url 0
               end
 
               # end
@@ -290,10 +300,10 @@ module Admin
                 # if design.variants.first.variant_type.name == 'Color Way'
                 #   alt_text = "#{design.subcollection.name} - #{design.variants.first.name}"
                 # else
-                  alt_text = "#{design.variants.first.name}"
+                  alt_text = "#{variant.name}"
                 # end
 
-                product_type_names = design.variants.first.product_types.map { |t| t.name }
+                product_type_names = variant.product_types.map { |t| t.name }
                 if product_type_names.include? 'Murals'
                   alt_text += ' Mural'
                 elsif product_type_names.include? 'Contact Paper'
@@ -372,19 +382,19 @@ module Admin
           case variant_type
           when 'sample'
             if material
-              design.variants.first.sample_sku_with_material material
+              variant.sample_sku_with_material material
             else
-              design.variants.first.sample_sku
+              variant.sample_sku
             end
           when 'custom'
-            design.variants.first.design.sku+'-c'
+            variant.design.sku+'-c'
           when 'custom_sample'
-            design.variants.first.design.sku+'-c-s'
+            variant.design.sku+'-c-s'
           when 'full'
             if material
-              design.variants.first.sku_with_material_and_colors material
+              variant.sku_with_material_and_colors material
             else
-              design.variants.first.sku_with_colors
+              variant.sku_with_colors
             end
           end
 
@@ -396,7 +406,7 @@ module Admin
             if variant_type == 'sample' || variant_type == 'custom_sample'
               (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
             else
-              design.variants.first.variant_grams
+              variant.variant_grams
             end
           end
 
@@ -423,7 +433,7 @@ module Admin
               # if material
               #   (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
               # else
-              design.variants.first.price
+              variant.price
               # end
             end
           end
@@ -459,7 +469,7 @@ module Admin
           #   if @random_install_image && @random_install_image[:variant_id] == design.variants.first.id
           #     @random_install_image[:install_image].file.url
           #   else
-              design.subcollection.designs.first.variants.first.swatch_image_url 0
+          variant.swatch_image_url 0
             # end
             # when 'custom','custom_sample'
             #   'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
@@ -476,7 +486,7 @@ module Admin
         elsif attr == 'collection'
           case domain
           when 'astek.com'
-            unless design.collection.suppress_from_display
+            unless variant.design.collection.suppress_from_display
               design.collection.name
             end
           when 'astekhome.com'
