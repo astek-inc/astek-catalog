@@ -170,41 +170,49 @@ module Admin
           # end
 
           subcollection.designs.each_with_index do |design, i|
-            @image_index = i
-            # first_variant_row = true
 
-            # if website == 'astekhome.com' && design.user_can_select_material
-            #
-            #   design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
-            #
-            #     if @first_row
-            #       csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
-            #       @first_row = false
-            #     else
-            #       csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
-            #     end
-            #     first_variant_row = false
-            #
-            #     unless design.collection.suppress_sample_option_from_display
-            #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
-            #     end
-            #
-            #   end
-            #
-            # else
+            design.variants_for_domain(website).each_with_index do |variant, i|
+
+              @image_index = i
+
+              # first_variant_row = true
+
+              # if website == 'astekhome.com' && design.user_can_select_material
+              #
+              #   design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
+              #
+              #     if @first_row
+              #       csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
+              #       @first_row = false
+              #     else
+              #       csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
+              #     end
+              #     first_variant_row = false
+              #
+              #     unless design.collection.suppress_sample_option_from_display
+              #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
+              #     end
+              #
+              #   end
+              #
+              # else
+
               if @first_row
-                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, design, 'full', @image_index, website)) }
+                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
                 @first_row = false
               else
-                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, design, 'full', @image_index, website)) }
+                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
               end
 
-              if website == 'astekhome.com'
-                unless design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, design, 'sample', 0, website)) }
+                if website == 'astekhome.com'
+                  unless design.collection.suppress_sample_option_from_display
+                    csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
+                  end
                 end
-              end
-            # end
+              # end
+
+            end
+
           end
 
           # # On astekhome.com, if a design has colorways, we don't show the install images separately, we mix a random install image in with the swatch images
@@ -223,40 +231,42 @@ module Admin
 
       end
 
-      def attribute_value attr, design, variant_type, image_index, domain, material=nil, show_image=true
+      def attribute_value attr, variant, variant_type, image_index, domain, material=nil, show_image=true
 
         if TEXT_VALUES[attr.to_sym]
 
           TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
-          design.subcollection.handle
+          variant.design.subcollection.handle
 
         elsif attr == 'body'
           case domain
           when 'astek.com'
-            astek_business_description design
+            astek_business_description variant
           when 'astekhome.com'
-            astek_home_description design
+            astek_home_description variant
           end
 
         elsif attr == 'tags'
           if variant_type == 'full'
-            design.tags domain
+            variant.design.tags domain
           end
 
         elsif attr == 'option_1_name'
-          design.subcollection.subcollection_type.name
+          variant.design.subcollection.subcollection_type.name
 
         elsif attr == 'option_1_value'
-          case design.subcollection.subcollection_type.name
+          case variant.design.subcollection.subcollection_type.name
           when 'Roll Width'
             case domain
             when 'astek.com'
-              design.property('roll_width_inches') + ' inches'
+              variant.design.property('roll_width_inches') + ' inches'
             when 'astekhome.com'
-              design.property('roll_width_inches')
+              variant.design.property('roll_width_inches')
             end
+          when 'Material'
+              variant.substrate.for_domain(domain)
           end
 
         elsif attr == 'image_src'
@@ -267,7 +277,7 @@ module Admin
               #   @random_install_image[:install_image].file.url
               # else
               if image_index == 0
-                design.variants.first.swatch_image_url 0
+                variant.swatch_image_url 0
               end
 
               # end
@@ -290,10 +300,10 @@ module Admin
                 # if design.variants.first.variant_type.name == 'Color Way'
                 #   alt_text = "#{design.subcollection.name} - #{design.variants.first.name}"
                 # else
-                  alt_text = "#{design.variants.first.name}"
+                  alt_text = "#{variant.name}"
                 # end
 
-                product_type_names = design.variants.first.product_types.map { |t| t.name }
+                product_type_names = variant.product_types.map { |t| t.name }
                 if product_type_names.include? 'Murals'
                   alt_text += ' Mural'
                 elsif product_type_names.include? 'Contact Paper'
@@ -372,19 +382,19 @@ module Admin
           case variant_type
           when 'sample'
             if material
-              design.variants.first.sample_sku_with_material material
+              variant.sample_sku_with_material material
             else
-              design.variants.first.sample_sku
+              variant.sample_sku
             end
           when 'custom'
-            design.variants.first.design.sku+'-c'
+            variant.design.sku+'-c'
           when 'custom_sample'
-            design.variants.first.design.sku+'-c-s'
+            variant.design.sku+'-c-s'
           when 'full'
             if material
-              design.variants.first.sku_with_material_and_colors material
+              variant.sku_with_material_and_colors material
             else
-              design.variants.first.sku_with_colors
+              variant.sku_with_colors
             end
           end
 
@@ -396,7 +406,7 @@ module Admin
             if variant_type == 'sample' || variant_type == 'custom_sample'
               (BigDecimal('.01') * BigDecimal('453.592')).round.to_s
             else
-              design.variants.first.variant_grams
+              variant.variant_grams
             end
           end
 
@@ -423,7 +433,7 @@ module Admin
               # if material
               #   (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
               # else
-              design.variants.first.price
+              variant.price
               # end
             end
           end
@@ -459,7 +469,7 @@ module Admin
           #   if @random_install_image && @random_install_image[:variant_id] == design.variants.first.id
           #     @random_install_image[:install_image].file.url
           #   else
-              design.subcollection.designs.first.variants.first.swatch_image_url 0
+          variant.swatch_image_url 0
             # end
             # when 'custom','custom_sample'
             #   'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
@@ -471,22 +481,22 @@ module Admin
           # end
 
         elsif attr == 'seo_title'
-          design.name
+          variant.design.name
 
         elsif attr == 'collection'
           case domain
           when 'astek.com'
-            unless design.collection.suppress_from_display
-              design.collection.name
+            unless variant.design.collection.suppress_from_display
+              variant.design.collection.name
             end
           when 'astekhome.com'
-            unless design.collection.suppress_from_display
-              design.collection.name
+            unless variant.design.collection.suppress_from_display
+              variant.design.collection.name
             end
           end
 
         else
-          val = design.variants.first.send(attr)
+          val = variant.send(attr)
           if [true, false].include? val
             # The example csv file shows true and false in all caps
             val.to_s.upcase
@@ -523,14 +533,14 @@ module Admin
         end
       end
 
-      def astek_business_description design
+      def astek_business_description variant
         body = ''
 
-        if design.description
-          body += format_description design
+        if variant.design.description_for_domain('astek.com')
+          body += format_description(variant.design.description_for_domain('astek.com'))
         end
 
-        body += format_business_properties design
+        body += format_business_properties variant.design
 
         if design.variants.first.tearsheet.file
           body += format_tearsheet_links design
@@ -540,55 +550,55 @@ module Admin
         body
       end
 
-      def astek_home_description design
-        body = format_home_properties(design).gsub(/\n+/, ' ')
+      def astek_home_description variant
+        body = format_home_properties(variant.design).gsub(/\n+/, ' ')
 
-        if design.subcollection.subcollection_type.name == 'Roll Width'
+        if variant.design.subcollection.subcollection_type.name == 'Roll Width'
           body += roll_width_data_js design.subcollection
         end
 
         body
       end
 
-      def format_description design
+      def format_description description
         '<div>
-            <p>'+design.description+'</p>
+            <p>'+description+'</p>
         </div>'
       end
 
-      def format_business_properties design
+      def format_business_properties variant
         formatted = '<div class="description__meta">'
 
-        unless design.collection.suppress_from_display
+        unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
-        if design.variants.first.substrate
+        if variant.substrate_for_domain('astek.com')
           formatted += '<div>
             <h5>Substrate</h5>
             <p>Type II</p>
           </div>'
         end
-        # '+design.variants.first.format_substrate_name+'
+        # '+variant.format_substrate_name+'
 
-        if design.variants.first.backing_type
+        if variant.backing_type
           formatted += '<div>
             <h5>Backing</h5>
-            <p>'+design.variants.first.backing_type.name+'</p>
+            <p>'+variant.backing_type.name+'</p>
           </div>'
         end
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+design.variants.first.sale_unit.name+'</p>
+            <p>'+variant.sale_unit.name+'</p>
           </div>'
 
-        design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && design.sale_unit.name != 'Roll'
-          next if /\Aroll_width_/ =~ dp.property.name && design.subcollection.subcollection_type.name == 'Roll Width'
+        variant.design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
+          next if /\Aroll_width_/ =~ dp.property.name && variant.design.subcollection.subcollection_type.name == 'Roll Width'
           formatted += '<div>
             <h5>'+dp.property.presentation+'</h5>
             <p>'+format_property_value(dp)+'</p>
@@ -599,32 +609,32 @@ module Admin
         formatted
       end
 
-      def format_home_properties design
+      def format_home_properties variant
         formatted = '<div class="description__meta">'
 
-        design.subcollection.designs.each do |d|
+        variant.design.subcollection.designs.each do |d|
             formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
                   <h6>SKU</h6>
                   <p>'+d.sku+'</p>
                 </div>'
         end
 
-        unless design.collection.suppress_from_display
+        unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h6>Collection</h6>
-              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
-        if design.collection.lead_time
+        if variant.design.collection.lead_time
           formatted += '<div>
               <h6>Lead Time</h6>
-              <p>'+design.collection.lead_time.name+'</p>
+              <p>'+variant.design.collection.lead_time.name+'</p>
             </div>'
         end
 
-        design.design_properties.each do |dp|
-          next if design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
+        variant.design.design_properties.each do |dp|
+          next if variant.design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
 
           formatted += '<div>
             <h6>'+dp.property.presentation+'</h6>
@@ -632,17 +642,17 @@ module Admin
           </div>'
         end
 
-        if design.variants.first.minimum_quantity > 1
+        if variant.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+design.variants.first.minimum_quantity.to_s+' '+design.variants.first.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+variant.minimum_quantity.to_s+' '+variant.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if design.variants.first.sale_quantity > 1
+        if variant.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+design.variants.first.sale_quantity.to_s+'</p>
+            <p>'+variant.sale_quantity.to_s+'</p>
           </div>'
         end
 
@@ -652,7 +662,7 @@ module Admin
 
       def format_tearsheet_links variant
         out = '<!-- pdf -->'
-        design.variants.each do |v|
+        variant.design.variants.each do |v|
           if v.tearsheet.file
             out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
           end
