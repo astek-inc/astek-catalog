@@ -163,7 +163,7 @@ module Admin
           # # On astekhome.com, if a design has colorways, we don't show the install images separately.
           # # Instead, we mix a random install image in with the swatch images
           # @random_install_image = nil
-          # if website == 'astekhome.com' && design.has_colorways?
+          # if website == 'astekhome.com' && variant.design.has_colorways?
           #   if install_images = subcollection.install_images
           #     @random_install_image = install_images.sample
           #   end
@@ -177,7 +177,7 @@ module Admin
 
               # first_variant_row = true
 
-              # if website == 'astekhome.com' && design.user_can_select_material
+              # if website == 'astekhome.com' && variant.design.user_can_select_material
               #
               #   design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
               #
@@ -243,9 +243,9 @@ module Admin
         elsif attr == 'body'
           case domain
           when 'astek.com'
-            astek_business_description design
+            astek_business_description variant, domain
           when 'astekhome.com'
-            astek_home_description design
+            astek_home_description variant
           end
 
         elsif attr == 'tags'
@@ -481,22 +481,22 @@ module Admin
           # end
 
         elsif attr == 'seo_title'
-          design.name
+          variant.design.name
 
         elsif attr == 'collection'
           case domain
           when 'astek.com'
             unless variant.design.collection.suppress_from_display
-              design.collection.name
+              variant.design.collection.name
             end
           when 'astekhome.com'
-            unless design.collection.suppress_from_display
-              design.collection.name
+            unless variant.design.collection.suppress_from_display
+              variant.design.collection.name
             end
           end
 
         else
-          val = design.variants.first.send(attr)
+          val = variant.send(attr)
           if [true, false].include? val
             # The example csv file shows true and false in all caps
             val.to_s.upcase
@@ -533,72 +533,75 @@ module Admin
         end
       end
 
-      def astek_business_description design
+      def astek_business_description variant, domain
         body = ''
 
-        if design.description
-          body += format_description design
+        if formatted_description = format_description(variant, domain)
+          body += formatted_description
         end
 
-        body += format_business_properties design
+        body += format_business_properties(variant) #, domain)
 
-        if design.variants.first.tearsheet.file
-          body += format_tearsheet_links design
+        if variant.tearsheet.file
+          body += format_tearsheet_links variant
         end
 
         body = body.gsub(/\n+/, ' ')
         body
       end
 
-      def astek_home_description design
-        body = format_home_properties(design).gsub(/\n+/, ' ')
+      def astek_home_description variant
+        body = format_home_properties(variant).gsub(/\n+/, ' ')
 
-        if design.subcollection.subcollection_type.name == 'Roll Width'
-          body += roll_width_data_js design.subcollection
+        if variant.design.subcollection.subcollection_type.name == 'Roll Width'
+          body += roll_width_data_js variant.design.subcollection
         end
 
         body
       end
+      ##
 
-      def format_description design
-        '<div>
-            <p>'+design.description+'</p>
-        </div>'
+      def format_description(variant, domain)
+        formatted_description = ''
+        if description = variant.design.description_for_domain(domain)
+          formatted_description += '<p>' + description + '</p>'
+        end
       end
 
-      def format_business_properties design
+
+      def format_business_properties variant
         formatted = '<div class="description__meta">'
 
-        unless design.collection.suppress_from_display
+        unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
-        if design.variants.first.substrate
-          formatted += '<div>
-            <h5>Substrate</h5>
-            <p>Type II</p>
-          </div>'
-        end
+        # if variant.design.variants.first.substrate
+        #   formatted += '<div>
+        #     <h5>Substrate</h5>
+        #     <p>Type II</p>
+        #   </div>'
+        # end
         # '+design.variants.first.format_substrate_name+'
 
-        if design.variants.first.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+design.variants.first.backing_type.name+'</p>
-          </div>'
-        end
+        # if variant.backing_type
+        #   formatted += '<div>
+        #     <h5>Backing</h5>
+        #     <p>'+variant.backing_type.name+'</p>
+        #   </div>'
+        # end
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+design.variants.first.sale_unit.name+'</p>
+            <p>'+variant.sale_unit.name+'</p>
           </div>'
 
-        design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && design.sale_unit.name != 'Roll'
-          next if /\Aroll_width_/ =~ dp.property.name && design.subcollection.subcollection_type.name == 'Roll Width'
+        variant.design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+          next if /\Aroll_width_/ =~ dp.property.name && variant.design.subcollection.subcollection_type.name == 'Roll Width'
           formatted += '<div>
             <h5>'+dp.property.presentation+'</h5>
             <p>'+format_property_value(dp)+'</p>
@@ -609,60 +612,81 @@ module Admin
         formatted
       end
 
-      def format_home_properties design
+      def format_home_properties variant
         formatted = '<div class="description__meta">'
 
-        design.subcollection.designs.each do |d|
-            formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
+        formatted += '<div>
+              <h6>SKU</h6>
+              <p>'+variant.design.sku+'</p>
+            </div>'
+
+        variant.design.subcollection.designs.each do |d|
+          formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
                   <h6>SKU</h6>
                   <p>'+d.sku+'</p>
                 </div>'
         end
 
-        unless design.collection.suppress_from_display
+        unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h6>Collection</h6>
-              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
-        if design.collection.lead_time
+        if variant.design.collection.lead_time
           formatted += '<div>
               <h6>Lead Time</h6>
-              <p>'+design.collection.lead_time.name+'</p>
+              <p>'+variant.design.collection.lead_time.name+'</p>
             </div>'
         end
 
-        design.design_properties.each do |dp|
-          next if design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
+        variant.design.design_properties.each do |dp|
+
+          next if variant.design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
+          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
 
           formatted += '<div>
             <h6>'+dp.property.presentation+'</h6>
-            <p>'+format_property_value(dp)+'</p>
+            <p>'+format_property_value(dp, 'astekhome.com')+'</p>
           </div>'
+
         end
 
-        if design.variants.first.minimum_quantity > 1
+        if variant.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+design.variants.first.minimum_quantity.to_s+' '+design.variants.first.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+variant.minimum_quantity.to_s+' '+variant.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if design.variants.first.sale_quantity > 1
+        if variant.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+design.variants.first.sale_quantity.to_s+'</p>
+            <p>'+variant.sale_quantity.to_s+'</p>
           </div>'
         end
 
         formatted += '</div>'
+
+        formatted += '<script>
+          var Astek = Astek || {};
+          Astek.calculator_settings = ' + variant.design.calculator_settings + ';
+        </script>'
+
+        if design = variant.design.peel_and_stick_version
+          formatted += "<script>
+            var Astek = Astek || {};
+            Astek.peel_and_stick_version_handle = '#{design.handle}';
+          </script>"
+        end
+
         formatted
       end
 
       def format_tearsheet_links variant
         out = '<!-- pdf -->'
-        design.variants.each do |v|
+        variant.design.variants.each do |v|
           if v.tearsheet.file
             out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
           end
@@ -670,14 +694,33 @@ module Admin
         out
       end
 
-      def format_property_value dp
-        if matches = dp.property.name.match(/_(?<unit>inches|yards|meters)\Z/)
+      def format_property_value(dp, domain = nil)
+        if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
           "#{dp.value} #{matches[:unit]}"
-        elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Untrimmed].include?(dp.value)
-          # Value for margin trim can be numeric, but we display "Untrimmed"
-          'Untrimmed'
+        elsif dp.property.name == 'margin_trim'
+          format_margin_trim_property_value(dp, domain)
         else
           dp.value
+        end
+      end
+
+      def format_margin_trim_property_value(dp, domain = nil)
+        if domain == 'astekhome.com'
+          if dp.design.digital? && (%w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value) || dp.value == 'Untrimmed')
+            'Pre-trimmed'
+          elsif %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
+        else
+          if %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
         end
       end
 
