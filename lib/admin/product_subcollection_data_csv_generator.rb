@@ -177,7 +177,7 @@ module Admin
 
               # first_variant_row = true
 
-              # if website == 'astekhome.com' && variant.design.user_can_select_material
+              # if website == 'astekhome.com' && design.user_can_select_material
               #
               #   design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
               #
@@ -551,7 +551,8 @@ module Admin
       end
 
       def astek_home_description variant
-        body = format_home_properties(variant).gsub(/\n+/, ' ')
+
+        body = format_home_properties(variant.design).gsub(/\n+/, ' ')
 
         if variant.design.subcollection.subcollection_type.name == 'Roll Width'
           body += roll_width_data_js variant.design.subcollection
@@ -559,7 +560,6 @@ module Admin
 
         body
       end
-      ##
 
       def format_description(variant, domain)
         formatted_description = ''
@@ -567,7 +567,6 @@ module Admin
           formatted_description += '<p>' + description + '</p>'
         end
       end
-
 
       def format_business_properties variant
         formatted = '<div class="description__meta">'
@@ -579,14 +578,14 @@ module Admin
             </div>'
         end
 
-        # if variant.design.variants.first.substrate
+        # if variant.substrate_for_domain('astek.com')
         #   formatted += '<div>
         #     <h5>Substrate</h5>
         #     <p>Type II</p>
         #   </div>'
         # end
-        # '+design.variants.first.format_substrate_name+'
-
+        # # '+variant.format_substrate_name+'
+        #
         # if variant.backing_type
         #   formatted += '<div>
         #     <h5>Backing</h5>
@@ -600,12 +599,15 @@ module Admin
           </div>'
 
         variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+
+          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
           next if /\Aroll_width_/ =~ dp.property.name && variant.design.subcollection.subcollection_type.name == 'Roll Width'
+
           formatted += '<div>
             <h5>'+dp.property.presentation+'</h5>
             <p>'+format_property_value(dp)+'</p>
           </div>'
+
         end
 
         formatted += '</div>'
@@ -615,13 +617,8 @@ module Admin
       def format_home_properties variant
         formatted = '<div class="description__meta">'
 
-        formatted += '<div>
-              <h6>SKU</h6>
-              <p>'+variant.design.sku+'</p>
-            </div>'
-
         variant.design.subcollection.designs.each do |d|
-          formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
+            formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
                   <h6>SKU</h6>
                   <p>'+d.sku+'</p>
                 </div>'
