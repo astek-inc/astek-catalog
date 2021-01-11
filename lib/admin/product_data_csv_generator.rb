@@ -913,26 +913,6 @@ module Admin
           dp.value
         end
       end
-      
-      def format_margin_trim_property_value(dp, domain = nil)
-        if domain == 'astekhome.com'
-          if dp.design.digital? && (%w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value) || dp.value == 'Untrimmed')
-            'Pre-trimmed'
-          elsif %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
-            # Value for margin trim can be numeric, but we display "Untrimmed"
-            'Untrimmed'
-          else
-            dp.value
-          end
-        else
-          if %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
-            # Value for margin trim can be numeric, but we display "Untrimmed"
-            'Untrimmed'
-          else
-            dp.value
-          end
-        end
-      end
 
       def format_margin_trim_property_value(dp, domain = nil)
         if domain == 'astekhome.com'
