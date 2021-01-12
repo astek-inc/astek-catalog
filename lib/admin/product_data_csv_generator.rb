@@ -602,8 +602,7 @@ module Admin
 
         elsif attr == 'variant_image'
           # if show_image
-            case variant_type
-            when 'full','sample','substrate-full'
+            if /full|sample/ =~ variant_type
               if @random_install_image && @random_install_image[:variant_id] == variant.id
                 @random_install_image[:install_image].file.url
               else
