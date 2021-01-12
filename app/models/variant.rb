@@ -89,25 +89,29 @@ class Variant < ApplicationRecord
     end
   end
 
-  def price
-    self.design.price.to_s
-  end
-
   # For export to Shopify websites. Color is appended to ensure the product appears in search results.
   def sample_sku
     self.sku + '-s'
   end
 
-  def sample_sku_with_material material
-    self.sku + '-' + material.name.parameterize + '-s'
+  def sample_sku_with_substrate substrate
+    self.sku + '-' + substrate.name_or_display_name.parameterize + '-s'
+  end
+
+  def sample_sku_with_custom_material custom_material
+    self.sku + '-' + custom_material.name.parameterize + '-s'
   end
 
   def sku_with_colors
     self.sku + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
   end
 
-  def sku_with_material_and_colors material
-    self.sku + '-' + material.name.parameterize + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
+  def sku_with_substrate_and_colors substrate
+    self.sku + '-' + substrate.name_or_display_name.parameterize + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
+  end
+
+  def sku_with_custom_material_and_colors custom_material
+    self.sku + '-' + custom_material.name.parameterize + '__' + self.colors.map { |c| c.name.gsub(/\s+/, '-').downcase }.join('__')
   end
 
   def install_images_for_domain domain
