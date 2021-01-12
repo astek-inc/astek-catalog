@@ -202,18 +202,19 @@ module Admin
             elsif website == 'astekhome.com' && variant.variant_substrates.for_domain(website).count > 1
 
               # Multiple materials for this variant
-              variant.variant_substrates.for_domain(website).each do |substrate|
+              variant.variant_substrates.for_domain(website).each do |variant_substrate|
 
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, nil, substrate)) }
+                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, nil, substrate)) }
+                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
                 end
+                first_variant_row = false
 
                 murals = ProductType.find_by(name: 'Murals')
                 unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, "sample-substrate", 0, website, nil, nil, substrate)) }
+                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, "sample-substrate", 0, website, nil, nil, variant_substrate.substrate)) }
                 end
 
               end
