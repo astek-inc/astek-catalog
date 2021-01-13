@@ -35,4 +35,12 @@ class Substrate < ApplicationRecord
     end
   end
 
+  def name_or_display_name
+    if self.display_name.present?
+      self.display_name
+    else
+      self.name
+    end
+  end
+
 end

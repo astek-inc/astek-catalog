@@ -3,7 +3,7 @@ module Admin
 
     before_action :set_variant, only: [:edit, :update, :destroy]
     before_action :set_design, :set_collection
-    before_action :set_product_types, :set_colors, :set_substrates, :set_backing_types, only: [:new, :create, :edit, :update]
+    before_action :set_sale_units, :set_product_types, :set_colors, :set_substrates, :set_backing_types, only: [:new, :create, :edit, :update]
     before_action :set_websites, only: [:new, :edit]
 
     def index
@@ -68,6 +68,10 @@ module Admin
       @collection = @design.collection
     end
 
+    def set_sale_units
+      @sale_units = SaleUnit.all
+    end
+
     def set_product_types
       @product_types = ProductType.all
     end
@@ -91,8 +95,9 @@ module Admin
     def variant_params
       params.require(:variant).permit(
           :variant_type_id, :name, :sku, :keywords, :design_id, :substrate_id, :backing_type_id,
-          :weight, :width, :height, :depth, :price_code, :price, :sale_price, :display_sale_price, :sale_unit_id, :weight, :sale_quantity,
-          :minimum_quantity, product_type_ids: [], color_ids: [], website_ids: []
+          :price_code, :price, :sale_price, :display_sale_price, :sale_unit_id, :sale_quantity,
+          :minimum_quantity, :weight, :width, :height, :depth,
+          product_type_ids: [], color_ids: [], website_ids: []
       )
     end
 
