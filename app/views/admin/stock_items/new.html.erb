@@ -1,0 +1,28 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+      link_to('Collections', admin_collections_path),
+      link_to(@collection.name, edit_admin_collection_path(@collection)),
+      link_to('Designs', admin_collection_designs_path(@collection)),
+      link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
+      link_to('Variants', admin_design_variants_path(@design)),
+      link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
+      link_to('Stock Items', admin_variant_stock_items_path(@variant)),
+      'New Stock Item'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+  <%= form_for [:admin, :variant, @stock_item], html: { multipart: true } do |f| %>
+
+    <%= render partial: 'form', locals: { f: f } %>
+
+    <%= form_buttons admin_variant_stock_items_path(@variant) %>
+
+  <% end %>
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+  <%= render partial: 'admin/variants/subnav', locals: { current: 'stock_items' } %>
+<% end %>
