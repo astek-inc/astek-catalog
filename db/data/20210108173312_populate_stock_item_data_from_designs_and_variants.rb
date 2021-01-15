@@ -1,4 +1,4 @@
-class PopulateVariantPricingDataFromDesigns < ActiveRecord::Migration[5.2]
+class PopulateStockItemDataFromDesignsAndVariants < ActiveRecord::Migration[5.2]
   def up
     Design.all.each do |d|
       puts d.name
