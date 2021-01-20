@@ -224,15 +224,16 @@ module Admin
               full_variant_type = 'full'
               sample_variant_type = 'sample'
               substrate = nil
+              stock_item_count = variant.stock_items.for_domain(website).count
 
-              if variant.stock_items.for_domain(website).count > 1
+              if stock_item_count > 1
                 full_variant_type = 'full-substrate'
                 sample_variant_type = 'sample-substrate'
               end
 
               variant.stock_items.for_domain(website).each do |stock_item|
 
-                if design.digital?
+                if design.digital? && stock_item_count > 1
                   substrate = stock_item.substrate
                 end
 
