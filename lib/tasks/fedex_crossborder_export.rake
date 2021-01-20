@@ -5,11 +5,13 @@ namespace :db do
   task :fedex_crossborder_export => :environment do
 
     csv_data = ''
-    Collection.joins(:websites).where('websites.domain = ?', 'astekhome.com').each do |collection|
+    Collection.for_domain('astekhome.com').each do |collection|
       puts 'Getting data for '+collection.name
 
-      collection.designs.available.each do |design|
-        csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
+      collection.designs.available.for_domain('astekhome.com').each do |design|
+        if design.price.present? && design.price > 0 && design.country_id.present?
+          csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
+        end
       end
     end
 

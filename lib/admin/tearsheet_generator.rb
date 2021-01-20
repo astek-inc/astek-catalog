@@ -15,8 +15,8 @@ module Admin
 
         filename = Rails.root.join('tmp', @variant.sku+'.pdf')
 
-        logo_img = open(LOGO_IMAGE_URL)
-        variant_img = open(@variant.variant_swatch_images.first.file.large.url)
+        logo_img = URI.open(LOGO_IMAGE_URL)
+        variant_img = URI.open(@variant.variant_swatch_images.first.file.large.url)
 
         Prawn::Font::AFM.hide_m17n_warning = true
 

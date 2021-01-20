@@ -31,7 +31,7 @@ module Admin
       collection = Collection.find(params[:collection_id])
 
       csv_data = ''
-      collection.designs.each do |design|
+      collection.designs.available.for_domain('astekhome.com').each do |design|
         csv_data += ::Admin::OrderLimitsCsvGenerator.order_limits_csv design
       end
 

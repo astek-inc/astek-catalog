@@ -12,7 +12,7 @@ module Admin
         variant_inventory_tracker: '',
         variant_inventory_policy: 'Continue',
         variant_fulfillment_service: 'Manual',
-        variant_compare_at_price: '',
+        # variant_compare_at_price: '',
         google_shopping_mpn: '',
         google_shopping_age_group: '',
         google_shopping_gender: '',
@@ -183,18 +183,38 @@ module Admin
 
             if website == 'astekhome.com' && design.user_can_select_material
 
-              design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
+              design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |custom_material|
 
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
+                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, custom_material, first_variant_row)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, material, first_variant_row)) }
+                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, custom_material, first_variant_row)) }
                 end
                 first_variant_row = false
 
                 unless design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, material)) }
+                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, custom_material)) }
+                end
+
+              end
+
+            elsif website == 'astekhome.com' && variant.variant_substrates.for_domain(website).count > 1
+
+              # Multiple materials for this variant
+              variant.variant_substrates.for_domain(website).each do |variant_substrate|
+
+                if @first_row
+                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
+                  @first_row = false
+                else
+                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
+                end
+                first_variant_row = false
+
+                murals = ProductType.find_by(name: 'Murals')
+                unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
+                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, "sample-substrate", 0, website, nil, nil, variant_substrate.substrate)) }
                 end
 
               end
@@ -235,7 +255,7 @@ module Admin
 
       end
 
-      def attribute_value attr, variant, variant_type, image_index, domain, material=nil, show_image=true
+      def attribute_value attr, variant, variant_type, image_index, domain, custom_material=nil, show_image=true, substrate=nil
 
         if TEXT_VALUES[attr.to_sym]
 
@@ -251,7 +271,8 @@ module Admin
           variant.type
 
         elsif attr == 'tags'
-          if variant_type == 'full'
+          if /\Afull/ =~ variant_type
+          # if variant_type == 'full'
             variant.design.tags domain
           end
 
@@ -298,8 +319,7 @@ module Admin
 
         elsif attr == 'image_src'
           if show_image
-            case variant_type
-            when 'full'
+            if /\Afull/ =~ variant_type
               if @random_install_image && @random_install_image[:variant_id] == variant.id
                 @random_install_image[:install_image].file.url
               else
@@ -316,8 +336,7 @@ module Admin
 
         elsif attr == 'image_alt_text'
           if show_image
-            case variant_type
-            when 'full'
+            if /\Afull/ =~ variant_type
 
               if variant.variant_type.name == 'Color Way'
                 alt_text = "#{variant.design.name} - #{variant.name}"
@@ -347,8 +366,7 @@ module Admin
           end
 
         elsif attr == 'image_position'
-          case variant_type
-          when 'sample', 'custom', 'custom_sample'
+          if /\A(sample|custom|custom_sample)/ =~ variant_type
             nil
           else
             if show_image
@@ -366,7 +384,9 @@ module Admin
           when 'astek.com'
             nil
           when 'astekhome.com'
-            if variant.variant_type.name == 'Color Way' || variant.design.digital?
+            if /-substrate\z/ =~ variant_type
+              'Material'
+            elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               'Size'
             else
               if variant.design.user_can_select_material
@@ -382,10 +402,12 @@ module Admin
           when 'astek.com'
             nil
           when 'astekhome.com'
-            if variant.variant_type.name == 'Color Way' || variant.design.digital?
+            if /-substrate\z/ =~ variant_type
+              substrate.name_or_display_name
+            elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               astek_home_size_value variant_type
             else
-              astek_home_material_value material
+              astek_home_custom_material_value custom_material
             end
           when 'onairdesign.com'
             nil
@@ -396,7 +418,9 @@ module Admin
           when 'astek.com'
             nil
           when 'astekhome.com'
-            if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
+            if /-substrate\z/ =~ variant_type
+              'Size'
+            elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               'Material'
             end
           when 'onairdesign.com'
@@ -408,33 +432,37 @@ module Admin
           when 'astek.com'
             nil
           when 'astekhome.com'
-            if (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
-              astek_home_material_value material
+            if /-substrate\z/ =~ variant_type
+              astek_home_size_value variant_type
+            elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
+              astek_home_custom_material_value custom_material
             end
           when 'onairdesign.com'
             nil
           end
 
         elsif attr == 'sku'
-          case variant_type
-          when 'sample'
-            if material
-              variant.sample_sku_with_material material
+          if /\Asample/ =~ variant_type
+            if substrate
+              variant.sample_sku_with_substrate substrate
+            elsif custom_material
+              variant.sample_sku_with_custom_material custom_material
             else
               variant.sample_sku
             end
-          when 'custom'
-            variant.design.sku+'-c'
-          when 'custom_sample'
-            variant.design.sku+'-c-s'
-          when 'full'
-
+          elsif variant_type == 'custom'
+              variant.design.sku+'-c'
+          elsif variant_type ==  'custom_sample'
+              variant.design.sku+'-c-s'
+          elsif /\Afull/ =~ variant_type
             case domain
             when 'onairdesign.com'
               variant.sku
             else
-              if material
-                variant.sku_with_material_and_colors material
+              if substrate
+                variant.sku_with_substrate_and_colors substrate
+              elsif custom_material
+                variant.sku_with_custom_material_and_colors custom_material
               else
                 variant.sku_with_colors
               end
@@ -446,11 +474,11 @@ module Admin
           when 'astek.com'
             nil
           when 'astekhome.com'
-            if variant_type == 'sample' || variant_type == 'custom_sample'
+            if /sample/ =~ variant_type
               (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
             else
-              if material
-                material_variant_weight material, variant, domain
+              if custom_material
+                custom_material_variant_weight custom_material, variant, domain
               else
                 variant.variant_grams
               end
@@ -474,25 +502,72 @@ module Admin
           when 'astek.com'
             0
           when 'astekhome.com'
-            if variant_type == 'sample' || variant_type == 'custom_sample'
+            if /sample/ =~ variant_type
               if variant.design.digital?
                 SAMPLE_PRICE_DIGITAL
               else
                 SAMPLE_PRICE_DISTRIBUTED
               end
             else
-              if material
-                (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
+
+              # If there is a sale price indicated, we need to put that here and put
+              # the regular retail price in the compare_at_price column
+              if variant.sale_price.present? && variant.display_sale_price
+                display_price = variant.sale_price
               else
-                if variant.price.blank?
+                display_price = variant.price
+              end
+
+              if custom_material
+                (BigDecimal(display_price) + BigDecimal(custom_material.surcharge)).to_s
+              else
+                if display_price.blank?
                   0
                 else
-                  variant.price
+                  display_price
                 end
               end
+
             end
+
           when 'onairdesign.com'
             0
+          end
+
+        elsif attr == 'variant_compare_at_price'
+          case domain
+          when 'astek.com'
+            nil
+          when 'astekhome.com'
+
+            if /sample/ =~ variant_type
+              nil
+            else
+
+              # If there is a sale price indicated, we need to put the regular retail price here
+              # and put the sale price in the price column
+              if variant.sale_price.present? && variant.display_sale_price
+
+                if custom_material
+                  (BigDecimal(variant.price) + BigDecimal(custom_material.surcharge)).to_s
+                else
+                  if variant.price.blank?
+                    0
+                  else
+                    variant.price
+                  end
+                end
+
+              else
+
+                nil
+
+              end
+
+            end
+
+          when 'onairdesign.com'
+            nil
           end
 
         elsif attr == 'variant_requires_shipping'
@@ -527,8 +602,7 @@ module Admin
 
         elsif attr == 'variant_image'
           # if show_image
-            case variant_type
-            when 'full','sample'
+            if /full|sample/ =~ variant_type
               if @random_install_image && @random_install_image[:variant_id] == variant.id
                 @random_install_image[:install_image].file.url
               else
@@ -593,19 +667,18 @@ module Admin
       end
 
       def astek_home_size_value variant_type
-        case variant_type
-        when 'sample', 'full'
-          variant_type.capitalize
-        when 'custom_sample'
+        if /\A(?<label>sample|full)/ =~ variant_type
+          label.capitalize
+        elsif variant_type == 'custom_sample'
           'Sample'
         else
           'Full'
         end
       end
 
-      def astek_home_material_value material
-        if material
-          material.name
+      def astek_home_custom_material_value custom_material
+        if custom_material
+          custom_material.name
         end
       end
 
@@ -623,11 +696,11 @@ module Admin
       def astek_business_description variant, domain
         body = ''
 
-        if description = variant.design.description_for_domain(domain)
-          body += format_description description
+        if formatted_description = format_description(variant, domain)
+          body += formatted_description
         end
 
-        body += format_business_properties variant, domain
+        body += format_business_properties(variant, domain)
 
         if variant.tearsheet.file
           body += format_tearsheet_links variant
@@ -642,35 +715,48 @@ module Admin
         body
       end
 
-      def onair_design_description variant, domain
+      def onair_design_description(variant, domain)
         body = ''
-
-        if description = variant.design.description_for_domain(domain)
-          body += format_description description
+        if formatted_description = format_description(variant, domain)
+          body += formatted_description
         end
-
-        body += format_onair_properties(variant).gsub(/\n+/, ' ')
+        body += format_onair_properties(variant)
+        body = body.gsub(/\n+/, ' ')
         body
       end
 
-      def format_description description
-        '<div>
-            <p>'+description+'</p>
-        </div>'
+      def format_description(variant, domain)
+
+        formatted_description = ''
+
+        if description = variant.design.description_for_domain(domain)
+          formatted_description += '<p>' + description + '</p>'
+        end
+
+        if domain == 'astek.com' && variant.design.collection.product_category.name == 'Contract Vinyl'
+          formatted_description += '<p>For digitally printed commercial grade vinyl wallcoverings, visit our <a href="/collections/studio">Studio</a> collections.</p>'
+        end
+
+        unless formatted_description.blank?
+          "<div>
+            #{formatted_description}
+          </div>"
+        end
+
       end
 
-      def format_business_properties variant, domain
+      def format_business_properties(variant, domain)
         formatted = '<div class="description__meta">'
 
         unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+variant.design.collection.name.gsub("\'", "").parameterize+'">'+variant.design.collection.name+'</a></p>
+              <p><a href="/collections/' + variant.design.collection.name.gsub("\'", "").parameterize + '">' + variant.design.collection.name + '</a></p>
             </div>'
         end
 
         if variant.design.digital?
-          # This property has to apply to all variants, so we are making sure that they are all TYpe II.
+          # This property has to apply to all variants, so we are making sure that they are all Type II.
           vs = variant.design.variants
           if vs.select { |v| v.substrate_for_domain(domain).substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == vs.count
             formatted += '<div>
@@ -684,35 +770,35 @@ module Admin
           if variant.backing_type
             formatted += '<div>
               <h5>Backing</h5>
-              <p>'+variant.backing_type.name+'</p>
+              <p>' + variant.backing_type.name + '</p>
             </div>'
-          # elsif variant_substrate && variant_substrate.backing_type
-          #   formatted += '<div>
-          #     <h5>Backing</h5>
-          #     <p>'+variant_substrate.backing_type.name+'</p>
-          #   </div>'
+            # elsif variant_substrate && variant_substrate.backing_type
+            #   formatted += '<div>
+            #     <h5>Backing</h5>
+            #     <p>'+variant_substrate.backing_type.name+'</p>
+            #   </div>'
           end
         end
 
-        if variant.design.sale_unit.present?
+        if variant.sale_unit.present?
           formatted += '<div>
               <h5>Sold By</h5>
-              <p>'+variant.design.sale_unit.name+'</p>
+              <p>' + variant.sale_unit.name + '</p>
             </div>'
         end
 
         if variant.design.price_code.present?
           formatted += '<div>
             <h5>Price Code</h5>
-            <p>'+variant.design.price_code+'</p>
+            <p>' + variant.design.price_code + '</p>
           </div>'
         end
 
         variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
           formatted += '<div>
-            <h5>'+dp.property.presentation+'</h5>
-            <p>'+format_property_value(dp)+'</p>
+            <h5>' + dp.property.presentation + '</h5>
+            <p>' + format_property_value(dp) + '</p>
           </div>'
         end
 
@@ -743,24 +829,24 @@ module Admin
         end
 
         variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
           formatted += '<div>
             <h6>'+dp.property.presentation+'</h6>
-            <p>'+format_property_value(dp)+'</p>
+            <p>'+format_property_value(dp, 'astekhome.com')+'</p>
           </div>'
         end
 
-        if variant.design.minimum_quantity > 1
+        if variant.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+variant.design.minimum_quantity.to_s+' '+variant.design.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+variant.minimum_quantity.to_s+' '+variant.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if variant.design.sale_quantity > 1
+        if variant.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+variant.design.sale_quantity.to_s+'</p>
+            <p>'+variant.sale_quantity.to_s+'</p>
           </div>'
         end
 
@@ -768,7 +854,7 @@ module Admin
 
         formatted += '<script>
           var Astek = Astek || {};
-          Astek.calculator_settings = ' + variant.design.calculator_settings + ';
+          Astek.calculator_settings = ' + variant.calculator_settings + ';
         </script>'
 
         if design = variant.design.peel_and_stick_version
@@ -798,7 +884,7 @@ module Admin
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+variant.design.sale_unit.name+'</p>
+            <p>'+variant.sale_unit.name+'</p>
           </div>'
 
         variant.design.design_properties.each do |dp|
@@ -820,7 +906,7 @@ module Admin
             vertical_repeat_inches
           ].include? dp.property.name
 
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
 
           formatted += '<div>
             <h5>'+dp.property.presentation+'</h5>
@@ -842,14 +928,33 @@ module Admin
         out
       end
 
-      def format_property_value dp
+      def format_property_value(dp, domain = nil)
         if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
           "#{dp.value} #{matches[:unit]}"
-        elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Pretrimmed Untrimmed].include?(dp.value)
-          # Value for margin trim can be numeric, but we display "Untrimmed"
-          'Untrimmed'
+        elsif dp.property.name == 'margin_trim'
+          format_margin_trim_property_value(dp, domain)
         else
           dp.value
+        end
+      end
+
+      def format_margin_trim_property_value(dp, domain = nil)
+        if domain == 'astekhome.com'
+          if dp.design.digital? && (%w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value) || dp.value == 'Untrimmed')
+            'Pre-trimmed'
+          elsif %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
+        else
+          if %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
         end
       end
 
@@ -857,13 +962,13 @@ module Admin
       # may be required to complete a given order, so the weight of a square foot of a variant
       # is given as more than standard. We want to apply the same increase to the custom material
       # options
-      def material_variant_weight material, variant, domain
+      def custom_material_variant_weight custom_material, variant, domain
         variant_substrate = variant.substrate_for_domain domain
         if BigDecimal(variant.weight) == BigDecimal(variant_substrate.weight_per_square_foot)
-          (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+          (BigDecimal(custom_material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
         else
           ratio = BigDecimal(variant.weight) / BigDecimal(variant_substrate.weight_per_square_foot)
-          (BigDecimal(material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
+          (BigDecimal(custom_material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
         end
       end
 

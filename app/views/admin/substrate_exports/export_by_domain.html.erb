@@ -10,6 +10,14 @@
 <%= content_tag :div, class: 'col-md-9' do %>
   <p>Copy and paste the information below into the Value field of the substrates Shop metafield in
     the Shopify admin interface for <%= @website.name %>.</p>
-  <textarea id="substrate-json-data"><%= render partial: 'admin/substrate_exports/substrates.json', locals: { substrates: @substrates, website: @website } %>
-  </textarea>
+  <%= text_area_tag 'substrate-json-data',
+        (render partial: 'admin/substrate_exports/substrates.json',
+            locals: { substrates: @substrates, website: @website }),
+        class: 'to-copy',
+        disabled: true %>
+<% end %>
+<%= content_tag :div, class: 'col-md-1' do %>
+  <button id="copy-to-clipboard" type="button" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Copy
+  </button>
 <% end %>

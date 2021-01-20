@@ -3,7 +3,7 @@ module Admin
 
     before_action :set_design, only: [:update, :edit, :destroy, :custom_materials]
     before_action :set_collection, except: [:edit]
-    before_action :set_sale_units, :set_styles, :set_countries, :set_websites, only: [:new, :create, :edit, :update]
+    before_action :set_styles, :set_countries, :set_websites, only: [:new, :create, :edit, :update]
     before_action :set_substrates, only: [:custom_materials]
     before_action :set_default_custom_material, only: [:custom_materials]
 
@@ -81,10 +81,6 @@ module Admin
       @collection = Collection.find(params[:collection_id])
     end
 
-    def set_sale_units
-      @sale_units = SaleUnit.all
-    end
-
     def set_countries
       @countries = Country.all
     end
@@ -121,9 +117,8 @@ module Admin
     def design_params
       params.require(:design).permit(
           :sku, :master_sku, :name, :description, :collection_id, :vendor_id,
-          :price_code, :price, :sale_unit_id, :weight, :sale_quantity, :minimum_quantity,
-          :available_on, :expires_on, :country_id, :suppress_from_searches, :user_can_select_material,
-          :keyword_list, style_ids: [], substrate_ids: [], website_ids: []
+          :available_on, :expires_on, :country_id, :suppress_from_searches,
+          :user_can_select_material, :keyword_list, style_ids: [], substrate_ids: [], website_ids: []
       )
     end
 

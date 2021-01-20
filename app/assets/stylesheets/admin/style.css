@@ -69,7 +69,8 @@ div.form-actions > button {
     margin-right: 10px;
 }
 
-div#suppress-from-searches {
+div#suppress-from-searches,
+div#display-sale-price {
     padding-top: 20px;
 }
 
@@ -88,4 +89,12 @@ div.panel-body.checkbox-wrapper {
 div.export_form {
     margin-left: 20px;
     margin-bottom: 2rem;
+}
+
+button#copy-to-clipboard {
+    margin-top: 3rem;
+}
+
+div#clipboard-message {
+    display: none;
 }

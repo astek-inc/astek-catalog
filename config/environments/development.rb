@@ -58,4 +58,19 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Per Devise docs - not used
+  # config.action_mailer.default_url_options = { host: 'www.astek.com', port: 443 }
+
+  # MailGun settings for Heroku
+  config.action_mailer.smtp_settings = {
+    port: ENV['MAILGUN_SMTP_PORT'],
+    address: ENV['MAILGUN_SMTP_SERVER'],
+    user_name: ENV['MAILGUN_SMTP_LOGIN'],
+    password: ENV['MAILGUN_SMTP_PASSWORD'],
+    domain: 'catalog.astek.com',
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+  config.action_mailer.delivery_method = :smtp
 end

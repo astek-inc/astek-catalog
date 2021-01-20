@@ -13,7 +13,9 @@ module Admin
 
       csv_data = ''
       designs.each do |design|
-        csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
+        if design.price.present? && design.price > 0 && design.country_id.present?
+          csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
+        end
       end
 
       if sku_array.length < 10

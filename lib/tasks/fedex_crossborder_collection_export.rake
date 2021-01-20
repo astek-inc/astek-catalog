@@ -11,14 +11,17 @@ namespace :db do
     collection = Collection.find_by(name: collection_name)
 
     unless collection.websites.map { |w| w.domain }.include? 'astekhome.com'
-      raise collection_name +' collection is not flagged as available for the '+domain+' domain'
+      raise collection_name +' collection is not flagged as available for the astekhome.com domain'
     end
 
     puts 'Getting data for '+collection.name
 
     csv_data = ''
-    collection.designs.available.each do |design|
-      csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
+    collection.designs.available.for_domain('astekhome.com').each do |design|
+      if design.price.present? && design.price > 0 && design.country_id.present?
+        puts 'Preparing data for design '+design.name
+        csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
+      end
     end
 
     filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-fedex-crossborder-product-data-#{collection.name.parameterize}.csv"

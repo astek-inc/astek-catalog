@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_17_232136) do
+ActiveRecord::Schema.define(version: 2020_11_04_185547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -156,6 +156,8 @@ ActiveRecord::Schema.define(version: 2020_08_17_232136) do
     t.integer "country_id"
     t.integer "vendor_id"
     t.integer "subcollection_id"
+    t.decimal "sale_price", precision: 5, scale: 2
+    t.boolean "display_sale_price", default: false
     t.index ["deleted_at"], name: "index_designs_on_deleted_at"
     t.index ["master_sku"], name: "index_designs_on_master_sku"
     t.index ["row_order"], name: "index_designs_on_row_order"
@@ -220,7 +222,6 @@ ActiveRecord::Schema.define(version: 2020_08_17_232136) do
   create_table "product_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.integer "product_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
@@ -422,7 +423,6 @@ ActiveRecord::Schema.define(version: 2020_08_17_232136) do
     t.string "name"
     t.text "sku"
     t.integer "product_type_id"
-    t.integer "substrate_id"
     t.integer "backing_type_id"
     t.integer "row_order"
     t.string "tearsheet"
@@ -475,13 +475,11 @@ ActiveRecord::Schema.define(version: 2020_08_17_232136) do
   add_foreign_key "designs", "sale_units"
   add_foreign_key "designs", "subcollections"
   add_foreign_key "designs", "vendors"
-  add_foreign_key "product_types", "product_categories"
   add_foreign_key "states", "countries"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "taggings", "tags"
   add_foreign_key "variants", "backing_types"
   add_foreign_key "variants", "designs"
   add_foreign_key "variants", "product_types"
-  add_foreign_key "variants", "substrates"
   add_foreign_key "variants", "variant_types"
 end
