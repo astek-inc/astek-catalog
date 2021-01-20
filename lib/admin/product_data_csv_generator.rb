@@ -238,11 +238,12 @@ module Admin
                 end
 
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, nil, substrate)) }
+                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, nil, substrate)) }
+                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
                 end
+                first_variant_row = false
 
                 if website == 'astekhome.com'
                   murals = ProductType.find_by(name: 'Murals')
@@ -254,10 +255,7 @@ module Admin
               end
 
             end
-
-
-
-
+            
           end
 
           # This is for astek.com, and astekhome.com designs which don't have colorways.
