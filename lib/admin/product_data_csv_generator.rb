@@ -509,6 +509,8 @@ module Admin
             end
           when 'onairdesign.com'
             nil
+          else
+            nil
           end
 
         elsif attr == 'variant_inventory_qty'
