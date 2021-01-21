@@ -264,18 +264,17 @@ module Admin
           # On astekhome.com, if a design has colorways, we don't show the install images separately,
           # we mix a random install image in with the swatch images (handled above @line 170).
           if website == 'astek.com' || (website == 'astekhome.com' && !design.has_colorways?)
-            design.variants_for_domain(website).stock_items.for_domain(website).each do |variant|
-              if variant.install_images_for_domain(website)
-                variant.install_images_for_domain(website).each do |image|
+            design.variants_for_domain(website).each do |v|
+              if v.install_images_for_domain(website)
+                v.install_images_for_domain(website).each do |image|
                   @image_index += 1
                   csv << [design.handle] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
-
                 end
               end
             end
           end
-        end
 
+        end
       end
 
       def attribute_value attr, stock_item, variant_type, image_index, domain, custom_material=nil, show_image=true, substrate=nil
