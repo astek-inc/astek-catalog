@@ -512,10 +512,10 @@ module Admin
 
               # If there is a sale price indicated, we need to put that here and put
               # the regular retail price in the compare_at_price column
-              if variant.sale_price.present? && variant.display_sale_price
-                display_price = variant.sale_price
+              if variant.design.sale_price.present? && variant.design.display_sale_price
+                display_price = variant.design.sale_price
               else
-                display_price = variant.price
+                display_price = variant.design.price
               end
 
               if custom_material
@@ -546,15 +546,15 @@ module Admin
 
               # If there is a sale price indicated, we need to put the regular retail price here
               # and put the sale price in the price column
-              if variant.sale_price.present? && variant.display_sale_price
+              if variant.design.sale_price.present? && variant.design.display_sale_price
 
                 if custom_material
-                  (BigDecimal(variant.price) + BigDecimal(custom_material.surcharge)).to_s
+                  (BigDecimal(variant.design.price) + BigDecimal(custom_material.surcharge)).to_s
                 else
-                  if variant.price.blank?
+                  if variant.design.price.blank?
                     0
                   else
-                    variant.price
+                    variant.design.price
                   end
                 end
 
@@ -780,10 +780,10 @@ module Admin
           end
         end
 
-        if variant.sale_unit.present?
+        if variant.design.sale_unit.present?
           formatted += '<div>
               <h5>Sold By</h5>
-              <p>' + variant.sale_unit.name + '</p>
+              <p>' + variant.design.sale_unit.name + '</p>
             </div>'
         end
 
@@ -795,7 +795,7 @@ module Admin
         end
 
         variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
           formatted += '<div>
             <h5>' + dp.property.presentation + '</h5>
             <p>' + format_property_value(dp) + '</p>
@@ -829,24 +829,24 @@ module Admin
         end
 
         variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
           formatted += '<div>
             <h6>'+dp.property.presentation+'</h6>
             <p>'+format_property_value(dp, 'astekhome.com')+'</p>
           </div>'
         end
 
-        if variant.minimum_quantity > 1
+        if variant.design.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+variant.minimum_quantity.to_s+' '+variant.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+variant.design.minimum_quantity.to_s+' '+variant.design.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if variant.sale_quantity > 1
+        if variant.design.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+variant.sale_quantity.to_s+'</p>
+            <p>'+variant.design.sale_quantity.to_s+'</p>
           </div>'
         end
 
@@ -854,7 +854,7 @@ module Admin
 
         formatted += '<script>
           var Astek = Astek || {};
-          Astek.calculator_settings = ' + variant.calculator_settings + ';
+          Astek.calculator_settings = ' + variant.design.calculator_settings + ';
         </script>'
 
         if design = variant.design.peel_and_stick_version
@@ -884,7 +884,7 @@ module Admin
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+variant.sale_unit.name+'</p>
+            <p>'+variant.design.sale_unit.name+'</p>
           </div>'
 
         variant.design.design_properties.each do |dp|
@@ -906,7 +906,7 @@ module Admin
             vertical_repeat_inches
           ].include? dp.property.name
 
-          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
 
           formatted += '<div>
             <h5>'+dp.property.presentation+'</h5>
