@@ -829,7 +829,7 @@ module Admin
         end
 
         variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
           formatted += '<div>
             <h5>' + dp.property.presentation + '</h5>
             <p>' + format_property_value(dp) + '</p>
