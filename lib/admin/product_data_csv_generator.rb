@@ -255,7 +255,7 @@ module Admin
               end
 
             end
-            
+
           end
 
           # This is for astek.com, and astekhome.com designs which don't have colorways.
@@ -503,7 +503,7 @@ module Admin
               if custom_material
                 custom_material_variant_weight custom_material, variant, domain
               else
-                variant.variant_grams
+                variant_grams stock_item
               end
             end
           when 'onairdesign.com'
@@ -1008,6 +1008,11 @@ module Admin
           ratio = BigDecimal(variant.weight) / BigDecimal(variant_substrate.weight_per_square_foot)
           (BigDecimal(custom_material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
         end
+      end
+
+      # Shopify sites require weight in grams, in whole numbers (no decimals)
+      def variant_grams stock_item
+        (stock_item.weight * BigDecimal('453.592')).round.to_s unless stock_item.weight.nil?
       end
 
     end
