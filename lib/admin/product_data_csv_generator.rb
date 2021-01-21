@@ -499,10 +499,10 @@ module Admin
             nil
           when 'astekhome.com'
             if /sample/ =~ variant_type
-              (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
+              (BigDecimal(SAMPLE_WEIGHT, 0) * BigDecimal('453.592', 0)).round.to_s
             else
               if custom_material
-                custom_material_variant_weight custom_material, variant, domain
+                custom_material_stock_item_weight custom_material, stock_item
               else
                 variant_grams stock_item
               end
@@ -543,7 +543,7 @@ module Admin
               end
 
               if custom_material
-                (BigDecimal(display_price) + BigDecimal(custom_material.surcharge)).to_s
+                (BigDecimal(display_price, 0) + BigDecimal(custom_material.surcharge, 0)).to_s
               else
                 if display_price.blank?
                   0
@@ -573,7 +573,7 @@ module Admin
               if stock_item.sale_price.present? && stock_item.display_sale_price
 
                 if custom_material
-                  (BigDecimal(stock_item.price) + BigDecimal(custom_material.surcharge)).to_s
+                  (BigDecimal(stock_item.price, 0) + BigDecimal(custom_material.surcharge, 0)).to_s
                 else
                   if stock_item.price.blank?
                     0
@@ -1001,19 +1001,19 @@ module Admin
       # may be required to complete a given order, so the weight of a square foot of a variant
       # is given as more than standard. We want to apply the same increase to the custom material
       # options
-      def custom_material_variant_weight custom_material, variant, domain
-        variant_substrate = variant.substrate_for_domain domain
-        if BigDecimal(variant.weight) == BigDecimal(variant_substrate.weight_per_square_foot)
-          (BigDecimal(custom_material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+      def custom_material_stock_item_weight custom_material, stock_item
+        substrate = stock_item.substrate
+        if BigDecimal(stock_item.weight, 0) == BigDecimal(substrate.weight_per_square_foot, 0)
+          (BigDecimal(custom_material.substrate.weight_per_square_foot, 0) * BigDecimal('453.592', 0)).round.to_s
         else
-          ratio = BigDecimal(variant.weight) / BigDecimal(variant_substrate.weight_per_square_foot)
-          (BigDecimal(custom_material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
+          ratio = BigDecimal(stock_item.weight, 0) / BigDecimal(substrate.weight_per_square_foot, 0)
+          (BigDecimal(custom_material.substrate.weight_per_square_foot, 0) * ratio * BigDecimal('453.592', 0)).round.to_s
         end
       end
 
       # Shopify sites require weight in grams, in whole numbers (no decimals)
       def variant_grams stock_item
-        (stock_item.weight * BigDecimal('453.592')).round.to_s unless stock_item.weight.nil?
+        (stock_item.weight * BigDecimal('453.592', 0)).round.to_s unless stock_item.weight.nil?
       end
 
     end
