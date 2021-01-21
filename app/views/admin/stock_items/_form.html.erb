@@ -1,12 +1,10 @@
 <%= f.hidden_field :variant_id, value: @variant.id %>
 
 <% if @design.digital? %>
-  <%#= field_set_tag nil, 'data-hook': 'stock-item' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :substrate_id, 'Substrate' %> <span class="required">*</span>
-      <%= f.collection_select :substrate_id, @substrates, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
-    <% end %>
-  <%# end %>
+  <%= content_tag :div, class: ['form-group'] do %>
+    <%= f.label :substrate_id, 'Substrate' %> <span class="required">*</span>
+    <%= f.collection_select :substrate_id, @substrates, :id, :name, { prompt: 'Select' }, { required: true, class: 'form-control' } %>
+  <% end %>
 <% end %>
 
 <% unless @design.digital? %>
