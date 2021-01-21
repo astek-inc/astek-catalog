@@ -185,16 +185,18 @@ module Admin
 
               design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |custom_material|
 
+                stock_item = variant.stock_items.for_domain(website).first
+
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, custom_material, first_variant_row)) }
+                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website, custom_material, first_variant_row)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, custom_material, first_variant_row)) }
+                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website, custom_material, first_variant_row)) }
                 end
                 first_variant_row = false
 
                 unless design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, custom_material)) }
+                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'sample', 0, website, custom_material)) }
                 end
 
               end
