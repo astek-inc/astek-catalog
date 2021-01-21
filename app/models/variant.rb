@@ -56,11 +56,6 @@ class Variant < ApplicationRecord
 
   end
 
-  # Shopify sites require weight in grams, in whole numbers (no decimals)
-  def variant_grams
-    (self.weight * BigDecimal('453.592')).round.to_s unless self.weight.nil?
-  end
-
   def published?
     self.design.available_on < Time.now && ( self.design.expires_on.nil? || self.design.expires_on > Time.now ) && self.design.deleted_at.nil?
   end
