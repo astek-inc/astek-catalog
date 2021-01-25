@@ -83,6 +83,7 @@ module Admin
       params.require(:stock_item).permit(
         :variant_id, :substrate_id, :backing_type_id,
         :price_code, :price, :sale_price, :display_sale_price, :sale_unit_id, :sale_quantity, :minimum_quantity,
+        :weight, :width, :height, :depth,
         website_ids: []
       )
     end
