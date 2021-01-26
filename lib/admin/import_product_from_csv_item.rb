@@ -312,11 +312,10 @@ module Admin
           end
         end
 
-        puts 'Finding or creating variant: '+variant_name
-
         new_variant_record = false
         variant_name = item.variant_name ? item.variant_name.strip : item.design_name.strip
         variant_sku = item.variant_sku ? item.variant_sku.strip : item.design_sku.strip
+        puts "Finding or creating variant: #{variant_name} (#{variant_sku})"
 
         variant = Variant.find_or_create_by!(
           {
