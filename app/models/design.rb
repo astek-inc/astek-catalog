@@ -545,15 +545,15 @@ class Design < ApplicationRecord
 
     case self.sale_unit.name
     when 'Roll'
-      width = self.design.property('roll_width_inches')
-      if length = self.design.property('roll_length_yards')
+      width = self.property('roll_width_inches')
+      if length = self.property('roll_length_yards')
         {
           note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} yd.)</span>",
           divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('36', 9))),
           minimum: self.minimum_quantity,
           sale_unit: %w[roll rolls]
         }.to_json
-      elsif length = self.design.property('roll_length_feet')
+      elsif length = self.property('roll_length_feet')
         {
           note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} ft.)</span>",
           divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('12', 9))),
@@ -563,7 +563,7 @@ class Design < ApplicationRecord
       end
 
     when 'Yard'
-      width = self.design.property('roll_width_inches')
+      width = self.property('roll_width_inches')
       length = '36'
 
       parenthetical_note = "#{width} in. wide roll, sold per yard."
@@ -579,7 +579,7 @@ class Design < ApplicationRecord
       }.to_json
 
     when 'Meter'
-      width = self.design.property('roll_width_inches')
+      width = self.property('roll_width_inches')
       length = '39.37'
 
       parenthetical_note = "#{width} in. wide roll, sold per meter."
@@ -606,14 +606,14 @@ class Design < ApplicationRecord
 
       # If we have dimensions for the whole mural, we'll use those. Otherwise,
       # we'll use the dimensions of each panel and multiply by the number of panels.
-      if (self.design.property('mural_width_inches') && self.design.property('mural_height_inches'))
-        width = self.design.property('mural_width_inches')
-        height = self.design.property('mural_height_inches')
+      if (self.property('mural_width_inches') && self.property('mural_height_inches'))
+        width = self.property('mural_width_inches')
+        height = self.property('mural_height_inches')
         divisor = BigDecimal(width, 9) * BigDecimal(height, 9)
       else
-        width = self.design.property 'panel_width_inches'
-        height = self.design.property 'panel_height_inches'
-        quantity = self.design.property 'panels_per_set'
+        width = self.property 'panel_width_inches'
+        height = self.property 'panel_height_inches'
+        quantity = self.property 'panels_per_set'
         divisor = (BigDecimal(width, 9) * BigDecimal(height, 9) * BigDecimal(quantity, 9))
       end
 
@@ -625,8 +625,8 @@ class Design < ApplicationRecord
       }.to_json
 
     when 'Panel'
-      width = self.design.property 'panel_width_inches'
-      height = self.design.property 'panel_height_inches'
+      width = self.property 'panel_width_inches'
+      height = self.property 'panel_height_inches'
       {
         note: "Indicate no. of Panels<br><span>We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
         divisor: (BigDecimal(width, 9) * BigDecimal(height, 9)),
