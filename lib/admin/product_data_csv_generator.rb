@@ -409,13 +409,14 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              'Material'
+              'Size'
+            #  'Material'
             elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               'Size'
-            else
-              if variant.design.user_can_select_material
-                'Material'
-              end
+            # else
+            #   if variant.design.user_can_select_material
+            #     'Material'
+            #   end
             end
           when 'onairdesign.com'
             nil
@@ -427,11 +428,12 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              substrate.name_or_display_name
+              # substrate.name_or_display_name
+              astek_home_size_value variant_type
             elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               astek_home_size_value variant_type
-            else
-              astek_home_custom_material_value custom_material
+            # else
+            #   astek_home_custom_material_value custom_material
             end
           when 'onairdesign.com'
             nil
@@ -443,7 +445,7 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              'Size'
+              'Material'
             elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               'Material'
             end
@@ -457,7 +459,8 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              astek_home_size_value variant_type
+              # astek_home_size_value variant_type
+              substrate.name_or_display_name
             elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               astek_home_custom_material_value custom_material
             end
