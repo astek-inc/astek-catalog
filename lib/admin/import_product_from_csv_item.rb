@@ -224,10 +224,11 @@ module Admin
         end
 
         puts 'Finding or creating design information for '+item.design_name
-        new_record = false
+        new_design_record = false
         design = Design.find_or_create_by!({ sku: item.design_sku.strip, name: item.design_name.strip, collection: @collection }) do |d|
+
           # If we got here, this is a new record
-          new_record = true
+          new_design_record = true
 
           d.available_on = Time.now
           d.styles = styles unless styles.nil?
@@ -265,7 +266,7 @@ module Admin
         end
 
         # We can display different design descriptions on different websites
-        if new_record && item.description
+        if new_design_record && item.description
           item.description.split('|').map { |i| i.strip }.each do |text|
 
             /\A\((?<sites>.+)\)(?<site_text>.+)\z/ =~ text
