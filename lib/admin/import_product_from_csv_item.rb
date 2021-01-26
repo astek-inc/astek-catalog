@@ -526,32 +526,6 @@ module Admin
 
       end
 
-      # def create_variant_substrates item, variant
-      #
-      #   if item.substrate
-      #     substrate_names = item.substrate.split('|').map { |s| s.strip }
-      #     substrate_names.each do |name|
-      #       substrate = Substrate.find_by(name)
-      #
-      #       if substrate.nil?
-      #         raise "Cannot find substrate: #{item.substrate}"
-      #       end
-      #
-      #       # We only offer product printed on paper on Astek Home. Matte Vinyl is the equivalent default substrate on Astek Business.
-      #       if substrate.name == 'Paper' && item.websites.split(',').map { |w| w.strip }.include?('A')
-      #         VariantSubstrate.create! variant: variant, substrate: Substrate.find_by(name: 'Matte Vinyl'), websites: [Website.find_by(domain: 'astek.com')]
-      #         other_websites_string = (item.websites.split(',').map { |w| w.strip } - ['A']).join(',')
-      #         if other_websites = sites_from_string(other_websites_string, ',')
-      #           VariantSubstrate.create! variant: variant, substrate: substrate, websites: other_websites
-      #         end
-      #       else
-      #         VariantSubstrate.create! variant: variant, substrate: substrate, websites: variant.websites
-      #       end
-      #     end
-      #   end
-      #
-      # end
-
     end
   end
 end
