@@ -312,34 +312,30 @@ module Admin
         end
 
         variant_name = item.variant_name ? item.variant_name.strip : item.design_name.strip
-        puts 'Creating variant: '+variant_name
+        variant_sku = item.variant_sku ? item.variant_sku.strip : item.design_sku.strip
+        puts 'Finding or creating variant: '+variant_name
 
-        variant = Variant.create!(
-            {
-                design: design,
-                variant_type: variant_type,
-                name: variant_name,
-                sku: item.variant_sku ? item.variant_sku.strip : item.design_sku.strip,
-                product_types: product_types,
-                websites: design.websites
-            }
+        variant = Variant.find_or_create_by!(
+          {
+            design: design,
+            variant_type: variant_type,
+            name: variant_name,
+            sku: variant_sku
+          }
         ) do |v|
-          
+          # If we got here, this is a new record
+          v.product_types = product_types
+          v.websites = design.websites
           v.colors = colors unless colors.nil?
-
         end
 
-        ### Create stock items for variant. All pricing and shipping related data is associated
+        ### Create stock item for variant. All pricing and shipping related data is associated
         # with stock items.
-
-
         if design.digital?
           if item.substrate
-            substrate_names = item.substrate.split('|').map { |s| s.strip }
-            substrate_names.each do |name|
-              create_stock_item variant, name, item
-            end
+              create_stock_item variant, item
           end
+
         # elsif item.backing
         #   backing_type = BackingType.find_by(name: item.backing.strip)
         #   if backing_type.nil?
@@ -425,16 +421,27 @@ module Admin
         filtered = keywords.reject{ |k| @valid_keywords.exclude? k } #.uniq
       end
 
-      def create_stock_item variant, substrate_name, row
+      def create_stock_item variant, row
 
-        substrate = Substrate.find_by(name: substrate_name)
+        substrate = nil
+        backing_type = nil
 
-        if substrate.nil?
-          raise "Cannot find substrate: #{substrate_name}"
+        if row.substrate
+          substrate = Substrate.find_by(name: row.substrate.strip)
+          if substrate.nil?
+            raise "Cannot find substrate: #{row.substrate}"
+          end
+        end
+
+        if row.backing
+          backing_type = BackingType.find_by(name: item.backing.strip)
+          if backing_type.nil?
+            raise "Cannot find backing type: #{row.backing}"
+          end
         end
 
         # We only offer product printed on paper on Astek Home. Matte Vinyl is the equivalent default substrate on Astek Business.
-        if substrate.name == 'Paper' && row.websites.split(',').map { |w| w.strip }.include?('A')
+        if substrate.present? && substrate.name == 'Paper' && row.websites.split(',').map { |w| w.strip }.include?('A')
           matte_vinyl_substrate = Substrate.find_by(name: 'Matte Vinyl')
           StockItem.create!({ variant: variant, substrate: matte_vinyl_substrate, websites: [Website.find_by(domain: 'astek.com')] }) do |si|
             set_stock_item_attributes row, si, matte_vinyl_substrate
@@ -447,7 +454,7 @@ module Admin
             end
           end
         else
-          StockItem.create!({ variant: variant, substrate: substrate, websites: variant.websites }) do |si|
+          StockItem.create!({ variant: variant, substrate: substrate, backing_type: backing_type, websites: variant.websites }) do |si|
             set_stock_item_attributes row, si, substrate
           end
         end
@@ -481,10 +488,8 @@ module Admin
           MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(row.vendor.strip) ||
           @collection.name = 'Limited Stock'
 
-          if si.variant.design.digital?
-            unless substrate.nil?
-              si.weight = substrate.weight_per_square_foot
-            end
+          if si.variant.design.digital? && substrate.present? && si.sale_unit.name == 'Square Foot'
+            si.weight = substrate.weight_per_square_foot
           else
             unless row.weight.nil?
               si.weight = BigDecimal(row.weight.strip.gsub(/,/, ''), 2)
