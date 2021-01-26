@@ -312,9 +312,11 @@ module Admin
           end
         end
 
+        puts 'Finding or creating variant: '+variant_name
+
+        new_variant_record = false
         variant_name = item.variant_name ? item.variant_name.strip : item.design_name.strip
         variant_sku = item.variant_sku ? item.variant_sku.strip : item.design_sku.strip
-        puts 'Finding or creating variant: '+variant_name
 
         variant = Variant.find_or_create_by!(
           {
@@ -324,69 +326,67 @@ module Admin
             sku: variant_sku
           }
         ) do |v|
+
           # If we got here, this is a new record
+          new_variant_record = true
+
           v.product_types = product_types
           v.websites = design.websites
           v.colors = colors unless colors.nil?
+
         end
 
-        ### Create stock item for variant. All pricing and shipping related data is associated
-        # with stock items.
-        if design.digital?
-          if item.substrate
-              create_stock_item variant, item
-          end
+        if new_variant_record
 
-        # elsif item.backing
-        #   backing_type = BackingType.find_by(name: item.backing.strip)
-        #   if backing_type.nil?
-        #     raise "Cannot find backing type: #{item.backing}"
-        #   end
-        #   variant.update({ backing_type: backing_type })
-        end
-
-        item.images.split(',').map { |i| i.strip }.each do |url|
-          puts 'Processing swatch image: '+url
-          VariantSwatchImage.create!(
+          item.images.split(',').map { |i| i.strip }.each do |url|
+            puts 'Processing swatch image: '+url
+            VariantSwatchImage.create!(
               {
-                  remote_file_url: url,
-                  type: 'VariantSwatchImage',
-                  owner_id: variant.id
+                remote_file_url: url,
+                type: 'VariantSwatchImage',
+                owner_id: variant.id
               }
-          )
-        end
-
-        if item.install_images
-          item.install_images.split(',').map { |i| i.strip }.each do |url|
-
-            /\A\((?<sites>.+)\)(?<image_url>.+)\z/ =~ url
-
-            if sites
-              url = image_url.strip
-              websites = sites_from_string sites, '|'
-            else
-              websites = variant.websites
-            end
-
-            puts 'Processing install image: '+url
-            VariantInstallImage.create!(
-                {
-                    remote_file_url: url,
-                    type: 'VariantInstallImage',
-                    owner_id: variant.id,
-                    websites: websites
-                }
             )
           end
+
+          if item.install_images
+            item.install_images.split(',').map { |i| i.strip }.each do |url|
+
+              /\A\((?<sites>.+)\)(?<image_url>.+)\z/ =~ url
+
+              if sites
+                url = image_url.strip
+                websites = sites_from_string sites, '|'
+              else
+                websites = variant.websites
+              end
+
+              puts 'Processing install image: '+url
+              VariantInstallImage.create!(
+                {
+                  remote_file_url: url,
+                  type: 'VariantInstallImage',
+                  owner_id: variant.id,
+                  websites: websites
+                }
+              )
+            end
+          end
+
+          if @collection.product_category.name == 'Digital' && variant.websites.map{ |w| w.domain }.include?('astek.com')
+            puts 'Generating tearsheet'
+            # This is a workaround. Accented characters seem to throw a Prawn error if read directly from the CSV file,
+            # but they are OK when pulled from the database.
+            v = Variant.find(variant.id)
+            ::Admin::TearsheetGenerator.generate v
+          end
+
         end
 
-        if @collection.product_category.name == 'Digital' && variant.websites.map{ |w| w.domain }.include?('astek.com')
-          puts 'Generating tearsheet'
-          # This is a workaround. Accented characters seem to throw a Prawn error if read directly from the CSV file,
-          # but they are OK when pulled from the database.
-          v = Variant.find(variant.id)
-          ::Admin::TearsheetGenerator.generate v
-        end
+        # Create stock item for variant. All pricing- and shipping-related data is associated with stock items.
+        puts 'Creating stock item for variant'
+        create_stock_item variant, item
+
       end
 
       def sites_from_string string, delimiter
@@ -459,6 +459,7 @@ module Admin
             set_stock_item_attributes row, si, substrate
           end
         end
+
       end
 
       def set_stock_item_attributes row, si, substrate
