@@ -13,7 +13,9 @@ module Admin
 
     @design
     @variant
+    @stock_item
     @material
+    @substrate
     @sample
 
     class << self
