@@ -107,9 +107,9 @@ module Admin
         if @material
 
           if @sample
-            @variant.sample_sku_with_material @material
+            @variant.sample_sku_with_custom_material @material
           else
-            @variant.sku_with_material_and_colors @material
+            @variant.sku_with_custom_material_and_colors @material
           end
 
         elsif @substrate
