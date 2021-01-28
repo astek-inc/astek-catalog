@@ -19,6 +19,8 @@ class Variant < ApplicationRecord
   has_many :variant_substrates
   has_many :substrates, through: :variant_substrates
 
+  has_many :stock_items, inverse_of: :variant
+
   has_many :variant_swatch_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
   has_many :variant_install_images, -> { order(row_order: :asc) }, foreign_key: 'owner_id', dependent: :destroy
 
@@ -52,11 +54,6 @@ class Variant < ApplicationRecord
 
     out
 
-  end
-
-  # Shopify sites require weight in grams, in whole numbers (no decimals)
-  def variant_grams
-    (self.weight * BigDecimal('453.592')).round.to_s unless self.weight.nil?
   end
 
   def published?

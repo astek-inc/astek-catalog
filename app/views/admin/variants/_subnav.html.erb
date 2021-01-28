@@ -1,8 +1,6 @@
 <div class="list-group">
   <%= subnav_link 'Details', 'pencil', edit_admin_design_variant_path(@design, @variant), 'details', current %>
-  <% if @variant.design.digital? %>
-    <%= subnav_link 'Substrates', 'circle-arrow-down', admin_variant_variant_substrates_path(@variant), 'substrates', current %>
-  <% end %>
+  <%= subnav_link 'Stock Items', 'gift', admin_variant_stock_items_path(@variant), 'stock_items', current %>
   <%= subnav_link 'Swatch Images', 'picture', admin_variant_variant_swatch_images_path(@variant), 'swatch_images', current %>
   <%= subnav_link 'Install Images', 'picture', admin_variant_variant_install_images_path(@variant), 'install_images', current %>
   <% if @variant.design.digital? %>

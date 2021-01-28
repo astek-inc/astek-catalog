@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_04_185547) do
+ActiveRecord::Schema.define(version: 2021_01_14_214132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -139,10 +139,6 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
     t.string "sku"
     t.text "description"
     t.text "old_keywords"
-    t.decimal "price", precision: 8, scale: 2
-    t.integer "sale_unit_id"
-    t.integer "sale_quantity", default: 1
-    t.integer "minimum_quantity", default: 1
     t.boolean "suppress_from_searches", default: false
     t.datetime "available_on"
     t.datetime "expires_on"
@@ -151,13 +147,10 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
     t.datetime "deleted_at"
     t.integer "row_order"
     t.string "master_sku"
-    t.string "price_code"
     t.boolean "user_can_select_material"
     t.integer "country_id"
     t.integer "vendor_id"
     t.integer "subcollection_id"
-    t.decimal "sale_price", precision: 5, scale: 2
-    t.boolean "display_sale_price", default: false
     t.index ["deleted_at"], name: "index_designs_on_deleted_at"
     t.index ["master_sku"], name: "index_designs_on_master_sku"
     t.index ["row_order"], name: "index_designs_on_row_order"
@@ -296,6 +289,27 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
     t.index ["deleted_at"], name: "index_states_on_deleted_at"
   end
 
+  create_table "stock_items", force: :cascade do |t|
+    t.integer "variant_id"
+    t.integer "substrate_id"
+    t.integer "backing_type_id"
+    t.string "price_code"
+    t.decimal "price", precision: 8, scale: 2
+    t.decimal "sale_price", precision: 8, scale: 2
+    t.boolean "display_sale_price", default: false
+    t.integer "sale_unit_id"
+    t.integer "sale_quantity", default: 1
+    t.integer "minimum_quantity", default: 1
+    t.decimal "weight", precision: 8, scale: 2
+    t.decimal "width", precision: 8, scale: 2
+    t.decimal "height", precision: 8, scale: 2
+    t.decimal "depth", precision: 8, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_stock_items_on_deleted_at"
+  end
+
   create_table "styles", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -400,15 +414,6 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
   end
 
-  create_table "variant_substrates", force: :cascade do |t|
-    t.integer "variant_id"
-    t.integer "substrate_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["substrate_id", "variant_id"], name: "index_variant_substrates_on_substrate_id_and_variant_id"
-    t.index ["variant_id", "substrate_id"], name: "index_variant_substrates_on_variant_id_and_substrate_id"
-  end
-
   create_table "variant_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -472,10 +477,13 @@ ActiveRecord::Schema.define(version: 2020_11_04_185547) do
   add_foreign_key "design_aliases", "designs"
   add_foreign_key "designs", "collections"
   add_foreign_key "designs", "countries"
-  add_foreign_key "designs", "sale_units"
   add_foreign_key "designs", "subcollections"
   add_foreign_key "designs", "vendors"
   add_foreign_key "states", "countries"
+  add_foreign_key "stock_items", "backing_types"
+  add_foreign_key "stock_items", "sale_units"
+  add_foreign_key "stock_items", "substrates"
+  add_foreign_key "stock_items", "variants"
   add_foreign_key "substrates", "backing_types"
   add_foreign_key "taggings", "tags"
   add_foreign_key "variants", "backing_types"

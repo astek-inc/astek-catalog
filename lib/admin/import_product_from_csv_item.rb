@@ -200,30 +200,14 @@ module Admin
         puts 'Finding relevant information'
         vendor = Vendor.find_by!({ name: item.vendor.strip })
         product_category = ProductCategory.find_by!( { name: item.product_category.strip })
-        sale_unit = SaleUnit.find_by!({ name: item.sale_unit.strip }) unless item.sale_unit.blank?
+        # sale_unit = SaleUnit.find_by!({ name: item.sale_unit.strip }) unless item.sale_unit.blank?
         product_types = ProductType.where(name: item.product_type.split(',').map { |t| t.strip }.reject { |c| c.empty? }) unless item.product_type.nil?
         styles = Style.where(name: item.style.split(',').map { |s| s.strip }.reject { |c| c.empty? }) unless item.style.nil?
         variant_type = VariantType.find_by!({ name: item.variant_type.strip })
         colors = Color.where(name: item.color.split(',').map { |c| c.strip }.reject { |c| c.empty? }) unless item.color.nil?
 
-        substrate = nil
-        backing_type = nil
-        if item.substrate
-          substrate = Substrate.find_by(name: item.substrate.strip)
-          backing_type = substrate.backing_type
-          if substrate.nil?
-            raise "Cannot find substrate: #{item.substrate}"
-          end
-        elsif item.backing
-          backing_type = BackingType.find_by(name: item.backing.strip)
-          substrate = nil
-          if backing_type.nil?
-            raise "Cannot find backing type: #{item.backing}"
-          end
-        end
-
         puts 'Finding or creating collection information for '+item.collection
-        collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category }) do |c|
+        @collection = Collection.find_or_create_by!({ name: item.collection.strip, product_category: product_category }) do |c|
           # If we got here, this is a new record
           
           unless item.websites.nil?
@@ -240,18 +224,16 @@ module Admin
         end
 
         puts 'Finding or creating design information for '+item.design_name
-        new_record = false
-        design = Design.find_or_create_by!({ sku: item.design_sku.strip, name: item.design_name.strip, collection: collection }) do |d|
-          # If we got here, this is a new record
-          new_record = true
+        new_design_record = false
+        design = Design.find_or_create_by!({ sku: item.design_sku.strip, name: item.design_name.strip, collection: @collection }) do |d|
 
-          d.sale_unit = sale_unit
-          d.sale_quantity = item.sale_quantity.strip unless item.sale_quantity.blank?
-          d.minimum_quantity = item.minimum_quantity.strip unless item.minimum_quantity.blank?
+          # If we got here, this is a new record
+          new_design_record = true
+
           d.available_on = Time.now
           d.styles = styles unless styles.nil?
           d.vendor = vendor
-          d.websites = collection.websites
+          d.websites = @collection.websites
 
           unless item.keywords.nil?
             d.keyword_list = keyword_tag_values item.keywords
@@ -266,17 +248,6 @@ module Admin
             d.country_of_origin = country_of_origin
           end
 
-          # Don't require a price if the product is only to appear on On Air Design
-          # or if we tell the user to call for pricing for products from this vendor
-          # or if the item is from the Limited Stock showroom binders
-          unless item.price.nil? && (
-          (item.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
-            MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
-            collection.name = 'Limited Stock'
-          )
-            d.price = BigDecimal(item.price.strip.gsub(/,/, ''), 2)
-          end
-
           # This is a duplicate of a design in another collection,
           # suppress it from display except with its collection
           if item.respond_to? 'master_sku'
@@ -286,20 +257,16 @@ module Admin
             end
           end
 
-          if item.respond_to? 'price_code'
-            d.price_code = item.price_code.strip unless item.price_code.nil?
-          end
-
           # Custom materials should really be associated with Colorways (variants),
           # but the website only displays material options by design
-          if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? collection.name
+          if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? @collection.name
             d.user_can_select_material = true
           end
 
         end
 
         # We can display different design descriptions on different websites
-        if new_record && item.description
+        if new_design_record && item.description
           item.description.split('|').map { |i| i.strip }.each do |text|
 
             /\A\((?<sites>.+)\)(?<site_text>.+)\z/ =~ text
@@ -328,7 +295,7 @@ module Admin
 
         # Custom materials should really be associated with Colorways (variants),
         # but the website only displays material options by design
-        if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? collection.name
+        if ['Digital Library', 'Vintage', 'Pre-1920s', '1920s-1930s', '1940s-1950s', '1960s-1970s'].include? @collection.name
           puts 'Adding custom materials'
           Substrate.where('default_custom_material_group = ?', true).each do |s|
             design.set_custom_material s
@@ -345,123 +312,80 @@ module Admin
           end
         end
 
+        new_variant_record = false
         variant_name = item.variant_name ? item.variant_name.strip : item.design_name.strip
-        puts 'Creating variant: '+variant_name
+        variant_sku = item.variant_sku ? item.variant_sku.strip : item.design_sku.strip
+        puts "Finding or creating variant: #{variant_name} (#{variant_sku})"
 
-        variant = Variant.create!(
-            {
-                design: design,
-                variant_type: variant_type,
-                name: variant_name,
-                sku: item.variant_sku ? item.variant_sku.strip : item.design_sku.strip,
-                backing_type: backing_type,
-                product_types: product_types,
-                websites: design.websites
-            }
+        variant = Variant.find_or_create_by!(
+          {
+            design: design,
+            variant_type: variant_type,
+            name: variant_name,
+            sku: variant_sku
+          }
         ) do |v|
-          
-          # Don't require shipping information if the product is only to appear on On Air Design
-          # or if we tell the user to call for pricing for products from this vendor
-          # or if the item is from the Limited Stock showrrom binders
-          if (item.websites.split(',').map { |w| w.strip } & %w[A H]).empty? ||
-              MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(item.vendor.strip) ||
-              collection.name = 'Limited Stock'
 
-            if design.digital?
-              unless substrate.nil?
-                v.weight = substrate.weight_per_square_foot
-              end
-            else
-              unless item.weight.nil?
-                v.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
-              end
-            end
+          # If we got here, this is a new record
+          new_variant_record = true
 
-            unless item.package_width.nil?
-              v.width = BigDecimal(item.package_width.strip.gsub(/,/, ''), 2)
-            end
-
-            unless item.package_height.nil?
-              v.height = BigDecimal(item.package_height.strip.gsub(/,/, ''), 2)
-            end
-
-            unless item.package_depth.nil?
-              v.depth = BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
-            end
-
-          else
-
-            if design.digital?
-              v.weight = substrate.weight_per_square_foot
-            else
-              v.weight = BigDecimal(item.weight.strip.gsub(/,/, ''), 2)
-            end
-
-            v.width = BigDecimal(item.package_width.strip.gsub(/,/, ''), 2)
-            v.height = BigDecimal(item.package_height.strip.gsub(/,/, ''), 2)
-            v.depth = BigDecimal(item.package_depth.strip.gsub(/,/, ''), 2)
-
-          end
-          
+          v.product_types = product_types
+          v.websites = design.websites
           v.colors = colors unless colors.nil?
 
         end
 
-        if design.digital?
-          # We only offer product printed on paper on Astek Home. Matte Vinyl is the equivalent default substrate on Astek Business.
-          if substrate.name == 'Paper' && item.websites.split(',').map { |w| w.strip }.include?('A')
-            VariantSubstrate.create! variant: variant, substrate: Substrate.find_by(name: 'Matte Vinyl'), websites: [Website.find_by(domain: 'astek.com')]
-            other_websites_string = (item.websites.split(',').map { |w| w.strip } - ['A']).join(',')
-            if other_websites = sites_from_string(other_websites_string, ',')
-              VariantSubstrate.create! variant: variant, substrate: substrate, websites: other_websites
-            end
-          else
-            VariantSubstrate.create! variant: variant, substrate: substrate, websites: variant.websites
-          end
-        end
+        if new_variant_record
 
-        item.images.split(',').map { |i| i.strip }.each do |url|
-          puts 'Processing swatch image: '+url
-          VariantSwatchImage.create!(
+          item.images.split(',').map { |i| i.strip }.each do |url|
+            puts 'Processing swatch image: '+url
+            VariantSwatchImage.create!(
               {
-                  remote_file_url: url,
-                  type: 'VariantSwatchImage',
-                  owner_id: variant.id
+                remote_file_url: url,
+                type: 'VariantSwatchImage',
+                owner_id: variant.id
               }
-          )
-        end
-
-        if item.install_images
-          item.install_images.split(',').map { |i| i.strip }.each do |url|
-
-            /\A\((?<sites>.+)\)(?<image_url>.+)\z/ =~ url
-
-            if sites
-              url = image_url.strip
-              websites = sites_from_string sites, '|'
-            else
-              websites = variant.websites
-            end
-
-            puts 'Processing install image: '+url
-            VariantInstallImage.create!(
-                {
-                    remote_file_url: url,
-                    type: 'VariantInstallImage',
-                    owner_id: variant.id,
-                    websites: websites
-                }
             )
           end
+
+          if item.install_images
+            item.install_images.split(',').map { |i| i.strip }.each do |url|
+
+              /\A\((?<sites>.+)\)(?<image_url>.+)\z/ =~ url
+
+              if sites
+                url = image_url.strip
+                websites = sites_from_string sites, '|'
+              else
+                websites = variant.websites
+              end
+
+              puts 'Processing install image: '+url
+              VariantInstallImage.create!(
+                {
+                  remote_file_url: url,
+                  type: 'VariantInstallImage',
+                  owner_id: variant.id,
+                  websites: websites
+                }
+              )
+            end
+          end
+
+          if @collection.product_category.name == 'Digital' && variant.websites.map{ |w| w.domain }.include?('astek.com')
+            puts 'Generating tearsheet'
+            # This is a workaround. Accented characters seem to throw a Prawn error if read directly from the CSV file,
+            # but they are OK when pulled from the database.
+            v = Variant.find(variant.id)
+            ::Admin::TearsheetGenerator.generate v
+          end
+
         end
 
-        if collection.product_category.name == 'Digital' && variant.websites.map{ |w| w.domain }.include?('astek.com')
-          puts 'Generating tearsheet'
-          # This is a workaround. Accented characters seem to throw a Prawn error if read directly from the CSV file,
-          # but they are OK when pulled from the database.
-          v = Variant.find(variant.id)
-          ::Admin::TearsheetGenerator.generate v
-        end
+        # Create stock item for variant. All pricing- and shipping-related data is associated with stock items.
+        puts 'Creating stock item for variant'
+        create_stock_item variant, item
+
       end
 
       def sites_from_string string, delimiter
@@ -495,6 +419,110 @@ module Admin
 
       def filter_keywords keywords
         filtered = keywords.reject{ |k| @valid_keywords.exclude? k } #.uniq
+      end
+
+      def create_stock_item variant, row
+
+        substrate = nil
+        backing_type = nil
+
+        if row.substrate
+          substrate = Substrate.find_by(name: row.substrate.strip)
+          if substrate.nil?
+            raise "Cannot find substrate: #{row.substrate}"
+          end
+        end
+
+        if row.backing
+          backing_type = BackingType.find_by(name: item.backing.strip)
+          if backing_type.nil?
+            raise "Cannot find backing type: #{row.backing}"
+          end
+        end
+
+        # We only offer product printed on paper on Astek Home. Matte Vinyl is the equivalent default substrate on Astek Business.
+        if substrate.present? && substrate.name == 'Paper' && row.websites.split(',').map { |w| w.strip }.include?('A')
+          matte_vinyl_substrate = Substrate.find_by(name: 'Matte Vinyl')
+          StockItem.create!({ variant: variant, substrate: matte_vinyl_substrate, websites: [Website.find_by(domain: 'astek.com')] }) do |si|
+            set_stock_item_attributes row, si, matte_vinyl_substrate
+          end
+
+          other_websites_string = (row.websites.split(',').map { |w| w.strip } - ['A']).join(',')
+          if other_websites = sites_from_string(other_websites_string, ',')
+            StockItem.create!({ variant: variant, substrate: substrate, websites: other_websites }) do |si|
+              set_stock_item_attributes row, si, substrate
+            end
+          end
+        else
+          StockItem.create!({ variant: variant, substrate: substrate, backing_type: backing_type, websites: variant.websites }) do |si|
+            set_stock_item_attributes row, si, substrate
+          end
+        end
+
+      end
+
+      def set_stock_item_attributes row, si, substrate
+
+        if row.respond_to? 'price_code'
+          si.price_code = row.price_code.strip unless row.price_code.nil?
+        end
+
+        # Don't require a price if the product is only to appear on On Air Design
+        # or if we tell the user to call for pricing for products from this vendor
+        # or if the item is from the Limited Stock showroom binders
+        unless row.price.nil? && (
+          (row.websites.split(',').map { |s| s.strip } & %w[A H]).empty? ||
+            MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(row.vendor.strip) ||
+            @collection.name = 'Limited Stock'
+        )
+          si.price = BigDecimal(row.price.strip.gsub(/,/, ''), 2)
+        end
+
+        si.sale_unit = SaleUnit.find_by!({ name: row.sale_unit.strip }) unless row.sale_unit.blank?
+        si.sale_quantity = row.sale_quantity.strip unless row.sale_quantity.blank?
+        si.minimum_quantity = row.minimum_quantity.strip unless row.minimum_quantity.blank?
+
+        # Don't require shipping information if the product is only to appear on On Air Design
+        # or if we tell the user to call for pricing for products from this vendor
+        # or if the item is from the Limited Stock showroom binders
+        if (row.websites.split(',').map { |w| w.strip } & %w[A H]).empty? ||
+          MILLS_NOT_REQUIRING_PRICE_OR_SHIPPING_INFO.include?(row.vendor.strip) ||
+          @collection.name = 'Limited Stock'
+
+          if si.variant.design.digital? && substrate.present? && si.sale_unit.name == 'Square Foot'
+            si.weight = substrate.weight_per_square_foot
+          else
+            unless row.weight.nil?
+              si.weight = BigDecimal(row.weight.strip.gsub(/,/, ''), 2)
+            end
+          end
+
+          unless row.package_width.nil?
+            si.width = BigDecimal(row.package_width.strip.gsub(/,/, ''), 2)
+          end
+
+          unless row.package_height.nil?
+            si.height = BigDecimal(row.package_height.strip.gsub(/,/, ''), 2)
+          end
+
+          unless row.package_depth.nil?
+            si.depth = BigDecimal(row.package_depth.strip.gsub(/,/, ''), 2)
+          end
+
+        else
+
+          if si.variant.design.digital?
+            si.weight = substrate.weight_per_square_foot
+          else
+            si.weight = BigDecimal(row.weight.strip.gsub(/,/, ''), 2)
+          end
+
+          si.width = BigDecimal(row.package_width.strip.gsub(/,/, ''), 2)
+          si.height = BigDecimal(row.package_height.strip.gsub(/,/, ''), 2)
+          si.depth = BigDecimal(row.package_depth.strip.gsub(/,/, ''), 2)
+
+        end
+
       end
 
     end

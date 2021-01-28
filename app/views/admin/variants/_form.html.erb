@@ -58,42 +58,7 @@
   <% end %>
 <% end %>
 
-<% unless @design.digital? %>
-  <%= content_tag :div, class: ['form-group'] do %>
-    <%= f.label :backing_type_id, 'Backing' %>
-    <%= f.collection_select :backing_type_id, @backing_types, :id, :name, { prompt: 'Select' }, { required: false, class: 'form-control' } %>
-  <% end %>
-<% end %>
 
-<%= content_tag :div, class: 'row' do %>
-  <%= content_tag :div, class: 'col-md-3' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :weight, 'Weight in Pounds' %>
-      <%= f.text_field :weight, required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
-
-  <%= content_tag :div, class: 'col-md-3' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :width, 'Package Width in Inches' %>
-      <%= f.text_field :width, required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
-
-  <%= content_tag :div, class: 'col-md-3' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :height, 'Package Height in Inches' %>
-      <%= f.text_field :height, required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
-
-  <%= content_tag :div, class: 'col-md-3' do %>
-    <%= content_tag :div, class: ['form-group'] do %>
-      <%= f.label :depth, 'Package Depth in Inches' %>
-      <%= f.text_field :depth, required: false, class: 'form-control' %>
-    <% end %>
-  <% end %>
-<% end %>
 
 <%= field_set_tag nil, 'data-hook': 'collection-websites' do %>
   <%= content_tag :div, class: 'panel panel-default' do %>

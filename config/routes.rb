@@ -159,6 +159,8 @@ Rails.application.routes.draw do
       end
 
       resources :variant_substrates, except: [:show, :delete]
+
+      resources :stock_items, except: [:show, :delete]
     end
 
     resources :variant_types, except: [:show, :delete]

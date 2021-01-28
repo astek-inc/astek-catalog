@@ -185,54 +185,77 @@ module Admin
 
               design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |custom_material|
 
+                stock_item = variant.stock_items.for_domain(website).first
+
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, custom_material, first_variant_row)) }
+                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website, custom_material, first_variant_row)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website, custom_material, first_variant_row)) }
+                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website, custom_material, first_variant_row)) }
                 end
                 first_variant_row = false
 
                 unless design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website, custom_material)) }
+                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'sample', 0, website, custom_material)) }
                 end
 
               end
 
-            elsif website == 'astekhome.com' && variant.variant_substrates.for_domain(website).count > 1
+            # elsif website == 'astekhome.com' && variant.variant_substrates.for_domain(website).count > 1
+            #
+            #   # Multiple materials for this variant
+            #   variant.variant_substrates.for_domain(website).each do |variant_substrate|
+            #
+            #     if @first_row
+            #       csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
+            #       @first_row = false
+            #     else
+            #       csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
+            #     end
+            #     first_variant_row = false
+            #
+            #     murals = ProductType.find_by(name: 'Murals')
+            #     unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
+            #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, "sample-substrate", 0, website, nil, nil, variant_substrate.substrate)) }
+            #     end
+            #
+            #   end
 
-              # Multiple materials for this variant
-              variant.variant_substrates.for_domain(website).each do |variant_substrate|
+            else
+
+              full_variant_type = 'full'
+              sample_variant_type = 'sample'
+              substrate = nil
+              stock_item_count = variant.stock_items.for_domain(website).count
+
+              if stock_item_count > 1
+                full_variant_type = 'full-substrate'
+                sample_variant_type = 'sample-substrate'
+              end
+
+              variant.stock_items.for_domain(website).each do |stock_item|
+
+                if design.digital? && stock_item_count > 1
+                  substrate = stock_item.substrate
+                end
 
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
+                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
+                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
                 end
                 first_variant_row = false
 
-                murals = ProductType.find_by(name: 'Murals')
-                unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, "sample-substrate", 0, website, nil, nil, variant_substrate.substrate)) }
+                if website == 'astekhome.com'
+                  murals = ProductType.find_by(name: 'Murals')
+                  unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
+                    csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, sample_variant_type, 0, website, nil, nil, substrate)) }
+                  end
                 end
 
               end
 
-            else
-              if @first_row
-                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
-                @first_row = false
-              else
-                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, website)) }
-              end
-
-              if website == 'astekhome.com'
-                murals = ProductType.find_by(name: 'Murals')
-                unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, website)) }
-                end
-              end
             end
 
           end
@@ -241,21 +264,22 @@ module Admin
           # On astekhome.com, if a design has colorways, we don't show the install images separately,
           # we mix a random install image in with the swatch images (handled above @line 170).
           if website == 'astek.com' || (website == 'astekhome.com' && !design.has_colorways?)
-            design.variants_for_domain(website).each do |variant|
-              if variant.install_images_for_domain(website)
-                variant.install_images_for_domain(website).each do |image|
+            design.variants_for_domain(website).each do |v|
+              if v.install_images_for_domain(website)
+                v.install_images_for_domain(website).each do |image|
                   @image_index += 1
                   csv << [design.handle] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
-
                 end
               end
             end
           end
-        end
 
+        end
       end
 
-      def attribute_value attr, variant, variant_type, image_index, domain, custom_material=nil, show_image=true, substrate=nil
+      def attribute_value attr, stock_item, variant_type, image_index, domain, custom_material=nil, show_image=true, substrate=nil
+
+        variant = stock_item.variant
 
         if TEXT_VALUES[attr.to_sym]
 
@@ -265,7 +289,7 @@ module Admin
           variant.design.handle
 
         elsif attr == 'body'
-          body_for_domain variant, domain
+          body_for_domain stock_item, domain
 
         elsif attr == 'type'
           variant.type
@@ -273,7 +297,7 @@ module Admin
         elsif attr == 'tags'
           if /\Afull/ =~ variant_type
           # if variant_type == 'full'
-            variant.design.tags domain
+          variant.design.tags domain
           end
 
         elsif attr == 'option_1_name'
@@ -385,13 +409,14 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              'Material'
+              'Size'
+            #  'Material'
             elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               'Size'
-            else
-              if variant.design.user_can_select_material
-                'Material'
-              end
+            # else
+            #   if variant.design.user_can_select_material
+            #     'Material'
+            #   end
             end
           when 'onairdesign.com'
             nil
@@ -403,11 +428,12 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              substrate.name_or_display_name
+              # substrate.name_or_display_name
+              astek_home_size_value variant_type
             elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               astek_home_size_value variant_type
-            else
-              astek_home_custom_material_value custom_material
+            # else
+            #   astek_home_custom_material_value custom_material
             end
           when 'onairdesign.com'
             nil
@@ -419,7 +445,7 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              'Size'
+              'Material'
             elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               'Material'
             end
@@ -433,7 +459,8 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              astek_home_size_value variant_type
+              # astek_home_size_value variant_type
+              substrate.name_or_display_name
             elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               astek_home_custom_material_value custom_material
             end
@@ -475,15 +502,17 @@ module Admin
             nil
           when 'astekhome.com'
             if /sample/ =~ variant_type
-              (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
+              (BigDecimal(SAMPLE_WEIGHT, 0) * BigDecimal('453.592', 0)).round.to_s
             else
               if custom_material
-                custom_material_variant_weight custom_material, variant, domain
+                custom_material_stock_item_weight custom_material, stock_item
               else
-                variant.variant_grams
+                variant_grams stock_item
               end
             end
           when 'onairdesign.com'
+            nil
+          else
             nil
           end
 
@@ -512,14 +541,14 @@ module Admin
 
               # If there is a sale price indicated, we need to put that here and put
               # the regular retail price in the compare_at_price column
-              if variant.design.sale_price.present? && variant.design.display_sale_price
-                display_price = variant.design.sale_price
+              if stock_item.sale_price.present? && stock_item.display_sale_price
+                display_price = stock_item.sale_price
               else
-                display_price = variant.design.price
+                display_price = stock_item.price
               end
 
               if custom_material
-                (BigDecimal(display_price) + BigDecimal(custom_material.surcharge)).to_s
+                (BigDecimal(display_price, 0) + BigDecimal(custom_material.surcharge, 0)).to_s
               else
                 if display_price.blank?
                   0
@@ -546,15 +575,15 @@ module Admin
 
               # If there is a sale price indicated, we need to put the regular retail price here
               # and put the sale price in the price column
-              if variant.design.sale_price.present? && variant.design.display_sale_price
+              if stock_item.sale_price.present? && stock_item.display_sale_price
 
                 if custom_material
-                  (BigDecimal(variant.design.price) + BigDecimal(custom_material.surcharge)).to_s
+                  (BigDecimal(stock_item.price, 0) + BigDecimal(custom_material.surcharge, 0)).to_s
                 else
-                  if variant.design.price.blank?
+                  if stock_item.price.blank?
                     0
                   else
-                    variant.design.price
+                    stock_item.price
                   end
                 end
 
@@ -682,25 +711,28 @@ module Admin
         end
       end
 
-      def body_for_domain variant, domain
+      def body_for_domain stock_item, domain
         case domain
         when 'astek.com'
-          astek_business_description variant, domain
+          astek_business_description stock_item, domain
         when 'astekhome.com'
-          astek_home_description variant
+          astek_home_description stock_item
         when 'onairdesign.com'
-          onair_design_description variant, domain
+          onair_design_description stock_item, domain
         end
       end
 
-      def astek_business_description variant, domain
+      def astek_business_description stock_item, domain
+
+        variant = stock_item.variant
+
         body = ''
 
-        if formatted_description = format_description(variant, domain)
+        if formatted_description = format_description(stock_item, domain)
           body += formatted_description
         end
 
-        body += format_business_properties(variant, domain)
+        body += format_business_properties(stock_item, domain)
 
         if variant.tearsheet.file
           body += format_tearsheet_links variant
@@ -710,14 +742,14 @@ module Admin
         body
       end
 
-      def astek_home_description variant
-        body = format_home_properties(variant).gsub(/\n+/, ' ')
+      def astek_home_description stock_item
+        body = format_home_properties(stock_item).gsub(/\n+/, ' ')
         body
       end
 
-      def onair_design_description(variant, domain)
+      def onair_design_description(stock_item, domain)
         body = ''
-        if formatted_description = format_description(variant, domain)
+        if formatted_description = format_description(stock_item, domain)
           body += formatted_description
         end
         body += format_onair_properties(variant)
@@ -725,7 +757,9 @@ module Admin
         body
       end
 
-      def format_description(variant, domain)
+      def format_description(stock_item, domain)
+
+        variant = stock_item.variant
 
         formatted_description = ''
 
@@ -745,20 +779,24 @@ module Admin
 
       end
 
-      def format_business_properties(variant, domain)
+      def format_business_properties(stock_item, domain)
+
+        variant = stock_item.variant
+        design = variant.design
+
         formatted = '<div class="description__meta">'
 
-        unless variant.design.collection.suppress_from_display
+        unless design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/' + variant.design.collection.name.gsub("\'", "").parameterize + '">' + variant.design.collection.name + '</a></p>
+              <p><a href="/collections/' + design.collection.name.gsub("\'", "").parameterize + '">' + design.collection.name + '</a></p>
             </div>'
         end
 
-        if variant.design.digital?
+        if design.digital?
           # This property has to apply to all variants, so we are making sure that they are all Type II.
-          vs = variant.design.variants
-          if vs.select { |v| v.substrate_for_domain(domain).substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == vs.count
+          sis = design.variants.map { |v| v.stock_items.for_domain(domain) }.flatten!
+          if sis.select { |si| si.substrate.substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == sis.count
             formatted += '<div>
               <h5>Substrate</h5>
               <p>Type II</p>
@@ -766,11 +804,11 @@ module Admin
           end
         end
 
-        unless variant.design.digital?
-          if variant.backing_type
+        unless design.digital?
+          if stock_item.backing_type
             formatted += '<div>
               <h5>Backing</h5>
-              <p>' + variant.backing_type.name + '</p>
+              <p>' + stock_item.backing_type.name + '</p>
             </div>'
             # elsif variant_substrate && variant_substrate.backing_type
             #   formatted += '<div>
@@ -780,22 +818,22 @@ module Admin
           end
         end
 
-        if variant.design.sale_unit.present?
+        if stock_item.sale_unit.present?
           formatted += '<div>
               <h5>Sold By</h5>
-              <p>' + variant.design.sale_unit.name + '</p>
+              <p>' + stock_item.sale_unit.name + '</p>
             </div>'
         end
 
-        if variant.design.price_code.present?
+        if stock_item.price_code.present?
           formatted += '<div>
             <h5>Price Code</h5>
-            <p>' + variant.design.price_code + '</p>
+            <p>' + stock_item.price_code + '</p>
           </div>'
         end
 
-        variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+        design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
           formatted += '<div>
             <h5>' + dp.property.presentation + '</h5>
             <p>' + format_property_value(dp) + '</p>
@@ -806,47 +844,51 @@ module Admin
         formatted
       end
 
-      def format_home_properties variant
+      def format_home_properties stock_item
+
+        variant = stock_item.variant
+        design = variant.design
+
         formatted = '<div class="description__meta">'
 
         formatted += '<div>
               <h6>SKU</h6>
-              <p>'+variant.design.sku+'</p>
+              <p>'+design.sku+'</p>
             </div>'
 
-        unless variant.design.collection.suppress_from_display
+        unless design.collection.suppress_from_display
           formatted += '<div>
               <h6>Collection</h6>
-              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
             </div>'
         end
 
-        if variant.design.collection.lead_time
+        if design.collection.lead_time
           formatted += '<div>
               <h6>Lead Time</h6>
-              <p>'+variant.design.collection.lead_time.name+'</p>
+              <p>'+design.collection.lead_time.name+'</p>
             </div>'
         end
 
-        variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+        design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
           formatted += '<div>
             <h6>'+dp.property.presentation+'</h6>
             <p>'+format_property_value(dp, 'astekhome.com')+'</p>
           </div>'
         end
 
-        if variant.design.minimum_quantity > 1
+        if stock_item.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+variant.design.minimum_quantity.to_s+' '+variant.design.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if variant.design.sale_quantity > 1
+        if stock_item.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+variant.design.sale_quantity.to_s+'</p>
+            <p>'+stock_item.sale_quantity.to_s+'</p>
           </div>'
         end
 
@@ -854,10 +896,10 @@ module Admin
 
         formatted += '<script>
           var Astek = Astek || {};
-          Astek.calculator_settings = ' + variant.design.calculator_settings + ';
+          Astek.calculator_settings = ' + stock_item.calculator_settings + ';
         </script>'
 
-        if design = variant.design.peel_and_stick_version
+        if design = design.peel_and_stick_version
           formatted += "<script>
             var Astek = Astek || {};
             Astek.peel_and_stick_version_handle = '#{design.handle}';
@@ -867,27 +909,31 @@ module Admin
         formatted
       end
 
-      def format_onair_properties variant
+      def format_onair_properties stock_item
+
+        variant = stock_item.variant
+        design = variant.design
+
         formatted = '<div class="description__meta">'
 
         formatted += '<div>
               <h5>SKU</h5>
-              <p>'+variant.design.sku+'</p>
+              <p>'+design.sku+'</p>
             </div>'
 
-        unless variant.design.collection.suppress_from_display
+        unless design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
             </div>'
         end
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+variant.design.sale_unit.name+'</p>
+            <p>'+stock_item.sale_unit.name+'</p>
           </div>'
 
-        variant.design.design_properties.each do |dp|
+        design.design_properties.each do |dp|
           next unless %w[
             margin_trim
             motif_width_inches
@@ -906,7 +952,7 @@ module Admin
             vertical_repeat_inches
           ].include? dp.property.name
 
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
 
           formatted += '<div>
             <h5>'+dp.property.presentation+'</h5>
@@ -962,14 +1008,19 @@ module Admin
       # may be required to complete a given order, so the weight of a square foot of a variant
       # is given as more than standard. We want to apply the same increase to the custom material
       # options
-      def custom_material_variant_weight custom_material, variant, domain
-        variant_substrate = variant.substrate_for_domain domain
-        if BigDecimal(variant.weight) == BigDecimal(variant_substrate.weight_per_square_foot)
-          (BigDecimal(custom_material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+      def custom_material_stock_item_weight custom_material, stock_item
+        substrate = stock_item.substrate
+        if BigDecimal(stock_item.weight, 0) == BigDecimal(substrate.weight_per_square_foot, 0)
+          (BigDecimal(custom_material.substrate.weight_per_square_foot, 0) * BigDecimal('453.592', 0)).round.to_s
         else
-          ratio = BigDecimal(variant.weight) / BigDecimal(variant_substrate.weight_per_square_foot)
-          (BigDecimal(custom_material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
+          ratio = BigDecimal(stock_item.weight, 0) / BigDecimal(substrate.weight_per_square_foot, 0)
+          (BigDecimal(custom_material.substrate.weight_per_square_foot, 0) * ratio * BigDecimal('453.592', 0)).round.to_s
         end
+      end
+
+      # Shopify sites require weight in grams, in whole numbers (no decimals)
+      def variant_grams stock_item
+        (stock_item.weight * BigDecimal('453.592', 0)).round.to_s unless stock_item.weight.nil?
       end
 
     end
