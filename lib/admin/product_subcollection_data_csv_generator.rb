@@ -423,7 +423,7 @@ module Admin
               # if material
               #   (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
               # else
-              design.variants.first.price
+              design.price
               # end
             end
           end
