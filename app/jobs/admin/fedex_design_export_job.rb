@@ -10,7 +10,10 @@ module Admin
       design = Design.find(design_id)
       website = Website.find_by(domain: 'astekhome.com')
 
-      if design.websites.include?(website) && design.price.present? && design.price > 0 && design.country_id.present?
+      if design.websites.include?(website) &&
+        design.variants.for_domain('astekhome.com').first.stock_items.for_domain('astekhome.com').first.price.present? &&
+        design.variants.for_domain('astekhome.com').first.stock_items.for_domain('astekhome.com').first.price > 0 &&
+        design.country_id.present?
 
         csv_data = ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, true
         filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-fedex-product-export-#{design.name.parameterize}.csv"
