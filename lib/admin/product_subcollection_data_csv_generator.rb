@@ -171,7 +171,7 @@ module Admin
 
           subcollection.designs.each_with_index do |design, i|
 
-            design.variants_for_domain(website).each_with_index do |variant, i|
+            design.variants_for_domain(website).each do |variant, j|
 
               variant.stock_items.for_domain(website).each do |stock_item|
 
