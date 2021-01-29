@@ -47,7 +47,7 @@ module Admin
       @backing_type.row_order_position = params[:row_order_position]
       @backing_type.save
 
-      render nothing: true
+      head :ok
     end
 
     private

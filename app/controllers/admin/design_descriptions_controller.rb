@@ -52,7 +52,7 @@ module Admin
       @description.row_order_position = params[:row_order_position]
       @description.save
 
-      render nothing: true
+      head :ok
     end
 
     private

@@ -36,7 +36,7 @@ module Admin
       design_property.row_order_position = params[:row_order_position]
       design_property.save
 
-      render nothing: true
+      head :ok
     end
 
     private
