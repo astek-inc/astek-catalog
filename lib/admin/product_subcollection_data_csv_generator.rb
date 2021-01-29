@@ -437,6 +437,7 @@ module Admin
               # if material
               #   (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
               # else
+
               stock_item.price
               # end
             end

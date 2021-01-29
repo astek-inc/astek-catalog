@@ -40,7 +40,7 @@ module Admin
       @substrate_image.row_order_position = params[:row_order_position]
       @substrate_image.save
 
-      render nothing: true
+      head :ok
     end
 
     private

@@ -160,7 +160,9 @@ Rails.application.routes.draw do
 
       resources :variant_substrates, except: [:show, :delete]
 
-      resources :stock_items, except: [:show, :delete]
+      resources :stock_items, except: [:show, :delete] do
+        post :update_row_order, on: :collection
+      end
     end
 
     resources :variant_types, except: [:show, :delete]

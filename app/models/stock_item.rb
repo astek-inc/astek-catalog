@@ -4,6 +4,9 @@ class StockItem < ApplicationRecord
 
   acts_as_paranoid
 
+  include RankedModel
+  ranks :row_order, with_same: :variant_id
+
   include Websiteable
 
   belongs_to :variant, inverse_of: :stock_items

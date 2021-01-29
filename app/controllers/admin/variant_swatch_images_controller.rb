@@ -40,7 +40,7 @@ module Admin
       @variant_swatch_image.row_order_position = params[:row_order_position]
       @variant_swatch_image.save
 
-      render nothing: true
+      head :ok
     end
 
     private

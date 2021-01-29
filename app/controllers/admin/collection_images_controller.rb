@@ -40,7 +40,7 @@ module Admin
       @collection_image.row_order_position = params[:row_order_position]
       @collection_image.save
 
-      render nothing: true
+      head :ok
     end
 
     private
