@@ -39,7 +39,7 @@ class Design < ApplicationRecord
   default_scope { order(sku: :asc) }
 
   belongs_to :collection, inverse_of: :designs
-  belongs_to :sale_unit, inverse_of: :designs
+  # belongs_to :sale_unit, inverse_of: :designs
   belongs_to :vendor, inverse_of: :designs
   belongs_to :country_of_origin, class_name: 'Country', foreign_key: 'country_id', optional: true
   belongs_to :subcollection, inverse_of: :designs, optional: true

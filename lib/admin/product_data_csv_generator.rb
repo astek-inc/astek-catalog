@@ -409,13 +409,14 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              'Material'
+              'Size'
+            #  'Material'
             elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               'Size'
-            else
-              if variant.design.user_can_select_material
-                'Material'
-              end
+            # else
+            #   if variant.design.user_can_select_material
+            #     'Material'
+            #   end
             end
           when 'onairdesign.com'
             nil
@@ -427,11 +428,12 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              substrate.name_or_display_name
+              # substrate.name_or_display_name
+              astek_home_size_value variant_type
             elsif variant.variant_type.name == 'Color Way' || variant.design.digital?
               astek_home_size_value variant_type
-            else
-              astek_home_custom_material_value custom_material
+            # else
+            #   astek_home_custom_material_value custom_material
             end
           when 'onairdesign.com'
             nil
@@ -443,7 +445,7 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              'Size'
+              'Material'
             elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               'Material'
             end
@@ -457,7 +459,8 @@ module Admin
             nil
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
-              astek_home_size_value variant_type
+              # astek_home_size_value variant_type
+              substrate.name_or_display_name
             elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
               astek_home_custom_material_value custom_material
             end
@@ -779,20 +782,21 @@ module Admin
       def format_business_properties(stock_item, domain)
 
         variant = stock_item.variant
+        design = variant.design
 
         formatted = '<div class="description__meta">'
 
-        unless variant.design.collection.suppress_from_display
+        unless design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/' + variant.design.collection.name.gsub("\'", "").parameterize + '">' + variant.design.collection.name + '</a></p>
+              <p><a href="/collections/' + design.collection.name.gsub("\'", "").parameterize + '">' + design.collection.name + '</a></p>
             </div>'
         end
 
-        if variant.design.digital?
+        if design.digital?
           # This property has to apply to all variants, so we are making sure that they are all Type II.
-          vs = variant.design.variants
-          if vs.select { |v| v.substrate_for_domain(domain).substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == vs.count
+          sis = design.variants.map { |v| v.stock_items.for_domain(domain) }.flatten!
+          if sis.select { |si| si.substrate.substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == sis.count
             formatted += '<div>
               <h5>Substrate</h5>
               <p>Type II</p>
@@ -800,7 +804,7 @@ module Admin
           end
         end
 
-        unless variant.design.digital?
+        unless design.digital?
           if stock_item.backing_type
             formatted += '<div>
               <h5>Backing</h5>
@@ -828,8 +832,8 @@ module Admin
           </div>'
         end
 
-        variant.design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && variant.design.sale_unit.name != 'Roll'
+        design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
           formatted += '<div>
             <h5>' + dp.property.presentation + '</h5>
             <p>' + format_property_value(dp) + '</p>
@@ -908,18 +912,19 @@ module Admin
       def format_onair_properties stock_item
 
         variant = stock_item.variant
+        design = variant.design
 
         formatted = '<div class="description__meta">'
 
         formatted += '<div>
               <h5>SKU</h5>
-              <p>'+variant.design.sku+'</p>
+              <p>'+design.sku+'</p>
             </div>'
 
-        unless variant.design.collection.suppress_from_display
+        unless design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
             </div>'
         end
 
@@ -928,7 +933,7 @@ module Admin
             <p>'+stock_item.sale_unit.name+'</p>
           </div>'
 
-        variant.design.design_properties.each do |dp|
+        design.design_properties.each do |dp|
           next unless %w[
             margin_trim
             motif_width_inches

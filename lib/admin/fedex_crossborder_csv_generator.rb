@@ -13,7 +13,9 @@ module Admin
 
     @design
     @variant
+    @stock_item
     @material
+    @substrate
     @sample
 
     class << self
@@ -28,12 +30,16 @@ module Admin
             csv << header
           end
 
-          design.variants.each do |variant|
+          design.variants_for_domain('astekhome.com').each do |variant|
+
             @variant = variant
 
+
             if design.user_can_select_material
+
               design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
 
+                @stock_item = variant.stock_items.for_domain('astekhome.com').first
                 @material = material
 
                 @sample = false
@@ -48,11 +54,20 @@ module Admin
 
             else
 
-              @sample = false
-              csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
+              variant.stock_items.for_domain('astekhome.com').each do |stock_item|
 
-              @sample = true
-              csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
+                @stock_item = stock_item
+                @substrate = stock_item.substrate
+
+                @sample = false
+                csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
+
+                @sample = true
+                csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
+
+              end
+
+              @substrate = nil
 
             end
 
@@ -92,9 +107,17 @@ module Admin
         if @material
 
           if @sample
-            @variant.sample_sku_with_material @material
+            @variant.sample_sku_with_custom_material @material
           else
-            @variant.sku_with_material_and_colors @material
+            @variant.sku_with_custom_material_and_colors @material
+          end
+
+        elsif @substrate
+
+          if @sample
+            @variant.sample_sku_with_substrate @substrate
+          else
+            @variant.sku_with_substrate_and_colors @substrate
           end
 
         else
@@ -160,7 +183,7 @@ module Admin
             SAMPLE_PRICE_IN_STOCK
           end
         else
-          @variant.price
+          @stock_item.price
         end
       end
 
@@ -203,7 +226,7 @@ module Admin
               NON_PAPER_PACKAGE_DEPTH
             end
           else
-            @variant.depth
+            @stock_item.depth
           end
         end
       end
@@ -212,7 +235,7 @@ module Admin
         if @sample
           SAMPLE_PACKAGE_DIMENSIONS[:width]
         else
-          @variant.width
+          @stock_item.width
         end
       end
 
@@ -220,7 +243,7 @@ module Admin
         if @sample
           SAMPLE_PACKAGE_DIMENSIONS[:height]
         else
-          @variant.height
+          @stock_item.height
         end
       end
 
@@ -231,7 +254,7 @@ module Admin
           if @material
             material_variant_weight
           else
-            @variant.weight
+            @stock_item.weight
           end
         end
       end
@@ -297,11 +320,11 @@ module Admin
       # is given as more than standard. We want to apply the same increase to the custom material
       # options
       def material_variant_weight
-        if BigDecimal(@variant.weight) == BigDecimal(@variant.variant_substrates.for_domain('astekhome.com').first.substrate.weight_per_square_foot)
-          BigDecimal(@material.substrate.weight_per_square_foot)
+        if BigDecimal(@stock_item.weight, 0) == BigDecimal(@stock_item.substrate.weight_per_square_foot, 0)
+          BigDecimal(@material.substrate.weight_per_square_foot, 0)
         else
-          ratio = BigDecimal(@variant.weight) / BigDecimal(@variant.variant_substrates.for_domain('astekhome.com').first.substrate.weight_per_square_foot)
-          (BigDecimal(@material.substrate.weight_per_square_foot) * ratio)
+          ratio = BigDecimal(@stock_item.weight, 0) / BigDecimal(@stock_item.substrate.weight_per_square_foot, 0)
+          (BigDecimal(@material.substrate.weight_per_square_foot, 0) * ratio)
         end
       end
 
