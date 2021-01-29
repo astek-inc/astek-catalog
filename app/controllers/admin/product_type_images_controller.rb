@@ -40,7 +40,7 @@ module Admin
       @product_type_image.row_order_position = params[:row_order_position]
       @product_type_image.save
 
-      render nothing: true
+      head :ok
     end
 
     private

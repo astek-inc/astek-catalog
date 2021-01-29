@@ -58,7 +58,7 @@ module Admin
     #   @design.row_order_position = params[:row_order_position]
     #   @design.save
     #
-    #   render nothing: true
+    #   head :ok
     # end
 
     def destroy

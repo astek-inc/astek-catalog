@@ -45,7 +45,7 @@ module Admin
       @variant.row_order_position = params[:row_order_position]
       @variant.save
 
-      render nothing: true
+      head :ok
     end
 
     def destroy

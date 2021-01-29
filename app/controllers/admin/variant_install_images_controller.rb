@@ -55,7 +55,7 @@ module Admin
       @variant_install_image.row_order_position = params[:row_order_position]
       @variant_install_image.save
 
-      render nothing: true
+      head :ok
     end
 
     private
