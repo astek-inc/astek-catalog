@@ -21,9 +21,10 @@
   <% if @stock_items.any? %>
 
     <div class="table-responsive">
-      <table class="table table-striped">
+      <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_variant_stock_items_path %>">
         <thead>
         <tr>
+          <th class="move-handle"></th>
           <th>Substrate or Backing</th>
           <th>Websites</th>
           <th class="actions"></th>
@@ -33,6 +34,9 @@
         <tbody>
         <% @stock_items.each do |item| %>
           <tr class="stock_item fields" data-item-id="<%= item.id %>" data-hook="stock_item">
+            <td class="move-handle text-center">
+              <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+            </td>
             <td><%= item.substrate_or_backing %></td>
             <td><%= item.websites.map { |w| w.name }.join(', ') %></td>
 

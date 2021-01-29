@@ -1,12 +1,12 @@
 module Admin
   class StockItemsController < Admin::BaseController
 
-    before_action :set_stock_item, except: [:index, :new, :create]
+    before_action :set_stock_item, except: [:index, :new, :create, :update_row_order]
     before_action :set_variant, :set_design, :set_collection, :set_substrates, :set_backing_types, :set_sale_units,
                   :set_websites, except: [:destroy]
 
     def index
-      @stock_items = StockItem.where(variant_id: params[:variant_id])
+      @stock_items = StockItem.where(variant_id: params[:variant_id]).rank(:row_order)
     end
 
     def new
@@ -43,6 +43,13 @@ module Admin
       @stock_item.destroy
       flash[:notice] = 'Stock item removed.'
       redirect_to(action: 'index')
+    end
+
+    def update_row_order
+      @stock_item = StockItem.find(params[:item_id])
+      @stock_item.row_order_position = params[:row_order_position]
+      @stock_item.save
+      head :ok
     end
 
     private
