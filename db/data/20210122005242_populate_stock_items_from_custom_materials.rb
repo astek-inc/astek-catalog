@@ -6,11 +6,11 @@ class PopulateStockItemsFromCustomMaterials < ActiveRecord::Migration[5.2]
       puts "Design: #{design.name} - #{design.sku}"
 
       # puts 'Variants:'
-      design.variants.each do |variant|
+      design.variants.for_domain('astekhome.com').each do |variant|
         # puts "#{variant.name} - #{variant.sku}"
 
         # puts 'Stock Items:'
-        variant.stock_items.each do |stock_item|
+        variant.stock_items.for_domain('astekhome.com').each do |stock_item|
 
           # puts 'Create Stock Items:'
           design.custom_materials.each do |custom_material|
