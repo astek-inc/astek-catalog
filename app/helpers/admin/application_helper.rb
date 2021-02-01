@@ -86,7 +86,7 @@ module Admin
 
     def datepicker_field_value(date)
       unless date.blank?
-        date.strftime '%B %-d, %Y'
+        date.strftime '%F'
       end
     end
 
