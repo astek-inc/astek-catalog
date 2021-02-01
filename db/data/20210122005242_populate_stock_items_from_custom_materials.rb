@@ -27,7 +27,7 @@ class PopulateStockItemsFromCustomMaterials < ActiveRecord::Migration[5.2]
             # puts "\tPrice: #{(BigDecimal(stock_item.price, 0) + BigDecimal(custom_material.surcharge, 0))}"
             # puts "\tWeight: #{custom_material.substrate.weight_per_square_foot}"
 
-            new_stock_item = StockItem.create!({
+            StockItem.create!({
               variant_id: variant.id,
               substrate_id: custom_material.substrate.id,
               price: (BigDecimal(stock_item.price, 0) + BigDecimal(custom_material.surcharge, 0)),
@@ -37,10 +37,9 @@ class PopulateStockItemsFromCustomMaterials < ActiveRecord::Migration[5.2]
               weight: custom_material.substrate.weight_per_square_foot,
               width: stock_item.width,
               height: stock_item.height,
-              depth: stock_item.depth
+              depth: stock_item.depth,
+              websites: stock_item.websites
             })
-
-            new_stock_item.websites = stock_item.websites
 
           end
         end
