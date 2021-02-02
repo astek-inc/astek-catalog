@@ -66,7 +66,7 @@
   <%= content_tag :div, class: 'col-md-6' do %>
     <%= content_tag :div, class: ['form-group'] do %>
       <%= f.label :backing_type, 'Backing Type' %>
-      <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { prompt: 'Select' }, { class: 'form-control' } %>
+      <%= f.collection_select :backing_type_id, BackingType.all, :id, :name, { include_blank: 'Select' }, { class: 'form-control' } %>
     <% end %>
   <% end %>
 
