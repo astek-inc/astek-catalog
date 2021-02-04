@@ -434,7 +434,7 @@ module Admin
         end
 
         if row.backing
-          backing_type = BackingType.find_by(name: item.backing.strip)
+          backing_type = BackingType.find_by(name: row.backing.strip)
           if backing_type.nil?
             raise "Cannot find backing type: #{row.backing}"
           end
