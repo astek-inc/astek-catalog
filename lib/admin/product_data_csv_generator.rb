@@ -181,83 +181,39 @@ module Admin
             @image_index = i
             first_variant_row = true
 
-            if website == 'astekhome.com' && design.user_can_select_material
+            full_variant_type = 'full'
+            sample_variant_type = 'sample'
+            substrate = nil
+            stock_item_count = variant.stock_items.for_domain(website).count
 
-              design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |custom_material|
+            if stock_item_count > 1
+              full_variant_type = 'full-substrate'
+              sample_variant_type = 'sample-substrate'
+            end
 
-                stock_item = variant.stock_items.for_domain(website).first
+            variant.stock_items.rank(:row_order).for_domain(website).each do |stock_item|
 
-                if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website, custom_material, first_variant_row)) }
-                  @first_row = false
-                else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website, custom_material, first_variant_row)) }
-                end
-                first_variant_row = false
-
-                unless design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'sample', 0, website, custom_material)) }
-                end
-
+              if design.digital? && stock_item_count > 1
+                substrate = stock_item.substrate
               end
 
-            # elsif website == 'astekhome.com' && variant.variant_substrates.for_domain(website).count > 1
-            #
-            #   # Multiple materials for this variant
-            #   variant.variant_substrates.for_domain(website).each do |variant_substrate|
-            #
-            #     if @first_row
-            #       csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
-            #       @first_row = false
-            #     else
-            #       csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, "full-substrate", @image_index, website, nil, first_variant_row, variant_substrate.substrate)) }
-            #     end
-            #     first_variant_row = false
-            #
-            #     murals = ProductType.find_by(name: 'Murals')
-            #     unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
-            #       csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, "sample-substrate", 0, website, nil, nil, variant_substrate.substrate)) }
-            #     end
-            #
-            #   end
-
-            else
-
-              full_variant_type = 'full'
-              sample_variant_type = 'sample'
-              substrate = nil
-              stock_item_count = variant.stock_items.for_domain(website).count
-
-              if stock_item_count > 1
-                full_variant_type = 'full-substrate'
-                sample_variant_type = 'sample-substrate'
+              if @first_row
+                csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
+                @first_row = false
+              else
+                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
               end
+              first_variant_row = false
 
-              variant.stock_items.for_domain(website).each do |stock_item|
-
-                if design.digital? && stock_item_count > 1
-                  substrate = stock_item.substrate
+              if website == 'astekhome.com'
+                murals = ProductType.find_by(name: 'Murals')
+                unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
+                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, sample_variant_type, 0, website, nil, nil, substrate)) }
                 end
-
-                if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
-                  @first_row = false
-                else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, full_variant_type, @image_index, website, nil, first_variant_row, substrate)) }
-                end
-                first_variant_row = false
-
-                if website == 'astekhome.com'
-                  murals = ProductType.find_by(name: 'Murals')
-                  unless design.collection.suppress_sample_option_from_display || (design.distributed? && variant.product_types.include?(murals))
-                    csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, sample_variant_type, 0, website, nil, nil, substrate)) }
-                  end
-                end
-
               end
 
             end
-
+            
           end
 
           # This is for astek.com, and astekhome.com designs which don't have colorways.
