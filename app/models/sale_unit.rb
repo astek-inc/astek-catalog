@@ -4,7 +4,7 @@ class SaleUnit < ApplicationRecord
 
   acts_as_paranoid
 
-  has_many :variants, inverse_of: :sale_unit
+  has_many :designs, inverse_of: :sale_unit
 
   default_scope { order(:name) }
 

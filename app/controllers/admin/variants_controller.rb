@@ -45,7 +45,7 @@ module Admin
       @variant.row_order_position = params[:row_order_position]
       @variant.save
 
-      render nothing: true
+      head :ok
     end
 
     def destroy
@@ -94,9 +94,7 @@ module Admin
 
     def variant_params
       params.require(:variant).permit(
-          :variant_type_id, :name, :sku, :keywords, :design_id, :substrate_id, :backing_type_id,
-          :price_code, :price, :sale_price, :display_sale_price, :sale_unit_id, :sale_quantity,
-          :minimum_quantity, :weight, :width, :height, :depth,
+          :variant_type_id, :name, :sku, :keywords, :design_id,
           product_type_ids: [], color_ids: [], website_ids: []
       )
     end

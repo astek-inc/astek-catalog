@@ -712,13 +712,13 @@ module Admin
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+@design.sale_unit.name+'</p>
+            <p>'+variant.sale_unit.name+'</p>
           </div>'
 
-        if @design.price_code.present?
+        if variant.price_code.present?
           formatted += '<div>
             <h5>Price Code</h5>
-            <p>'+@design.price_code+'</p>
+            <p>'+variant.price_code+'</p>
           </div>'
         end
 
@@ -764,17 +764,17 @@ module Admin
           </div>'
         end
 
-        if @design.minimum_quantity > 1
+        if variant.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+@design.minimum_quantity.to_s+' '+@design.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+variant.minimum_quantity.to_s+' '+variant.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if @design.sale_quantity > 1
+        if variant.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+@design.sale_quantity.to_s+'</p>
+            <p>'+variant.sale_quantity.to_s+'</p>
           </div>'
         end
 
@@ -799,7 +799,7 @@ module Admin
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+@design.sale_unit.name+'</p>
+            <p>'+variant.sale_unit.name+'</p>
           </div>'
 
         @design.design_properties.each do |dp|

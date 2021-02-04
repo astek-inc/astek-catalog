@@ -1,0 +1,63 @@
+<% content_for :header_left do %>
+  <%= content_tag :h1, [
+    link_to('Collections', admin_collections_path),
+    link_to(@collection.name, edit_admin_collection_path(@collection)),
+    link_to('Designs', admin_collection_designs_path(@collection)),
+    link_to(@design.name, edit_admin_collection_design_path(@collection, @design)),
+    link_to('Variants', admin_design_variants_path(@design)),
+    link_to(@variant.name, edit_admin_design_variant_path(@design, @variant)),
+    'Stock Items'
+  ].join(' / ').html_safe %>
+<% end %>
+
+<% content_for :header_right do %>
+  <%= link_to 'New Stock Item', new_admin_variant_stock_item_path(@variant), class: 'btn btn-success' %>
+<% end %>
+
+<%= render partial: 'admin/shared/header' %>
+
+<%= content_tag :div, class: 'col-md-9' do %>
+
+  <% if @stock_items.any? %>
+
+    <div class="table-responsive">
+      <table class="table table-striped sortable" data-hook data-sortable-link="<%= update_row_order_admin_variant_stock_items_path %>">
+        <thead>
+        <tr>
+          <th class="move-handle"></th>
+          <th>Substrate or Backing</th>
+          <th>Websites</th>
+          <th class="actions"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @stock_items.each do |item| %>
+          <tr class="stock_item fields" data-item-id="<%= item.id %>" data-hook="stock_item">
+            <td class="move-handle text-center">
+              <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+            </td>
+            <td><%= item.substrate_or_backing %></td>
+            <td><%= item.websites.map { |w| w.name }.join(', ') %></td>
+
+            <td class="actions">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                <%= edit_button edit_admin_variant_stock_item_path @variant, item %>
+                <%= delete_button admin_variant_stock_item_path @variant, item %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  <% else %>
+    <p>No stock items found. <%= link_to 'Create one.', new_admin_variant_stock_item_path %></p>
+  <% end %>
+
+<% end %>
+
+<%= content_tag :div, class: 'col-md-3' do %>
+  <%= render partial: 'admin/variants/subnav', locals: { current: 'stock_items' } %>
+<% end %>

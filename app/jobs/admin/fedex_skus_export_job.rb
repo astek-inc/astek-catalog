@@ -13,7 +13,9 @@ module Admin
 
       csv_data = ''
       designs.each do |design|
-        if design.price.present? && design.price > 0 && design.country_id.present?
+        if design.variants.for_domain('astekhome.com').first.stock_items.for_domain('astekhome.com').first.price.present? &&
+          design.variants.for_domain('astekhome.com').first.stock_items.for_domain('astekhome.com').first.price > 0 &&
+          design.country_id.present?
           csv_data += ::Admin::FedexCrossborderCsvGenerator.fedex_crossborder_csv design, csv_data.empty?
         end
       end
