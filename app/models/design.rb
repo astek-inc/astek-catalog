@@ -226,10 +226,12 @@ class Design < ApplicationRecord
   # end
 
   def material_tags separator
-    if self.custom_materials.any?
+    if self.variants.map { |v| v.stock_items }.flatten.count > self.variants.count
       material_tags = []
-      self.custom_materials.each do |m|
-        material_tags << to_tag('material', m.name.parameterize, separator)
+      self.variants.each do |v|
+        v.stock_items.each do |i|
+          material_tags << to_tag('material', i.substrate.name.parameterize, separator)
+        end
       end
       material_tags
     end
