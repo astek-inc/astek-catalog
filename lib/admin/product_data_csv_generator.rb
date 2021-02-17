@@ -402,8 +402,8 @@ module Admin
           when 'astekhome.com'
             if /-substrate\z/ =~ variant_type
               'Material'
-            elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
-              'Material'
+            # elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.stock_items.for_domain('astekhome.com') > 1
+            #   'Material'
             end
           when 'onairdesign.com'
             nil
@@ -417,8 +417,8 @@ module Admin
             if /-substrate\z/ =~ variant_type
               # astek_home_size_value variant_type
               substrate.name_or_display_name
-            elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.design.user_can_select_material
-              astek_home_custom_material_value custom_material
+            # elsif (variant.variant_type.name == 'Color Way' || variant.design.digital?) && variant.stock_items.for_domain('astekhome.com') > 1
+            #   astek_home_custom_material_value custom_material
             end
           when 'onairdesign.com'
             nil
@@ -661,11 +661,11 @@ module Admin
         end
       end
 
-      def astek_home_custom_material_value custom_material
-        if custom_material
-          custom_material.name
-        end
-      end
+      # def astek_home_custom_material_value custom_material
+      #   if custom_material
+      #     custom_material.name
+      #   end
+      # end
 
       def body_for_domain stock_item, domain
         case domain
