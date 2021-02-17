@@ -94,7 +94,7 @@ class FixDamasksStockItems < ActiveRecord::Migration[5.2]
       end
 
     end
-    
+
   end
 
   def down
