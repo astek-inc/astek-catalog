@@ -31,6 +31,8 @@ class StockItem < ApplicationRecord
       width = self.variant.design.property('roll_width_inches')
       if length = self.variant.design.property('roll_length_yards')
         {
+          quantity_label: 'Quantity (Rolls)',
+          quantity_note: "<span>1 roll = #{width} in. x #{length} yd.</span>",
           note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} yd.)</span>",
           divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('36', 9))),
           minimum: self.minimum_quantity,
@@ -38,6 +40,8 @@ class StockItem < ApplicationRecord
         }.to_json
       elsif length = self.variant.design.property('roll_length_feet')
         {
+          quantity_label: 'Quantity (Rolls)',
+          quantity_note: "<span>1 roll = #{width} in. x #{length} ft.</span>",
           note: "Indicate no. of Rolls <span>(1 Roll = #{width} in. x #{length} ft.)</span>",
           divisor: (BigDecimal(width, 9) * (BigDecimal(length, 9) * BigDecimal('12', 9))),
           minimum: self.minimum_quantity,
@@ -55,6 +59,8 @@ class StockItem < ApplicationRecord
       end
 
       {
+        quantity_label: 'Quantity (Yards)',
+        quantity_note: "<span>#{width} in. wide roll. Minimum order of #{self.minimum_quantity} yards.</span>",
         note: "Indicate no. of Yards <span>(#{parenthetical_note})</span>",
         divisor: (BigDecimal(width, 9) * BigDecimal(length, 9)),
         minimum: self.minimum_quantity,
@@ -71,6 +77,8 @@ class StockItem < ApplicationRecord
       end
 
       {
+        quantity_label: 'Quantity (Meters)',
+        quantity_note: "<span>#{width} in. wide roll, sold per meter. Minimum order of #{self.minimum_quantity} meters.</span>",
         note: "Indicate no. of Meters <span>(#{parenthetical_note})</span>",
         divisor: (BigDecimal(width, 9) * BigDecimal(length, 9)),
         minimum: self.minimum_quantity,
@@ -79,6 +87,8 @@ class StockItem < ApplicationRecord
 
     when 'Square Foot'
       {
+        quantity_label: 'Quantity (Square Feet)',
+        quantity_note: "<span>Minimum order of #{self.minimum_quantity} square feet. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
         note: "Indicate no. of Square Feet<br><span>This product is custom printed. Minimum order quantity of #{self.minimum_quantity} square feet. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
         divisor: 144,
         minimum: self.minimum_quantity,
@@ -101,6 +111,8 @@ class StockItem < ApplicationRecord
       end
 
       {
+        quantity_label: "Quantity (Sets of #{quantity} Panels)",
+        quantity_note: "<span>Minimum order of #{self.minimum_quantity} set. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
         note: "Indicate no. of Sets of #{quantity} Panels<br><span>Minimum order quantity of #{self.minimum_quantity} set. We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
         divisor: divisor,
         minimum: self.minimum_quantity,
@@ -111,6 +123,8 @@ class StockItem < ApplicationRecord
       width = self.variant.design.property 'panel_width_inches'
       height = self.variant.design.property 'panel_height_inches'
       {
+        quantity_label: 'Quantity (Panels)',
+        quantity_note: "<span>We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
         note: "Indicate no. of Panels<br><span>We suggest adding an additional 20-30% overage to be sure you're covered!</span>",
         divisor: (BigDecimal(width, 9) * BigDecimal(height, 9)),
         minimum: self.minimum_quantity,
