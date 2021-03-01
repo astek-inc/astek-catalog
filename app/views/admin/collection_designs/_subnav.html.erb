@@ -3,7 +3,4 @@
   <%= subnav_link 'Descriptions', 'comment', admin_design_descriptions_path(@design), 'descriptions', current %>
   <%= subnav_link 'Properties', 'list-alt', admin_design_design_properties_path(@design), 'properties', current %>
   <%= subnav_link 'Variants', 'th-large', admin_design_variants_path(@design), 'variants', current %>
-  <% if @design.digital? %>
-    <%= subnav_link 'Custom Materials' , 'wrench', custom_materials_admin_collection_design_path(@collection, @design), 'custom_materials', current %>
-  <% end %>
 </div>

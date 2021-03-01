@@ -32,40 +32,27 @@ module Admin
 
           design.variants_for_domain('astekhome.com').each do |variant|
 
+            # More than one stock item per variant means there are material options
+            material_options = false
+            if variant.stock_items.for_domain('astekhome.com').count > 1
+              material_options = true
+            end
+
             @variant = variant
 
+            variant.stock_items.for_domain('astekhome.com').each do |stock_item|
 
-            if design.user_can_select_material
+              @stock_item = stock_item
 
-              design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
-
-                @stock_item = variant.stock_items.for_domain('astekhome.com').first
-                @material = material
-
-                @sample = false
-                csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
-
-                @sample = true
-                csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
-
-              end
-
-              @material = nil
-
-            else
-
-              variant.stock_items.for_domain('astekhome.com').each do |stock_item|
-
-                @stock_item = stock_item
+              if material_options
                 @substrate = stock_item.substrate
-
-                @sample = false
-                csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
-
-                @sample = true
-                csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
-
               end
+
+              @sample = false
+              csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
+
+              @sample = true
+              csv << [composition, product_name, product_type, language, product_id, product_description, url, image_url, price, origin_country, hs_code, eccn, haz, license_flag, import_flag, item_export_hub_country, l1, w1, h1, wt1, l2, w2, h2, wt2, l3, w3, h3, wt3, l4, w4, h4, wt4]
 
               @substrate = nil
 
@@ -104,15 +91,7 @@ module Admin
       end
 
       def product_id
-        if @material
-
-          if @sample
-            @variant.sample_sku_with_custom_material @material
-          else
-            @variant.sku_with_custom_material_and_colors @material
-          end
-
-        elsif @substrate
+        if @substrate
 
           if @sample
             @variant.sample_sku_with_substrate @substrate

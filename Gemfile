@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.7.2'
 
-gem 'rails', '5.2.4.4'
+gem 'rails', '5.2.4.5'
 gem 'active_model_serializers'
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -34,7 +34,7 @@ gem 'kaminari'
 
 # File uploads, image transformation, and Amazon S3 storage
 gem 'fog-aws'
-gem 'carrierwave', '~> 2.0'
+gem "carrierwave", '>= 2.1.1'
 gem 'mini_magick', '>= 4.9.4'
 
 # Authentication and permissions

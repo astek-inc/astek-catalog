@@ -365,15 +365,21 @@ module Admin
         puts 'Creating stock item for variant'
         create_stock_item variant, item
 
+        # Only create custom material stock items for Astek Home
         if COLLECTIONS_WITH_CUSTOM_MATERIALS.include? @collection.name
           puts 'Adding stock items for custom materials'
+
+          first_stock_item = variant.stock_items.for_domain('astekhome.com').first
+
           Substrate.where('default_custom_material_group = ?', true).each do |s|
-            # Only create custom material stock items for Astek Home
-            custom_material_item = item
-            custom_material_item.websites = 'H'
-            custom_material_item.substrate = s.name
-            create_stock_item variant, custom_material_item
+            unless s == first_stock_item.substrate
+              custom_material_item = item
+              custom_material_item.websites = 'H'
+              custom_material_item.substrate = s.name
+              create_stock_item variant, custom_material_item
+            end
           end
+
         end
 
         if @collection.product_category.name == 'Digital' && variant.websites.map{ |w| w.domain }.include?('astek.com')
