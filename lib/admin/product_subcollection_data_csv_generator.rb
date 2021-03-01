@@ -580,10 +580,10 @@ module Admin
 
         formatted = '<div class="description__meta">'
 
-        unless design.collection.suppress_from_display
+        unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
@@ -630,24 +630,24 @@ module Admin
 
         formatted = '<div class="description__meta">'
 
-        design.subcollection.designs.each do |d|
+        variant.design.subcollection.designs.each do |d|
             formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
                   <h6>SKU</h6>
                   <p>'+d.sku+'</p>
                 </div>'
         end
 
-        unless design.collection.suppress_from_display
+        unless variant.design.collection.suppress_from_display
           formatted += '<div>
               <h6>Collection</h6>
-              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
             </div>'
         end
 
-        if design.collection.lead_time
+        if variant.design.collection.lead_time
           formatted += '<div>
               <h6>Lead Time</h6>
-              <p>'+design.collection.lead_time.name+'</p>
+              <p>'+variant.design.collection.lead_time.name+'</p>
             </div>'
         end
 
