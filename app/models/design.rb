@@ -55,11 +55,6 @@ class Design < ApplicationRecord
 
   has_and_belongs_to_many :styles
 
-  # Custom materials should really be associated with Colorways (variants),
-  # but the website only displays material options by design
-  has_many :custom_materials, dependent: :destroy, inverse_of: :design
-  has_many :substrates, through: :custom_materials
-
   validates :name, presence: true
   validates :sku, uniqueness:true, presence: true
 
@@ -231,10 +226,12 @@ class Design < ApplicationRecord
   # end
 
   def material_tags separator
-    if self.custom_materials.any?
+    if self.variants.map { |v| v.stock_items }.flatten.count > self.variants.count
       material_tags = []
-      self.custom_materials.each do |m|
-        material_tags << to_tag('material', m.name.parameterize, separator)
+      self.variants.each do |v|
+        v.stock_items.each do |i|
+          material_tags << to_tag('material', i.substrate.name.parameterize, separator)
+        end
       end
       material_tags
     end

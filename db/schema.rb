@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_29_223856) do
+ActiveRecord::Schema.define(version: 2021_02_10_211401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -88,14 +88,6 @@ ActiveRecord::Schema.define(version: 2021_01_29_223856) do
     t.index ["deleted_at"], name: "index_currencies_on_deleted_at"
   end
 
-  create_table "custom_materials", id: :serial, force: :cascade do |t|
-    t.integer "design_id"
-    t.integer "substrate_id"
-    t.boolean "default_material"
-    t.index ["design_id", "substrate_id"], name: "index_custom_materials_on_design_id_and_substrate_id"
-    t.index ["substrate_id", "design_id"], name: "index_custom_materials_on_substrate_id_and_design_id"
-  end
-
   create_table "data_migrations", id: false, force: :cascade do |t|
     t.string "version", null: false
     t.index ["version"], name: "unique_data_migrations", unique: true
@@ -147,7 +139,6 @@ ActiveRecord::Schema.define(version: 2021_01_29_223856) do
     t.datetime "deleted_at"
     t.integer "row_order"
     t.string "master_sku"
-    t.boolean "user_can_select_material"
     t.integer "country_id"
     t.integer "vendor_id"
     t.integer "subcollection_id"
