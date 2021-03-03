@@ -7,6 +7,24 @@ module Admin
     SAMPLE_PRICE_DIGITAL = '10.99'
     SAMPLE_PRICE_DISTRIBUTED = '5.99'
 
+    DIMENSIONAL_PROPERTIES = %w[
+      motif_width_inches
+      mural_height_inches
+      mural_width_inches
+      panel_height_inches
+      panels_per_set
+      panel_width_inches
+      printed_width_inches
+      repeat_match_type
+      roll_length_feet
+      roll_length_meters
+      roll_length_yards
+      roll_width_inches
+      tile_height_inches
+      tile_width_inches
+      vertical_repeat_inches
+    ]
+
     TEXT_VALUES = {
         variant_barcode: '',
         variant_inventory_tracker: '',
@@ -829,30 +847,12 @@ module Admin
         formatted
       end
 
-      def format_size_and_repeat_properties design, stock_item
-
-        size_and_repeat_properties = %w[
-          motif_width_inches
-          mural_height_inches
-          mural_width_inches
-          panel_height_inches
-          panels_per_set
-          panel_width_inches
-          printed_width_inches
-          repeat_match_type
-          roll_length_feet
-          roll_length_meters
-          roll_length_yards
-          roll_width_inches
-          tile_height_inches
-          tile_width_inches
-          vertical_repeat_inches
-        ]
+      def format_dimensional_properties design, stock_item
 
         items = ''
 
         design.design_properties.each do |dp|
-          if size_and_repeat_properties.include? dp.property.name
+          if DIMENSIONAL_PROPERTIES.include? dp.property.name
 
             next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
             items += '<div>
