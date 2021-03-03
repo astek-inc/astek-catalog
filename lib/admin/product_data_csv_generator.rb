@@ -903,11 +903,11 @@ module Admin
         end
 
         return '<div class="dropdown">
-          <div class="header">
-            <span>Size + Repeat</span> <span class="caret down"></span>
+          <div class="dropdown-header">
+            <span>Size + Repeat</span> <span class="dropdown-caret down"></span>
           </div>
 
-          <div class="body">
+          <div class="dropdown-body">
             <dl>
               ' + items + '
             </dl>
