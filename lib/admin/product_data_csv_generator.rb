@@ -824,11 +824,11 @@ module Admin
         design = variant.design
 
         formatted = '<!-- DESCRIPTION V2 -->
-          <div class="description__meta">'
+        <div class="description__meta">'
 
-        formatted += format_size_and_repeat_properties design, stock_item
-
-
+        formatted += format_dimensional_properties design, stock_item
+        formatted += format_shipping_and_returns_information
+        formatted += format_additional_specs design, stock_item
 
         formatted += '</div>'
 
@@ -877,49 +877,79 @@ module Admin
 
       end
 
+      def format_shipping_and_returns_information
+
+        return '<div class="dropdown">
+          <div class="dropdown-header">
+            <span>Shipping + Returns</span> <span class="dropdown-caret down"></span>
+          </div>
+
+          <div class="dropdown-body">
+            <p>This product is digitally printed to order. We do not accept returns or exchanges on digitally printed products.</p>
+            <p>Print to order products require at least 7 days to print before being shipped.</p>
+            <p>To learn more visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>
+          </div>
+        </div>'
+
+      end
+
       def format_additional_specs design, stock_item
 
+        items = ''
 
-        # formatted += '<div>
-        #       <h6>SKU</h6>
-        #       <p>'+design.sku+'</p>
-        #     </div>'
-        #
-        # unless design.collection.suppress_from_display
-        #   formatted += '<div>
-        #       <h6>Collection</h6>
-        #       <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
-        #     </div>'
-        # end
-        #
-        # if design.collection.lead_time
-        #   formatted += '<div>
-        #       <h6>Lead Time</h6>
-        #       <p>'+design.collection.lead_time.name+'</p>
-        #     </div>'
-        # end
-        #
-        # design.design_properties.each do |dp|
-        #   next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
-        #   formatted += '<div>
-        #     <h6>'+dp.property.presentation+'</h6>
-        #     <p>'+format_property_value(dp, 'astekhome.com')+'</p>
-        #   </div>'
-        # end
-        #
-        # if stock_item.minimum_quantity > 1
-        #   formatted += '<div>
-        #     <h6>Minimum quantity</h6>
-        #     <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
-        #   </div>'
-        # end
-        #
-        # if stock_item.sale_quantity > 1
-        #   formatted += '<div>
-        #     <h6>Sold in quantities of</h6>
-        #     <p>'+stock_item.sale_quantity.to_s+'</p>
-        #   </div>'
-        # end
+        items += '<div>
+          <dt>SKU</dt>
+          <dd>'+design.sku+'</dd>
+        </div>'
+
+        unless design.collection.suppress_from_display
+          items += '<div>
+            <dt>Collection</dt>
+            <dd><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></dd>
+          </div>'
+        end
+
+        if design.collection.lead_time
+          items += '<div>
+            <dt>Lead time</dt>
+            <dd>'+design.collection.lead_time.name+'</dd>
+          </div>'
+        end
+
+        design.design_properties.each do |dp|
+          if DIMENSIONAL_PROPERTIES.exclude? dp.property.name
+            items += '<div>
+              <dt>'+dp.property.presentation+'</dt>
+              <dd>'+format_property_value(dp, 'astekhome.com')+'</dd>
+            </div>'
+          end
+        end
+
+        if stock_item.minimum_quantity > 1
+          items += '<div>
+            <dt>Minimum quantity</dt>
+            <dd>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</dd>
+          </div>'
+        end
+
+        if stock_item.sale_quantity > 1
+          items += '<div>
+            <dt>Sold in quantities of</dt>
+            <dd>'+stock_item.sale_quantity.to_s+'</dd>
+          </div>'
+        end
+
+        return '<div class="dropdown">
+          <div class="dropdown-header">
+            <span>Additional Specs</span> <span class="dropdown-caret down"></span>
+          </div>
+
+          <div class="dropdown-body">
+            <dl>
+              ' + items + '
+            </dl>
+          </div>
+        </div>'
 
       end
 
