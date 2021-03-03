@@ -805,48 +805,51 @@ module Admin
         variant = stock_item.variant
         design = variant.design
 
-        formatted = '<div class="description__meta">'
+        formatted = '<!-- DESCRIPTION V2 -->
+          <div class="description__meta">'
 
-        formatted += '<div>
-              <h6>SKU</h6>
-              <p>'+design.sku+'</p>
-            </div>'
+        formatted += format_size_and_repeat_properties design, stock_item
 
-        unless design.collection.suppress_from_display
-          formatted += '<div>
-              <h6>Collection</h6>
-              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
-            </div>'
-        end
-
-        if design.collection.lead_time
-          formatted += '<div>
-              <h6>Lead Time</h6>
-              <p>'+design.collection.lead_time.name+'</p>
-            </div>'
-        end
-
-        design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
-          formatted += '<div>
-            <h6>'+dp.property.presentation+'</h6>
-            <p>'+format_property_value(dp, 'astekhome.com')+'</p>
-          </div>'
-        end
-
-        if stock_item.minimum_quantity > 1
-          formatted += '<div>
-            <h6>Minimum quantity</h6>
-            <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
-          </div>'
-        end
-
-        if stock_item.sale_quantity > 1
-          formatted += '<div>
-            <h6>Sold in quantities of</h6>
-            <p>'+stock_item.sale_quantity.to_s+'</p>
-          </div>'
-        end
+        # formatted += '<div>
+        #       <h6>SKU</h6>
+        #       <p>'+design.sku+'</p>
+        #     </div>'
+        #
+        # unless design.collection.suppress_from_display
+        #   formatted += '<div>
+        #       <h6>Collection</h6>
+        #       <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+        #     </div>'
+        # end
+        #
+        # if design.collection.lead_time
+        #   formatted += '<div>
+        #       <h6>Lead Time</h6>
+        #       <p>'+design.collection.lead_time.name+'</p>
+        #     </div>'
+        # end
+        #
+        # design.design_properties.each do |dp|
+        #   next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
+        #   formatted += '<div>
+        #     <h6>'+dp.property.presentation+'</h6>
+        #     <p>'+format_property_value(dp, 'astekhome.com')+'</p>
+        #   </div>'
+        # end
+        #
+        # if stock_item.minimum_quantity > 1
+        #   formatted += '<div>
+        #     <h6>Minimum quantity</h6>
+        #     <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
+        #   </div>'
+        # end
+        #
+        # if stock_item.sale_quantity > 1
+        #   formatted += '<div>
+        #     <h6>Sold in quantities of</h6>
+        #     <p>'+stock_item.sale_quantity.to_s+'</p>
+        #   </div>'
+        # end
 
         formatted += '</div>'
 
@@ -863,6 +866,54 @@ module Admin
         end
 
         formatted
+      end
+
+      def format_size_and_repeat_properties design, stock_item
+
+        size_and_repeat_properties = %w[
+          motif_width_inches
+          mural_height_inches
+          mural_width_inches
+          panel_height_inches
+          panels_per_set
+          panel_width_inches
+          printed_width_inches
+          repeat_match_type
+          roll_length_feet
+          roll_length_meters
+          roll_length_yards
+          roll_width_inches
+          tile_height_inches
+          tile_width_inches
+          vertical_repeat_inches
+        ]
+
+        items = ''
+
+        design.design_properties.each do |dp|
+          if size_and_repeat_properties.include? dp.property.name
+
+            next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
+            items += '<div>
+              <dt>'+dp.property.presentation+'<dt>
+              <dd>'+format_property_value(dp, 'astekhome.com')+'</dd>
+            </div>'
+
+          end
+        end
+
+        return '<div class="dropdown">
+          <div class="header">
+            <span>Size + Repeat</span> <span class="caret down"></span>
+          </div>
+
+          <div class="body">
+            <dl>
+              ' + items + '
+            </dl>
+          </div>
+        </div>'
+
       end
 
       def format_onair_properties stock_item
