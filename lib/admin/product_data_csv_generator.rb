@@ -810,46 +810,7 @@ module Admin
 
         formatted += format_size_and_repeat_properties design, stock_item
 
-        # formatted += '<div>
-        #       <h6>SKU</h6>
-        #       <p>'+design.sku+'</p>
-        #     </div>'
-        #
-        # unless design.collection.suppress_from_display
-        #   formatted += '<div>
-        #       <h6>Collection</h6>
-        #       <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
-        #     </div>'
-        # end
-        #
-        # if design.collection.lead_time
-        #   formatted += '<div>
-        #       <h6>Lead Time</h6>
-        #       <p>'+design.collection.lead_time.name+'</p>
-        #     </div>'
-        # end
-        #
-        # design.design_properties.each do |dp|
-        #   next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
-        #   formatted += '<div>
-        #     <h6>'+dp.property.presentation+'</h6>
-        #     <p>'+format_property_value(dp, 'astekhome.com')+'</p>
-        #   </div>'
-        # end
-        #
-        # if stock_item.minimum_quantity > 1
-        #   formatted += '<div>
-        #     <h6>Minimum quantity</h6>
-        #     <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
-        #   </div>'
-        # end
-        #
-        # if stock_item.sale_quantity > 1
-        #   formatted += '<div>
-        #     <h6>Sold in quantities of</h6>
-        #     <p>'+stock_item.sale_quantity.to_s+'</p>
-        #   </div>'
-        # end
+
 
         formatted += '</div>'
 
@@ -913,6 +874,52 @@ module Admin
             </dl>
           </div>
         </div>'
+
+      end
+
+      def format_additional_specs design, stock_item
+
+
+        # formatted += '<div>
+        #       <h6>SKU</h6>
+        #       <p>'+design.sku+'</p>
+        #     </div>'
+        #
+        # unless design.collection.suppress_from_display
+        #   formatted += '<div>
+        #       <h6>Collection</h6>
+        #       <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+        #     </div>'
+        # end
+        #
+        # if design.collection.lead_time
+        #   formatted += '<div>
+        #       <h6>Lead Time</h6>
+        #       <p>'+design.collection.lead_time.name+'</p>
+        #     </div>'
+        # end
+        #
+        # design.design_properties.each do |dp|
+        #   next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
+        #   formatted += '<div>
+        #     <h6>'+dp.property.presentation+'</h6>
+        #     <p>'+format_property_value(dp, 'astekhome.com')+'</p>
+        #   </div>'
+        # end
+        #
+        # if stock_item.minimum_quantity > 1
+        #   formatted += '<div>
+        #     <h6>Minimum quantity</h6>
+        #     <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
+        #   </div>'
+        # end
+        #
+        # if stock_item.sale_quantity > 1
+        #   formatted += '<div>
+        #     <h6>Sold in quantities of</h6>
+        #     <p>'+stock_item.sale_quantity.to_s+'</p>
+        #   </div>'
+        # end
 
       end
 
