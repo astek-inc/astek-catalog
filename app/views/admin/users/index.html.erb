@@ -16,6 +16,7 @@
         <table class="table table-striped">
           <thead>
           <tr>
+            <th>ID</th>
             <th>Email</th>
             <th>Date Created</th>
             <th>Last Signed In</th>
@@ -26,6 +27,7 @@
           <tbody>
           <% @users.each do |user| %>
               <tr class="user_property fields" data-item-id=<%= "#{user.id}" %> data-hook="user">
+                <td><%= user.id %></td>
                 <td><%= user.email %></td>
                 <td><%= user.created_at %></td>
                 <td><%= user.last_sign_in_at %></td>

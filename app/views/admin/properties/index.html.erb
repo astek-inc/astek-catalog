@@ -16,6 +16,7 @@
         <table class="table table-striped">
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Presentation</th>
             <th class="actions"></th>
@@ -25,6 +26,7 @@
           <tbody>
           <% @properties.each do |property| %>
               <tr class="property_property fields" data-item-id=<%= "#{property.id}" %> data-hook="property">
+                <td><%= property.id %></td>
                 <td><%= property.name %></td>
                 <td><%= property.presentation %></td>
                 <td class="actions">

@@ -18,6 +18,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th class="actions"></th>
           </tr>
@@ -26,6 +27,7 @@
           <tbody>
           <% @colors.each do |color| %>
             <tr class="product_property fields" data-hook="color">
+              <td><%= color.id %></td>
               <td><%= color.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

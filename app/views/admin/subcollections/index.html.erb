@@ -21,6 +21,7 @@
         <table class="table table-striped">
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Type</th>
             <th class="actions"></th>
@@ -30,6 +31,7 @@
           <tbody>
           <% @subcollections.each do |subcollection| %>
             <tr class="product_property fields" data-hook="subcollection">
+              <td><%= subcollection.id %></td>
               <td><%= subcollection.name %></td>
               <td><%= subcollection.subcollection_type.name %></td>
               <td class="actions">

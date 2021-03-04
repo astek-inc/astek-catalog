@@ -18,9 +18,10 @@
       <table class="table table-striped">
         <thead>
         <tr>
+          <th>ID</th>
           <th>Name</th>
           <th>Category</th>
-          <th>Description</th>
+<!--          <th>Description</th>-->
           <th>Websites</th>
           <th class="actions"></th>
         </tr>
@@ -29,9 +30,10 @@
         <tbody>
         <% @collections.each do |collection| %>
             <tr class="product_property fields" data-hook="collection">
+              <td><%= collection.id %></td>
               <td><%= collection.name %></td>
               <td><%= collection.product_category.name %></td>
-              <td><%= truncate(sanitize(collection.description), length: 90) %></td>
+<!--              <td><%#= truncate(sanitize(collection.description), length: 90) %></td>-->
               <td><%= collection.websites.map { |w| w.name }.join(', ') %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

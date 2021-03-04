@@ -22,6 +22,7 @@
           <thead>
           <tr>
             <th class="move-handle"></th>
+            <th>ID</th>
             <th>Design</th>
             <th>SKU</th>
             <th>Websites</th>
@@ -35,6 +36,7 @@
               <td class="move-handle text-center">
                 <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
               </td>
+              <td><%= design_alias.id %></td>
               <td><%= design_alias.design.name %></td>
               <td><%= design_alias.design.sku %></td>
               <td><%= design_alias.websites.map { |w| w.name }.join(', ') %></td>

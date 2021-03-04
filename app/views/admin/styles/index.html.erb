@@ -16,6 +16,7 @@
       <table class="table table-striped">
         <thead>
         <tr>
+          <th>ID</th>
           <th>Name</th>
           <th class="actions"></th>
         </tr>
@@ -24,6 +25,7 @@
         <tbody>
         <% @styles.each do |style| %>
           <tr class="style_property fields" data-item-id=<%= "#{style.id}" %> data-hook="style">
+            <td><%= style.id %></td>
             <td><%= style.name %></td>
             <td class="actions">
               <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

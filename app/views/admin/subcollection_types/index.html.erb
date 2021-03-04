@@ -19,6 +19,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th class="actions"></th>
           </tr>
@@ -27,6 +28,7 @@
           <tbody>
           <% @subcollection_types.each do |subcollection_type| %>
             <tr class="subcollection_type fields" data-hook="subcollection">
+              <td><%= subcollection_type.id %></td>
               <td><%= subcollection_type.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

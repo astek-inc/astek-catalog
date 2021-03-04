@@ -19,6 +19,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th class="actions"></th>
           </tr>
@@ -27,6 +28,7 @@
           <tbody>
           <% @substrate_categories.each do |substrate_category| %>
             <tr class="substrate_category fields" data-hook="substrate_category">
+              <td><%= substrate_category.id %></td>
               <td><%= substrate_category.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

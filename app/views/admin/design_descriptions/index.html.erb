@@ -23,6 +23,7 @@
         <table class="table table-striped sortable">
           <thead>
           <tr>
+            <th>ID</th>
             <th>Description</th>
             <th>Websites</th>
             <th class="actions"></th>
@@ -32,6 +33,7 @@
           <tbody>
           <% @descriptions.each do |description| %>
             <tr class="product_property fields" data-item-id=<%= "#{description.id}" %> data-hook="description">
+              <td><%= description.id %></td>
               <td><%= truncate(sanitize(description.description), length: 120) %></td>
               <td><%= description.websites.map { |w| w.name }.join(', ') %></td>
               <td class="actions">

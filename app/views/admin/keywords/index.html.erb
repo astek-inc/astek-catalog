@@ -18,6 +18,7 @@
       <table class="table table-striped">
         <thead>
         <tr>
+          <th>ID</th>
           <th>Name</th>
           <th class="actions"></th>
         </tr>
@@ -26,6 +27,7 @@
         <tbody>
         <% @keywords.each do |keyword| %>
           <tr class="product_property fields" data-hook="keyword">
+            <td><%= keyword.id %></td>
             <td><%= keyword.name %></td>
             <td class="actions">
               <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
