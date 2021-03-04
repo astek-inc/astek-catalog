@@ -2,8 +2,8 @@
   <%= content_tag :h1, [
       link_to('Collections', admin_collections_path),
       link_to(@design.collection.name, edit_admin_collection_path(@design.collection)),
-      'Designs',
-      @design.name,
+      link_to('Designs', admin_collection_designs_path(@design.collection)),
+      link_to(@design.name, edit_admin_collection_design_path(@design.collection, @design)),
       'Descriptions'
   ].join(' / ').html_safe %>
 <% end %>
