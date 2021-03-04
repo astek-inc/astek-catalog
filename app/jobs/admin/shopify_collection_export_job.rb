@@ -1,3 +1,4 @@
+require "#{Rails.root}/lib/admin/base_product_data_csv_generator.rb"
 require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
 require "#{Rails.root}/lib/admin/product_design_alias_data_csv_generator.rb"
 require "#{Rails.root}/lib/admin/product_subcollection_data_csv_generator.rb"

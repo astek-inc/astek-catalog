@@ -1,159 +1,90 @@
 module Admin
-  module ProductSubcollectionDataCsvGenerator
+  class ProductSubcollectionDataCsvGenerator < Admin::BaseProductDataCsvGenerator
 
-    require 'csv'
+    # require 'csv'
 
-    TEXT_VALUES = {
-        variant_barcode: '',
-        variant_inventory_tracker: '',
-        variant_inventory_policy: 'Continue',
-        variant_fulfillment_service: 'Manual',
-        variant_compare_at_price: '',
-        google_shopping_mpn: '',
-        google_shopping_age_group: '',
-        google_shopping_gender: '',
-        google_shopping_google_product_category: '',
-        google_shopping_adwords_grouping: '',
-        google_shopping_adwords_labels: '',
-        google_shopping_condition: '',
-        google_shopping_custom_product: '',
-        google_shopping_custom_label_0: '',
-        google_shopping_custom_label_1: '',
-        google_shopping_custom_label_2: '',
-        google_shopping_custom_label_3: '',
-        google_shopping_custom_label_4: '',
-        variant_tax_code: '',
-        cost_per_item: ''
-    }
+    # TEXT_VALUES = {
+    #     variant_barcode: '',
+    #     variant_inventory_tracker: '',
+    #     variant_inventory_policy: 'Continue',
+    #     variant_fulfillment_service: 'Manual',
+    #     variant_compare_at_price: '',
+    #     google_shopping_mpn: '',
+    #     google_shopping_age_group: '',
+    #     google_shopping_gender: '',
+    #     google_shopping_google_product_category: '',
+    #     google_shopping_adwords_grouping: '',
+    #     google_shopping_adwords_labels: '',
+    #     google_shopping_condition: '',
+    #     google_shopping_custom_product: '',
+    #     google_shopping_custom_label_0: '',
+    #     google_shopping_custom_label_1: '',
+    #     google_shopping_custom_label_2: '',
+    #     google_shopping_custom_label_3: '',
+    #     google_shopping_custom_label_4: '',
+    #     variant_tax_code: '',
+    #     cost_per_item: ''
+    # }
+
+    # PRIMARY_ROW_ATTRIBUTES = %w[
+    #   handle
+    #   title
+    #   body
+    #   vendor
+    #   type
+    #   tags
+    #   published?
+    #   option_1_name
+    #   option_1_value
+    #   option_2_name
+    #   option_2_value
+    #   option_3_name
+    #   option_3_value
+    #   sku
+    #   variant_grams
+    #   variant_inventory_tracker
+    #   variant_inventory_qty
+    #   variant_inventory_policy
+    #   variant_fulfillment_service
+    #   price
+    #   variant_compare_at_price
+    #   variant_requires_shipping
+    #   variant_taxable
+    #   variant_barcode
+    #   image_src
+    #   image_position
+    #   image_alt_text
+    #   gift_card
+    #   google_shopping_mpn
+    #   google_shopping_age_group
+    #   google_shopping_gender
+    #   google_shopping_google_product_category
+    #   seo_title
+    #   description
+    #   google_shopping_adwords_grouping
+    #   google_shopping_adwords_labels
+    #   google_shopping_condition
+    #   google_shopping_custom_product
+    #   google_shopping_custom_label_0
+    #   google_shopping_custom_label_1
+    #   google_shopping_custom_label_2
+    #   google_shopping_custom_label_3
+    #   google_shopping_custom_label_4
+    #   variant_image
+    #   variant_weight_unit
+    #   variant_tax_code
+    #   cost_per_item
+    #   collection
+    # ]
 
     class << self
 
       def product_data_csv subcollection, website, include_header=true
-        header = [
-            'Handle',
-            'Title',
-            'Body (HTML)',
-            'Vendor',
-            'Type',
-            'Tags',
-            'Published',
-            'Option1 Name',
-            'Option1 Value',
-            'Option2 Name',
-            'Option2 Value',
-            'Option3 Name',
-            'Option3 Value',
-            'Variant SKU',
-            'Variant Grams',
-            'Variant Inventory Tracker',
-            'Variant Inventory Qty',
-            'Variant Inventory Policy',
-            'Variant Fulfillment Service',
-            'Variant Price',
-            'Variant Compare At Price',
-            'Variant Requires Shipping',
-            'Variant Taxable',
-            'Variant Barcode',
-            'Image Src',
-            'Image Position',
-            'Image Alt Text',
-            'Gift Card',
-            'Google Shopping / MPN',
-            'Google Shopping / Age Group',
-            'Google Shopping / Gender',
-            'Google Shopping / Google Product Category',
-            'SEO Title',
-            'SEO Description',
-            'Google Shopping / AdWords Grouping',
-            'Google Shopping / AdWords Labels',
-            'Google Shopping / Condition',
-            'Google Shopping / Custom Product',
-            'Google Shopping / Custom Label 0',
-            'Google Shopping / Custom Label 1',
-            'Google Shopping / Custom Label 2',
-            'Google Shopping / Custom Label 3',
-            'Google Shopping / Custom Label 4',
-            'Variant Image',
-            'Variant Weight Unit',
-            'Variant Tax Code',
-            'Cost Per Item',
-            'Collection'
-        ]
-
-        primary_row_attributes = %w[
-            handle
-            title
-            body
-            vendor
-            type
-            tags
-            published?
-            option_1_name
-            option_1_value
-            option_2_name
-            option_2_value
-            option_3_name
-            option_3_value
-            sku
-            variant_grams
-            variant_inventory_tracker
-            variant_inventory_qty
-            variant_inventory_policy
-            variant_fulfillment_service
-            price
-            variant_compare_at_price
-            variant_requires_shipping
-            variant_taxable
-            variant_barcode
-            image_src
-            image_position
-            image_alt_text
-            gift_card
-            google_shopping_mpn
-            google_shopping_age_group
-            google_shopping_gender
-            google_shopping_google_product_category
-            seo_title
-            description
-            google_shopping_adwords_grouping
-            google_shopping_adwords_labels
-            google_shopping_condition
-            google_shopping_custom_product
-            google_shopping_custom_label_0
-            google_shopping_custom_label_1
-            google_shopping_custom_label_2
-            google_shopping_custom_label_3
-            google_shopping_custom_label_4
-            variant_image
-            variant_weight_unit
-            variant_tax_code
-            cost_per_item
-            collection
-        ]
-
-        secondary_row_attributes = ['handle', nil, nil, nil, nil, nil, nil, nil, 'option_1_value', nil, 'option_2_value', nil] +
-            %w[
-            option_3_value
-            sku
-            variant_grams
-            variant_inventory_tracker
-            variant_inventory_qty
-            variant_inventory_policy
-            variant_fulfillment_service
-            price
-            variant_compare_at_price
-            variant_requires_shipping
-            variant_taxable
-            variant_barcode
-            image_src
-            image_position
-            image_alt_text
-          ] + 16.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 3.times.map { nil }
 
         CSV.generate(headers: true) do |csv|
 
           if include_header
-            csv << header
+            csv << BaseProductDataCsvGenerator::HEADER
           end
 
           # total_image_count = subcollection.designs.variants.count + subcollection.designs.variants.select { |v| v.variant_install_images.any? }.count
@@ -200,15 +131,15 @@ module Admin
                 # else
 
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
+                  csv << BaseProductDataCsvGenerator::PRIMARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
+                  csv << BaseProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
                 end
 
                 if website == 'astekhome.com'
                   unless design.collection.suppress_sample_option_from_display
-                    csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'sample', 0, website)) }
+                    csv << BaseProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'sample', 0, website)) }
                   end
                 end
               # end
@@ -237,9 +168,9 @@ module Admin
 
       def attribute_value attr, stock_item, variant_type, image_index, domain, material=nil, show_image=true
 
-        if TEXT_VALUES[attr.to_sym]
+        if BaseProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
 
-          TEXT_VALUES[attr.to_sym]
+          BaseProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
           stock_item.variant.design.subcollection.handle
@@ -500,6 +431,9 @@ module Admin
             end
           end
 
+        elsif attr == 'variant_compare_at_price'
+          nil
+
         else
           val = stock_item.variant.send(attr)
           if [true, false].include? val
@@ -623,76 +557,76 @@ module Admin
         formatted
       end
 
-      def format_home_properties stock_item
-
-        variant = stock_item.variant
-        design = variant.design
-
-        formatted = '<div class="description__meta">'
-
-        variant.design.subcollection.designs.each do |d|
-            formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
-                  <h6>SKU</h6>
-                  <p>'+d.sku+'</p>
-                </div>'
-        end
-
-        unless variant.design.collection.suppress_from_display
-          formatted += '<div>
-              <h6>Collection</h6>
-              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
-            </div>'
-        end
-
-        if variant.design.collection.lead_time
-          formatted += '<div>
-              <h6>Lead Time</h6>
-              <p>'+variant.design.collection.lead_time.name+'</p>
-            </div>'
-        end
-
-        design.design_properties.each do |dp|
-
-          next if design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
-          next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
-
-          formatted += '<div>
-            <h6>'+dp.property.presentation+'</h6>
-            <p>'+format_property_value(dp, 'astekhome.com')+'</p>
-          </div>'
-
-        end
-
-        if stock_item.minimum_quantity > 1
-          formatted += '<div>
-            <h6>Minimum quantity</h6>
-            <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
-          </div>'
-        end
-
-        if stock_item.sale_quantity > 1
-          formatted += '<div>
-            <h6>Sold in quantities of</h6>
-            <p>'+stock_item.sale_quantity.to_s+'</p>
-          </div>'
-        end
-
-        formatted += '</div>'
-
-        formatted += '<script>
-          var Astek = Astek || {};
-          Astek.calculator_settings = ' + stock_item.calculator_settings + ';
-        </script>'
-
-        if design = design.peel_and_stick_version
-          formatted += "<script>
-            var Astek = Astek || {};
-            Astek.peel_and_stick_version_handle = '#{design.handle}';
-          </script>"
-        end
-
-        formatted
-      end
+      # def format_home_properties stock_item
+      #
+      #   variant = stock_item.variant
+      #   design = variant.design
+      #
+      #   formatted = '<div class="description__meta">'
+      #
+      #   variant.design.subcollection.designs.each do |d|
+      #       formatted += '<div class="sku-wrapper" data-description-sku="'+d.sku+'" style="display: none;">
+      #             <h6>SKU</h6>
+      #             <p>'+d.sku+'</p>
+      #           </div>'
+      #   end
+      #
+      #   unless variant.design.collection.suppress_from_display
+      #     formatted += '<div>
+      #         <h6>Collection</h6>
+      #         <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
+      #       </div>'
+      #   end
+      #
+      #   if variant.design.collection.lead_time
+      #     formatted += '<div>
+      #         <h6>Lead Time</h6>
+      #         <p>'+variant.design.collection.lead_time.name+'</p>
+      #       </div>'
+      #   end
+      #
+      #   design.design_properties.each do |dp|
+      #
+      #     next if design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
+      #     next if /\Aroll_length_/ =~ dp.property.name && variant.sale_unit.name != 'Roll'
+      #
+      #     formatted += '<div>
+      #       <h6>'+dp.property.presentation+'</h6>
+      #       <p>'+format_property_value(dp, 'astekhome.com')+'</p>
+      #     </div>'
+      #
+      #   end
+      #
+      #   if stock_item.minimum_quantity > 1
+      #     formatted += '<div>
+      #       <h6>Minimum quantity</h6>
+      #       <p>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</p>
+      #     </div>'
+      #   end
+      #
+      #   if stock_item.sale_quantity > 1
+      #     formatted += '<div>
+      #       <h6>Sold in quantities of</h6>
+      #       <p>'+stock_item.sale_quantity.to_s+'</p>
+      #     </div>'
+      #   end
+      #
+      #   formatted += '</div>'
+      #
+      #   formatted += '<script>
+      #     var Astek = Astek || {};
+      #     Astek.calculator_settings = ' + stock_item.calculator_settings + ';
+      #   </script>'
+      #
+      #   if design = design.peel_and_stick_version
+      #     formatted += "<script>
+      #       var Astek = Astek || {};
+      #       Astek.peel_and_stick_version_handle = '#{design.handle}';
+      #     </script>"
+      #   end
+      #
+      #   formatted
+      # end
 
       def format_tearsheet_links stock_item
         out = '<!-- pdf -->'
