@@ -827,7 +827,7 @@ module Admin
         <div class="description__meta">'
 
         formatted += format_dimensional_properties design, stock_item
-        formatted += format_shipping_and_returns_information
+        formatted += format_shipping_and_returns_information design
         formatted += format_additional_specs design, stock_item
 
         formatted += '</div>'
@@ -877,20 +877,22 @@ module Admin
 
       end
 
-      def format_shipping_and_returns_information
+      def format_shipping_and_returns_information design
+        out = ''
+        if design.digital?
+          out = '<div class="dropdown">
+            <div class="dropdown-header">
+              <span>Shipping + Returns</span> <span class="dropdown-caret down"></span>
+            </div>
 
-        return '<div class="dropdown">
-          <div class="dropdown-header">
-            <span>Shipping + Returns</span> <span class="dropdown-caret down"></span>
-          </div>
-
-          <div class="dropdown-body">
-            <p>This product is digitally printed to order. We do not accept returns or exchanges on digitally printed products.</p>
-            <p>Digitally printed products require 1-2 weeks to print before being shipped.</p>
-            <p>To learn more, visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>
-          </div>
-        </div>'
-
+            <div class="dropdown-body">
+              <p>This product is digitally printed to order. We do not accept returns or exchanges on digitally printed products.</p>
+              <p>Digitally printed products require 1-2 weeks to print before being shipped.</p>
+              <p>To learn more, visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>
+            </div>
+          </div>'
+        end
+        return out
       end
 
       def format_additional_specs design, stock_item
