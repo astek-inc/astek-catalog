@@ -886,8 +886,8 @@ module Admin
 
           <div class="dropdown-body">
             <p>This product is digitally printed to order. We do not accept returns or exchanges on digitally printed products.</p>
-            <p>Print to order products require at least 7 days to print before being shipped.</p>
-            <p>To learn more visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>
+            <p>Digitally printed products require 1-2 weeks to print before being shipped.</p>
+            <p>To learn more, visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>
           </div>
         </div>'
 
