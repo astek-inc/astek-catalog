@@ -21,6 +21,7 @@
         <table class="table table-striped">
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Display Name</th>
             <th>Backing Type</th>
@@ -33,6 +34,7 @@
           <tbody>
           <% @substrates.each do |substrate| %>
             <tr class="product_property fields" data-hook="substrate">
+              <td><%= substrate.id %></td>
               <td><%= substrate.name %></td>
               <td><%= substrate.display_name %></td>
               <td><%= substrate.backing_type.name unless substrate.backing_type.nil? %></td>

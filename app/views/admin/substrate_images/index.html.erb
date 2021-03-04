@@ -21,6 +21,7 @@
           <thead>
           <tr>
             <th class="move-handle"></th>
+            <th>ID</th>
             <th>Image</th>
             <th class="actions"></th>
           </tr>
@@ -32,6 +33,7 @@
                 <td class="move-handle text-center">
                   <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                 </td>
+                <td><%= image.id %></td>
                 <td><%= image_tag(image.file.url(:thumb)) %></td>
 
                 <td class="actions">

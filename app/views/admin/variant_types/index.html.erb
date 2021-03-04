@@ -19,6 +19,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th class="actions"></th>
           </tr>
@@ -27,6 +28,7 @@
           <tbody>
           <% @variant_types.each do |variant_type| %>
             <tr class="variant_type fields" data-hook="variant">
+              <td><%= variant_type.id %></td>
               <td><%= variant_type.name %></td>
               <td class="actions">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">

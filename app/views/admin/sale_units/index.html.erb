@@ -18,6 +18,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Description</th>
             <th class="actions"></th>
@@ -27,6 +28,7 @@
           <tbody>
           <% @sale_units.each do |sale_unit| %>
             <tr class="product_property fields" data-hook="sale_unit">
+              <td><%= sale_unit.id %></td>
               <td><%= sale_unit.name %></td>
               <td><%= truncate(sanitize(sale_unit.description), length: 140) %></td>
               <td class="actions">

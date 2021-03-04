@@ -51,6 +51,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Description</th>
             <th>Collection</th>
@@ -61,6 +62,7 @@
           <tbody>
           <% @designs.each do |design| %>
             <tr class="design fields" data-item-id=<%= "#{design.id}" %> data-hook="design">
+              <td><%= design.id %></td>
               <td><%= design.name %></td>
               <td><%= truncate(sanitize(design.description), length: 140) %></td>
               <td><%= design.collection.name %></td>

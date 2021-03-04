@@ -16,6 +16,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Description</th>
             <th>Websites</th>
@@ -26,6 +27,7 @@
           <tbody>
           <% @product_types.each do |product_type| %>
               <tr class="product_property fields" data-hook="product_type">
+                <td><%= product_type.id %></td>
                 <td><%= product_type.name %></td>
                 <td><%= truncate(sanitize(product_type.description), length: 140) %></td>
                 <td><%= product_type.websites.map { |w| w.name }.join(', ') %></td>

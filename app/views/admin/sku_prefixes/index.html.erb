@@ -18,6 +18,7 @@
         <table class="table table-striped" data-hook>
           <thead>
           <tr>
+            <th>ID</th>
             <th>Prefix</th>
             <th>Separator</th>
             <th>Description</th>
@@ -28,6 +29,7 @@
           <tbody>
           <% @sku_prefixes.each do |sku_prefix| %>
             <tr class="sku_prefix fields" data-hook="sku_prefix">
+              <td><%= sku_prefix.id %></td>
               <td><%= sku_prefix.prefix %></td>
               <td><%= sku_prefix.separator %></td>
               <td><%= truncate(sanitize(sku_prefix.description), length: 140) %></td>

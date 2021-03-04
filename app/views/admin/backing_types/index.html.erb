@@ -17,6 +17,7 @@
           <thead>
           <tr>
             <th class="move-handle"></th>
+            <th>ID</th>
             <th>Name</th>
             <th>Description</th>
             <th class="actions"></th>
@@ -29,6 +30,7 @@
               <td class="move-handle text-center">
                   <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
                 </td>
+                <td><%= backing_type.id %></td>
                 <td><%= backing_type.name %></td>
                 <td><%= truncate(sanitize(backing_type.description), length: 140) %></td>
                 <td class="actions">
