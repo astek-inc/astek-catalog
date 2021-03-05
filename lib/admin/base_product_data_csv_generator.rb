@@ -171,6 +171,93 @@ module Admin
 
     class << self
 
+      def format_description(stock_item, domain)
+
+        variant = stock_item.variant
+
+        formatted_description = ''
+
+        if description = variant.design.description_for_domain(domain)
+          formatted_description += '<p>' + description + '</p>'
+        end
+
+        if domain == 'astek.com' && variant.design.collection.product_category.name == 'Contract Vinyl'
+          formatted_description += '<p>For digitally printed commercial grade vinyl wallcoverings, visit our <a href="/collections/studio">Studio</a> collections.</p>'
+        end
+
+        unless formatted_description.blank?
+          "<div>
+            #{formatted_description}
+          </div>"
+        end
+
+      end
+
+      def format_business_properties(stock_item, domain)
+
+        variant = stock_item.variant
+        design = variant.design
+
+        formatted = '<div class="description__meta">'
+
+        unless design.collection.suppress_from_display
+          formatted += '<div>
+              <h5>Collection</h5>
+              <p><a href="/collections/' + design.collection.name.gsub("\'", "").parameterize + '">' + design.collection.name + '</a></p>
+            </div>'
+        end
+
+        if design.digital?
+          # This property has to apply to all variants, so we are making sure that they are all Type II.
+          sis = design.variants.map { |v| v.stock_items.for_domain(domain) }.flatten!
+          if sis.select { |si| si.substrate.substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == sis.count
+            formatted += '<div>
+              <h5>Substrate</h5>
+              <p>Type II</p>
+            </div>'
+          end
+        end
+
+        unless design.digital?
+          if stock_item.backing_type
+            formatted += '<div>
+              <h5>Backing</h5>
+              <p>' + stock_item.backing_type.name + '</p>
+            </div>'
+            # elsif variant_substrate && variant_substrate.backing_type
+            #   formatted += '<div>
+            #     <h5>Backing</h5>
+            #     <p>'+variant_substrate.backing_type.name+'</p>
+            #   </div>'
+          end
+        end
+
+        if stock_item.sale_unit.present?
+          formatted += '<div>
+              <h5>Sold By</h5>
+              <p>' + stock_item.sale_unit.name + '</p>
+            </div>'
+        end
+
+        if stock_item.price_code.present?
+          formatted += '<div>
+            <h5>Price Code</h5>
+            <p>' + stock_item.price_code + '</p>
+          </div>'
+        end
+
+        design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
+          formatted += '<div>
+            <h5>' + dp.property.presentation + '</h5>
+            <p>' + format_property_value(dp) + '</p>
+          </div>'
+        end
+
+        formatted += '</div>'
+        formatted
+      end
+
       def format_home_properties stock_item
 
         variant = stock_item.variant
@@ -313,6 +400,46 @@ module Admin
           </div>
         </div>'
 
+      end
+
+      def format_tearsheet_links variant
+        out = '<!-- pdf -->'
+        variant.design.variants.each do |v|
+          if v.tearsheet.file
+            out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
+          end
+        end
+        out
+      end
+
+      def format_property_value(dp, domain = nil)
+        if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
+          "#{dp.value} #{matches[:unit]}"
+        elsif dp.property.name == 'margin_trim'
+          format_margin_trim_property_value(dp, domain)
+        else
+          dp.value
+        end
+      end
+
+      def format_margin_trim_property_value(dp, domain = nil)
+        if domain == 'astekhome.com'
+          if dp.design.digital? && (%w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value) || dp.value == 'Untrimmed')
+            'Pre-trimmed'
+          elsif %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
+        else
+          if %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+            # Value for margin trim can be numeric, but we display "Untrimmed"
+            'Untrimmed'
+          else
+            dp.value
+          end
+        end
       end
 
     end

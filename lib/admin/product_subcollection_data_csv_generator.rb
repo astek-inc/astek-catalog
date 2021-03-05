@@ -1,82 +1,6 @@
 module Admin
   class ProductSubcollectionDataCsvGenerator < Admin::BaseProductDataCsvGenerator
 
-    # require 'csv'
-
-    # TEXT_VALUES = {
-    #     variant_barcode: '',
-    #     variant_inventory_tracker: '',
-    #     variant_inventory_policy: 'Continue',
-    #     variant_fulfillment_service: 'Manual',
-    #     variant_compare_at_price: '',
-    #     google_shopping_mpn: '',
-    #     google_shopping_age_group: '',
-    #     google_shopping_gender: '',
-    #     google_shopping_google_product_category: '',
-    #     google_shopping_adwords_grouping: '',
-    #     google_shopping_adwords_labels: '',
-    #     google_shopping_condition: '',
-    #     google_shopping_custom_product: '',
-    #     google_shopping_custom_label_0: '',
-    #     google_shopping_custom_label_1: '',
-    #     google_shopping_custom_label_2: '',
-    #     google_shopping_custom_label_3: '',
-    #     google_shopping_custom_label_4: '',
-    #     variant_tax_code: '',
-    #     cost_per_item: ''
-    # }
-
-    # PRIMARY_ROW_ATTRIBUTES = %w[
-    #   handle
-    #   title
-    #   body
-    #   vendor
-    #   type
-    #   tags
-    #   published?
-    #   option_1_name
-    #   option_1_value
-    #   option_2_name
-    #   option_2_value
-    #   option_3_name
-    #   option_3_value
-    #   sku
-    #   variant_grams
-    #   variant_inventory_tracker
-    #   variant_inventory_qty
-    #   variant_inventory_policy
-    #   variant_fulfillment_service
-    #   price
-    #   variant_compare_at_price
-    #   variant_requires_shipping
-    #   variant_taxable
-    #   variant_barcode
-    #   image_src
-    #   image_position
-    #   image_alt_text
-    #   gift_card
-    #   google_shopping_mpn
-    #   google_shopping_age_group
-    #   google_shopping_gender
-    #   google_shopping_google_product_category
-    #   seo_title
-    #   description
-    #   google_shopping_adwords_grouping
-    #   google_shopping_adwords_labels
-    #   google_shopping_condition
-    #   google_shopping_custom_product
-    #   google_shopping_custom_label_0
-    #   google_shopping_custom_label_1
-    #   google_shopping_custom_label_2
-    #   google_shopping_custom_label_3
-    #   google_shopping_custom_label_4
-    #   variant_image
-    #   variant_weight_unit
-    #   variant_tax_code
-    #   cost_per_item
-    #   collection
-    # ]
-
     class << self
 
       def product_data_csv subcollection, website, include_header=true
@@ -84,7 +8,7 @@ module Admin
         CSV.generate(headers: true) do |csv|
 
           if include_header
-            csv << BaseProductDataCsvGenerator::HEADER
+            csv << Admin::BaseProductDataCsvGenerator::HEADER
           end
 
           # total_image_count = subcollection.designs.variants.count + subcollection.designs.variants.select { |v| v.variant_install_images.any? }.count
@@ -131,15 +55,15 @@ module Admin
                 # else
 
                 if @first_row
-                  csv << BaseProductDataCsvGenerator::PRIMARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
+                  csv << Admin::BaseProductDataCsvGenerator::PRIMARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
                   @first_row = false
                 else
-                  csv << BaseProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
+                  csv << Admin::BaseProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'full', @image_index, website)) }
                 end
 
                 if website == 'astekhome.com'
                   unless design.collection.suppress_sample_option_from_display
-                    csv << BaseProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'sample', 0, website)) }
+                    csv << Admin::BaseProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map { |attr| (attr.nil? ? nil : attribute_value(attr, stock_item, 'sample', 0, website)) }
                   end
                 end
               # end
@@ -168,9 +92,9 @@ module Admin
 
       def attribute_value attr, stock_item, variant_type, image_index, domain, material=nil, show_image=true
 
-        if BaseProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
+        if Admin::BaseProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
 
-          BaseProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
+          Admin::BaseProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
           stock_item.variant.design.subcollection.handle
@@ -479,7 +403,7 @@ module Admin
           body += formatted_description
         end
 
-        body += format_business_properties(stock_item) #, domain)
+        body += format_business_properties(stock_item, domain)
 
         if stock_item.variant.tearsheet.file
           body += format_tearsheet_links stock_item
@@ -500,102 +424,52 @@ module Admin
         body
       end
 
-      def format_description(stock_item, domain)
-        formatted_description = ''
-        if description = stock_item.variant.design.description_for_domain(domain)
-          formatted_description += '<p>' + description + '</p>'
-        end
-      end
+      # def format_description(stock_item, domain)
+      #   formatted_description = ''
+      #   if description = stock_item.variant.design.description_for_domain(domain)
+      #     formatted_description += '<p>' + description + '</p>'
+      #   end
+      # end
 
-      def format_business_properties stock_item
-
-        variant = stock_item.variant
-        design = variant.design
-
-        formatted = '<div class="description__meta">'
-
-        unless variant.design.collection.suppress_from_display
-          formatted += '<div>
-              <h5>Collection</h5>
-              <p><a href="/collections/'+variant.design.collection.name.parameterize+'">'+variant.design.collection.name+'</a></p>
-            </div>'
-        end
-
-        # if variant.substrate_for_domain('astek.com')
-        #   formatted += '<div>
-        #     <h5>Substrate</h5>
-        #     <p>Type II</p>
-        #   </div>'
-        # end
-        # # '+variant.format_substrate_name+'
-        #
-        # if variant.backing_type
-        #   formatted += '<div>
-        #     <h5>Backing</h5>
-        #     <p>'+variant.backing_type.name+'</p>
-        #   </div>'
-        # end
-
-        formatted += '<div>
-            <h5>Sold By</h5>
-            <p>'+stock_item.sale_unit.name+'</p>
-          </div>'
-
-        design.design_properties.each do |dp|
-
-          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
-          next if /\Aroll_width_/ =~ dp.property.name && variant.design.subcollection.subcollection_type.name == 'Roll Width'
-
-          formatted += '<div>
-            <h5>'+dp.property.presentation+'</h5>
-            <p>'+format_property_value(dp)+'</p>
-          </div>'
-
-        end
-
-        formatted += '</div>'
-        formatted
-      end
-
-      def format_tearsheet_links stock_item
-        out = '<!-- pdf -->'
-        stock_item.variant.design.variants.each do |v|
-          if v.tearsheet.file
-            out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
-          end
-        end
-        out
-      end
-
-      def format_property_value(dp, domain = nil)
-        if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
-          "#{dp.value} #{matches[:unit]}"
-        elsif dp.property.name == 'margin_trim'
-          format_margin_trim_property_value(dp, domain)
-        else
-          dp.value
-        end
-      end
-
-      def format_margin_trim_property_value(dp, domain = nil)
-        if domain == 'astekhome.com'
-          if dp.design.digital? && (%w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value) || dp.value == 'Untrimmed')
-            'Pre-trimmed'
-          elsif %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
-            # Value for margin trim can be numeric, but we display "Untrimmed"
-            'Untrimmed'
-          else
-            dp.value
-          end
-        else
-          if %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
-            # Value for margin trim can be numeric, but we display "Untrimmed"
-            'Untrimmed'
-          else
-            dp.value
-          end
-        end
-      end
+      # def format_tearsheet_links stock_item
+      #   out = '<!-- pdf -->'
+      #   stock_item.variant.design.variants.each do |v|
+      #     if v.tearsheet.file
+      #       out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
+      #     end
+      #   end
+      #   out
+      # end
+      #
+      # def format_property_value(dp, domain = nil)
+      #   if matches = dp.property.name.match(/_(?<unit>inches|feet|yards|meters)\Z/)
+      #     "#{dp.value} #{matches[:unit]}"
+      #   elsif dp.property.name == 'margin_trim'
+      #     format_margin_trim_property_value(dp, domain)
+      #   else
+      #     dp.value
+      #   end
+      # end
+      #
+      # def format_margin_trim_property_value(dp, domain = nil)
+      #   if domain == 'astekhome.com'
+      #     if dp.design.digital? && (%w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value) || dp.value == 'Untrimmed')
+      #       'Pre-trimmed'
+      #     elsif %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+      #       # Value for margin trim can be numeric, but we display "Untrimmed"
+      #       'Untrimmed'
+      #     else
+      #       dp.value
+      #     end
+      #   else
+      #     if %w[Pre-trimmed Pretrimmed Untrimmed].exclude?(dp.value)
+      #       # Value for margin trim can be numeric, but we display "Untrimmed"
+      #       'Untrimmed'
+      #     else
+      #       dp.value
+      #     end
+      #   end
+      # end
 
       def roll_width_data_js subcollection
         json = subcollection.designs.map { |d| {
