@@ -202,14 +202,14 @@ module Admin
 
       def format_dimensional_properties design, stock_item
 
-        items = ''
+        items = []
 
         design.design_properties.each do |dp|
           if DIMENSIONAL_PROPERTIES.include? dp.property.name
 
             next if design.subcollected? && design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
             next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
-            items += '<div>
+            items << '<div>
               <dt>'+dp.property.presentation+'<dt>
               <dd>'+format_property_value(dp, 'astekhome.com')+'</dd>
             </div>'
@@ -217,18 +217,24 @@ module Admin
           end
         end
 
-        return '<div class="dropdown">
-          <div class="dropdown-header">
-            <span>Size + Repeat</span> <span class="dropdown-caret down"></span>
-          </div>
+        out = ''
 
-          <div class="dropdown-body">
-            <dl>
-              ' + items + '
-            </dl>
-          </div>
-        </div>'
+        if items.count > 0
+          out = '<div class="dropdown">
+            <div class="dropdown-header">
+              <span>Size + Repeat</span> <span class="dropdown-caret down"></span>
+            </div>
 
+            <div class="dropdown-body">
+              <dl>
+                ' + items.join("\n") + '
+              </dl>
+            </div>
+          </div>'
+        end
+
+        return out
+        
       end
 
       def format_shipping_and_returns_information design
