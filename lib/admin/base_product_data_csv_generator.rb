@@ -207,6 +207,7 @@ module Admin
         design.design_properties.each do |dp|
           if DIMENSIONAL_PROPERTIES.include? dp.property.name
 
+            next if design.subcollected? && design.subcollection.subcollection_type.name == 'Roll Width' && (/\Aroll_length_/ =~ dp.property.name || /\Aroll_width_/ =~ dp.property.name)
             next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
             items += '<div>
               <dt>'+dp.property.presentation+'<dt>

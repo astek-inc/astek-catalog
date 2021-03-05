@@ -117,6 +117,10 @@ class Design < ApplicationRecord
     self.variants.map { |v| v.variant_type.name }.include? 'Color Way'
   end
 
+  def subcollected?
+    self.subcollection.present?
+  end
+
   def peel_and_stick_version
     if self.digital?
       sku = 'PS' + self.sku
