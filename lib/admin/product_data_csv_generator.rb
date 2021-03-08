@@ -732,230 +732,121 @@ module Admin
         body
       end
 
-      # def format_description(stock_item, domain)
-      #
-      #   variant = stock_item.variant
-      #
-      #   formatted_description = ''
-      #
-      #   if description = variant.design.description_for_domain(domain)
-      #     formatted_description += '<p>' + description + '</p>'
-      #   end
-      #
-      #   if domain == 'astek.com' && variant.design.collection.product_category.name == 'Contract Vinyl'
-      #     formatted_description += '<p>For digitally printed commercial grade vinyl wallcoverings, visit our <a href="/collections/studio">Studio</a> collections.</p>'
-      #   end
-      #
-      #   unless formatted_description.blank?
-      #     "<div>
-      #       #{formatted_description}
-      #     </div>"
-      #   end
-      #
-      # end
+      def format_description(stock_item, domain)
 
-      # def format_business_properties(stock_item, domain)
-      #
-      #   variant = stock_item.variant
-      #   design = variant.design
-      #
-      #   formatted = '<div class="description__meta">'
-      #
-      #   unless design.collection.suppress_from_display
-      #     formatted += '<div>
-      #         <h5>Collection</h5>
-      #         <p><a href="/collections/' + design.collection.name.gsub("\'", "").parameterize + '">' + design.collection.name + '</a></p>
-      #       </div>'
-      #   end
-      #
-      #   if design.digital?
-      #     # This property has to apply to all variants, so we are making sure that they are all Type II.
-      #     sis = design.variants.map { |v| v.stock_items.for_domain(domain) }.flatten!
-      #     if sis.select { |si| si.substrate.substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == sis.count
-      #       formatted += '<div>
-      #         <h5>Substrate</h5>
-      #         <p>Type II</p>
-      #       </div>'
-      #     end
-      #   end
-      #
-      #   unless design.digital?
-      #     if stock_item.backing_type
-      #       formatted += '<div>
-      #         <h5>Backing</h5>
-      #         <p>' + stock_item.backing_type.name + '</p>
-      #       </div>'
-      #       # elsif variant_substrate && variant_substrate.backing_type
-      #       #   formatted += '<div>
-      #       #     <h5>Backing</h5>
-      #       #     <p>'+variant_substrate.backing_type.name+'</p>
-      #       #   </div>'
-      #     end
-      #   end
-      #
-      #   if stock_item.sale_unit.present?
-      #     formatted += '<div>
-      #         <h5>Sold By</h5>
-      #         <p>' + stock_item.sale_unit.name + '</p>
-      #       </div>'
-      #   end
-      #
-      #   if stock_item.price_code.present?
-      #     formatted += '<div>
-      #       <h5>Price Code</h5>
-      #       <p>' + stock_item.price_code + '</p>
-      #     </div>'
-      #   end
-      #
-      #   design.design_properties.each do |dp|
-      #     next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
-      #     formatted += '<div>
-      #       <h5>' + dp.property.presentation + '</h5>
-      #       <p>' + format_property_value(dp) + '</p>
-      #     </div>'
-      #   end
-      #
-      #   formatted += '</div>'
-      #   formatted
-      # end
+        variant = stock_item.variant
 
-      # def format_home_properties stock_item
-      #
-      #   variant = stock_item.variant
-      #   design = variant.design
-      #
-      #   formatted = '<!-- DESCRIPTION V2 -->
-      #   <div class="description__meta">'
-      #
-      #   formatted += format_dimensional_properties design, stock_item
-      #   formatted += format_shipping_and_returns_information design
-      #   formatted += format_additional_specs design, stock_item
-      #
-      #   formatted += '</div>'
-      #
-      #   formatted += '<script>
-      #     var Astek = Astek || {};
-      #     Astek.calculator_settings = ' + stock_item.calculator_settings + ';
-      #   </script>'
-      #
-      #   if design = design.peel_and_stick_version
-      #     formatted += "<script>
-      #       var Astek = Astek || {};
-      #       Astek.peel_and_stick_version_handle = '#{design.handle}';
-      #     </script>"
-      #   end
-      #
-      #   formatted
-      # end
-      #
-      # def format_dimensional_properties design, stock_item
-      #
-      #   items = ''
-      #
-      #   design.design_properties.each do |dp|
-      #     if DIMENSIONAL_PROPERTIES.include? dp.property.name
-      #
-      #       next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
-      #       items += '<div>
-      #         <dt>'+dp.property.presentation+'<dt>
-      #         <dd>'+format_property_value(dp, 'astekhome.com')+'</dd>
-      #       </div>'
-      #
-      #     end
-      #   end
-      #
-      #   return '<div class="dropdown">
-      #     <div class="dropdown-header">
-      #       <span>Size + Repeat</span> <span class="dropdown-caret down"></span>
-      #     </div>
-      #
-      #     <div class="dropdown-body">
-      #       <dl>
-      #         ' + items + '
-      #       </dl>
-      #     </div>
-      #   </div>'
-      #
-      # end
-      #
-      # def format_shipping_and_returns_information design
-      #   out = ''
-      #   if design.digital?
-      #     out = '<div class="dropdown">
-      #       <div class="dropdown-header">
-      #         <span>Shipping + Returns</span> <span class="dropdown-caret down"></span>
-      #       </div>
-      #
-      #       <div class="dropdown-body">
-      #         <p>This product is digitally printed to order. We do not accept returns or exchanges on digitally printed products.</p>
-      #         <p>Digitally printed products require 1-2 weeks to print before being shipped.</p>
-      #         <p>To learn more, visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>
-      #       </div>
-      #     </div>'
-      #   end
-      #   return out
-      #
-      # end
-      #
-      # def format_additional_specs design, stock_item
-      #
-      #   items = ''
-      #
-      #   items += '<div>
-      #     <dt>SKU</dt>
-      #     <dd>'+design.sku+'</dd>
-      #   </div>'
-      #
-      #   unless design.collection.suppress_from_display
-      #     items += '<div>
-      #       <dt>Collection</dt>
-      #       <dd><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></dd>
-      #     </div>'
-      #   end
-      #
-      #   if design.collection.lead_time
-      #     items += '<div>
-      #       <dt>Lead time</dt>
-      #       <dd>'+design.collection.lead_time.name+'</dd>
-      #     </div>'
-      #   end
-      #
-      #   design.design_properties.each do |dp|
-      #     if DIMENSIONAL_PROPERTIES.exclude? dp.property.name
-      #       items += '<div>
-      #         <dt>'+dp.property.presentation+'</dt>
-      #         <dd>'+format_property_value(dp, 'astekhome.com')+'</dd>
-      #       </div>'
-      #     end
-      #   end
-      #
-      #   if stock_item.minimum_quantity > 1
-      #     items += '<div>
-      #       <dt>Minimum quantity</dt>
-      #       <dd>'+stock_item.minimum_quantity.to_s+' '+stock_item.sale_unit.name.pluralize.titleize+'</dd>
-      #     </div>'
-      #   end
-      #
-      #   if stock_item.sale_quantity > 1
-      #     items += '<div>
-      #       <dt>Sold in quantities of</dt>
-      #       <dd>'+stock_item.sale_quantity.to_s+'</dd>
-      #     </div>'
-      #   end
-      #
-      #   return '<div class="dropdown">
-      #     <div class="dropdown-header">
-      #       <span>Additional Specs</span> <span class="dropdown-caret down"></span>
-      #     </div>
-      #
-      #     <div class="dropdown-body">
-      #       <dl>
-      #         ' + items + '
-      #       </dl>
-      #     </div>
-      #   </div>'
-      #
-      # end
+        formatted_description = ''
+
+        if description = variant.design.description_for_domain(domain)
+          formatted_description += '<p>' + description + '</p>'
+        end
+
+        if domain == 'astek.com' && variant.design.collection.product_category.name == 'Contract Vinyl'
+          formatted_description += '<p>For digitally printed commercial grade vinyl wallcoverings, visit our <a href="/collections/studio">Studio</a> collections.</p>'
+        end
+
+        unless formatted_description.blank?
+          "<div>
+            #{formatted_description}
+          </div>"
+        end
+
+      end
+
+      def format_business_properties(stock_item, domain)
+
+        variant = stock_item.variant
+        design = variant.design
+
+        formatted = '<div class="description__meta">'
+
+        unless design.collection.suppress_from_display
+          formatted += '<div>
+              <h5>Collection</h5>
+              <p><a href="/collections/' + design.collection.name.gsub("\'", "").parameterize + '">' + design.collection.name + '</a></p>
+            </div>'
+        end
+
+        if design.digital?
+          # This property has to apply to all variants, so we are making sure that they are all Type II.
+          sis = design.variants.map { |v| v.stock_items.for_domain(domain) }.flatten!
+          if sis.select { |si| si.substrate.substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == sis.count
+            formatted += '<div>
+              <h5>Substrate</h5>
+              <p>Type II</p>
+            </div>'
+          end
+        end
+
+        unless design.digital?
+          if stock_item.backing_type
+            formatted += '<div>
+              <h5>Backing</h5>
+              <p>' + stock_item.backing_type.name + '</p>
+            </div>'
+            # elsif variant_substrate && variant_substrate.backing_type
+            #   formatted += '<div>
+            #     <h5>Backing</h5>
+            #     <p>'+variant_substrate.backing_type.name+'</p>
+            #   </div>'
+          end
+        end
+
+        if stock_item.sale_unit.present?
+          formatted += '<div>
+              <h5>Sold By</h5>
+              <p>' + stock_item.sale_unit.name + '</p>
+            </div>'
+        end
+
+        if stock_item.price_code.present?
+          formatted += '<div>
+            <h5>Price Code</h5>
+            <p>' + stock_item.price_code + '</p>
+          </div>'
+        end
+
+        design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
+          formatted += '<div>
+            <h5>' + dp.property.presentation + '</h5>
+            <p>' + format_property_value(dp) + '</p>
+          </div>'
+        end
+
+        formatted += '</div>'
+        formatted
+      end
+
+      def format_home_properties stock_item
+
+        variant = stock_item.variant
+        design = variant.design
+
+        formatted = '<!-- DESCRIPTION V2 -->
+        <div class="description__meta">'
+
+        formatted += format_dimensional_properties design, stock_item
+        formatted += format_shipping_and_returns_information design
+        formatted += format_additional_specs design, stock_item
+
+        formatted += '</div>'
+
+        formatted += '<script>
+          var Astek = Astek || {};
+          Astek.calculator_settings = ' + stock_item.calculator_settings + ';
+        </script>'
+
+        if design = design.peel_and_stick_version
+          formatted += "<script>
+            var Astek = Astek || {};
+            Astek.peel_and_stick_version_handle = '#{design.handle}';
+          </script>"
+        end
+
+        formatted
+      end
 
       def format_onair_properties stock_item
 
