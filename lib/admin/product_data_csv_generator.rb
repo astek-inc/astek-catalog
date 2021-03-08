@@ -878,21 +878,27 @@ module Admin
       end
 
       def format_shipping_and_returns_information design
-        out = ''
+
         if design.digital?
-          out = '<div class="dropdown">
+          body_content = '<p>This product is digitally printed to order. We do not accept returns or exchanges on digitally printed products.</p>
+            <p>Digitally printed products require 1-2 weeks to print before being shipped.</p>
+            <p>To learn more, visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>'
+        else
+          body_content = '<p>Stock of this item varies. If in stock, products are shipped within 1-2 business days.</p>
+            <p>This product is eligible for returns with a 30% restocking fee applied. The product must be unopened, uncut, and sent back within 30 days of purchasing.</p>
+            <p>For more info, visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>'
+        end
+
+        return '<div class="dropdown">
             <div class="dropdown-header">
               <span>Shipping + Returns</span> <span class="dropdown-caret down"></span>
             </div>
 
             <div class="dropdown-body">
-              <p>This product is digitally printed to order. We do not accept returns or exchanges on digitally printed products.</p>
-              <p>Digitally printed products require 1-2 weeks to print before being shipped.</p>
-              <p>To learn more, visit our <a href="/pages/shipping-policy">shipping policy and returns page</a>.</p>
+              ' + body_content + '
             </div>
           </div>'
-        end
-        return out
+        
       end
 
       def format_additional_specs design, stock_item
