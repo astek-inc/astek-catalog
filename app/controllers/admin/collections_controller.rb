@@ -44,7 +44,7 @@ module Admin
 
     def csv_export_search
       domain = Website.find(params[:website_id]).domain
-      @collections = Collection.where('collections.name LIKE ?', params[:term] + '%').for_domain(domain)
+      @collections = Collection.where('LOWER(collections.name) LIKE ?', params[:term].downcase + '%').for_domain(domain)
       render json: @collections, each_serializer: CollectionSearchResultSerializer, root: nil, adapter: :attributes
     end
 
