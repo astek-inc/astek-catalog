@@ -176,11 +176,11 @@ module Admin
             end
           end
 
-          puts '= * ~ | '*30
-          puts @other_domains
-          puts @other_domain
-          puts total_image_count
-          puts '= * ~ | '*30
+          # puts '= * ~ | '*30
+          # puts @other_domains
+          # puts @other_domain
+          # puts total_image_count
+          # puts '= * ~ | '*30
 
           @custom_image_index = total_image_count
           @first_row = true
@@ -238,8 +238,8 @@ module Admin
           # we mix a random install image in with the swatch images (handled above @line 170).
           if domain == 'astek.com' || (domain == 'astekhome.com' && !@design.has_colorways?)
             @design.variants.each do |variant|
-              if variant.install_images
-                variant.install_images.each do |image|
+              if variant.variant_install_images
+                variant.variant_install_images.each do |image|
                   @image_index += 1
                   csv << [@design.handle] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
 
@@ -498,7 +498,7 @@ module Admin
               end
             else
               if material
-                (BigDecimal(variant.price) + BigDecimal(material.surcharge)).to_s
+                (BigDecimal(variant.price, 0) + BigDecimal(material.surcharge, 0)).to_s
               else
                 variant.price
               end
@@ -638,7 +638,7 @@ module Admin
           end
         end
 
-        body += format_business_properties variant
+        body += format_business_properties variant, domain
 
         if variant.tearsheet.file
           body += format_tearsheet_links variant
@@ -679,7 +679,7 @@ module Admin
         </div>'
       end
 
-      def format_business_properties variant
+      def format_business_properties variant, domain
         formatted = '<div class="description__meta">'
 
         unless @design.collection.suppress_from_display
@@ -689,36 +689,35 @@ module Admin
             </div>'
         end
 
-        if variant.substrate
-          formatted += '<div>
-            <h5>Substrate</h5>
-            <p>Type II</p>
-          </div>'
-        end
-        # '+variant.format_substrate_name+'
-
-        if variant.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant.backing_type.name+'</p>
-          </div>'
-        elsif variant.substrate.backing_type
-          formatted += '<div>
-            <h5>Backing</h5>
-            <p>'+variant.substrate.backing_type.name+'</p>
-          </div>'
+        if @design.digital?
+          # This property has to apply to all variants, so we are making sure that they are all Type II.
+          sis = @design.variants.map { |v| v.stock_items }.flatten!
+          if sis.select { |si| si.substrate.substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == sis.count
+            formatted += '<div>
+              <h5>Substrate</h5>
+              <p>Type II</p>
+            </div>'
+          end
         end
 
+        unless @design.digital?
+          if variant.stock_items.first.backing_type
+            formatted += '<div>
+              <h5>Backing</h5>
+              <p>' + variant.stock_items.first.backing_type.name + '</p>
+            </div>'
+          end
+        end
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+variant.sale_unit.name+'</p>
+            <p>'+variant.stock_items.first.sale_unit.name+'</p>
           </div>'
 
-        if variant.price_code.present?
+        if variant.stock_items.first.price_code.present?
           formatted += '<div>
             <h5>Price Code</h5>
-            <p>'+variant.price_code+'</p>
+            <p>'+variant.stock_items.first.price_code+'</p>
           </div>'
         end
 
@@ -764,17 +763,17 @@ module Admin
           </div>'
         end
 
-        if variant.minimum_quantity > 1
+        if variant.stock_items.first.minimum_quantity > 1
           formatted += '<div>
             <h6>Minimum quantity</h6>
-            <p>'+variant.minimum_quantity.to_s+' '+variant.sale_unit.name.pluralize.titleize+'</p>
+            <p>'+variant.stock_items.first.minimum_quantity.to_s+' '+variant.stock_items.first.sale_unit.name.pluralize.titleize+'</p>
           </div>'
         end
 
-        if variant.sale_quantity > 1
+        if variant.stock_items.first.sale_quantity > 1
           formatted += '<div>
             <h6>Sold in quantities of</h6>
-            <p>'+variant.sale_quantity.to_s+'</p>
+            <p>'+variant.stock_items.first.sale_quantity.to_s+'</p>
           </div>'
         end
 
@@ -799,7 +798,7 @@ module Admin
 
         formatted += '<div>
             <h5>Sold By</h5>
-            <p>'+variant.sale_unit.name+'</p>
+            <p>'+variant.stock_items.first.sale_unit.name+'</p>
           </div>'
 
         @design.design_properties.each do |dp|
@@ -854,11 +853,11 @@ module Admin
       # If the printed width of a given design is less than standard, more physical material
       # may be required to complete a given order, so the weight may be more than standard
       def material_variant_weight material, variant
-        if BigDecimal(variant.weight) == BigDecimal(variant.substrate.weight_per_square_foot)
-          (BigDecimal(material.substrate.weight_per_square_foot) * BigDecimal('453.592')).round.to_s
+        if BigDecimal(variant.stock_items.first.weight, 0) == BigDecimal(variant.stock_items.first.substrate.weight_per_square_foot, 0)
+          (BigDecimal(material.substrate.weight_per_square_foot, 0) * BigDecimal('453.592', 0)).round.to_s
         else
-          ratio = BigDecimal(variant.weight) / BigDecimal(variant.substrate.weight_per_square_foot)
-          (BigDecimal(material.substrate.weight_per_square_foot) * ratio * BigDecimal('453.592')).round.to_s
+          ratio = BigDecimal(variant.stock_items.first.weight, 0) / BigDecimal(variant.stock_items.first.substrate.weight_per_square_foot, 0)
+          (BigDecimal(material.substrate.weight_per_square_foot, 0) * ratio * BigDecimal('453.592', 0)).round.to_s
         end
       end
 
