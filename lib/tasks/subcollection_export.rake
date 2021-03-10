@@ -1,4 +1,4 @@
-require "#{Rails.root}/lib/admin/product_subcollection_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/shopify_subcollection_data_csv_generator.rb"
 
 namespace :db do
   desc 'Export product information for a subcollection for a given domain'
@@ -31,7 +31,7 @@ namespace :db do
       #   end
       #
       #   puts 'Getting data for '+design.name
-        csv_data += ::Admin::ProductSubcollectionDataCsvGenerator.product_data_csv subcollection, domain, csv_data.empty?
+        csv_data += ::Admin::ShopifySubcollectionDataCsvGenerator.product_data_csv subcollection, domain, csv_data.empty?
       # end
 
 

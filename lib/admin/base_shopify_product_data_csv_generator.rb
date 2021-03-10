@@ -1,5 +1,5 @@
 module Admin
-  class BaseProductDataCsvGenerator
+  class BaseShopifyProductDataCsvGenerator
 
     require 'csv'
 
@@ -171,6 +171,52 @@ module Admin
 
     class << self
 
+      def body_for_domain stock_item, domain
+        case domain
+        when 'astek.com'
+          astek_business_description stock_item, domain
+        when 'astekhome.com'
+          astek_home_description stock_item
+        when 'onairdesign.com'
+          onair_design_description stock_item, domain
+        end
+      end
+
+      def astek_business_description stock_item, domain
+
+        variant = stock_item.variant
+
+        body = ''
+
+        if formatted_description = format_description(stock_item, domain)
+          body += formatted_description
+        end
+
+        body += format_business_properties(stock_item, domain)
+
+        if variant.tearsheet.file
+          body += format_tearsheet_links variant
+        end
+
+        body = body.gsub(/\n+/, ' ')
+        body
+      end
+
+      def astek_home_description stock_item
+        body = format_home_properties(stock_item).gsub(/\n+/, ' ')
+        body
+      end
+
+      def onair_design_description(stock_item, domain)
+        body = ''
+        if formatted_description = format_description(stock_item, domain)
+          body += formatted_description
+        end
+        body += format_onair_properties(variant)
+        body = body.gsub(/\n+/, ' ')
+        body
+      end
+
       def format_description(stock_item, domain)
 
         variant = stock_item.variant
@@ -192,6 +238,7 @@ module Admin
         end
 
       end
+
 
       def format_business_properties(stock_item, domain)
 
@@ -251,6 +298,61 @@ module Admin
           formatted += '<div>
             <h5>' + dp.property.presentation + '</h5>
             <p>' + format_property_value(dp) + '</p>
+          </div>'
+        end
+
+        formatted += '</div>'
+        formatted
+      end
+
+      def format_onair_properties stock_item
+
+        variant = stock_item.variant
+        design = variant.design
+
+        formatted = '<div class="description__meta">'
+
+        formatted += '<div>
+              <h5>SKU</h5>
+              <p>'+design.sku+'</p>
+            </div>'
+
+        unless design.collection.suppress_from_display
+          formatted += '<div>
+              <h5>Collection</h5>
+              <p><a href="/collections/'+design.collection.name.parameterize+'">'+design.collection.name+'</a></p>
+            </div>'
+        end
+
+        formatted += '<div>
+            <h5>Sold By</h5>
+            <p>'+stock_item.sale_unit.name+'</p>
+          </div>'
+
+        design.design_properties.each do |dp|
+          next unless %w[
+            margin_trim
+            motif_width_inches
+            mural_height_inches
+            mural_width_inches
+            panel_height_inches
+            panel_width_inches
+            panels_per_set
+            printed_width_inches
+            repeat_match_type
+            roll_length_meters
+            roll_length_yards
+            roll_width_inches
+            tile_height_inches
+            tile_width_inches
+            vertical_repeat_inches
+          ].include? dp.property.name
+
+          next if /\Aroll_length_/ =~ dp.property.name && stock_item.sale_unit.name != 'Roll'
+
+          formatted += '<div>
+            <h5>'+dp.property.presentation+'</h5>
+            <p>'+format_property_value(dp)+'</p>
           </div>'
         end
 
@@ -446,6 +548,61 @@ module Admin
             dp.value
           end
         end
+      end
+
+      def astek_home_size_value variant_type
+        case variant_type
+        when 'sample', 'full'
+          variant_type.capitalize
+        when 'custom_sample'
+          'Sample'
+        else
+          'Full'
+        end
+      end
+
+      def astek_home_material_value material
+        if material
+          material.name
+        end
+      end
+
+      def astek_home_colorway_value variant_type, variant_name
+        case variant_type
+        when 'custom', 'custom_sample'
+          'Custom'
+        else
+          variant_name
+        end
+      end
+
+      def astek_home_size_value variant_type
+        if /\A(?<label>sample|full)/ =~ variant_type
+          label.capitalize
+        elsif variant_type == 'custom_sample'
+          'Sample'
+        else
+          'Full'
+        end
+      end
+
+      # If the printed width of a given design is less than standard, more physical material
+      # may be required to complete a given order, so the weight of a square foot of a variant
+      # is given as more than standard. We want to apply the same increase to the custom material
+      # options
+      def custom_material_stock_item_weight custom_material, stock_item
+        substrate = stock_item.substrate
+        if BigDecimal(stock_item.weight, 0) == BigDecimal(substrate.weight_per_square_foot, 0)
+          (BigDecimal(custom_material.substrate.weight_per_square_foot, 0) * BigDecimal('453.592', 0)).round.to_s
+        else
+          ratio = BigDecimal(stock_item.weight, 0) / BigDecimal(substrate.weight_per_square_foot, 0)
+          (BigDecimal(custom_material.substrate.weight_per_square_foot, 0) * ratio * BigDecimal('453.592', 0)).round.to_s
+        end
+      end
+
+      # Shopify sites require weight in grams, in whole numbers (no decimals)
+      def variant_grams stock_item
+        (stock_item.weight * BigDecimal('453.592', 0)).round.to_s unless stock_item.weight.nil?
       end
 
     end

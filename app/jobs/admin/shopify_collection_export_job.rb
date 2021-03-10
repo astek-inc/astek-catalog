@@ -1,7 +1,7 @@
-require "#{Rails.root}/lib/admin/base_product_data_csv_generator.rb"
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
-require "#{Rails.root}/lib/admin/product_design_alias_data_csv_generator.rb"
-require "#{Rails.root}/lib/admin/product_subcollection_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/base_shopify_product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/shopify_design_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/shopify_design_alias_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/shopify_subcollection_data_csv_generator.rb"
 
 module Admin
   class ShopifyCollectionExportJob < ActiveJob::Base
@@ -15,15 +15,15 @@ module Admin
 
       csv_data = ''
       collection.designs.available.unsubcollected.for_domain(website.domain).each do |design|
-        csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
+        csv_data += ::Admin::ShopifyDesignDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
       end
 
       collection.design_aliases.for_domain(website.domain).each do |design_alias|
-        csv_data += ::Admin::ProductDesignAliasDataCsvGenerator.product_data_csv design_alias, website.domain, csv_data.empty?
+        csv_data += ::Admin::ShopifyDesignAliasDataCsvGenerator.product_data_csv design_alias, website.domain, csv_data.empty?
       end
 
       collection.subcollections.each do |subcollection|
-        csv_data += ::Admin::ProductSubcollectionDataCsvGenerator.product_data_csv subcollection, website.domain, csv_data.empty?
+        csv_data += ::Admin::ShopifySubcollectionDataCsvGenerator.product_data_csv subcollection, website.domain, csv_data.empty?
       end
 
       filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-shopify-product-export-#{collection.name.parameterize}.csv"
