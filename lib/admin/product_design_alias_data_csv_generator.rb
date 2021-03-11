@@ -682,10 +682,10 @@ module Admin
       def format_business_properties variant, domain
         formatted = '<div class="description__meta">'
 
-        unless @design.collection.suppress_from_display
+        unless @design_alias.collection.suppress_from_display
           formatted += '<div>
               <h5>Collection</h5>
-              <p><a href="/collections/'+@design.collection.name.parameterize+'">'+@design.collection.name+'</a></p>
+              <p><a href="/collections/'+@design_alias.collection.name.parameterize+'">'+@design_alias.collection.name+'</a></p>
             </div>'
         end
 
@@ -741,10 +741,10 @@ module Admin
               <p>'+@design.sku+'</p>
             </div>'
 
-        unless @design.collection.suppress_from_display
+        unless @design_alias.collection.suppress_from_display
           formatted += '<div>
               <h6>Collection</h6>
-              <p><a href="/collections/'+@design.collection.name.parameterize+'">'+@design.collection.name+'</a></p>
+              <p><a href="/collections/'+@design_alias.collection.name.parameterize+'">'+@design_alias.collection.name+'</a></p>
             </div>'
         end
 
