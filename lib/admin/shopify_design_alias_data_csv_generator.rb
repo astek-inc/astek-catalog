@@ -1,3 +1,5 @@
+require "#{Rails.root}/lib/admin/base_shopify_product_data_csv_generator.rb"
+
 module Admin
   class ShopifyDesignAliasDataCsvGenerator < Admin::BaseShopifyProductDataCsvGenerator
 
