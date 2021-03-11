@@ -435,6 +435,187 @@ module Admin
 
       end
 
+      def astek_business_description variant, domain
+        body = ''
+
+        if description = @design_alias.description
+          body += format_description description
+        elsif description = @design.description_for_domain(domain)
+          body += format_description description
+        else
+          @other_domains.each do |od|
+            if description = @design.description_for_domain(od)
+              body += format_description description
+              break
+            end
+          end
+        end
+
+        body += format_business_properties variant, domain
+
+        if variant.tearsheet.file
+          body += format_tearsheet_links variant
+        end
+
+        body = body.gsub(/\n+/, ' ')
+        body
+      end
+
+      def astek_home_description variant
+        body = format_home_properties(variant).gsub(/\n+/, ' ')
+        body
+      end
+
+      def onair_design_description variant, domain
+        body = ''
+
+        if description = @design_alias.description
+          body += format_description description
+        elsif description = @design.description_for_domain(domain)
+          body += format_description description
+        else
+          @other_domains.each do |od|
+            if description = @design.description_for_domain(od)
+              body += format_description description
+              break
+            end
+          end
+        end
+
+        body += format_onair_properties(variant).gsub(/\n+/, ' ')
+        body
+      end
+
+      def format_business_properties variant, domain
+        formatted = '<div class="description__meta">'
+
+        unless @design_alias.collection.suppress_from_display
+          formatted += '<div>
+              <h5>Collection</h5>
+              <p><a href="/collections/'+@design_alias.collection.name.parameterize+'">'+@design_alias.collection.name+'</a></p>
+            </div>'
+        end
+
+        if @design.digital?
+          # This property has to apply to all variants, so we are making sure that they are all Type II.
+          sis = @design.variants.map { |v| v.stock_items }.flatten!
+          if sis.select { |si| si.substrate.substrate_categories.map { |sc| sc.name }.include? 'Type II' }.count == sis.count
+            formatted += '<div>
+              <h5>Substrate</h5>
+              <p>Type II</p>
+            </div>'
+          end
+        end
+
+        unless @design.digital?
+          if variant.stock_items.first.backing_type
+            formatted += '<div>
+              <h5>Backing</h5>
+              <p>' + variant.stock_items.first.backing_type.name + '</p>
+            </div>'
+          end
+        end
+
+        formatted += '<div>
+            <h5>Sold By</h5>
+            <p>'+variant.stock_items.first.sale_unit.name+'</p>
+          </div>'
+
+        if variant.stock_items.first.price_code.present?
+          formatted += '<div>
+            <h5>Price Code</h5>
+            <p>'+variant.stock_items.first.price_code+'</p>
+          </div>'
+        end
+
+        @design.design_properties.each do |dp|
+          next if /\Aroll_length_/ =~ dp.property.name && @design.sale_unit.name != 'Roll'
+          formatted += '<div>
+            <h5>'+dp.property.presentation+'</h5>
+            <p>'+format_property_value(dp)+'</p>
+          </div>'
+        end
+
+        formatted += '</div>'
+        formatted
+      end
+
+      def format_home_properties variant
+
+        stock_item = variant.stock_items.first
+
+        formatted = '<!-- DESCRIPTION V2 -->
+          <div class="description__meta">'
+
+        formatted += format_dimensional_properties @design, stock_item
+        formatted += format_shipping_and_returns_information @design
+        formatted += format_additional_specs @design, stock_item
+
+        formatted += '</div>'
+
+        formatted += '<script>
+            var Astek = Astek || {};
+            Astek.calculator_settings = ' + stock_item.calculator_settings + ';
+          </script>'
+
+        if design = design.peel_and_stick_version
+          formatted += "<script>
+              var Astek = Astek || {};
+              Astek.peel_and_stick_version_handle = '#{design.handle}';
+            </script>"
+        end
+
+        formatted
+      end
+
+      def format_onair_properties variant
+        formatted = '<div class="description__meta">'
+
+        formatted += '<div>
+              <h5>SKU</h5>
+              <p>'+@design.sku+'</p>
+            </div>'
+
+        unless @design_alias.collection.suppress_from_display
+          formatted += '<div>
+              <h5>Collection</h5>
+              <p><a href="/collections/'+@design_alias.collection.name.parameterize+'">'+@design_alias.collection.name+'</a></p>
+            </div>'
+        end
+
+        formatted += '<div>
+            <h5>Sold By</h5>
+            <p>'+variant.stock_items.first.sale_unit.name+'</p>
+          </div>'
+
+        @design.design_properties.each do |dp|
+          next unless %w[
+            margin_trim
+            motif_width_inches
+            mural_height_inches
+            mural_width_inches
+            printed_width_inches
+            repeat_match_type
+            roll_length_meters
+            roll_length_yards
+            roll_width_inches
+            tile_height_inches
+            tile_width_inches
+            vertical_repeat_inches
+          ].include? dp.property.name
+
+          next if /\Aroll_length_/ =~ dp.property.name && @design.sale_unit.name != 'Roll'
+
+          formatted += '<div>
+            <h5>'+dp.property.presentation+'</h5>
+            <p>'+format_property_value(dp)+'</p>
+          </div>'
+        end
+
+        formatted += '</div>'
+        formatted
+      end
+
     end
 
   end
