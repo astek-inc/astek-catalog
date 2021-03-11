@@ -14,10 +14,15 @@ module Admin
           end
 
           @first_row = true
+          @first_variant_image
 
           subcollection.designs.each_with_index do |design, i|
 
-            design.variants_for_domain(website).each do |variant, j|
+            design.variants_for_domain(website).each do |variant|
+
+              if i == 0
+                @first_variant_image = variant.swatch_image_url(0)
+              end
 
               variant.stock_items.for_domain(website).each do |stock_item|
 
@@ -285,7 +290,7 @@ module Admin
           #   if @random_install_image && @random_install_image[:variant_id] == design.variants.first.id
           #     @random_install_image[:install_image].file.url
           #   else
-          variant.swatch_image_url 0
+            @first_variant_image
             # end
             # when 'custom','custom_sample'
             #   'https://s3-us-west-2.amazonaws.com/astek-home/site-files/Product-Custom-Colorway-Swatch.png'
