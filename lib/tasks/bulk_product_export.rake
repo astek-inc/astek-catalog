@@ -1,5 +1,4 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
-include Admin::ProductDataCsvGenerator
+require "#{Rails.root}/lib/admin/shopify_design_data_csv_generator.rb"
 
 namespace :db do
   desc 'Export all products that are flagged to show on a given domain'
@@ -19,7 +18,7 @@ namespace :db do
       puts 'Getting data for '+collection.name
 
       collection.designs.available.each do |design|
-        csv_data += Admin::ProductDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
+        csv_data += Admin::ShopifyDesignDataCsvGenerator.product_data_csv design, domain, csv_data.empty?
       end
     end
 

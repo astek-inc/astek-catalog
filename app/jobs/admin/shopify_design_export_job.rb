@@ -1,4 +1,5 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/base_shopify_product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/shopify_design_data_csv_generator.rb"
 
 module Admin
   class ShopifyDesignExportJob < ActiveJob::Base
@@ -17,7 +18,7 @@ module Admin
 
       else
 
-        csv_data = ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, true
+        csv_data = ::Admin::ShopifyDesignDataCsvGenerator.product_data_csv design, website.domain, true
         filename = "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}-#{website.name.parameterize}-shopify-product-export-#{design.name.parameterize}.csv"
 
         storage = Fog::Storage.new(

@@ -1,34 +1,5 @@
 module Admin
-  module ProductDesignAliasDataCsvGenerator
-
-    require 'csv'
-
-    SAMPLE_WEIGHT = '.5'
-    SAMPLE_PRICE_DIGITAL = '10.99'
-    SAMPLE_PRICE_DISTRIBUTED = '5.99'
-
-    TEXT_VALUES = {
-        variant_barcode: '',
-        variant_inventory_tracker: '',
-        variant_inventory_policy: 'Continue',
-        variant_fulfillment_service: 'Manual',
-        variant_compare_at_price: '',
-        google_shopping_mpn: '',
-        google_shopping_age_group: '',
-        google_shopping_gender: '',
-        google_shopping_google_product_category: '',
-        google_shopping_adwords_grouping: '',
-        google_shopping_adwords_labels: '',
-        google_shopping_condition: '',
-        google_shopping_custom_product: '',
-        google_shopping_custom_label_0: '',
-        google_shopping_custom_label_1: '',
-        google_shopping_custom_label_2: '',
-        google_shopping_custom_label_3: '',
-        google_shopping_custom_label_4: '',
-        variant_tax_code: '',
-        cost_per_item: ''
-    }
+  class ShopifyDesignAliasDataCsvGenerator < Admin::BaseShopifyProductDataCsvGenerator
 
     class << self
 
@@ -38,131 +9,10 @@ module Admin
         @design = @design_alias.design
         @other_domains = Website.where.not('domain = ?', domain).map { |w| w.domain }
 
-        header = [
-            'Handle',
-            'Title',
-            'Body (HTML)',
-            'Vendor',
-            'Type',
-            'Tags',
-            'Published',
-            'Option1 Name',
-            'Option1 Value',
-            'Option2 Name',
-            'Option2 Value',
-            'Option3 Name',
-            'Option3 Value',
-            'Variant SKU',
-            'Variant Grams',
-            'Variant Inventory Tracker',
-            'Variant Inventory Qty',
-            'Variant Inventory Policy',
-            'Variant Fulfillment Service',
-            'Variant Price',
-            'Variant Compare At Price',
-            'Variant Requires Shipping',
-            'Variant Taxable',
-            'Variant Barcode',
-            'Image Src',
-            'Image Position',
-            'Image Alt Text',
-            'Gift Card',
-            'Google Shopping / MPN',
-            'Google Shopping / Age Group',
-            'Google Shopping / Gender',
-            'Google Shopping / Google Product Category',
-            'SEO Title',
-            'SEO Description',
-            'Google Shopping / AdWords Grouping',
-            'Google Shopping / AdWords Labels',
-            'Google Shopping / Condition',
-            'Google Shopping / Custom Product',
-            'Google Shopping / Custom Label 0',
-            'Google Shopping / Custom Label 1',
-            'Google Shopping / Custom Label 2',
-            'Google Shopping / Custom Label 3',
-            'Google Shopping / Custom Label 4',
-            'Variant Image',
-            'Variant Weight Unit',
-            'Variant Tax Code',
-            'Cost Per Item',
-            'Collection'
-        ]
-
-        primary_row_attributes = %w[
-            handle
-            title
-            body
-            vendor
-            type
-            tags
-            published?
-            option_1_name
-            option_1_value
-            option_2_name
-            option_2_value
-            option_3_name
-            option_3_value
-            sku
-            variant_grams
-            variant_inventory_tracker
-            variant_inventory_qty
-            variant_inventory_policy
-            variant_fulfillment_service
-            price
-            variant_compare_at_price
-            variant_requires_shipping
-            variant_taxable
-            variant_barcode
-            image_src
-            image_position
-            image_alt_text
-            gift_card
-            google_shopping_mpn
-            google_shopping_age_group
-            google_shopping_gender
-            google_shopping_google_product_category
-            seo_title
-            seo_description
-            google_shopping_adwords_grouping
-            google_shopping_adwords_labels
-            google_shopping_condition
-            google_shopping_custom_product
-            google_shopping_custom_label_0
-            google_shopping_custom_label_1
-            google_shopping_custom_label_2
-            google_shopping_custom_label_3
-            google_shopping_custom_label_4
-            variant_image
-            variant_weight_unit
-            variant_tax_code
-            cost_per_item
-            collection
-        ]
-
-        secondary_row_attributes = ['handle', nil, nil, nil, nil, nil, nil, nil, 'option_1_value', nil, 'option_2_value', nil] +
-            %w[
-            option_3_value
-            sku
-            variant_grams
-            variant_inventory_tracker
-            variant_inventory_qty
-            variant_inventory_policy
-            variant_fulfillment_service
-            price
-            variant_compare_at_price
-            variant_requires_shipping
-            variant_taxable
-            variant_barcode
-            image_src
-            image_position
-            image_alt_text
-          ] + 16.times.map { nil } + ['variant_image', 'variant_weight_unit'] + 3.times.map { nil }
-
         CSV.generate(headers: true) do |csv|
 
           if include_header
-            csv << header
+            csv << Admin::BaseShopifyProductDataCsvGenerator::HEADER
           end
 
           # If there aren't any images assigned to this specific domain, use the first ones we can find
@@ -176,11 +26,11 @@ module Admin
             end
           end
 
-          # puts '= * ~ | '*30
-          # puts @other_domains
-          # puts @other_domain
-          # puts total_image_count
-          # puts '= * ~ | '*30
+          puts '= * ~ | '*30
+          puts @other_domains
+          puts @other_domain
+          puts total_image_count
+          puts '= * ~ | '*30
 
           @custom_image_index = total_image_count
           @first_row = true
@@ -204,15 +54,15 @@ module Admin
               @design.custom_materials.joins(:substrate).order('default_material DESC, COALESCE(substrates.display_name, substrates.name) ASC').each do |material|
 
                 if @first_row
-                  csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, domain, material, first_variant_row)) }
+                  csv << Admin::BaseShopifyProductDataCsvGenerator::PRIMARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, domain, material, first_variant_row)) }
                   @first_row = false
                 else
-                  csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, domain, material, first_variant_row)) }
+                  csv << Admin::BaseShopifyProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, domain, material, first_variant_row)) }
                 end
                 first_variant_row = false
 
                 unless @design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, domain, material)) }
+                  csv << Admin::BaseShopifyProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, domain, material)) }
                 end
 
               end
@@ -222,12 +72,12 @@ module Admin
                 csv << primary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, domain)) }
                 @first_row = false
               else
-                csv << secondary_row_attributes.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, domain)) }
+                csv << Admin::BaseShopifyProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map{ |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'full', @image_index, domain)) }
               end
 
               if domain == 'astekhome.com'
                 unless @design.collection.suppress_sample_option_from_display
-                  csv << secondary_row_attributes.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, domain)) }
+                  csv << Admin::BaseShopifyProductDataCsvGenerator::SECONDARY_ROW_ATTRIBUTES.map { |attr| (attr.nil? ? nil : attribute_value(attr, variant, 'sample', 0, domain)) }
                 end
               end
             end
@@ -238,8 +88,8 @@ module Admin
           # we mix a random install image in with the swatch images (handled above @line 170).
           if domain == 'astek.com' || (domain == 'astekhome.com' && !@design.has_colorways?)
             @design.variants.each do |variant|
-              if variant.variant_install_images
-                variant.variant_install_images.each do |image|
+              if variant.install_images
+                variant.install_images.each do |image|
                   @image_index += 1
                   csv << [@design.handle] + 23.times.map { nil } + [image.file.url, @image_index + 1] + 22.times.map { nil }
 
@@ -253,9 +103,9 @@ module Admin
 
       def attribute_value attr, variant, variant_type, image_index, domain, material=nil, show_image=true
 
-        if TEXT_VALUES[attr.to_sym]
+        if Admin::BaseShopifyProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
 
-          TEXT_VALUES[attr.to_sym]
+          Admin::BaseShopifyProductDataCsvGenerator::TEXT_VALUES[attr.to_sym]
 
         elsif attr == 'handle'
           @design_alias.handle
@@ -463,7 +313,7 @@ module Admin
             nil
           when 'astekhome.com'
             if variant_type == 'sample' || variant_type == 'custom_sample'
-              (BigDecimal(SAMPLE_WEIGHT) * BigDecimal('453.592')).round.to_s
+              (BigDecimal(Admin::BaseShopifyProductDataCsvGenerator::SAMPLE_WEIGHT, 0) * BigDecimal('453.592', 0)).round.to_s
             else
               if material
                 material_variant_weight material, variant
@@ -492,9 +342,9 @@ module Admin
           when 'astekhome.com'
             if variant_type == 'sample' || variant_type == 'custom_sample'
               if @design.digital?
-                SAMPLE_PRICE_DIGITAL
+                Admin::BaseShopifyProductDataCsvGenerator::SAMPLE_PRICE_DIGITAL
               else
-                SAMPLE_PRICE_DISTRIBUTED
+                Admin::BaseShopifyProductDataCsvGenerator::SAMPLE_PRICE_DISTRIBUTED
               end
             else
               if material
@@ -585,43 +435,6 @@ module Admin
 
       end
 
-      def astek_home_colorway_value variant_type, variant_name
-        case variant_type
-        when 'custom', 'custom_sample'
-          'Custom'
-        else
-          variant_name
-        end
-      end
-
-      def astek_home_size_value variant_type
-        case variant_type
-        when 'sample', 'full'
-          variant_type.capitalize
-        when 'custom_sample'
-          'Sample'
-        else
-          'Full'
-        end
-      end
-
-      def astek_home_material_value material
-        if material
-          material.name
-        end
-      end
-
-      def body_for_domain variant, domain
-        case domain
-        when 'astek.com'
-          astek_business_description variant, domain
-        when 'astekhome.com'
-          astek_home_description variant
-        when 'onairdesign.com'
-          onair_design_description variant, domain
-        end
-      end
-
       def astek_business_description variant, domain
         body = ''
 
@@ -671,12 +484,6 @@ module Admin
 
         body += format_onair_properties(variant).gsub(/\n+/, ' ')
         body
-      end
-
-      def format_description description
-        '<div>
-            <p>'+description+'</p>
-        </div>'
       end
 
       def format_business_properties variant, domain
@@ -734,50 +541,30 @@ module Admin
       end
 
       def format_home_properties variant
-        formatted = '<div class="description__meta">'
 
-        formatted += '<div>
-              <h6>SKU</h6>
-              <p>'+@design.sku+'</p>
-            </div>'
+        stock_item = variant.stock_items.first
 
-        unless @design_alias.collection.suppress_from_display
-          formatted += '<div>
-              <h6>Collection</h6>
-              <p><a href="/collections/'+@design_alias.collection.name.parameterize+'">'+@design_alias.collection.name+'</a></p>
-            </div>'
-        end
+        formatted = '<!-- DESCRIPTION V2 -->
+          <div class="description__meta">'
 
-        if @design.collection.lead_time
-          formatted += '<div>
-              <h6>Lead Time</h6>
-              <p>'+@design.collection.lead_time.name+'</p>
-            </div>'
-        end
-
-        @design.design_properties.each do |dp|
-          next if /\Aroll_length_/ =~ dp.property.name && @design.sale_unit.name != 'Roll'
-          formatted += '<div>
-            <h6>'+dp.property.presentation+'</h6>
-            <p>'+format_property_value(dp)+'</p>
-          </div>'
-        end
-
-        if variant.stock_items.first.minimum_quantity > 1
-          formatted += '<div>
-            <h6>Minimum quantity</h6>
-            <p>'+variant.stock_items.first.minimum_quantity.to_s+' '+variant.stock_items.first.sale_unit.name.pluralize.titleize+'</p>
-          </div>'
-        end
-
-        if variant.stock_items.first.sale_quantity > 1
-          formatted += '<div>
-            <h6>Sold in quantities of</h6>
-            <p>'+variant.stock_items.first.sale_quantity.to_s+'</p>
-          </div>'
-        end
+        formatted += format_dimensional_properties @design, stock_item
+        formatted += format_shipping_and_returns_information @design
+        formatted += format_additional_specs @design, stock_item
 
         formatted += '</div>'
+
+        formatted += '<script>
+            var Astek = Astek || {};
+            Astek.calculator_settings = ' + stock_item.calculator_settings + ';
+          </script>'
+
+        if design = design.peel_and_stick_version
+          formatted += "<script>
+              var Astek = Astek || {};
+              Astek.peel_and_stick_version_handle = '#{design.handle}';
+            </script>"
+        end
+
         formatted
       end
 
@@ -827,38 +614,6 @@ module Admin
 
         formatted += '</div>'
         formatted
-      end
-
-      def format_tearsheet_links variant
-        out = '<!-- pdf -->'
-        @design.variants.each do |v|
-          if v.tearsheet.file
-            out += ActionController::Base.helpers.link_to('Tear Sheet', v.tearsheet.file.url, class: 'btn btn--small', target: '_blank')
-          end
-        end
-        out
-      end
-
-      def format_property_value dp
-        if matches = dp.property.name.match(/_(?<unit>inches|yards|meters)\Z/)
-          "#{dp.value} #{matches[:unit]}"
-        elsif dp.property.name == 'margin_trim' && !%w[Pre-trimmed Untrimmed].include?(dp.value)
-          # Value for margin trim can be numeric, but we display "Untrimmed"
-          'Untrimmed'
-        else
-          dp.value
-        end
-      end
-
-      # If the printed width of a given design is less than standard, more physical material
-      # may be required to complete a given order, so the weight may be more than standard
-      def material_variant_weight material, variant
-        if BigDecimal(variant.stock_items.first.weight, 0) == BigDecimal(variant.stock_items.first.substrate.weight_per_square_foot, 0)
-          (BigDecimal(material.substrate.weight_per_square_foot, 0) * BigDecimal('453.592', 0)).round.to_s
-        else
-          ratio = BigDecimal(variant.stock_items.first.weight, 0) / BigDecimal(variant.stock_items.first.substrate.weight_per_square_foot, 0)
-          (BigDecimal(material.substrate.weight_per_square_foot, 0) * ratio * BigDecimal('453.592', 0)).round.to_s
-        end
       end
 
     end

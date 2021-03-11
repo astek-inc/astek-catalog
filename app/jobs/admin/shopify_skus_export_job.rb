@@ -1,4 +1,5 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/base_shopify_product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/shopify_design_data_csv_generator.rb"
 
 module Admin
   class ShopifySkusExportJob < ActiveJob::Base
@@ -21,7 +22,7 @@ module Admin
         end
 
         skus_to_process << design.sku
-        csv_data += ::Admin::ProductDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
+        csv_data += ::Admin::ShopifyDesignDataCsvGenerator.product_data_csv design, website.domain, csv_data.empty?
       end
 
       if skus_to_process.any?

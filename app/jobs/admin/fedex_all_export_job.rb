@@ -1,4 +1,4 @@
-require "#{Rails.root}/lib/admin/product_data_csv_generator.rb"
+require "#{Rails.root}/lib/admin/fedex_crossborder_csv_generator.rb"
 
 module Admin
   class FedexAllExportJob < ActiveJob::Base
